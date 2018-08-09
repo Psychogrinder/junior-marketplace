@@ -7,6 +7,9 @@ networks:
 services:
   front-nginx:
     container_name: marketplace.nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./
     ports:
       - "80:80"
     environment:
