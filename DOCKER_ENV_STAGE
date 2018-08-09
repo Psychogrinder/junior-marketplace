@@ -1,0 +1,5 @@
+# Docker stage
+
+export DOCKER_HOST=tcp://
+export DOCKER_TLS_VERIFY=0
+export DOCKER_CERT_PATH=""

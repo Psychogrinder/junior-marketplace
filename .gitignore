@@ -1,0 +1,17 @@
+.vagrant/
+.idea/
+
+__pycache__/
+
+*.log
+*.db
+*.egg-info
+
+
+marketplace.app/flask_sessions/
+marketplace.app/.env/
+
+node_modules/
+
+.env.prod
+.env.stage
