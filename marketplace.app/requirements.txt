@@ -1,0 +1,10 @@
+Flask
+Flask-Assets
+Flask-Mobility
+Flask-Marshmallow
+Flask-SQLalchemy
+Flask-Script
+Flask-Migrate
+Flask-Session
+marshmallow-sqlalchemy
+psycopg2-binary
