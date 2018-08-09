@@ -4,7 +4,6 @@
 __pycache__/
 
 *.log
-*.db
 *.egg-info
 
 
