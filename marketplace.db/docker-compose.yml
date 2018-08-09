@@ -1,0 +1,18 @@
+version: "3"
+
+networks:
+  marketplace:
+    external: true
+
+volumes:
+  marketplace.db:
+    external: false
+
+services:
+  db:
+    container_name: marketplace.db
+    image: postgres:10
+    networks:
+      - marketplace
+    volumes:
+      - marketplace.db
