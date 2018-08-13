@@ -1,0 +1,19 @@
+{
+  "name": "junior-marketplace",
+  "version": "1.0.0",
+  "description": "## Описание сервисов",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krsnv/junior-marketplace.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krsnv/junior-marketplace/issues"
+  },
+  "homepage": "https://github.com/krsnv/junior-marketplace#readme"
+}
