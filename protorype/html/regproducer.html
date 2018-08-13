@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Регистрация производителя</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.2/minty/bootstrap.min.css">
+	<link rel="stylesheet" href="regproducer.css">
+</head>
+<body>
+	<section class="modal-window authorization">
+		<h1>
+			Регистрация <br> производителя
+		</h1>
+		<form action="#">
+			<p>
+				<label for="email">Email</label>
+				<input type="email" autofocus class="form-control" id="email" placeholder="email@email.ru">
+			</p>
+			<p>
+				<label for="password">Пароль</label>
+				<input type="password" class="form-control" placeholder="*******" id="password" name="password">
+				<span>Минимум 6 символов</span>
+			</p>
+			<p>
+				<label for="repassword">Повторите пароль</label>
+				<input type="text" class="form-control" placeholder="*******" id="repassword" name="repassword">
+			</p>
+			<p>
+				<label for="name">Название магазина</label>
+				<input type="text" class="form-control" placeholder="У Иваныча" id="name" name="name">
+			</p>
+			<p>
+				<label for="contact_person">Контактное лицо</label>
+				<input type="text" class="form-control" placeholder="Иван Иванович Иванов" id="contact_person" name="contact_person">
+			</p>
+			<p>
+				<label for="phone">Номер телефона</label>
+				<input type="text" class="form-control" placeholder="+7991199555" id="phone" name="phone">
+			</p>
+			<p>
+				<label for="adress">Адрес</label>
+				<input type="text" class="form-control" placeholder="Улица Пушкина д. 14 парадная 1" id="adress" name="adress">
+			</p>
+			<p>
+				<label for="description">Описание (необязательное поле)</label>
+				<textarea type="text" class="form-control" rows="3" id="description" name="description">
+				</textarea>
+			</p>
+			<button class="btn btn-success">
+				Зарегистрироваться
+			</button>
+		</form>
+	</section>
+	<script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/js/tether.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+</body>
+</html>
