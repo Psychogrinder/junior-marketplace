@@ -1,0 +1,156 @@
+from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+
+class User(db.Model):
+    __tablename__ = 'user'
+    __mapper_args = {'polymorphic_on': 'discriminator'}
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(128), unique=True)
+    email_auth_status = db.Column(db.Boolean)
+    password_hash = db.Column(db.String(1024))
+    phone = db.String(db.String(16))
+    address = db.String(db.String(128))
+    photo_url = db.Column(db.String(256))
+
+    def __init__(self, email, password, phone='', address=''):
+        self.email = email
+        self.password_hash = generate_password_hash(password)
+        self.phone = phone
+        self.address = address
+
+    def change_password(self, password):
+        if check_password_hash(self.password_hash, password):
+            self.password_hash = generate_password_hash(password)
+            return True
+        else:
+            return False
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def set_photo_url(self, photo_url):
+        self.photo_url = photo_url
+
+
+class Consumer(User):
+    __mapper_args__ = {'polymorphic_identity': 'consumer'}
+    last_name = db.Column(db.String(128))
+    patronymic = db.Column(db.String(128))
+    first_name = db.Column(db.String(128))
+
+    def __init__(self, email, password, first_name, last_name, phone='', address='', patronymic=''):
+        super().__init__(email, password, phone, address)
+        self.first_name = first_name
+        self.last_name = last_name
+        self.patronymic = patronymic
+
+    def get_orders(self):
+        return Order.query.filter_by(consumer_id=self.id).all()
+
+
+class Producer(User):
+    __mapper_args__ = {'polymorphic_identity': 'producer'}
+    name = db.Column(db.String(128), unique=True)  # Подразумеваю что магазины с уникальными именами
+    person_to_contact = db.Column(db.String(128))
+    description = db.Column(db.String(256))
+
+    def __init__(self, email, password, phone, address, person_to_contact, description=''):
+        super().__init__(email, password, phone, address)
+        self.person_to_contact = person_to_contact
+        self.description = description
+
+    def get_products(self):
+        return Product.query.filter_by(producer_id=self.id).all()
+
+    def get_orders(self):
+        return Product.query.filter_by(producer_id=self.id).all()
+
+    def set_description(self, description):
+        self.description = description
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    total_cost = db.Column(db.Float)
+    orderItems = db.Column(db.String(2048))
+    status = db.Column(db.String(128))
+    delivery_method = db.Column(db.String(128))
+    delivery_address = db.Column(db.String(128))
+    order_timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+    shipping_timestamp = db.Column(db.DateTime)
+    consumer_phone = db.Column(db.String(128))
+    consumer_email = db.Column(db.String(128))
+    consumer_id = db.Column(db.Integer)
+    producer_id = db.Column(db.Integer)
+
+    def __init__(self, total_cost, order_items, delivery_method, delivery_address, consumer_phone, consumer_email,
+                 consumer_id, producer_id):
+        self.total_cost = total_cost
+        self.order_items = order_items
+        self.status = 'not processed'
+        self.delivery_method = delivery_method
+        self.delivery_address = delivery_address
+        self.consumer_id = consumer_id
+        self.producer_id = producer_id
+        self.consumer_phone = consumer_phone
+        self.consumer_email = consumer_email
+
+    def get_consumer(self):
+        return Consumer.query.filter_by(id=self.consumer_id).first()
+
+    def get_producer(self):
+        return Producer.query.filter_by(id=self.producer_id).first()
+
+    def change_status(self, status):
+        if status == 'finished':
+            self.shipping_timestamp = datetime.utcnow()
+        self.status = status
+
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(256))
+    photo_url = db.Column(db.String(256))
+    price = db.Column(db.Float)
+    quantity = db.Column(db.Integer)
+    producer_id = db.Column(db.Integer)
+    category_id = db.Column(db.Integer)
+    measurement_unit = db.Column(db.String(16))
+    weight = db.Column(db.Float)
+
+    def __init__(self, price, quantity, producer_id, category_id, measurement_unit, weight, description=''):
+        self.price = price
+        self.quantity = quantity
+        self.producer_id = producer_id
+        self.category_id = category_id
+        self.measurement_unit = measurement_unit
+        self.weight = weight
+        self.description = description
+
+    def set_description(self, description):
+        self.description = description
+
+    def get_producer(self):
+        return Producer.query.filter_by(id=self.producer_id).all()
+
+    def get_category(self):
+        return Category.query.filter_by(id=self.category_id).all()
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    parent_id = db.Column(db.Integer)
+
+    def __init__(self, name, parent_id=-1):
+        self.name = name
+        self.parent_id = parent_id
+
+    def get_products(self):
+        return Product.query.filter_by(category_id=self.id).all()
+
+    def get_subcategories(self):
+        return Category.query.filter_by(parent_id=self.id).all()
+
