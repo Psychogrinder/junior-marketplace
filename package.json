@@ -15,5 +15,6 @@
   "bugs": {
     "url": "https://github.com/krsnv/junior-marketplace/issues"
   },
-  "homepage": "https://github.com/krsnv/junior-marketplace#readme"
+  "homepage": "https://github.com/krsnv/junior-marketplace#readme",
+  "dependencies": {}
 }
