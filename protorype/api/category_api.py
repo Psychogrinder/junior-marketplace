@@ -7,9 +7,9 @@ api = Api(app)
 class CategoryNameById(Resource):
     def get(self, num):
         # вернуть название категории по id
-        name = dbCategory.query.filter_by(dbCategory.id == id).first()
-        if name:
-            return {'description':'category data', 'data': {'id': num, 'name': name}}
+        category = dbCategory.query.filter_by(id=id).first()
+        if category:
+            return {'description':'category data', 'data': {'id': num, 'name': category.name}}
         else:
             return {'error': 'No category with such id'}, 404
 

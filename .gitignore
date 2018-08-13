@@ -8,7 +8,7 @@ __pycache__/
 
 
 marketplace.app/flask_sessions/
-marketplace.app/.env/
+marketplace.app/.venv/
 
 node_modules/
 
