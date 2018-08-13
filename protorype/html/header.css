@@ -21,3 +21,19 @@
 .header-dropdown-toggle .dropdown-menu .btn-secondary:active {
 	background: #ff7851;
 }
+
+.header-login,
+.header-card {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.header-login:hover,
+.header-login:active,
+.header-card:hover,
+.header-card:active {
+    background: #FF7851;
+    padding-right: 0;
+    border-radius: 5px;
+}
