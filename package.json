@@ -16,7 +16,5 @@
     "url": "https://github.com/krsnv/junior-marketplace/issues"
   },
   "homepage": "https://github.com/krsnv/junior-marketplace#readme",
-  "dependencies": {
-    "bootstrap": "^4.0.0-alpha.6"
-  }
+  "dependencies": {}
 }
