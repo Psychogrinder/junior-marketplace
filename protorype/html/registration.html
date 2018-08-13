@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Регистрация</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.2/minty/bootstrap.min.css">
+	<link rel="stylesheet" href="registration.css">
+</head>
+<body>
+	<section class="modal-window password-reset">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+		<h1>Регистрация</h1>
+		<form action="#">
+			<p>
+				<label for="email">E-mail:</label>
+				<input type="email" autofocus class="form-control" id="email" placeholder="email@email.ru">
+        <span class="invalid-feedback">Неверный e-mail!</span>
+      </p>
+      <p>
+				<label for="password">Пароль:</label>
+				<input type="password" class="form-control" id="password" placeholder="******">
+        <span class="valid-feedback">Минимум 6 символов</span>
+			</p>
+      <p>
+				<label for="re_password">Повторите пароль:</label>
+				<input type="password" class="form-control" id="re_password" placeholder="******">
+        <span class="invalid-feedback">Пароли не совпадают!</span>
+			</p>
+			<button class="btn btn-success">Зарегистрироваться</button>
+		</form>
+	</section>
+</body>
+</html>
