@@ -1,4 +1,4 @@
-from app import db, ma
+from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import MONEY
@@ -89,7 +89,7 @@ class Producer(User):
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     total_cost = db.Column(MONEY)
-    orderItemsJSON = db.Column(db.JSON)
+    order_items_json = db.Column(db.JSON)
     status = db.Column(db.String(128))
     delivery_method = db.Column(db.String(128))
     delivery_address = db.Column(db.String(128))
@@ -100,10 +100,10 @@ class Order(db.Model):
     consumer_id = db.Column(db.Integer)
     producer_id = db.Column(db.Integer)
 
-    def __init__(self, total_cost, order_items, delivery_method, delivery_address, consumer_phone, consumer_email,
+    def __init__(self, total_cost, order_items_json, delivery_method, delivery_address, consumer_phone, consumer_email,
                  consumer_id, producer_id):
         self.total_cost = total_cost
-        self.order_items = order_items
+        self.order_items_json = order_items_json
         self.status = 'not processed'
         self.delivery_method = delivery_method
         self.delivery_address = delivery_address
