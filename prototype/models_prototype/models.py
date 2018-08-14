@@ -1,6 +1,7 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from sqlalchemy.dialects.postgresql import MONEY
 
 
 class User(db.Model):
@@ -61,7 +62,7 @@ class Consumer(User):
 
     def get_full_name(self):
         return "{first_name} {patronymic} {last_name}".format(first_name=self.first_name, patronymic=self.patronymic,
-                                                       last_name=self.last_name).strip()
+                                                              last_name=self.last_name).strip()
 
 
 class Producer(User):
@@ -70,8 +71,9 @@ class Producer(User):
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
 
-    def __init__(self, email, password, phone, address, person_to_contact, description=''):
+    def __init__(self, email, name, password, phone, address, person_to_contact, description=''):
         super().__init__(email, password, phone, address)
+        self.name = name
         self.person_to_contact = person_to_contact
         self.description = description
 
@@ -87,8 +89,8 @@ class Producer(User):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    total_cost = db.Column(db.Float)
-    orderItems = db.Column(db.String(2048))
+    total_cost = db.Column(MONEY)
+    order_items_json = db.Column(db.JSON)
     status = db.Column(db.String(128))
     delivery_method = db.Column(db.String(128))
     delivery_address = db.Column(db.String(128))
@@ -99,10 +101,10 @@ class Order(db.Model):
     consumer_id = db.Column(db.Integer)
     producer_id = db.Column(db.Integer)
 
-    def __init__(self, total_cost, order_items, delivery_method, delivery_address, consumer_phone, consumer_email,
+    def __init__(self, total_cost, order_items_json, delivery_method, delivery_address, consumer_phone, consumer_email,
                  consumer_id, producer_id):
         self.total_cost = total_cost
-        self.order_items = order_items
+        self.order_items_json = order_items_json
         self.status = 'not processed'
         self.delivery_method = delivery_method
         self.delivery_address = delivery_address
@@ -125,17 +127,19 @@ class Order(db.Model):
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
     description = db.Column(db.String(256))
     photo_url = db.Column(db.String(256))
-    price = db.Column(db.Float)
+    price = db.Column(MONEY)
     quantity = db.Column(db.Integer)
     producer_id = db.Column(db.Integer)
     category_id = db.Column(db.Integer)
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
 
-    def __init__(self, price, quantity, producer_id, category_id, measurement_unit, weight, description=''):
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description=''):
         self.price = price
+        self.name = name
         self.quantity = quantity
         self.producer_id = producer_id
         self.category_id = category_id
