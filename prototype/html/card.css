@@ -86,7 +86,7 @@
   padding: 0px;
 }
 
-.product_quantity_input#number {
+.product_quantity_input #number {
   text-align: center;
   border: none;
   border: 1px solid #ddd;
