@@ -71,8 +71,9 @@ class Producer(User):
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
 
-    def __init__(self, email, password, phone, address, person_to_contact, description=''):
+    def __init__(self, email, name, password, phone, address, person_to_contact, description=''):
         super().__init__(email, password, phone, address)
+        self.name = name
         self.person_to_contact = person_to_contact
         self.description = description
 
