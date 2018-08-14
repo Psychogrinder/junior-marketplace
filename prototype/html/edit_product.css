@@ -1,0 +1,65 @@
+/*breadcrumbs*/
+.breadcrumbs {
+    margin-bottom: 40px;
+}
+
+.breadcrumbs span a {
+    text-decoration: underline;
+    margin-right: 20px;
+}
+ .breadcrumbs span a.active {
+    text-decoration: none;
+    color: #78C2AD;
+}
+ .breadcrumbs span a.active:hover {
+    color: #78C2AD;
+}
+/*end breadcrumbs*/
+main {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+.edit-product form {
+    margin-top: 40px;
+}
+
+.edit-product-item {
+    margin-bottom: 30px;
+}
+
+.edit-product-item #photo {
+    padding: 0px;
+}
+
+.edit-product-save {
+    margin-top: 40px;
+}
+
+.edit-product-save .btn {
+    display: block;
+    margin-left: auto;
+}
+
+.edit-product-item #price {
+    background-image: url(img/ruble-sign-solid.svg);
+    padding-right: 40px;
+    background-size: 15px;
+    background-position-x: 95%;
+    background-position-y: center;
+    background-repeat: no-repeat;
+}
+
+.edit-product-item #weigth {
+    margin-right: 20px;
+}
+
+input::-moz-placeholder { font-weight: 100; }
+input::-webkit-input-placeholder { font-weight: 100; }
+input::-ms-input-placeholder { font-weight: 100; }
+input::-ms-input-placeholder { font-weight: 100; }
+input::placeholder { font-weight: 100; } 
