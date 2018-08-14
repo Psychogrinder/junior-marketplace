@@ -1,6 +1,7 @@
-from app import db
+from app import db, ma
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from sqlalchemy.dialects.postgresql import MONEY
 
 
 class User(db.Model):
@@ -61,7 +62,7 @@ class Consumer(User):
 
     def get_full_name(self):
         return "{first_name} {patronymic} {last_name}".format(first_name=self.first_name, patronymic=self.patronymic,
-                                                       last_name=self.last_name).strip()
+                                                              last_name=self.last_name).strip()
 
 
 class Producer(User):
@@ -87,8 +88,8 @@ class Producer(User):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    total_cost = db.Column(db.Float)
-    orderItems = db.Column(db.String(2048))
+    total_cost = db.Column(MONEY)
+    orderItemsJSON = db.Column(db.JSON)
     status = db.Column(db.String(128))
     delivery_method = db.Column(db.String(128))
     delivery_address = db.Column(db.String(128))
@@ -125,17 +126,19 @@ class Order(db.Model):
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
     description = db.Column(db.String(256))
     photo_url = db.Column(db.String(256))
-    price = db.Column(db.Float)
+    price = db.Column(MONEY)
     quantity = db.Column(db.Integer)
     producer_id = db.Column(db.Integer)
     category_id = db.Column(db.Integer)
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
 
-    def __init__(self, price, quantity, producer_id, category_id, measurement_unit, weight, description=''):
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description=''):
         self.price = price
+        self.name = name
         self.quantity = quantity
         self.producer_id = producer_id
         self.category_id = category_id
