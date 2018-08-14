@@ -10,6 +10,11 @@
 	width: 20px;
 }
 
+.header-login img,
+.header-card img {
+	max-width: 80%;
+} 
+
 .header-dropdown-toggle .dropdown-menu .btn-secondary {
     background: #F3969A;
     color: white;
