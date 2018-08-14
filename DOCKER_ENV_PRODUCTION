@@ -1,0 +1,5 @@
+# Docker prod
+
+export DOCKER_HOST=tcp://46.21.248.236:17543
+export DOCKER_TLS_VERIFY=1
+export DOCKER_CERT_PATH=~/.docker/xtramarketru/
