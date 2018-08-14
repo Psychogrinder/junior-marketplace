@@ -1,4 +1,3 @@
-
 /*breadcrumbs*/
 .breadcrumbs span a {
 	text-decoration: underline;
@@ -44,7 +43,7 @@ main .products .product-card {
 }
 
 .product-item-description p {
-	margin-bottom: 0rem;
+	  margin-bottom: 0rem;
     display: block;
     width: fit-content;
     margin-left: auto;
@@ -64,15 +63,15 @@ main .products .product-card {
 	margin-bottom: 2rem;
 }
 
-.product-producer-filter {
+.product-filter {
 	margin-top: 30px;
 }
 
-.product-producer-filter form {
+.product-filter form {
 	display: flex;
 }
 
-.product-producer-filter form .filter-block {
+.product-filter form .filter-block {
     box-sizing: border-box;
 }
 
