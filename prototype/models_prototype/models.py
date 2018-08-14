@@ -16,13 +16,14 @@ class User(db.Model):
 
     def __init__(self, email, password, phone='', address=''):
         self.email = email
+        self.email_auth_status = False
         self.password_hash = generate_password_hash(password)
         self.phone = phone
         self.address = address
 
-    def change_password(self, password):
-        if check_password_hash(self.password_hash, password):
-            self.password_hash = generate_password_hash(password)
+    def change_password(self, old_password, new_password):
+        if check_password_hash(self.password_hash, old_password):
+            self.password_hash = generate_password_hash(new_password)
             return True
         else:
             return False
@@ -32,6 +33,15 @@ class User(db.Model):
 
     def set_photo_url(self, photo_url):
         self.photo_url = photo_url
+
+    def verify_email(self):
+        self.email_auth_status = True
+
+    def set_address(self, address):
+        self.address = address
+
+    def set_phone(self, phone):
+        self.phone = phone
 
 
 class Consumer(User):
@@ -49,10 +59,14 @@ class Consumer(User):
     def get_orders(self):
         return Order.query.filter_by(consumer_id=self.id).all()
 
+    def get_full_name(self):
+        return "{first_name} {patronymic} {last_name}".format(first_name=self.first_name, patronymic=self.patronymic,
+                                                       last_name=self.last_name).strip()
+
 
 class Producer(User):
     __mapper_args__ = {'polymorphic_identity': 'producer'}
-    name = db.Column(db.String(128), unique=True)  # Подразумеваю что магазины с уникальными именами
+    name = db.Column(db.String(128), unique=True)
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
 
