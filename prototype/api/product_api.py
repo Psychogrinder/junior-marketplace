@@ -1,5 +1,5 @@
 from flask import session
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 from marketplace.app.marketplace import Product
 from marketplace.app.marketplace import Producer
 
