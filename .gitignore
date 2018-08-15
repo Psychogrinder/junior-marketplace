@@ -1,5 +1,6 @@
 .vagrant/
 .idea/
+.webassets-cache 
 
 __pycache__/
 
