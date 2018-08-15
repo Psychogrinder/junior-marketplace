@@ -10,4 +10,3 @@ marshmallow-sqlalchemy
 psycopg2-binary
 Flask-RESTful
 SQLAlchemy
-Werkzeug
