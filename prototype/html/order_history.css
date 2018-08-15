@@ -38,6 +38,10 @@
     border-bottom: 2px solid #eee;
 }
 
+.delivery_container:last-of-type{
+    border: none;
+}
+
 .delivery span,
 .delivery_value span{
     display: block;
