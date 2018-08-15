@@ -1,0 +1,38 @@
+body {
+	font-family: "Arial", sans-serif;
+	background-color: #ededed;
+}
+
+.modal-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+	background: white;
+  padding: 40px 30px;
+  border-radius: 10px;
+}
+
+.modal-window form p {
+	display: flex;
+	flex-direction: column;
+}
+
+.modal-window__text{
+  display: inline-block;
+  margin: 20px 0;
+}
+
+.valid-feedback,
+.invalid-feedback{
+  display: inline-block;
+}
+
+.valid-feedback{
+  color: gray;
+}
+
+.invalid-feedback{
+  color: red;
+}
