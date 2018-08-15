@@ -5,5 +5,4 @@ COPY ./runserver.py /app
 RUN pip install -r app/requirements.txt
 WORKDIR /app
 ENV FLASK_APP=runserver.py
-ENV FLASK_DEBUG=1
 CMD flask run --port=8000 --host=0.0.0.0
