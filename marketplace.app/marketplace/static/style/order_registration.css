@@ -1,0 +1,50 @@
+/*breadcrumbs*/
+.breadcrumbs {
+    margin-bottom: 40px;
+}
+
+.breadcrumbs span a {
+    text-decoration: underline;
+    margin-right: 20px;
+}
+ .breadcrumbs span a.active {
+    text-decoration: none;
+    color: #78C2AD;
+}
+ .breadcrumbs span a.active:hover {
+    color: #78C2AD;
+}
+/*end breadcrumbs*/
+main {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+.order-registration-header h1 {
+    margin-left: 0.8rem;
+}
+
+.order-sum {
+    margin-left: auto;
+}
+
+.order_registration form {
+    margin-top: 40px;
+}
+
+.order-registration-item {
+    margin-bottom: 30px;
+}
+
+.order-registration-agree {
+    margin-top: 40px;
+}
+
+.order-registration-agree .btn {
+    display: block;
+    margin-left: auto;
+}

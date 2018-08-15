@@ -1,0 +1,48 @@
+.userpic{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-image: url(icons/userpic.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.userpic_container{
+  text-align: right;
+}
+
+.profile_title{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.name_container span{
+  display: block;
+}
+
+.name_name{
+  font-size: 22px;
+  color: #000;
+}
+
+.name_edit{
+
+}
+
+.profile-keys span,
+.profile-values span{
+  display: block;
+  margin-bottom: 10px;
+}
+
+.profile-keys span{
+  text-align: right;
+}
+
+.gray-text span{
+  color: gray;
+}
+
+.main-text{
+  color: #000;
+}

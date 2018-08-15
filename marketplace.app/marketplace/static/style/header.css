@@ -1,0 +1,44 @@
+.header-logo {
+	width: 40px;
+}
+
+.header-dropdown-toggle button {
+	width: 70px;
+}
+
+.header-dropdown-toggle button img {
+	width: 20px;
+}
+
+.header-login img,
+.header-card img {
+	max-width: 80%;
+} 
+
+.header-dropdown-toggle .dropdown-menu .btn-secondary {
+    background: #F3969A;
+    color: white;
+    width: 90%;
+    margin: 8px;
+}
+
+.header-dropdown-toggle .dropdown-menu .btn-secondary:hover,
+.header-dropdown-toggle .dropdown-menu .btn-secondary:active {
+	background: #ff7851;
+}
+
+.header-login,
+.header-card {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.header-login:hover,
+.header-login:active,
+.header-card:hover,
+.header-card:active {
+    background: #FF7851;
+    padding-right: 0;
+    border-radius: 5px;
+}

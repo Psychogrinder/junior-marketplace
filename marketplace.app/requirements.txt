@@ -10,4 +10,7 @@ marshmallow
 marshmallow-sqlalchemy
 psycopg2-binary
 Flask-RESTful
+cssmin
+jsmin
 SQLAlchemy
+

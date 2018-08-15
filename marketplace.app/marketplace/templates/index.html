@@ -1,1 +1,162 @@
-Marketplace
+{% extends 'base.html' %}
+
+{% block meta_title %}
+	Каталог
+{% endblock %}
+
+{% block body %}
+	 <main>
+        <div class="container catalog">
+            <h1>КАТЕГОРИИ ТОВАРОВ</h1>
+            <div class="row catalog-category">
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/bird.jpg") }} alt="">
+                        <p>ПТИЦА</p>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/eggs.png") }} alt="">
+                        <p>ЯЙЦА</p>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/fish.png") }} alt="">
+                        <p>РЫБА</p>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/fruits.jpg") }} alt="">
+                        <p>ФРУКТЫ</p>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/honey.png") }} alt="">
+                        <p>МЕД</p>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/meat.jpg") }} alt="">
+                        <p>МЯСО</p>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/milk.jpg") }} alt="">
+                        <p>МОЛОЧНЫЕ ПРОДУКТЫ</p>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 catalog-category-item">
+                    <a href="">
+                        <img src={{ url_for('static', filename ="img/category/vegetables.jpg") }} alt="">
+                        <p>ОВОЩИ</p>
+                    </a>
+                </div>
+            </div>
+            <h1>ПОПУЛЯРНЫЕ ТОВАРЫ</h1>
+            <div class="row popular-product">
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-3 card-item">
+                    <a href="">
+                        <div class="product-item-photo">
+                            <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                        </div>
+                        <div class="product-item-dscription">
+                            <p>240 Р/КГ</p>
+                            <b>Яблоки антоновка</b>
+                            <p>сельхоз Иваныч</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

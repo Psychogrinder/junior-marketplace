@@ -1,0 +1,47 @@
+{% include 'inc/authorization.html' %}
+{% include 'inc/exit_profile.html' %}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img class="header-logo" src={{ url_for('static', filename = 'img/logo.svg') }} alt=""></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">КАТАЛОГ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">МОИ ЗАКАЗЫ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">ЗАКАЗЫ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">ТОВАРЫ</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Поиск">
+                </form>
+                <a href="#" class="header-card px-2">
+                    <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg')}} class="header-logo" alt="Корзина">
+                </a>
+                <div class="btn-group px-3 header-dropdown-toggle">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src={{ url_for('static', filename ='img/user-regular.svg')}} alt="">
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Профиль</a>
+                        <a class="dropdown-item btn btn-secondary" href="#" data-toggle="modal" data-target="#exitProfile">Выход</a>
+                    </div>
+                </div>
+                <a href="#" class="header-login px-2" data-toggle="modal" data-target="#singInUser">
+                    <img src={{ url_for('static', filename ='img/sign-in-alt-solid.svg')}} class="header-logo" >
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
