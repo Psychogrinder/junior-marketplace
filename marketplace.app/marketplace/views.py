@@ -1,4 +1,6 @@
+from flask import render_template, jsonify
 from marketplace import app
+
 
 @app.route('/')
 def index():
