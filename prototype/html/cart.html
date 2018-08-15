@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Карточка товара</title>
+        <link rel="shortcut icon" href="img/favicon.png" type="image/png">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.2/minty/bootstrap.min.css">
+        <link rel="stylesheet" href="cart.css">
+    </head>
+    <body>
+        <header></header>
+        <main>
+            <div class="container breadcrumbs">
+                <div class="row">
+                    <ul class="breadcrumb">
+                        <li>Корзина</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row cart_producer_title">
+                    <span>Сельхоз «Октябрьский»</span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="img/apple-ant.jpg" alt="" width="150px">
+                    </div>
+                    <div class="col-1 cart_product_stock_title">
+                        <span>Название</span>
+                        <span>Цена</span>
+                        <span>Артикул</span>
+                    </div>
+                    <div class="col-3 cart_product_stock_info">
+                        <span>Яйца</span>
+                        <span>100 руб/упаковка</span>
+                        <span>123456</span>
+                    </div>
+                    <div class="col-1">
+                        <span>Вес</span>
+                    </div>
+                    <div class="col-5 quantity_container">
+                        <span>Количество</span>
+                        <form class="product_quantity">
+                          <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+                          <input class="product_quantity_input" type="number" id="number" value="2" />
+                          <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="img/apple-ant.jpg" alt="" width="150px">
+                    </div>
+                    <div class="col-1 cart_product_stock_title">
+                        <span>Название</span>
+                        <span>Цена</span>
+                        <span>Артикул</span>
+                    </div>
+                    <div class="col-3 cart_product_stock_info">
+                        <span>Яйца</span>
+                        <span>100 руб/упаковка</span>
+                        <span>123456</span>
+                    </div>
+                    <div class="col-1">
+                        <span>Вес</span>
+                    </div>
+                    <div class="col-5 quantity_container">
+                        <span>Количество</span>
+                        <form class="product_quantity">
+                          <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+                          <input class="product_quantity_input" type="number" id="number" value="3" />
+                          <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 delivery">
+                        <span>Способ доставки</span>
+                        <select name="" id="">
+                            <option value="courier">Курьером</option>
+                            <option value="pickup">Самовывоз</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row cart_producer_title">
+                    <span>Сельхоз «Ноябрьский»</span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="img/apple-ant.jpg" alt="" width="150px">
+                    </div>
+                    <div class="col-1 cart_product_stock_title">
+                        <span>Название</span>
+                        <span>Цена</span>
+                        <span>Артикул</span>
+                    </div>
+                    <div class="col-3 cart_product_stock_info">
+                        <span>Яблоки</span>
+                        <span>100 руб/кг</span>
+                        <span>123456</span>
+                    </div>
+                    <div class="col-1">
+                        <span>Вес</span>
+                    </div>
+                    <div class="col-5 quantity_container">
+                        <span>Количество</span>
+                        <form class="product_quantity">
+                          <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+                          <input class="product_quantity_input" type="number" id="number" value="2" />
+                          <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="img/apple-ant.jpg" alt="" width="150px">
+                    </div>
+                    <div class="col-1 cart_product_stock_title">
+                        <span>Название</span>
+                        <span>Цена</span>
+                        <span>Артикул</span>
+                    </div>
+                    <div class="col-3 cart_product_stock_info">
+                        <span>Яблоки</span>
+                        <span>100 руб/кг</span>
+                        <span>123456</span>
+                    </div>
+                    <div class="col-1">
+                        <span>Вес</span>
+                    </div>
+                    <div class="col-5 quantity_container">
+                        <span>Количество</span>
+                        <form class="product_quantity">
+                          <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+                          <input class="product_quantity_input" type="number" id="number" value="3" />
+                          <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container delivery">
+                <div class="row">
+                    <div class="col-12">
+                        <span>Способ доставки</span>
+                        <select name="" id="">
+                            <option value="courier">Курьером</option>
+                            <option value="pickup">Самовывоз</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="container total_container">
+                <div class="row">
+                    <div class="col-8 total_box">
+                        <span>ИТОГО:</span>
+                        <span class="total_value">1200 P</span>
+                    </div>
+                    <div class="col-4 order_box">
+                        <button class="btn btn-primary btn_order">ОФОРМИТЬ ЗАКАЗ</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer></footer>
+  	    <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+  	    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/js/tether.min.js"></script>
+  	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+        <script src="quantity_script.js"></script>
+    </body>
+</html>
