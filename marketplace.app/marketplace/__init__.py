@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
 import cssmin
+from marketplace import models, views
 
 app = Flask(__name__)
 assets = Environment(app)
@@ -29,3 +30,4 @@ assets.register('css_all', css)
 
 if __name__=='__main__':
     app.run(port=8000)
+
