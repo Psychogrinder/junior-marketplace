@@ -12,6 +12,7 @@ marketplace.app/flask_sessions/
 marketplace.app/.venv/
 
 node_modules/
+bundle.min.css
 
 .env.prod
 .env.stage
