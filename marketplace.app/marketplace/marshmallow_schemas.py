@@ -1,5 +1,5 @@
-from app.models import Order, Product, Consumer, Producer, Category
-from app import ma
+from marketplace.models import Order, Product, Consumer, Producer, Category
+from marketplace import ma
 from marshmallow import fields, post_load
 from marshmallow_sqlalchemy import ModelConverter
 from sqlalchemy.dialects.postgresql import MONEY
