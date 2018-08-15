@@ -13,3 +13,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 db.init_app(app)
 
+from marketplace import models
