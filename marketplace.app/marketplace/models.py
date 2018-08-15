@@ -11,8 +11,8 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True)
     email_auth_status = db.Column(db.Boolean)
     password_hash = db.Column(db.String(1024))
-    phone_number = db.String(db.String(16))
-    address = db.String(db.String(128))
+    phone_number = db.Column(db.String(16))
+    address = db.Column(db.String(128))
     photo_url = db.Column(db.String(256))
 
     def __init__(self, email, password, phone_number='', address=''):
