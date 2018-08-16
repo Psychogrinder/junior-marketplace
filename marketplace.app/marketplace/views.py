@@ -8,6 +8,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/category/<category_name>')
+def category(category_name):
+    return render_template('category.html')
+
+
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
