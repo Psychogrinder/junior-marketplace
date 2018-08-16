@@ -23,3 +23,13 @@ docker-compose up -d
 ### marketplace.nginx
 
 Front-сервер для обслуживания домена.
+
+### marketplace.app/marketplace/utils/create-content.py
+Скрипт для наполнения уже созданной базы данных. Убедитесь что Flask не запущен,
+а docker с базой данных запущен.
+
+В папке utils выполните в терминале команды:
+export FLASK_APP=models.py
+flask run
+python3 create_content.py
+
