@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}
+Яблоки Антоновка
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="container breadcrumbs">
+        <span><a href={{ url_for( 'index' ) }}>Каталог</a></span>
+        <span><a href={{ url_for( 'category', category_name = 'fruits' )}}>Фрукты</a></span>
+        <span><a class="active">Яблоки Антоновка</a></span>
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="product_title">Яблоки Антоновка</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-5">
+                <div class="card_image">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="" width="100%" height="auto">
+                </div>
+            </div>
+            <div class="col-4 product_info">
+                <span class="producer_title">ПРОДАВЕЦ</span>
+                <span class="producer_title_name">Садовое хозяйство «Заречное»</span>
+                <span class="product_title_id">АРТИКУЛ</span>
+                <span class="product_id">123456</span>
+                <span class="product_price_title">ЦЕНА</span>
+                <span class="product_price_value">100 руб/кг</span>
+                <div class="row">
+                    <form class="product_quantity">
+                        <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+                        <input class="product_quantity_input" type="number" id="number" value="1"/>
+                        <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                    </form>
+                    <button type="button" class="btn btn-success">В КОРЗИНУ</button>
+                </div>
+            </div>
+            <div class="col-3">
+                <span class="stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg") }}>Нет в наличии</span>
+            </div>
+        </div>
+        <div class="row description-product">
+            <div class="col-12">
+                <h2>Описание</h2>
+                <p>
+                    Try cuting chili decorateed with whipped cream, mashed up with cumin.
+                    Try blending the iced tea blueberries with yellow buttermilk and cream,
+                    sautéed.Mix each side of the chickpeas with half a kilo of pickles.
+                    Try cuting chili decorateed with whipped cream, mashed up with cumin.
+                    Try blending the iced tea blueberries with yellow buttermilk and cream,
+                    sautéed.Mix each side of the chickpeas with half a kilo of pickles.
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
