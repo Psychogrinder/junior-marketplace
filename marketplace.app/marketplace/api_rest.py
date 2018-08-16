@@ -2,6 +2,7 @@ from marketplace.models import Product, Category, db
 from marketplace.marshmallow_schemas import CategorySchema, ProductSchema
 from marketplace import api
 from flask_restful import Resource, reqparse
+from pprint import pprint as pp
 
 parser = reqparse.RequestParser()
 for arg in ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']:
@@ -35,7 +36,6 @@ def abort_if_product_doesnt_exist(id):
     if not Product.query.filter_by(id=id).first():
         abort(404, message="No product with id {}".format(id))
 
-
 class Subcategories(Resource):
     def get(self, id):
         abort_if_category_doesnt_exist(id)
@@ -51,9 +51,15 @@ class ProductsByCategory(Resource):
         abort_if_category_doesnt_exist(id)
         category = get_category_by_id(id)
         product_schema = ProductSchema(many=True)
+        if category.parent_id != 0:
+            products = product_schema.dump(category.get_products())
+        else:
+            subcategories = Category.query.filter_by(parent_id=category.id).all()
+            divided_products = [product_schema.dump(subcategory.get_products()).data for subcategory in subcategories]
+            products = [product for subcategory in divided_products for product in subcategory]
         return {
             'category': category.id,
-            'products': product_schema.dump(category.get_products()),
+            'products': products
         }
 
 
@@ -72,7 +78,6 @@ class ProductsByPopularity(Resource):
     """
     Первыми идут самые популярные.
     """
-
     def get(self, id):
         abort_if_category_doesnt_exist(id)
         category = get_category_by_id(id)
@@ -80,8 +85,7 @@ class ProductsByPopularity(Resource):
 
         product_schema = ProductSchema(many=True)
         products = product_schema.dump(products).data
-        # TODO заменить quantity на times_ordered
-        products = sorted(products, key=itemgetter('quantity'), reverse=True)
+        products = sorted(products, key=itemgetter('times_ordered'), reverse=True)
         return {
             'producer': category.id,
             'products': products
