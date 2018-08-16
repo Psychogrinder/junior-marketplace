@@ -19,7 +19,8 @@ db.init_app(app)
 
 from marketplace import models, views, api_rest
 
-css = Bundle('style/authorization.css','style/header.css', 'style/footer.css', 'style/catalog.css',
+css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css', 'style/category.css',
+            'style/breadcrumbs.css',
              filters=['cssmin'], output='bundle.min.css')
 assets.register('css_all', css)
 

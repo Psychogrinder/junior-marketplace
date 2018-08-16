@@ -1,0 +1,14 @@
+
+.breadcrumbs span a {
+    text-decoration: underline;
+    margin-right: 20px;
+}
+
+.breadcrumbs span a.active {
+    text-decoration: none;
+    color: #78C2AD;
+}
+
+.breadcrumbs span a.active:hover {
+    color: #78C2AD;
+}

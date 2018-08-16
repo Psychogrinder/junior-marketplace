@@ -1,0 +1,53 @@
+<div class="modal fade" id="regProducer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Регистрация производителя</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#">
+                    <p>
+                        <label for="emailProducer">Email</label>
+                        <input type="email" autofocus class="form-control" id="emailProducer" placeholder="email@email.ru">
+                    </p>
+                    <p>
+                        <label for="passwordProducer">Пароль</label>
+                        <input type="password" class="form-control" placeholder="*******" id="passwordProducer" name="passwordProducer">
+                        <span>Минимум 6 символов</span>
+                    </p>
+                    <p>
+                        <label for="repassword">Повторите пароль</label>
+                        <input type="text" class="form-control" placeholder="*******" id="repassword" name="repassword">
+                    </p>
+                    <p>
+                        <label for="name">Название магазина</label>
+                        <input type="text" class="form-control" placeholder="У Иваныча" id="name" name="name">
+                    </p>
+                    <p>
+                        <label for="contact_person">Контактное лицо</label>
+                        <input type="text" class="form-control" placeholder="Иван Иванович Иванов" id="contact_person" name="contact_person">
+                    </p>
+                    <p>
+                        <label for="phone">Номер телефона</label>
+                        <input type="text" class="form-control" placeholder="+7991199555" id="phone" name="phone">
+                    </p>
+                    <p>
+                        <label for="adress">Адрес</label>
+                        <input type="text" class="form-control" placeholder="Улица Пушкина д. 14 парадная 1" id="adress" name="adress">
+                    </p>
+                    <p>
+                        <label for="description">Описание (необязательное поле)</label>
+                        <textarea type="text" class="form-control" rows="3" id="description" name="description">
+                        </textarea>
+                    </p>
+                    <button class="btn btn-success">
+                        Зарегистрироваться
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

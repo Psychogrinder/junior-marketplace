@@ -51,8 +51,8 @@ class Consumer(User):
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
 
-    def __init__(self, email, password, first_name, last_name, phone='', address='', patronymic=''):
-        super().__init__(email, password, phone, address)
+    def __init__(self, email, password, first_name, last_name, phone_number='', address='', patronymic=''):
+        super().__init__(email, password, phone_number, address)
         self.first_name = first_name
         self.last_name = last_name
         self.patronymic = patronymic
@@ -71,8 +71,8 @@ class Producer(User):
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
 
-    def __init__(self, email, name, password, phone, address, person_to_contact, description=''):
-        super().__init__(email, password, phone, address)
+    def __init__(self, email, name, password, phone_number, address, person_to_contact, description=''):
+        super().__init__(email, password, phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
         self.description = description
@@ -164,7 +164,7 @@ class Category(db.Model):
     name = db.Column(db.String(128))
     parent_id = db.Column(db.Integer)
 
-    def __init__(self, name, parent_id=-1):
+    def __init__(self, name, parent_id=0):
         self.name = name
         self.parent_id = parent_id
 
