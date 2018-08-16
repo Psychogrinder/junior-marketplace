@@ -7,11 +7,3 @@ main {
 	margin-bottom: 40px;
 }
 
-.modal-min-dialog {
-    width: 300px;
-}
-
-.modal-body form .btn {
-	display: block;
-	margin: auto;
-}

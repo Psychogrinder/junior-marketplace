@@ -1,0 +1,24 @@
+.modal-min-dialog {
+    width: 300px;
+}
+
+.modal-body form .btn {
+    display: block;
+    margin: auto;
+}
+
+.registration-link {
+    display: block;
+    width: fit-content;
+    margin: auto;
+    margin-top: 1rem;
+}
+
+.modal-top__text {
+    margin-top: -15px;
+    margin-bottom: 1rem;
+}
+
+.modal-bottom__text {
+    margin-top: 1rem;
+}
