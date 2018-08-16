@@ -1,29 +1,11 @@
 from marketplace.models import Product, Category, db
+from marketplace.marshmallow_schemas import CategorySchema, ProductSchema
 from marketplace import api
-from marshmallow import fields, Schema, post_load
-from flask_restful import Resource
-# </editor-fold>
+from flask_restful import Resource, reqparse
 
-# <editor-fold desc="Schemas">
-
-class ProductSchema(Schema):
-    # producer_name = fields.Function(lambda obj: Producer.query.filter_by(id=obj.producer_id).first().name)
-    # category_name = fields.Function(lambda obj: Category.query.filter_by(id=obj.category_id).first().name)
-
-    @post_load
-    def make_product(self, data):
-        return Product(**data)
-
-    class Meta:
-        fields = (
-            "name", "description", "price", "photo_url", "quantity", "producer_id", "category_id", "measurement_unit",
-            "weight")
-
-        # @post_load
-        # def make_product(self, data):
-        #     return Product(**data)
-
-# </editor-fold>
+parser = reqparse.RequestParser()
+for arg in ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']:
+    parser.add_argument(arg)
 
 def get_category_by_name(category_name):
     return Category.query.filter_by(name=category_name).first()

@@ -3,7 +3,6 @@ from datetime import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import MONEY
-from marketplace import models
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
