@@ -21,22 +21,33 @@
                 <div class="row">
                     <div class="col-2">Статус</div>
                     <div class="col-4">
-                        <select name="" id="">
-                            <option value="unfinished">Необработан</option>
-                            <option value="finished">Завершён</option>
-                            <option value="cancelled">Отменён</option>
+                        <select class="form-control" name="subcategory">
+                            <option value="" disabled selected>Не обработан</option>
+                            <option value="">Завершён</option>
+                            <option value="">Отменён</option>
                         </select>
                     </div>
                     <div class="col-5">
                         <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                            <input class="form-control mr-sm-2" type="text" placeholder="Найти...">
+                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
                         </form>
                     </div>
                     <div class="col-1">
-                        <button type="button" class="btn btn-primary btn-sm">Таблица</button>
+                        <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="tableSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Вид</button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" id="common_mode" onclick="showCommon()">Обычный</a>
+                                <a class="dropdown-item" href="#" id="table_mode" onclick="showTable()">Таблица</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+<!-- Common view -->
+
+            <div class="container item_order">
                 <div class="row order_history_info">
                     <div class="col-9">
                         <span>№ 123456</span>
@@ -45,179 +56,356 @@
                         <span>СУММА ЗАКАЗА: 1200 Р</span>
                     </div>
                 </div>
-            </div>
-            <div class="container">
                 <div class="row">
                     <div class="col-2">
                         <img src="img/apple-ant.jpg" alt="" width="150px">
                     </div>
-                    <div class="col-1 cart_product_stock_title">
-                        <span>Название</span>
-                        <span>Цена</span>
-                        <span>Артикул</span>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-6">Название</div>
+                            <div class="col-6"><p class="main-text">Яйца</p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Цена</div>
+                            <div class="col-6 main-text">100 руб/упаковка</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Артикул</div>
+                            <div class="col-6 main-text">123456</div>
+                        </div>
                     </div>
-                    <div class="col-3 cart_product_stock_info">
-                        <span>Яйца</span>
-                        <span>100 руб/упаковка</span>
-                        <span>123456</span>
-                    </div>
-                    <div class="col-1">
-                        <span>Вес</span>
-                        <span>12 шт.</span>
-                    </div>
-                    <div class="col-4 quantity_container">
-                        <span>Количество:</span>
-                        <span>2</span>
-                    </div>
+                    <div class="col-2">Вес</div>
+                    <div class="col-1 main-text">12 шт.</div>
+                    <div class="col-2">Количество:</div>
+                    <div class="col-1 main-text">2</div>
                 </div>
-            </div>
-            <div class="container">
                 <div class="row">
                     <div class="col-2">
                         <img src="img/apple-ant.jpg" alt="" width="150px">
                     </div>
-                    <div class="col-1 cart_product_stock_title">
-                        <span>Название</span>
-                        <span>Цена</span>
-                        <span>Артикул</span>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-6">Название</div>
+                            <div class="col-6 main-text">Яйца</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Цена</div>
+                            <div class="col-6 main-text">100 руб/упаковка</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Артикул</div>
+                            <div class="col-6 main-text">123456</div>
+                        </div>
                     </div>
-                    <div class="col-3 cart_product_stock_info">
-                        <span>Яйца</span>
-                        <span>100 руб/упаковка</span>
-                        <span>123456</span>
-                    </div>
-                    <div class="col-1">
-                        <span>Вес</span>
-                        <span>12 шт.</span>
-                    </div>
-                    <div class="col-4 quantity_container">
-                        <span>Количество:</span>
-                        <span>2</span>
-                    </div>
+                    <div class="col-2">Вес</div>
+                    <div class="col-1 main-text">12 шт.</div>
+                    <div class="col-2">Количество:</div>
+                    <div class="col-1 main-text">2</div>
                 </div>
-            </div>
-            <div class="container delivery_container">
                 <div class="row">
-                    <div class="col-2 delivery">
-                        <span>Доставка:</span>
-                        <span>Цена доставки:</span>
-                        <span>Адрес:</span>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4">Доставка:</div>
+                            <div class="col-8 main-text">Курьером</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Цена доставки:</div>
+                            <div class="col-8 main-text">400 Р</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Адрес:</div>
+                            <div class="col-8 main-text">Санкт-Петербург, 7-я линия В.О., д. 34, кв. 14</div>
+                        </div>
                     </div>
-                    <div class="col-4 delivery_value">
-                        <span>Курьером</span>
-                        <span>400 Р</span>
-                        <span>Санкт-Петербург, 7-я линия В.О., д. 34, кв. 14</span>
-                    </div>
-                    <div class="col-3 delivery">
-                        <span>Покупатель:</span>
-                        <span>Телефон:</span>
-                        <span>E-mail:</span>
-                        <span>Статус заказа:</span>
-                    </div>
-                    <div class="col-3 delivery">
-                        <span>Зинаида Петровна</span>
-                        <span>+7 999 123-45-67</span>
-                        <span>example@example.com</span>
-                        <select name="" id="">
-                            <option value="unfinished">Необработан</option>
-                            <option value="finished">Завершён</option>
-                            <option value="cancelled">Отменён</option>
-                        </select>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4">Покупатель:</div>
+                            <div class="col-8 main-text">Зинаида Петровна</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Телефон:</div>
+                            <div class="col-8 main-text">+7 999 123-45-67</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">E-mail:</div>
+                            <div class="col-8 main-text">example@example.com</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Статус заказа:</div>
+                            <div class="col-8">
+                                <select class="form-control" name="subcategory">
+                                    <option value="" disabled selected>Не обработан</option>
+                                    <option value="">Завершён</option>
+                                    <option value="">Отменён</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div class="container item_order">
                 <div class="row order_history_info">
-                    <div class="col-2">
+                    <div class="col-9">
                         <span>№ 123456</span>
-                    </div>
-                    <div class="col-3">
-                        <span>Сельхоз «Ноябрьский»</span>
-                    </div>
-                    <div class="col-4 order_history_date">
-                        <span>20.07.2018</span>
                     </div>
                     <div class="col-3">
                         <span>СУММА ЗАКАЗА: 1200 Р</span>
                     </div>
                 </div>
-            </div>
-            <div class="container">
                 <div class="row">
                     <div class="col-2">
                         <img src="img/apple-ant.jpg" alt="" width="150px">
                     </div>
-                    <div class="col-1 cart_product_stock_title">
-                        <span>Название</span>
-                        <span>Цена</span>
-                        <span>Артикул</span>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-6">Название</div>
+                            <div class="col-6"><p class="main-text">Яйца</p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Цена</div>
+                            <div class="col-6 main-text">100 руб/упаковка</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Артикул</div>
+                            <div class="col-6 main-text">123456</div>
+                        </div>
                     </div>
-                    <div class="col-3 cart_product_stock_info">
-                        <span>Яблоки</span>
-                        <span>100 руб/кг</span>
-                        <span>123456</span>
-                    </div>
-                    <div class="col-1">
-                        <span>Вес</span>
-                        <span>2 кг</span>
-                    </div>
-                    <div class="col-4 quantity_container">
-                        <span>Количество:</span>
-                        <span>2</span>
-                    </div>
+                    <div class="col-2">Вес</div>
+                    <div class="col-1 main-text">12 шт.</div>
+                    <div class="col-2">Количество:</div>
+                    <div class="col-1 main-text">2</div>
                 </div>
-            </div>
-            <div class="container">
                 <div class="row">
                     <div class="col-2">
                         <img src="img/apple-ant.jpg" alt="" width="150px">
                     </div>
-                    <div class="col-1 cart_product_stock_title">
-                        <span>Название</span>
-                        <span>Цена</span>
-                        <span>Артикул</span>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-6">Название</div>
+                            <div class="col-6 main-text">Яйца</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Цена</div>
+                            <div class="col-6 main-text">100 руб/упаковка</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">Артикул</div>
+                            <div class="col-6 main-text">123456</div>
+                        </div>
                     </div>
-                    <div class="col-3 cart_product_stock_info">
-                        <span>Яблоки</span>
-                        <span>100 руб/кг</span>
-                        <span>123456</span>
-                    </div>
-                    <div class="col-1">
-                        <span>Вес</span>
-                        <span>2 кг</span>
-                    </div>
-                    <div class="col-4 quantity_container">
-                        <span>Количество:</span>
-                        <span>2</span>
-                    </div>
+                    <div class="col-2">Вес</div>
+                    <div class="col-1 main-text">12 шт.</div>
+                    <div class="col-2">Количество:</div>
+                    <div class="col-1 main-text">2</div>
                 </div>
-            </div>
-            <div class="container delivery_container">
                 <div class="row">
-                    <div class="col-2 delivery">
-                        <span>Доставка:</span>
-                        <span>Цена доставки:</span>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4">Доставка:</div>
+                            <div class="col-8 main-text">Курьером</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Цена доставки:</div>
+                            <div class="col-8 main-text">400 Р</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Адрес:</div>
+                            <div class="col-8 main-text">Санкт-Петербург, 7-я линия В.О., д. 34, кв. 14</div>
+                        </div>
                     </div>
-                    <div class="col-2 delivery_value">
-                        <span>Самовывоз</span>
-                        <span>0 Р</span>
-                    </div>
-                    <div class="col-3">
-                        <span>Статус заказа:</span>
-                    </div>
-                    <div class="col-2">
-                        <span>Завершён</span>
-                    </div>
-                    <div class="col-3">
-                        <button class="btn btn-primary btn_order">ПОВТОРИТЬ ЗАКАЗ</button>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4">Покупатель:</div>
+                            <div class="col-8 main-text">Зинаида Петровна</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Телефон:</div>
+                            <div class="col-8 main-text">+7 999 123-45-67</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">E-mail:</div>
+                            <div class="col-8 main-text">example@example.com</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Статус заказа:</div>
+                            <div class="col-8">
+                                <select class="form-control" name="subcategory">
+                                    <option value="" disabled selected>Не обработан</option>
+                                    <option value="">Завершён</option>
+                                    <option value="">Отменён</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+<!-- Table view -->
+
+            <div class="container table_container hidden">
+                <div class="table_global_row">
+                    <div class="table_global_cell">
+                        <div>Номер заказа</div>
+                        <div class="main-text">123456</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Покупатель</div>
+                        <div class="main-text">Петровна</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Телефон</div>
+                        <div class="main-text">+7 999 123-45-67</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>E-mail</div>
+                        <div class="main-text">example@example.com</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Дата заказа</div>
+                        <div class="main-text">20.07.2018</div>
+                    </div>
+                </div>
+                <div class="table_global_row">
+                    <div class="table_global_cell">
+                        <div>Товар</div>
+                        <div class="main-text">Яйца</div>
+                        <div class="main-text">Яйца</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Цена</div>
+                        <div class="main-text">100 руб/уп</div>
+                        <div class="main-text">100 руб/уп</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Артикул</div>
+                        <div class="main-text">123456</div>
+                        <div class="main-text">123456</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Количество</div>
+                        <div class="main-text">2</div>
+                        <div class="main-text">2</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Статус</div>
+                        <div>
+                            <select class="form-control" name="subcategory">
+                                <option value="" disabled selected>Не обработан</option>
+                                <option value="">Завершён</option>
+                                <option value="">Отменён</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="table_global_row">
+                    <div class="table_global_cell">
+                        <div>Способ доставки</div>
+                        <div class="main-text">Курьером</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Адрес</div>
+                        <div class="main-text">Санкт-Петербург, 7 линия В.О., д. 34, кв. 45</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Цена доставки</div>
+                        <div class="main-text">400 Р</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Сумма заказа</div>
+                        <div class="main-text">1200 Р</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container table_container hidden">
+                <div class="table_global_row">
+                    <div class="table_global_cell">
+                        <div>Номер заказа</div>
+                        <div class="main-text">123456</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Покупатель</div>
+                        <div class="main-text">Петровна</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Телефон</div>
+                        <div class="main-text">+7 999 123-45-67</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>E-mail</div>
+                        <div class="main-text">example@example.com</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Дата заказа</div>
+                        <div class="main-text">20.07.2018</div>
+                    </div>
+                </div>
+                <div class="table_global_row">
+                    <div class="table_global_cell">
+                        <div>Товар</div>
+                        <div class="main-text">Яйца</div>
+                        <div class="main-text">Яйца</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Цена</div>
+                        <div class="main-text">100 руб/уп</div>
+                        <div class="main-text">100 руб/уп</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Артикул</div>
+                        <div class="main-text">123456</div>
+                        <div class="main-text">123456</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Количество</div>
+                        <div class="main-text">2</div>
+                        <div class="main-text">2</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Статус</div>
+                        <div>
+                            <select class="form-control" name="subcategory">
+                                <option value="" disabled selected>Не обработан</option>
+                                <option value="">Завершён</option>
+                                <option value="">Отменён</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="table_global_row">
+                    <div class="table_global_cell">
+                        <div>Способ доставки</div>
+                        <div class="main-text">Курьером</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Адрес</div>
+                        <div class="main-text">Санкт-Петербург, 7 линия В.О., д. 34, кв. 45</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Цена доставки</div>
+                        <div class="main-text">400 Р</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div>Сумма заказа</div>
+                        <div class="main-text">1200 Р</div>
+                    </div>
+                    <div class="table_global_cell">
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+
+
+
         </main>
         <footer></footer>
-  	    <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-  	    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/js/tether.min.js"></script>
-  	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-        <script src="quantity_script.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="table_view.js"></script>
     </body>
 </html>
