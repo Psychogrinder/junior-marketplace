@@ -164,7 +164,7 @@ class Category(db.Model):
     name = db.Column(db.String(128))
     parent_id = db.Column(db.Integer)
 
-    def __init__(self, name, parent_id=-1):
+    def __init__(self, name, parent_id=0):
         self.name = name
         self.parent_id = parent_id
 
