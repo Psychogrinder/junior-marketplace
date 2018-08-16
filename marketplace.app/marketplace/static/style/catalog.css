@@ -45,17 +45,17 @@
     width: 100%;
 }
 
-.product-item-dscription {
+.product-item-description {
     margin-top: 1rem;
 }
 
-.product-item-dscription b {
+.product-item-description b {
     display: block;
     width: fit-content;
     margin-left: auto;
 }
 
-.product-item-dscription p {
+.product-item-description p {
     margin-bottom: 0rem;
     display: block;
     width: fit-content;
@@ -63,7 +63,7 @@
     color: #343a40;
 }
 
-.card-item a:hover .product-item-dscription p {
+.card-item a:hover .product-item-description p {
     color: #78c2ad;
     
 }
