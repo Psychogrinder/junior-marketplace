@@ -7,7 +7,6 @@ from flask import render_template
 def index():
     return render_template('index.html')
 
-
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
