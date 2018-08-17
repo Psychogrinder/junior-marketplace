@@ -50,14 +50,14 @@
     margin-right: 10px;
 }
 
-main.customer_profile + .modal + footer {
+main.profile + .modal + footer {
     position: absolute;
     bottom: 0;
     width: 100%;
 }
 
 @media (max-width: 800px) {
-    main.customer_profile + .modal + footer {
+    main.profile + .modal + footer {
         position: relative;
     }
 }

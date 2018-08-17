@@ -3,7 +3,7 @@
 Профиль пользователя
 {% endblock %}
 {% block body %}
-<main class="customer_profile">
+<main class="profile">
     <div class="container profile_title">
         <div class="row">
             <div class="col-3 col-sm-2 userpic_container">
@@ -13,7 +13,7 @@
                 <div class="name_container">
                     <h1>Иван Фёдоров</h1>
                     <p class="edit-profile">
-                        <a href="#">
+                        <a href={{ url_for( 'edit_customer', user_id = '5') }}>
                             <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
                             Редактировать
                         </a>
