@@ -109,8 +109,8 @@ class ProductRest(Resource):
         """
         abort_if_product_doesnt_exist(id)
         product = Product.query.filter_by(id=id).first()
-        product_schema = ProductSchema(many=True)
-        return product_schema.dump(product)
+        product_schema = ProductSchema()
+        return product_schema.dump(product).data
 
     def delete(self, id):
         """

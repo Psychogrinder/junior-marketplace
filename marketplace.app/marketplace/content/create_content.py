@@ -12,6 +12,8 @@ from models import *
 producer_names = ['безбрежный', 'бездонный', 'безмятежный', 'белоснежный', 'беспредельный', 'колоссальный',
                   'мировой', 'неиссякаемый', 'щедрый']
 
+number_of_producers = len(producer_names)
+
 file = open('data/producer-description.txt', 'r')
 description = file.read()
 file.close()
@@ -61,7 +63,7 @@ for i, cat in enumerate(Category.query.all()):
 
 prices = range(50, 1000)
 quantity = range(100, 500)
-producer_ids = range(1, len(producer_names)+1)
+producer_ids = range(1, number_of_producers+1)
 measurement_units = ['кг', 'литры', 'штуки']
 weights = range(5, 50)
 product_descriptions = ['Очень вкусный продукт', 'Самый вкусный продукт']
