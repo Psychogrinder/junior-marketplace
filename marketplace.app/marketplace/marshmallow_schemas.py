@@ -19,6 +19,7 @@ class OrderSchema(ma.ModelSchema):
 
         @post_load
         def create_order(self, data):
+            print(data)
             return Order(**data)
 
 
@@ -36,10 +37,6 @@ class ConsumerSchema(ma.ModelSchema):
     class Meta:
         model = Consumer
         fields = ('id', 'email', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address')
-        
-        @post_load
-        def create_consumer(self, data):
-            return Order(**data)
 
 
 class ProducerSchema(ma.ModelSchema):
@@ -47,16 +44,11 @@ class ProducerSchema(ma.ModelSchema):
         model = Producer
         fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address')
 
-        @post_load
-        def create_producer(self, data):
-            return Producer(**data)
-
 
 class CategorySchema(ma.ModelSchema):
     class Meta:
         model = Category
-        
+
         @post_load
         def create_category(self, data):
             return Category(**data)
-
