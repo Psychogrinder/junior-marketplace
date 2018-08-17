@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Редактирование профиля магазина{% endblock %}
+
+{% block body %}
+
+{% include 'inc/modal_delete_producer.html' %}
+<main>
+    <div class="container edit-profile">
+        <section class="breadcrumbs">
+            <span><a href={{ url_for('producer_profile', producer_id = '5' ) }}>Профиль</a></span>
+            <span><a class="active">Редактирование профиля</a></span>
+        </section>
+        <div class="delete-profile">
+            <p class="out-of-stock">
+                <a href="#" data-toggle="modal" data-target="#deleteProfileProducer">
+                    <img src={{ url_for('static', filename='img/exclamation-circle-solid.svg' ) }}>
+                    Удалить профиль
+                </a>
+            </p>
+        </div>
+        <form action="#">
+            <div class="row edit-profile-item">
+                <label for="producer_name" class="col-4 col-sm-2">Название фермы</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="producer_name" placeholder="Сельхоз Ивана">
+            </div>
+            <div class="row edit-profile-item">
+                <label for="producer_contact_person" class="col-4 col-sm-2">Контактное лицо</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="producer_contact_person" placeholder="Иван">
+            </div>
+            <div class="row edit-profile-item">
+                <label for="producer_email" class="col-4 col-sm-2">Email</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="producer_email" value="example@mail.com" disabled>
+            </div>
+            <div class="row edit-profile-item">
+                <label for="producer_logo" class="col-4 col-sm-2">Логотип</label>
+                <input type="file" class="form-control-file col-8 col-sm-4" id="producer_logo" aria-describedby="fileHelp">
+            </div>
+            <div class="row edit-profile-item">
+                <label for="producer_phone" class="col-4 col-sm-2">Телефон</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="producer_phone" placeholder="89110881856"
+                       pattern="^[ 0-9]+$">
+            </div>
+            <div class="row edit-profile-item">
+                <label for="producer_adress" class="col-4 col-sm-2">Адрес</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="producer_adress"
+                       placeholder="Улица Пушкина д 14 кв 58">
+            </div>
+            <div class="row edit-profile-item">
+                <label for="producer_description" class="col-4 col-sm-2">Описание</label>
+                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="producer_description" name="description">
+                    </textarea>
+            </div>
+            <div class="col-12 col-sm-10 edit-profile-save">
+                <button type="submit" class="btn btn-success">СОХРАНИТЬ</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
