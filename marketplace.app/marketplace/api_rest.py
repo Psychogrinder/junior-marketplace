@@ -2,7 +2,6 @@ from marketplace.models import Product, Category, db
 from marketplace.marshmallow_schemas import CategorySchema, ProductSchema
 from marketplace import api
 from flask_restful import Resource, reqparse
-from pprint import pprint as pp
 
 parser = reqparse.RequestParser()
 for arg in ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']:
@@ -36,6 +35,16 @@ def abort_if_product_doesnt_exist(id):
     if not Product.query.filter_by(id=id).first():
         abort(404, message="No product with id {}".format(id))
 
+class BaseCategories(Resource):
+    """
+    Возвращает список имён базовых категорий.
+    """
+    def get(self):
+        base_categories = Category.query.filter_by(parent_id=0).all()
+        return {
+            'base_categories': [category.name for category in base_categories]
+        }
+
 class Subcategories(Resource):
     def get(self, id):
         abort_if_category_doesnt_exist(id)
@@ -58,7 +67,7 @@ class ProductsByCategory(Resource):
             divided_products = [product_schema.dump(subcategory.get_products()).data for subcategory in subcategories]
             products = [product for subcategory in divided_products for product in subcategory]
         return {
-            'category': category.id,
+            'category_id': category.id,
             'products': products
         }
 
@@ -114,7 +123,7 @@ class ProductRest(Resource):
 
     def put(self, id):
         """
-        Обновляет
+        Обновить информацию о продукте
         """
         abort_if_product_doesnt_exist(id)
         product = Product.query.filter_by(id=id).first()
@@ -139,7 +148,7 @@ class ProductRest(Resource):
 
         return {"message": "Продукт был успешно добавлен."}
 
-
+api.add_resource(BaseCategories, '/category/base')
 api.add_resource(Subcategories, '/category/subcategories/<int:id>')
 api.add_resource(ProductsByCategory, '/category/<int:id>')
 api.add_resource(ProductsByPopularity, '/category/popularity/<int:id>')

@@ -31,12 +31,8 @@ bin/run-flask-app.sh или bin/init_db_and_run.sh
 
 Front-сервер для обслуживания домена.
 
-### marketplace.app/marketplace/content/create-content.py
+### create-content
 Скрипт для наполнения контентом уже созданной базы данных. Убедитесь что Flask не запущен,
-а docker с базой данных запущен.
-
-Работая из папки content, выполните в терминале команды:
-export FLASK_APP=data_app.py
-flask run
-python3 create_content.py
+а Docker с базой данных запущен. Находясь в папке junior-marketpalce выполните команду:
+./bin/create-content.sh
 
