@@ -7,3 +7,7 @@ main {
 	margin-bottom: 40px;
 }
 
+input[type="text"] {
+    color: black;
+}
+
