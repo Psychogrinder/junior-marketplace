@@ -123,15 +123,11 @@ def get_all_orders():
 
 
 def get_all_consumers():
-    print(Consumer.query.get(1))
-    return [consumer_schema.dump(consumer).data for consumer in Consumer.query.all()]
-    # return consumer_schema_list.dump(Consumer.query.all()).data
+    return consumer_schema_list.dump(Consumer.query.filter_by(entity='consumer').all()).data
 
 
 def get_all_producers():
-    print('what_the_fuck')
-    print(Producer.query.all())
-    return producer_schema_list.dump(Producer.query.all()).data
+    return producer_schema_list.dump(Producer.query.filter_by(entity='producer').all()).data
 
 
 def get_all_default_categories():
@@ -230,3 +226,4 @@ def delete_product_by_id(product_id):
     db.session.delete(product)
     db.session.commit()
     return {"message": "Product with id {} has been deleted succesfully".format(product_id)}
+

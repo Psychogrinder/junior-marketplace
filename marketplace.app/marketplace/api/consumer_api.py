@@ -14,7 +14,6 @@ class GlobalConsumers(Resource):
 
     def post(self):
         args = parser.parse_args()
-        print(args)
         return utils.post_consumer(args), 201
 
 
