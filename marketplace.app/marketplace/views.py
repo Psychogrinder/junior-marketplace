@@ -18,6 +18,11 @@ def product_card(category_name, product_id):
     return render_template('product_card.html')
 
 
+@app.route('/cart/<user_id>')
+def cart(user_id):
+    return render_template('cart.html')
+
+
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
