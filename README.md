@@ -24,12 +24,12 @@ docker-compose up -d
 
 Front-сервер для обслуживания домена.
 
-### marketplace.app/marketplace/utils/create-content.py
+### marketplace.app/marketplace/content/create-content.py
 Скрипт для наполнения уже созданной базы данных. Убедитесь что Flask не запущен,
 а docker с базой данных запущен.
 
-В папке utils выполните в терминале команды:
-export FLASK_APP=models.py
+Работая из папки content, выполните в терминале команды:
+export FLASK_APP=data_app.py
 flask run
 python3 create_content.py
 
