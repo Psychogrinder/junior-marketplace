@@ -19,6 +19,9 @@ def product_card(category_name, product_id):
 def customer_profile(user_id):
     return render_template('customer_profile.html')
   
+def edit_customer(user_id):
+    return render_template('edit_customer.html')
+  
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
