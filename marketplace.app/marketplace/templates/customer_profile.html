@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block meta_title %}
+Профиль пользователя
+{% endblock %}
+{% block body %}
+<main class="customer_profile">
+    <div class="container profile_title">
+        <div class="row">
+            <div class="col-3 col-sm-2 userpic_container">
+                <img src={{ url_for( 'static', filename = 'img/userpic.svg') }} alt="">
+            </div>
+            <div class="col-9">
+                <div class="name_container">
+                    <h1>Иван Фёдоров</h1>
+                    <p class="edit-profile">
+                        <a href="#">
+                            <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
+                            Редактировать
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-3 col-sm-2 profile-keys">
+                <span>E-mail:</span>
+                <span>Телефон:</span>
+                <span>Адрес:</span>
+            </div>
+            <div class="col-9 col-sm-10 profile-values">
+                <span class="main-text">example@example.com</span>
+                <span class="main-text">+7 999 123-45-67</span>
+                <span class="main-text">Санкт-Петерург, Большой пр. П.С., д. 22, кв. 12</span>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
