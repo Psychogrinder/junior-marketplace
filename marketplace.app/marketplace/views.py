@@ -23,6 +23,11 @@ def cart(user_id):
     return render_template('cart.html')
 
 
+@app.route('/order_history/<user_id>')
+def order_history(user_id):
+    return render_template('order_history.html')
+
+
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
