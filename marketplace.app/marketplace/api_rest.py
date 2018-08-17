@@ -2,7 +2,7 @@ from marketplace.models import Product, Category, db
 from marketplace.marshmallow_schemas import CategorySchema, ProductSchema
 from marketplace import api
 from flask_restful import Resource, reqparse
-
+from operator import itemgetter
 parser = reqparse.RequestParser()
 for arg in ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']:
     parser.add_argument(arg)
@@ -109,7 +109,7 @@ class ProductRest(Resource):
         """
         abort_if_product_doesnt_exist(id)
         product = Product.query.filter_by(id=id).first()
-        product_schema = ProductSchema()
+        product_schema = ProductSchema(many=True)
         return product_schema.dump(product)
 
     def delete(self, id):
