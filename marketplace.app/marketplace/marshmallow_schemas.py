@@ -35,8 +35,8 @@ class ProductSchema(ma.ModelSchema):
 class ConsumerSchema(ma.ModelSchema):
     class Meta:
         model = Consumer
-        fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address')
-
+        fields = ('id', 'email', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address')
+        
         @post_load
         def create_consumer(self, data):
             return Order(**data)
@@ -45,7 +45,7 @@ class ConsumerSchema(ma.ModelSchema):
 class ProducerSchema(ma.ModelSchema):
     class Meta:
         model = Producer
-        fields = ('id', 'email', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address')
+        fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address')
 
         @post_load
         def create_producer(self, data):
