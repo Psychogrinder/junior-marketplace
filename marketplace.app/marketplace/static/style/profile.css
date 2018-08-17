@@ -1,0 +1,64 @@
+.userpic {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+}
+
+.userpic_container {
+    text-align: right;
+}
+
+.userpic_container img {
+    width: 60px;
+}
+
+.profile_title {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.name_container span {
+    display: block;
+}
+
+.profile-keys span,
+.profile-values span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.profile-keys span {
+    text-align: right;
+}
+
+.main-text {
+    color: #000;
+}
+
+.name_container .edit-profile a {
+	color: grey;
+    display: flex;
+}
+
+.name_container .edit-profile a:hover,
+.name_container .edit-profile a:active {
+	text-decoration: underline;
+}
+
+.name_container .edit-profile a img {
+    height: 18px;
+    margin-right: 10px;
+}
+
+main.profile + .modal + footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+@media (max-width: 800px) {
+    main.profile + .modal + footer {
+        position: relative;
+    }
+}
+
