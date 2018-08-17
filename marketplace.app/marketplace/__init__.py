@@ -21,8 +21,7 @@ db.init_app(app)
 from marketplace import models, views
 
 
-css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css', 'style/category.css',
-            'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/order_history.css',
+css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css', 'style/category.css', 'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/order_history.css', 'style/customer_profile.css',
              filters=['cssmin'], output='bundle.min.css')
 assets.register('css_all', css)
 
