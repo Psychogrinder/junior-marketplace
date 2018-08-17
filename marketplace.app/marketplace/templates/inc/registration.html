@@ -1,0 +1,33 @@
+<div class="modal fade" id="singUpUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-min-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Регистрация</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#">
+                    <p>
+                        <label for="emailRegistration">Email</label>
+                        <input type="email" autofocus class="form-control" id="emailRegistration" placeholder="email@email.ru">
+                    </p>
+                    <p>
+                        <label for="passwordRegistration">Пароль</label>
+                        <input type="password" class="form-control" placeholder="*******" id="passwordRegistration" name="password">
+                        <span>Минимум 6 символов</span>
+                    </p>
+                    <p>
+                        <label for="re_passwordRegistration">Повторите пароль:</label>
+                        <input type="password" class="form-control" id="re_passwordRegistration" placeholder="******">
+                        <!-- <span class="invalid-feedback">Пароли не совпадают!</span> -->
+                    </p>
+                    <button type="submit" class="btn btn-success">
+                        Зарегистрироваться
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

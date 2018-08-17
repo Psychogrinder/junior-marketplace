@@ -17,8 +17,15 @@
 docker-compose up -d
 ```
 
-Для локального использования, добавить блок `ports` и вытащить наружу порт
-базы данных.
+Перейти в корневую директорию и выполнить 
+```
+bin/create_virtualenv.sh
+```
+
+После выполнить 
+```
+bin/run-flask-app.sh или bin/init_db_and_run.sh
+```
 
 ### marketplace.nginx
 

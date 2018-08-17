@@ -38,10 +38,26 @@ footer .container .watermark {
     width: fit-content;
     margin-left: auto;
     color: #fff;
+    opacity: 0.5;
 }
 
 .footer-social-icon div:hover,
 .footer-social-icon div:active {
-	background-color: #F3969A;
+
 	cursor: pointer;
+}
+
+.footer-social-icon .insta-icon:hover,
+.footer-social-icon .insta-icon:active {
+    background-color: #F3969A;
+}
+
+.footer-social-icon .fb-icon:hover,
+.footer-social-icon .fb-icon:active {
+    background-color: #3b5998;
+}
+
+.footer-social-icon .vk-icon:hover,
+.footer-social-icon .vk-icon:active {
+    background-color: #4d7198;
 }
