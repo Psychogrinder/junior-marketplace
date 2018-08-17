@@ -2,9 +2,6 @@
     display: inline-block;
     width: 50px;
     height: 50px;
-    background-image: url(icons/userpic.svg);
-    background-size: contain;
-    background-repeat: no-repeat;
 }
 
 .userpic_container {
@@ -12,7 +9,7 @@
 }
 
 .userpic_container img {
-    width: 50px;
+    width: 60px;
 }
 
 .profile_title {
@@ -22,15 +19,6 @@
 
 .name_container span {
     display: block;
-}
-
-.name_name {
-    font-size: 22px;
-    color: #000;
-}
-
-.name_edit {
-
 }
 
 .profile-keys span,
@@ -43,12 +31,23 @@
     text-align: right;
 }
 
-.gray-text span {
-    color: gray;
-}
-
 .main-text {
     color: #000;
+}
+
+.name_container .edit-profile a {
+	color: grey;
+    display: flex;
+}
+
+.name_container .edit-profile a:hover,
+.name_container .edit-profile a:active {
+	text-decoration: underline;
+}
+
+.name_container .edit-profile a img {
+    height: 18px;
+    margin-right: 10px;
 }
 
 main.customer_profile + .modal + footer {
@@ -62,3 +61,4 @@ main.customer_profile + .modal + footer {
         position: relative;
     }
 }
+

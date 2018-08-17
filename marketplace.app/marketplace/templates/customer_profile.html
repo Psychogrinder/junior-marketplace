@@ -11,10 +11,15 @@
             <div class="col-3 col-sm-2 userpic_container">
                 <img src={{ url_for( 'static', filename = 'img/userpic.svg') }} alt="">
             </div>
-            <div class="col-9 c">
+            <div class="col-9">
                 <div class="name_container">
-                    <span class="name_name">Иван Фёдоров</span>
-                    <span class="name_edit"><a href="#">Редактировать</a></span>
+                    <h1>Иван Фёдоров</h1>
+                    <p class="edit-profile">
+                        <a href="#">
+                            <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
+                            Редактировать
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
