@@ -47,6 +47,10 @@ input#customer_photo {
     padding: 0;
 }
 
+input#producer_logo {
+    padding: 0;
+}
+
 main.edit_customer + .modal + footer {
     position: absolute;
     bottom: 0;
