@@ -9,9 +9,6 @@ dir_path = os.path.dirname(os.path.realpath(dir_path))
 sys.path.insert(0, dir_path)
 from models import *
 
-# <editor-fold desc='DATA'>
-
-# <editor-fold desc="Producer">
 producer_names = ['безбрежный', 'бездонный', 'безмятежный', 'белоснежный', 'беспредельный', 'колоссальный',
                   'мировой', 'неиссякаемый', 'щедрый']
 
@@ -27,9 +24,7 @@ with urllib.request.urlopen(f"https://randomuser.me/api/?results={len(producer_n
                             company['phone'], company['location']['street'],
                             f"{company['name']['first']} {company['name']['last']}", description)
         db.session.add(producer)
-    # </editor-fold>
 
-# <editor-fold desc="Consumer">
 with urllib.request.urlopen("https://randomuser.me/api/?results=100") as response:
     data = response.read()
     data = json.loads(data)
@@ -37,11 +32,9 @@ with urllib.request.urlopen("https://randomuser.me/api/?results=100") as respons
         consumer = Consumer(company['email'], company['login']['password'], company['name']['first'],
                             company['name']['last'], company['phone'], company['location']['street'])
         db.session.add(consumer)
-# </editor-fold>
 
-# <editor-fold desc="Category">
 category_data = {}
-# with open(os.path.join(dir_path, 'data/categories.txt'), 'r') as f:
+
 with open('data/categories.txt', 'r') as f:
     cat = None
     sub_cats = None
