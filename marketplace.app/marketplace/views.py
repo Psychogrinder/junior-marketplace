@@ -17,6 +17,9 @@ def category(category_name):
 def product_card(category_name, product_id):
     return render_template('product_card.html')
 
+@app.route('/user/<user_id>')
+def customer_profile(user_id):
+    return render_template('customer_profile.html')
 
 @app.route('/version')
 def version():
