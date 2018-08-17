@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 db.init_app(app)
 
-from marketplace import models, views
+from marketplace import models, views, api_resources
 
 
 css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css', 'style/category.css',
