@@ -18,6 +18,12 @@ def product_card(category_name, product_id):
     return render_template('product_card.html')
 
 
+# корзина
+@app.route('/cart/<user_id>')
+def cart(user_id):
+    return render_template('cart.html')
+
+
 # покупатель
 @app.route('/user/<user_id>')
 def customer_profile(user_id):

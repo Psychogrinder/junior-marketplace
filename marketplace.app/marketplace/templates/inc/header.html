@@ -27,7 +27,7 @@
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="text" placeholder="Поиск">
                 </form>
-                <a href="#" class="header-card px-2">
+                <a href={{ url_for('cart', user_id = '5') }} class="header-card px-2">
                     <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg')}} class="header-logo" alt="Корзина">
                 </a>
                 <div class="btn-group px-3 header-dropdown-toggle">
