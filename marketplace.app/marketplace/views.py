@@ -12,14 +12,15 @@ def index():
 
 @app.route('/category/<category_name>')
 def category(category_name):
-    category = Category.query.filter_by(slug=category_name)
-    products = Product.query.filter_by(category_id=category.id)
+    category = Category.query.filter_by(slug=category_name).first()
+    products = Product.query.filter_by(category_id=category.id).all()
     return render_template('category.html', products=products)
 
 
 @app.route('/category/<category_name>/<product_id>')
-def product_card(category_id, product_id):
-    return render_template('product_card.html')
+def product_card(category_name, product_id):
+    product = Product.query.filter_by(id=product_id).first()
+    return render_template('product_card.html', product=product)
 
 
 # товары производителя
