@@ -15,3 +15,20 @@ input[type="text"] {
     color: black;
 }
 
+main.main-footer-bottom h1{
+    margin-bottom: 2rem;
+}
+
+main.main-footer-bottom + .modal + footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+@media (max-width: 800px) {
+    main.main-footer-bottom + .modal + footer {
+        position: relative;
+    }
+}
+
+
