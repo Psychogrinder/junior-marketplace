@@ -22,7 +22,7 @@ with urllib.request.urlopen(f"https://randomuser.me/api/?results={len(producer_n
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
-        producer = Producer(company['email'], 'Совхоз ' + producer_names.pop().title(), company['login']['password'],
+        producer = Producer(company['login']['password'], company['email'], 'Совхоз ' + producer_names.pop().title(),
                             company['phone'], company['location']['street'],
                             f"{company['name']['first']} {company['name']['last']}", description)
         db.session.add(producer)

@@ -1,7 +1,7 @@
-import marketplace.api.api_utils as utils
+import marketplace.api_folder.api_utils as utils
 from flask_restful import Resource
 
-from marketplace.api.schemas import category_schema_list, product_schema, product_schema_list
+from marketplace.api_folder.schemas import category_schema_list, product_schema, product_schema_list
 
 
 class BaseCategories(Resource):

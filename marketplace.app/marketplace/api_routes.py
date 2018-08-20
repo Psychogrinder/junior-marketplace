@@ -1,9 +1,9 @@
 from marketplace import api
-from marketplace.api.category_api import BaseCategories, Subcategories, PopularProductsByCategory, ProductsByCategory
-from marketplace.api.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders
-from marketplace.api.order_api import GlobalOrders, Orders
-from marketplace.api.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders
-from marketplace.api.product_api import GlobalProducts, ProductRest
+from marketplace.api_folder.category_api import BaseCategories, Subcategories, PopularProductsByCategory, ProductsByCategory
+from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders
+from marketplace.api_folder.order_api import GlobalOrders, Orders
+from marketplace.api_folder.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders
+from marketplace.api_folder.product_api import GlobalProducts, ProductRest
 
 
 # TODO CHECK

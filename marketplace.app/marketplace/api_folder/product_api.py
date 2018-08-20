@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
-import marketplace.api.api_utils as utils
-from marketplace.api.schemas import product_schema_list, product_schema
+import marketplace.api_folder.api_utils as utils
+from marketplace.api_folder.schemas import product_schema_list, product_schema
 
 product_args = ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']
 parser = reqparse.RequestParser()

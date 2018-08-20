@@ -75,3 +75,7 @@
 .popular-product .card-item {
     margin-bottom: 2rem;
 }
+
+.catalog-category-item {
+    text-transform: uppercase;
+}

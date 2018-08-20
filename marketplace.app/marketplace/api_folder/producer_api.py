@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
-import marketplace.api.api_utils as utils
-from marketplace.api.schemas import producer_schema_list, producer_schema, order_schema_list, product_schema_list
+import marketplace.api_folder.api_utils as utils
+from marketplace.api_folder.schemas import producer_schema_list, producer_schema, order_schema_list, product_schema_list
 
 producer_args = ['email', 'name', 'password', 'person_to_contact', 'description', 'phone_number', 'address']
 
