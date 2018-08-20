@@ -30,3 +30,11 @@ bin/run-flask-app.sh или bin/init_db_and_run.sh
 ### marketplace.nginx
 
 Front-сервер для обслуживания домена.
+
+### create-content
+Скрипт для наполнения контентом уже созданной базы данных. Убедитесь что Docker с базой данных запущен. Находясь в папке junior-marketpalce выполните команду:
+./bin/create-content.sh
+
+### delete-content
+Скрипт для удаления контента из базы данных. Убедитесь что Docker с базой данных запущен. Находясь в папке junior-marketpalce выполните команду:
+./bin/delete-content.sh

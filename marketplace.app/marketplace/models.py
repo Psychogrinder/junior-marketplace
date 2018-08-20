@@ -1,4 +1,7 @@
-from marketplace import db
+try:
+    from marketplace import db
+except:
+    from content.data_app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import MONEY
@@ -14,13 +17,18 @@ class User(db.Model):
     phone_number = db.Column(db.String(16))
     address = db.Column(db.String(128))
     photo_url = db.Column(db.String(256))
+    entity = db.Column(db.String(16))
 
-    def __init__(self, email, password, phone_number='', address=''):
+    def __init__(self, email, password, entity, phone_number='', address=''):
         self.email = email
         self.email_auth_status = False
-        self.password_hash = generate_password_hash(password)
         self.phone_number = phone_number
+        self.password_hash = generate_password_hash(password)
         self.address = address
+        self.entity = entity
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
     def change_password(self, old_password, new_password):
         if check_password_hash(self.password_hash, old_password):
@@ -52,7 +60,7 @@ class Consumer(User):
     first_name = db.Column(db.String(128))
 
     def __init__(self, email, password, first_name, last_name, phone_number='', address='', patronymic=''):
-        super().__init__(email, password, phone_number, address)
+        super().__init__(email, password, 'consumer', phone_number, address)
         self.first_name = first_name
         self.last_name = last_name
         self.patronymic = patronymic
@@ -71,8 +79,8 @@ class Producer(User):
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
 
-    def __init__(self, email, name, password, phone_number, address, person_to_contact, description=''):
-        super().__init__(email, password, phone_number, address)
+    def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
+        super().__init__(email, password, 'producer', phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
         self.description = description
@@ -102,10 +110,10 @@ class Order(db.Model):
     producer_id = db.Column(db.Integer)
 
     def __init__(self, total_cost, order_items_json, delivery_method, delivery_address, consumer_phone, consumer_email,
-                 consumer_id, producer_id):
+                 consumer_id, producer_id, status='not processed'):
         self.total_cost = int(total_cost)
         self.order_items_json = order_items_json
-        self.status = 'not processed'
+        self.status = status
         self.delivery_method = delivery_method
         self.delivery_address = delivery_address
         self.consumer_id = consumer_id
@@ -162,10 +170,12 @@ class Product(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
+    slug = db.Column(db.String(128))
     parent_id = db.Column(db.Integer)
 
-    def __init__(self, name, parent_id=0):
+    def __init__(self, name, slug=None, parent_id=0):
         self.name = name
+        self.slug = slug
         self.parent_id = parent_id
 
     def get_products(self):
@@ -173,4 +183,3 @@ class Category(db.Model):
 
     def get_subcategories(self):
         return Category.query.filter_by(parent_id=self.id).all()
-

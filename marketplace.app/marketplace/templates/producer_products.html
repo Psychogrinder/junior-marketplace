@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Сельхоз Иваныч товары {% endblock %}
+
+{% block body %}
+
+<main>
+    <div class="container products">
+        <section class="breadcrumbs">
+            <span><a class="active">Товары</a></span>
+        </section>
+        <section class="product-filter">
+            <form action="#">
+                <div class="filter-block col-6 col-sm-4">
+                    <select class="form-control" name="sort_by">
+                        <option>По цене ↑</option>
+                        <option>По цене ↓</option>
+                        <option>По популярности</option>
+                    </select>
+                </div>
+                <div class="filter-block col-6 col-sm-4">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Поиск">
+                </div>
+                <div class="filter-block col-6 col-sm-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="in_stock" name="in_stock">
+                        <label class="form-check-label" for="in_stock">
+                            В наличии
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <a href={{ url_for('create_product', producer_id = '5' )}} class="btn btn-secondary add-product">Добавить товар</a>
+        </section>
+        <section class="product-card row">
+            <div class="col-6 col-sm-3 card-item">
+                <a href={{ url_for('product_card', category_name = 'fruits', product_id = '5' )}}>
+                <div class="product-item-photo">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                </div>
+                <div class="product-item-description">
+                    <p>240 Р/КГ</p>
+                    <b>Яблоки антоновка</b>
+                    <p class="edit-product">
+                        <a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}>
+                        <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
+                        Редактировать
+                        </a>
+                    </p>
+                </div>
+                </a>
+            </div>
+            <div class="col-6 col-sm-3 card-item">
+                <a href={{ url_for('product_card', category_name = 'fruits', product_id = '5' )}}>
+                <div class="product-item-photo">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                </div>
+                <div class="product-item-description">
+                    <p>240 Р/КГ</p>
+                    <b>Яблоки антоновка</b>
+                    <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename =
+                        'img/edit-regular.svg') }}>Редактировать</a></p>
+                </div>
+                </a>
+            </div>
+            <div class="col-6 col-sm-3 card-item">
+                <a href={{ url_for('product_card', category_name = 'fruits', product_id = '5' )}}>
+                <div class="product-item-photo">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                </div>
+                <div class="product-item-description">
+                    <p>240 Р/КГ</p>
+                    <b>Яблоки антоновка</b>
+                    <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename =
+                        'img/edit-regular.svg') }}>Редактировать</a></p>
+                </div>
+                </a>
+            </div>
+            <div class="col-6 col-sm-3 card-item">
+                <a href="">
+                    <div class="product-item-photo">
+                        <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                    </div>
+                    <div class="product-item-description">
+                        <p>240 Р/КГ</p>
+                        <b>Яблоки антоновка</b>
+                        <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename =
+                            'img/edit-regular.svg') }}>Редактировать</a></p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-sm-3 card-item">
+                <a href={{ url_for('product_card', category_name = 'fruits', product_id = '5' )}}>
+                <div class="product-item-photo">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                </div>
+                <div class="product-item-description">
+                    <p>240 Р/КГ</p>
+                    <b>Яблоки антоновка</b>
+                    <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5' , product_id = '5' )}}><img
+                            src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
+                    <p class="out-of-stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg")
+                        }}>Нет в наличии</p>
+                </div>
+                </a>
+            </div>
+            <div class="col-6 col-sm-3 card-item">
+                <a href={{ url_for('product_card', category_name = 'fruits', product_id = '5' )}}>
+                <div class="product-item-photo">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                </div>
+                <div class="product-item-description">
+                    <p>240 Р/КГ</p>
+                    <b>Яблоки антоновка</b>
+                    <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename =
+                        'img/edit-regular.svg') }}>Редактировать</a></p>
+                </div>
+                </a>
+            </div>
+            <div class="col-6 col-sm-3 card-item">
+                <a href={{ url_for('product_card', category_name = 'fruits', product_id = '5' )}}>
+                <div class="product-item-photo">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                </div>
+                <div class="product-item-description">
+                    <p>240 Р/КГ</p>
+                    <b>Яблоки антоновка</b>
+                    <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename =
+                        'img/edit-regular.svg') }}>Редактировать</a></p>
+                    <p class="out-of-stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg")
+                        }}>Нет в наличии</p>
+                </div>
+                </a>
+            </div>
+            <div class="col-6 col-sm-3 card-item">
+                <a href={{ url_for('product_card', category_name = 'fruits', product_id = '5' )}}>
+                <div class="product-item-photo">
+                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                </div>
+                <div class="product-item-description">
+                    <p>240 Р/КГ</p>
+                    <b>Яблоки антоновка</b>
+                    <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename =
+                        'img/edit-regular.svg') }}>Редактировать</a></p>
+                </div>
+                </a>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}

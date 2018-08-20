@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Создание товара{% endblock %}
+
+{% block body %}
+<main>
+    <div class="container edit-product-card">
+        <section class="breadcrumbs">
+            <span><a href="#">Товары</a></span>
+            <span><a class="active">Создание совара</a></span>
+        </section>
+        <form action="#">
+            <div class="row edit-product-item">
+                <label for="createName" class="col-4 col-sm-2">Название</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="createName" placeholder="Иван" required>
+            </div>
+            <div class="row edit-product-item">
+                <label for="createPhoto" class="col-4 col-sm-2">Фотография</label>
+                <input type="file" class="form-control-file col-8 col-sm-4" id="createPhoto" aria-describedby="fileHelp"
+                       required>
+            </div>
+            <div class="row edit-product-item">
+                <label for="createPrice" class="col-4 col-sm-2">Цена</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="createPrice" placeholder="100" pattern="^[ 0-9]+$"
+                       required>
+            </div>
+            <div class="row edit-product-item">
+                <label for="createArticle" class="col-4 col-sm-2">Артикул</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="createArticle" value="564895" disabled>
+            </div>
+            <div class="row edit-product-item">
+                <label for="createCategory" class="col-4 col-sm-2">Категория</label>
+                <select class="form-control col-8 col-sm-4" name="category" id="createCategory" required>
+                    <option value="" disabled selected>Категория</option>
+                    <option>Фрукты</option>
+                    <option>Овощи</option>
+                    <option>Мясо</option>
+                    <option>Птица</option>
+                    <option>Мёд</option>
+                    <option>Молочные продукты</option>
+                    <option>Рыба</option>
+                    <option>Яйца</option>
+                </select>
+            </div>
+            <div class="row edit-product-item">
+                <label for="createSubcategory" class="col-4 col-sm-2">Подкатегория</label>
+                <select class="form-control col-8 col-sm-4" name="subcategory" id="createSubcategory" required>
+                    <option value="" disabled selected>Подкатегория</option>
+                    <option>Яблоки</option>
+                    <option>Бананы</option>
+                    <option>Киви</option>
+                    <option>Апельсины</option>
+                </select>
+            </div>
+            <div class="row edit-product-item">
+                <label for="createCount" class="col-4 col-sm-2">Количество товара</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="createCount" placeholder="10" pattern="^[ 0-9]+$">
+            </div>
+            <div class="row edit-product-item">
+                <label for="createUnits" class="col-4 col-sm-2">Единицы измерения</label>
+                <select class="form-control col-8 col-sm-4" name="units" id="createUnits" required>
+                    <option>Кг</option>
+                    <option>Литр</option>
+                    <option>Упаковка</option>
+                </select>
+            </div>
+            <!-- TODO: вес должен всплывать если выбрана упаковка -->
+            <div class="row edit-product-item">
+                <label for="createWeigth" class="col-4 col-sm-2">Вес</label>
+                <input type="text" class="form-control col-4 col-sm-2" pattern="^[ 0-9]+$" name="weigth" id="createWeigth">
+                <select class="form-control col-4 col-sm-1" name="weigth_init" required>
+                    <option>Литр</option>
+                    <option>Кг</option>
+                    <option>Шт</option>
+                </select>
+            </div>
+            <div class="row edit-product-item">
+                <label for="createDescription" class="col-4 col-sm-2">Описание</label>
+                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="createDescription" name="description">
+                </textarea>
+            </div>
+            <div class="col-12 col-sm-10 edit-product-save">
+                <button type="submit" class="btn btn-success">СОХРАНИТЬ</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
