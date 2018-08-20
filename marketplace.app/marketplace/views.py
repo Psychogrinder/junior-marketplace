@@ -28,7 +28,9 @@ def category(category_name):
 @app.route('/products/<product_id>')
 def product_card(product_id):
     product = Product.query.filter_by(id=product_id).first()
-    return render_template('product_card.html', product=product)
+    category_name = utils.get_category_by_id(product.category_id).name.title()
+    producer_name = utils.get_producer_by_id(product.producer_id).name.title()
+    return render_template('product_card.html', category_name=category_name, product=product, producer_name=producer_name)
 
 
 # товары производителя
