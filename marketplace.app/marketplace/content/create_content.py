@@ -18,7 +18,7 @@ file = open('data/producer-description.txt', 'r')
 description = file.read()
 file.close()
 
-with urllib.request.urlopen(f"https://randomuser.me/api_folder/?results={len(producer_names)}") as response:
+with urllib.request.urlopen(f"https://randomuser.me/api/?results={len(producer_names)}") as response:
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
@@ -30,7 +30,7 @@ with urllib.request.urlopen(f"https://randomuser.me/api_folder/?results={len(pro
 for i, producer in enumerate(Producer.query.all()):
     producer.id = i+1
 
-with urllib.request.urlopen("https://randomuser.me/api_folder/?results=100") as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results=100") as response:
     data = response.read()
     data = json.loads(data)
     for person in data["results"]:
