@@ -1,31 +1,6 @@
-/*breadcrumbs*/
-.breadcrumbs {
-    margin-bottom: 40px;
-}
-
-.breadcrumbs span a {
-    text-decoration: underline;
-    margin-right: 20px;
-}
- .breadcrumbs span a.active {
-    text-decoration: none;
-    color: #78C2AD;
-}
- .breadcrumbs span a.active:hover {
-    color: #78C2AD;
-}
-/*end breadcrumbs*/
-main {
-    padding-top: 40px;
-    padding-bottom: 40px;
-}
-
-h1 {
-    font-size: 2rem;
-}
-
 .edit-profile form {
     margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .edit-profile-item {
@@ -51,7 +26,6 @@ input::-ms-input-placeholder { font-weight: 100; }
 input::-ms-input-placeholder { font-weight: 100; }
 input::placeholder { font-weight: 100; } 
 
-/*edit*/
 .delete-profile p {
     display: flex;
     justify-content: flex-end;
@@ -67,4 +41,23 @@ input::placeholder { font-weight: 100; }
     width: 20px;
     height: 20px;
     margin-right: 10px;
+}
+
+input#customer_photo {
+    padding: 0;
+}
+
+input#producer_logo {
+    padding: 0;
+}
+
+main.edit_customer + .modal + footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+ @media (max-width: 800px) {
+    main.edit_customer + .modal + footer {
+        position: relative;
+    }
 }

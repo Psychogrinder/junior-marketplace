@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}
-Яблоки Антоновка
-{% endblock %}
+{% block meta_title %}Яблоки Антоновка{% endblock %}
 
 {% block body %}
 <main>
@@ -27,7 +25,7 @@
             </div>
             <div class="col-4 product_info">
                 <span class="producer_title">ПРОДАВЕЦ</span>
-                <span class="producer_title_name">Садовое хозяйство «Заречное»</span>
+                <span class="producer_title_name"><a href={{ url_for('producer_profile', producer_id ="5") }}>Садовое хозяйство «Заречное»</a></span>
                 <span class="product_title_id">АРТИКУЛ</span>
                 <span class="product_id">123456</span>
                 <span class="product_price_title">ЦЕНА</span>

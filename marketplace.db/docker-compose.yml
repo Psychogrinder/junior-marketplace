@@ -15,7 +15,7 @@ services:
     networks:
       - marketplace
     volumes:
-      - marketplace.db
+      - marketplace.db:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:

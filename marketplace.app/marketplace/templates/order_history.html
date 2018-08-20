@@ -6,7 +6,7 @@
 
 {% block body %}
 <main>
-    <div class="container breadcrumbs">
+    <div class="container">
         <div class="row">
             <section class="breadcrumbs">
                 <span><a class="active">Мои заказы</a></span>
@@ -32,7 +32,7 @@
     <div class="container">
         <div class="row">
             <div class="col-2">
-                <img src="img/apple-ant.jpg" alt="" width="150px">
+                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
             </div>
             <div class="col-1 cart_product_stock_title">
                 <span>Название</span>
@@ -57,7 +57,7 @@
     <div class="container">
         <div class="row">
             <div class="col-2">
-                <img src="img/apple-ant.jpg" alt="" width="150px">
+                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
             </div>
             <div class="col-1 cart_product_stock_title">
                 <span>Название</span>
@@ -81,7 +81,7 @@
     </div>
     <div class="container delivery_container">
         <div class="row">
-            <div class="col-2 delivery">
+            <div class="col-2 delivery_value">
                 <span>Доставка:</span>
                 <span>Цена доставки:</span>
             </div>
@@ -120,7 +120,7 @@
     <div class="container">
         <div class="row">
             <div class="col-2">
-                <img src="img/apple-ant.jpg" alt="" width="150px">
+                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
             </div>
             <div class="col-1 cart_product_stock_title">
                 <span>Название</span>
@@ -145,7 +145,7 @@
     <div class="container">
         <div class="row">
             <div class="col-2">
-                <img src="img/apple-ant.jpg" alt="" width="150px">
+                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
             </div>
             <div class="col-1 cart_product_stock_title">
                 <span>Название</span>
@@ -169,7 +169,7 @@
     </div>
     <div class="container delivery_container">
         <div class="row">
-            <div class="col-2 delivery">
+            <div class="col-2 delivery_value">
                 <span>Доставка:</span>
                 <span>Цена доставки:</span>
             </div>
