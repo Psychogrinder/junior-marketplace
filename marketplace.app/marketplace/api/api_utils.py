@@ -103,7 +103,7 @@ def get_products_by_category_id(category_id):
 
 def get_products_by_producer_id(producer_id):
     producer = get_producer_by_id(producer_id)
-    return product_schema_list.dumo(producer.get_products())
+    return product_schema_list.dump(producer.get_products())
 
 
 # Get sorted

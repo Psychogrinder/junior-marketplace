@@ -19,7 +19,6 @@ class OrderSchema(ma.ModelSchema):
 
         @post_load
         def create_order(self, data):
-            print(data)
             return Order(**data)
 
 
