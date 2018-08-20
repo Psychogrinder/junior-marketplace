@@ -1,7 +1,7 @@
 from flask import render_template, jsonify
 from marketplace import app
 from marketplace.models import Category, Product, Producer, Consumer, Order
-
+import marketplace.api_folder.api_utils as utils
 
 # каталог
 @app.route('/')
@@ -18,12 +18,15 @@ def index():
 @app.route('/category/<category_name>')
 def category(category_name):
     category = Category.query.filter_by(slug=category_name).first()
-    products = Product.query.filter_by(category_id=category.id).all()
-    return render_template('category.html', products=products)
+    subcategories = Category.query.filter_by(parent_id=category.id).all()
+    category_name = category.name.title()
+    producers = Producer.query.filter_by(entity='producer').all()
+    products = utils.get_products_by_category_id(category.id)
+    return render_template('category.html', products=products, subcategories=subcategories, category=category, category_name=category_name, producers=producers)
 
 
-@app.route('/category/<category_name>/<product_id>')
-def product_card(category_name, product_id):
+@app.route('/products/<product_id>')
+def product_card(product_id):
     product = Product.query.filter_by(id=product_id).first()
     return render_template('product_card.html', product=product)
 

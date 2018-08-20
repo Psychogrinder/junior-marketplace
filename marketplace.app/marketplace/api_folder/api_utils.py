@@ -1,6 +1,6 @@
 from operator import itemgetter
 
-from marketplace.api.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, product_schema
+from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, product_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product
 from flask_restful import abort
 from marketplace import db
