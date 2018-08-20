@@ -9,7 +9,9 @@ def addCategoryLinks(link, category):
 # --/-- <id> с базы данных
 def addIdLinks(link, id):
     return link.replace('<id>', str(id))
+
 class TestSmoke(unittest.TestCase):
+
     def setUp(self):
         #self.browser = webdriver.Firefox()
         #self.addCleanup(self.browser.quit)
@@ -24,13 +26,15 @@ class TestSmoke(unittest.TestCase):
                       'products': '/producer/<id>/products',
                       'category': '/category/<name_category>',
                       'add_product': '/producer/<id>/create_product',
-                      'product': '/category/<name_category>/<id>',
+                      'product': '/category/<name_category>',
                       'profile': '/user/<id>',
                       'confirm_order': '/cart/<id>/order_registration/'
                       }
         self.id_user = 17
+
     def testConnection(self):
         self.assertEqual(200, (urlopen(self.url).getcode()))
+
         #проверяет корректность категорий по ссылке
         for category in range(len(self.categories)):
             for key, value in self.links.items():
