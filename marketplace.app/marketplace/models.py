@@ -1,4 +1,7 @@
-from marketplace import db
+try:
+    from marketplace import db
+except:
+    from content.data_app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import MONEY
