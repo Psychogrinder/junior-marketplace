@@ -8,8 +8,13 @@ from selenium import webdriver
 #browser = webdriver.Firefox()
 #browser.get('http://127.0.0.1:5000')
 
-def rightLinks(link, category, id):
-    pass
+#подменяет '<name_category>' на имя существующей категории для домтупа по ссылке
+def addCategoryLinks(link, category):
+    return link.replace('<name_category>', category)
+
+def addIdLinks(link, id):
+    return link.replace('<id>', str(id))
+
 
 class TestSmoke(unittest.TestCase):
 
@@ -31,11 +36,13 @@ class TestSmoke(unittest.TestCase):
 
     def testConnection(self):
         self.assertEqual(200, (urlopen(self.url).getcode()))
-        for k, v in self.links.items():
-            testUrl = self.url + v
+        #for k, v in self.links.items():
+        #    testUrl = self.url + v
+            #print(testUrl)
+        link = addCategoryLinks('/category/<name_category>', 'bird')
+        link = self.url + link
 
-            print(testUrl)
-            self.assertEqual(200, (urlopen(testUrl).getcode()))
+        self.assertEqual(200, (urlopen(link).getcode()))
 
     #def testPageTitle(self):
     #    self.browser.get(self.url)
