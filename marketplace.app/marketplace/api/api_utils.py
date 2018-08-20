@@ -1,14 +1,17 @@
 from operator import itemgetter
 from marketplace.models import Order, Consumer, Producer, Category, Product
 from flask_restful import abort
-from marketplace.marshmallow_schemas import OrderSchema, ConsumerSchema, ProducerSchema, CategorySchema, ProductSchema
+from marketplace.marshmallow_schemas import OrderSchema, ConsumerSchema, ProducerSchema, CategorySchema, ProductSchema, \
+    ProducerSignUpSchema, ConsumerSignUpSchema
 from marketplace import db
 
 # Marshmallow schemas
 
 order_schema = OrderSchema()
 consumer_schema = ConsumerSchema()
+consumer_sign_up_schema = ConsumerSignUpSchema()
 producer_schema = ProducerSchema()
+producer_sign_up_schema = ProducerSignUpSchema()
 category_schema = CategorySchema()
 product_schema = ProductSchema()
 order_schema_list = OrderSchema(many=True)
@@ -150,16 +153,14 @@ def post_order(args):
 
 
 def post_consumer(args):
-    new_consumer = consumer_schema.load(args).data
-    new_consumer.set_password(args['password'])
+    new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
     return consumer_schema.dump(new_consumer).data
 
 
 def post_producer(args):
-    new_producer = producer_schema.load(args).data
-    new_producer.set_password(args['password'])
+    new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
     return producer_schema.dump(new_producer).data
@@ -226,4 +227,3 @@ def delete_product_by_id(product_id):
     db.session.delete(product)
     db.session.commit()
     return {"message": "Product with id {} has been deleted succesfully".format(product_id)}
-
