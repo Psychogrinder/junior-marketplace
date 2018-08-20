@@ -53,6 +53,10 @@ def producer_profile(producer_id):
 def edit_producer(producer_id):
     return render_template('edit_producer.html')
 
+@app.route('/producer/<producer_id>/orders')
+def producer_orders(producer_id):
+    return render_template('producer_orders.html')
+
 
 @app.route('/version')
 def version():

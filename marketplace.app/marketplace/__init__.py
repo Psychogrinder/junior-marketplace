@@ -18,15 +18,16 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 db.init_app(app)
 
-from marketplace import models, views, api_routes
 
-css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css', 'style/category.css',
-             'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/edit_profile.css', 'style/profile.css',
-             'style/order_history.css', 'style/producer_products.css',
+from marketplace import models, views
+
+css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css', 'style/category.css', 
+             'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/edit_profile.css', 'style/profile.css', 
+             'style/order_history.css', 'style/producer_orders.css', 'style/producer_products.css',
             filters=['cssmin'], output='bundle.min.css')
 assets.register('css_all', css)
 
-js = Bundle('script/quantity.js',
+js = Bundle('script/quantity.js', 'script/table_view.js',
              filters=['jsmin'], output='app.min.js')
 assets.register('js_all', js)
 
