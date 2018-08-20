@@ -109,15 +109,6 @@ def get_all_orders():
 
 
 def get_all_consumers():
-    print('____________________________')
-    print('____________________________')
-    print('____________________________')
-    print('____________________________')
-    print('get all consumers')
-    print('____________________________')
-    print('____________________________')
-    print('____________________________')
-    print('____________________________')
     return Consumer.query.filter_by(entity='consumer').all()
 
 
