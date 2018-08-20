@@ -15,19 +15,19 @@
                         <a class="nav-link" href={{ url_for( 'index' )}}>КАТАЛОГ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">МОИ ЗАКАЗЫ</a>
+                        <a class="nav-link" href={{ url_for( 'order_history', user_id = '5' )}}>МОИ ЗАКАЗЫ</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">ЗАКАЗЫ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">ТОВАРЫ</a>
+                        <a class="nav-link" href={{ url_for('producer_products', producer_id = '5') }}>ТОВАРЫ</a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="text" placeholder="Поиск">
                 </form>
-                <a href="#" class="header-card px-2">
+                <a href={{ url_for('cart', user_id = '5') }} class="header-card px-2">
                     <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg')}} class="header-logo" alt="Корзина">
                 </a>
                 <div class="btn-group px-3 header-dropdown-toggle">

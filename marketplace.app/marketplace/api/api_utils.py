@@ -1,16 +1,24 @@
 from operator import itemgetter
 from marketplace.models import Order, Consumer, Producer, Category, Product
 from flask_restful import abort
-from marketplace.marshmallow_schemas import OrderSchema, ConsumerSchema, ProducerSchema, CategorySchema, ProductSchema
+from marketplace.marshmallow_schemas import OrderSchema, ConsumerSchema, ProducerSchema, CategorySchema, ProductSchema, \
+    ProducerSignUpSchema, ConsumerSignUpSchema
 from marketplace import db
 
 # Marshmallow schemas
 
-order_schema = OrderSchema(many=True)
-consumer_schema = ConsumerSchema(many=True)
-producer_schema = ProducerSchema(many=True)
-category_schema = CategorySchema(many=True)
-product_schema = ProductSchema(many=True)
+order_schema = OrderSchema()
+consumer_schema = ConsumerSchema()
+consumer_sign_up_schema = ConsumerSignUpSchema()
+producer_schema = ProducerSchema()
+producer_sign_up_schema = ProducerSignUpSchema()
+category_schema = CategorySchema()
+product_schema = ProductSchema()
+order_schema_list = OrderSchema(many=True)
+consumer_schema_list = ConsumerSchema(many=True)
+producer_schema_list = ProducerSchema(many=True)
+category_schema_list = CategorySchema(many=True)
+product_schema_list = ProductSchema(many=True)
 
 
 # Abort methods
@@ -45,12 +53,12 @@ def abort_if_product_doesnt_exist(product):
 
 def get_orders_by_producer_id(producer_id):
     abort_if_producer_doesnt_exist(producer_id)
-    return [order_schema.dump(order).data for order in Order.query.filter_by(producer_id=producer_id).all()]
+    return order_schema_list.dump(Order.query.filter_by(producer_id=producer_id).all()).data
 
 
 def get_orders_by_consumer_id(consumer_id):
     abort_if_consumer_doesnt_exist(consumer_id)
-    return [order_schema.dump(order).data for order in Order.query.filter_by(consumer_id=consumer_id).all()]
+    return order_schema_list.dump(Order.query.filter_by(consumer_id=consumer_id).all()).data
 
 
 def get_order_by_id(order_id):
@@ -86,16 +94,16 @@ def get_product_by_id(product_id):
 def get_products_by_category_id(category_id):
     category = get_category_by_id(category_id)
     if category.parent_id != 0:
-        return producer_schema.dump(category.get_products()).data
+        return producer_schema_list.dump(category.get_products()).data
     else:
         subcategories = get_subcategories_by_category_id(category_id)
-        divided_products = [product_schema.dump(subcategory.get_products()).data for subcategory in subcategories]
+        divided_products = [product_schema_list.dump(subcategory.get_products()).data for subcategory in subcategories]
         return [product for subcategory in divided_products for product in subcategory]
 
 
 def get_products_by_producer_id(producer_id):
     producer = get_producer_by_id(producer_id)
-    return product_schema.dumo(producer.get_products())
+    return product_schema_list.dump(producer.get_products())
 
 
 # Get sorted
@@ -103,7 +111,7 @@ def get_products_by_producer_id(producer_id):
 
 def get_popular_products_by_category_id(category_id):
     category = get_category_by_id(category_id)
-    return sorted(product_schema.dump(category.get_products()).data,
+    return sorted(product_schema_list.dump(category.get_products()).data,
                   key=itemgetter('times_ordered'), reverse=True)
 
 
@@ -114,23 +122,23 @@ def get_popular_products():
 # Get all methods
 
 def get_all_orders():
-    return order_schema.dump(Order.query.all()).data
+    return order_schema_list.dump(Order.query.all()).data
 
 
 def get_all_consumers():
-    return consumer_schema.dump(Consumer.query.all).data
+    return consumer_schema_list.dump(Consumer.query.filter_by(entity='consumer').all()).data
 
 
 def get_all_producers():
-    return producer_schema.dump(Producer.query.all())
+    return producer_schema_list.dump(Producer.query.filter_by(entity='producer').all()).data
 
 
 def get_all_default_categories():
-    return category_schema.dump(Category.query.fileter_by(parent_id=0).all()).data
+    return category_schema_list.dump(Category.query.fileter_by(parent_id=0).all()).data
 
 
 def get_all_products():
-    return product_schema.dump(Product.query.all()).data
+    return product_schema_list.dump(Product.query.all()).data
 
 
 # Post methods
@@ -145,14 +153,14 @@ def post_order(args):
 
 
 def post_consumer(args):
-    new_consumer = consumer_schema.load(args).data
+    new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
     return consumer_schema.dump(new_consumer).data
 
 
 def post_producer(args):
-    new_producer = producer_schema.load(args).data
+    new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
     return producer_schema.dump(new_producer).data
@@ -191,11 +199,11 @@ def put_consumer(args, consumer_id):
     return consumer_schema.dump(consumer).data
 
 
-def put_product(args, prodcut_id):
-    prodcut = get_product_by_id(prodcut_id)
-    # Изменяет prodcut, но мы пока не придумали как именно
+def put_product(args, product_id):
+    product = get_product_by_id(product_id)
+    # Изменяет product, но мы пока не придумали как именно
     db.session.commit()
-    return product_schema.dump(prodcut).data
+    return product_schema.dump(product).data
 
 
 # Delete methods

@@ -39,6 +39,7 @@
 .value-button {
     display: inline-block;
     border: 1px solid #ddd;
+    border-radius: 20px;
     margin: 0px;
     width: 40px;
     height: 40px;
@@ -58,22 +59,20 @@
     cursor: pointer;
 }
 
-.product_quantity #decrease {
+.product_quantity .product_quantity_decrease {
     margin-right: -4px;
-    border-radius: 20px;
 }
 
-.product_quantity #increase {
+.product_quantity .product_quantity_increase {
     margin-left: -4px;
-    border-radius: 20px;
 }
 
-.product_quantity #input-wrap {
+.product_quantity {
     margin: 0px;
     padding: 0px;
 }
 
-.product_quantity_input#number {
+.product_quantity_input {
     text-align: center;
     border: none;
     border: 1px solid #ddd;

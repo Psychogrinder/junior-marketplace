@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
-import marketplace.api_utils as utils
+import marketplace.api.api_utils as utils
 
-producer_args = ['email', 'name', 'person_to_contact', 'description', 'phone_number', 'address']
+producer_args = ['email', 'name', 'password', 'person_to_contact', 'description', 'phone_number', 'address']
 
 parser = reqparse.RequestParser()
 

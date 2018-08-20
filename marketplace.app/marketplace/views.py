@@ -2,13 +2,11 @@ from flask import render_template, jsonify
 from marketplace import app
 from flask import render_template
 
-
+#каталог
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
-# каталог и товары
 @app.route('/category/<category_name>')
 def category(category_name):
     return render_template('category.html')
@@ -17,15 +15,33 @@ def category(category_name):
 def product_card(category_name, product_id):
     return render_template('product_card.html')
 
+  
+
+ #товары производителя
+@app.route('/producer/<producer_id>/products')
+def producer_products(producer_id):
+    return render_template('producer_products.html')
+
+
+
+# корзина
+@app.route('/cart/<user_id>')
+def cart(user_id):
+    return render_template('cart.html')
+
 
 # покупатель
 @app.route('/user/<user_id>')
 def customer_profile(user_id):
     return render_template('customer_profile.html')
 
-@app.route('/user/<user_id>/edit')
+@app.route('/user/edit/<user_id>')
 def edit_customer(user_id):
     return render_template('edit_customer.html')
+
+@app.route('/order_history/<user_id>')
+def order_history(user_id):
+    return render_template('order_history.html')
 
 
 # производитель

@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-import marketplace.api_utils as utils
+import marketplace.api.api_utils as utils
 
 product_args = ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']
 parser = reqparse.RequestParser()
