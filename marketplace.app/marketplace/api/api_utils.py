@@ -96,13 +96,11 @@ def get_products_by_producer_id(producer_id):
 
 def get_popular_products_by_category_id(category_id):
     category = get_category_by_id(category_id)
-    return sorted(category.get_products(),
-                  key=itemgetter('times_ordered'), reverse=True)
+    return sorted(category.get_products(), key=lambda product: product.times_ordered, reverse=True)
 
 
 def get_popular_products():
-    return sorted(get_all_products(), key=itemgetter('times_ordered'), reverse=True)
-
+    return sorted(get_all_products(), key=lambda product: product.times_ordered, reverse=True)
 
 # Get all methods
 
@@ -111,6 +109,15 @@ def get_all_orders():
 
 
 def get_all_consumers():
+    print('____________________________')
+    print('____________________________')
+    print('____________________________')
+    print('____________________________')
+    print('get all consumers')
+    print('____________________________')
+    print('____________________________')
+    print('____________________________')
+    print('____________________________')
     return Consumer.query.filter_by(entity='consumer').all()
 
 
