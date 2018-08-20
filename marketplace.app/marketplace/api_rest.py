@@ -148,9 +148,9 @@ class ProductRest(Resource):
 
         return {"message": "Продукт был успешно добавлен."}
 
-api.add_resource(BaseCategories, '/category/base')
-api.add_resource(Subcategories, '/category/subcategories/<int:id>')
-api.add_resource(ProductsByCategory, '/category/<int:id>')
-api.add_resource(ProductsByPopularity, '/category/popularity/<int:id>')
-api.add_resource(ProductsByProducer, '/producer/<int:id>')
-api.add_resource(ProductRest, '/product/<int:id>', "/product")
+api.add_resource(BaseCategories, '/api/category/base')
+api.add_resource(Subcategories, '/api/category/subcategories/<int:id>')
+api.add_resource(ProductsByCategory, '/api/category/<int:id>')
+api.add_resource(ProductsByPopularity, '/api/category/popularity/<int:id>')
+api.add_resource(ProductsByProducer, '/api/producer/<int:id>')
+api.add_resource(ProductRest, '/api/product/<int:id>', "/product")
