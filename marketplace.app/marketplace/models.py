@@ -173,7 +173,7 @@ class Category(db.Model):
     slug = db.Column(db.String(128))
     parent_id = db.Column(db.Integer)
 
-    def __init__(self, name, slug, parent_id=0):
+    def __init__(self, name, slug=None, parent_id=0):
         self.name = name
         self.slug = slug
         self.parent_id = parent_id
