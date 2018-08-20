@@ -25,7 +25,7 @@ css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/cat
             filters=['cssmin'], output='bundle.min.css')
 assets.register('css_all', css)
 
-js = Bundle('script/quantity.js', 'script/table_view.js'
+js = Bundle('script/quantity.js', 'script/table_view.js',
              filters=['jsmin'], output='app.min.js')
 assets.register('js_all', js)
 

@@ -46,7 +46,7 @@ def edit_producer(producer_id):
     return render_template('edit_producer.html')
 
 @app.route('/producer/<producer_id>/orders')
-def edit_producer(producer_id):
+def producer_orders(producer_id):
     return render_template('producer_orders.html')
 
 
