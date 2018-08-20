@@ -6,9 +6,13 @@ from marketplace.models import Category, Product, Producer, Consumer, Order
 # каталог
 @app.route('/')
 def index():
-    categories = Category.query.all()
-    return render_template('index.html', categories=categories)
-
+    categories = Category.query.filter_by(parent_id=0).all()
+    popular_products = Product.query.order_by(Product.times_ordered.desc()).limit(12).all()
+    return render_template(
+        'index.html',
+        categories=categories,
+        popular_products=popular_products
+    )
 
 
 @app.route('/category/<category_name>')
@@ -16,7 +20,6 @@ def category(category_name):
     category = Category.query.filter_by(slug=category_name).first()
     products = Product.query.filter_by(category_id=category.id).all()
     return render_template('category.html', products=products)
-
 
 
 @app.route('/category/<category_name>/<product_id>')
@@ -30,6 +33,7 @@ def product_card(category_name, product_id):
 def producer_products(producer_id):
     products = Product.query.filter_by(producer_id=producer_id).all()
     return render_template('producer_products.html', products=products)
+
 
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
 def edit_product(producer_id, product_id):
@@ -47,6 +51,7 @@ def cart(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     return render_template('cart.html', user=user)
 
+
 @app.route('/cart/<user_id>/order_registration/')
 def order_registration(user_id):
     return render_template('order_registration.html')
@@ -59,12 +64,10 @@ def customer_profile(user_id):
     return render_template('customer_profile.html', user=user)
 
 
-
 @app.route('/user/edit/<user_id>')
 def edit_customer(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     return render_template('edit_customer.html', user=user)
-
 
 
 @app.route('/order_history/<user_id>')
@@ -78,7 +81,6 @@ def order_history(user_id):
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
     return render_template('producer_profile.html', producer=producer)
-
 
 
 @app.route('/producer/<producer_id>/edit')
