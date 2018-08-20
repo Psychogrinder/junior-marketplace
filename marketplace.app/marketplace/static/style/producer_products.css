@@ -23,16 +23,16 @@
 }
 /*end-filter*/
 
-.product-item-description .edit-product a {
+.edit-product a {
 	color: grey;
 }
 
-.product-item-description .edit-product a:hover,
-.product-item-description .edit-product a:active {
+.edit-product a:hover,
+.edit-product a:active {
 	text-decoration: underline;
 }
 
-.product-item-description .edit-product a img,
+.edit-product a img,
 .out-of-stock img {
     height: 20px;
     margin-right: 10px;

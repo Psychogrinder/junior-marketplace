@@ -22,6 +22,13 @@ def product_card(category_name, product_id):
 def producer_products(producer_id):
     return render_template('producer_products.html')
 
+@app.route('/producer/<producer_id>/products/<product_id>/edit')
+def edit_product(producer_id, product_id):
+    return render_template('edit_product.html')
+
+@app.route('/producer/<producer_id>/create_product')
+def create_product(producer_id):
+    return render_template('create_product.html')
 
 
 # корзина
