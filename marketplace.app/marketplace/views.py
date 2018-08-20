@@ -15,7 +15,7 @@ def category(category_name):
 def product_card(category_name, product_id):
     return render_template('product_card.html')
 
-  
+
 
  #товары производителя
 @app.route('/producer/<producer_id>/products')
@@ -35,6 +35,10 @@ def create_product(producer_id):
 @app.route('/cart/<user_id>')
 def cart(user_id):
     return render_template('cart.html')
+
+@app.route('/cart/<user_id>/order_registration/')
+def order_registration(user_id):
+    return render_template('order_registration.html')
 
 
 # покупатель
