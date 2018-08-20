@@ -6,14 +6,10 @@
 
 {% block body %}
 <main>
-    <div class="container breadcrumbs">
-        <div class="row">
-            <section class="breadcrumbs">
-                <span><a class="active">Корзина</a></span>
-            </section>
-        </div>
-    </div>
     <div class="container">
+        <section class="breadcrumbs">
+            <span><a class="active">Корзина</a></span>
+        </section>
         <div class="row cart_producer_title">
             <span>Сельхоз «Октябрьский»</span>
         </div>
@@ -184,7 +180,7 @@
                 <span class="total_value">1200 P</span>
             </div>
             <div class="col-4 order_box">
-                <button class="btn btn-primary btn_order">ОФОРМИТЬ ЗАКАЗ</button>
+                <a href={{ url_for( 'order_registration', user_id = '5' )}}  class="btn btn-primary btn_order">ОФОРМИТЬ ЗАКАЗ</a>
             </div>
         </div>
     </div>

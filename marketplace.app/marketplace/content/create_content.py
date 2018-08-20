@@ -27,12 +27,15 @@ with urllib.request.urlopen(f"https://randomuser.me/api/?results={len(producer_n
                             f"{company['name']['first']} {company['name']['last']}", description)
         db.session.add(producer)
 
+for i, producer in enumerate(Producer.query.all()):
+    producer.id = i+1
+
 with urllib.request.urlopen("https://randomuser.me/api/?results=100") as response:
     data = response.read()
     data = json.loads(data)
-    for company in data["results"]:
-        consumer = Consumer(company['email'], company['login']['password'], company['name']['first'],
-                            company['name']['last'], company['phone'], company['location']['street'])
+    for person in data["results"]:
+        consumer = Consumer(person['email'], person['login']['password'], person['name']['first'],
+                            person['name']['last'], person['phone'], person['location']['street'])
         db.session.add(consumer)
 
 category_data = {}
@@ -60,6 +63,15 @@ for category_name in category_data:
 
 for i, cat in enumerate(Category.query.all()):
     cat.id = i+1
+
+category_eng_names = []
+
+with open('data/categories_eng.txt', 'r') as f:
+    for line in f.readlines():
+        category_eng_names += [word.strip() for word in line.split(',')]
+
+for i, cat in enumerate(Category.query.all()):
+    cat.slug = category_eng_names[i]
 
 prices = range(50, 1000)
 quantity = range(100, 500)

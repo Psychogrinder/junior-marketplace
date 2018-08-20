@@ -1,0 +1,16 @@
+poultry
+chicken, goose, turkey
+eggs
+chicken, goose, quail
+fish
+salmon, perch, cod
+fruits
+pears, melons, apples
+honey
+buckwheat, lime, maple
+meat
+ham, pork, mutton
+dairy
+milk, cheese, curds
+vegetables
+potatoes, carrots, cabbages
