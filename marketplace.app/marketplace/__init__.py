@@ -13,13 +13,15 @@ app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(Config)
 ma = Marshmallow(app)
-api = Api(app)
+api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 db.init_app(app)
 
 
-from marketplace import models, views
+
+from marketplace import models, views, api_routes
+
 
 
 css = Bundle('style/base.css','style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css', 'style/category.css',

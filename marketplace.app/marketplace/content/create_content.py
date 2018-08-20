@@ -64,6 +64,15 @@ for category_name in category_data:
 for i, cat in enumerate(Category.query.all()):
     cat.id = i+1
 
+category_eng_names = []
+
+with open('data/categories_eng.txt', 'r') as f:
+    for line in f.readlines():
+        category_eng_names += [word.strip() for word in line.split(',')]
+
+for i, cat in enumerate(Category.query.all()):
+    cat.slug = category_eng_names[i]
+
 prices = range(50, 1000)
 quantity = range(100, 500)
 producer_ids = range(1, number_of_producers+1)
