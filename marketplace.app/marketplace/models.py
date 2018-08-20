@@ -16,10 +16,11 @@ class User(db.Model):
     photo_url = db.Column(db.String(256))
     entity = db.Column(db.String(16))
 
-    def __init__(self, email, entity, phone_number='', address=''):
+    def __init__(self, email, password, entity, phone_number='', address=''):
         self.email = email
         self.email_auth_status = False
         self.phone_number = phone_number
+        self.password_hash = generate_password_hash(password)
         self.address = address
         self.entity = entity
 
@@ -55,8 +56,8 @@ class Consumer(User):
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
 
-    def __init__(self, email, first_name, last_name, phone_number='', address='', patronymic=''):
-        super().__init__(email, 'consumer', phone_number, address)
+    def __init__(self, email, password, first_name, last_name, phone_number='', address='', patronymic=''):
+        super().__init__(email, password, 'consumer', phone_number, address)
         self.first_name = first_name
         self.last_name = last_name
         self.patronymic = patronymic
@@ -75,8 +76,8 @@ class Producer(User):
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
 
-    def __init__(self, email, name, phone_number, address, person_to_contact, description=''):
-        super().__init__(email, 'producer', phone_number, address)
+    def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
+        super().__init__(email, password, 'producer', phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
         self.description = description
@@ -177,4 +178,3 @@ class Category(db.Model):
 
     def get_subcategories(self):
         return Category.query.filter_by(parent_id=self.id).all()
-
