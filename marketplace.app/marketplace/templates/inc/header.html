@@ -20,7 +20,10 @@
                         <a class="nav-link" href={{ url_for( 'order_history', user_id = '5' )}}>МОИ ЗАКАЗЫ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href={{ url_for( 'producer_orders', producer_id = '5' )}}>ЗАКАЗЫ</a>
+                        <a class="nav-link nav-link-producer_orders" href={{ url_for( 'producer_orders', producer_id = '5' )}}>
+                            ЗАКАЗЫ
+                            <span class="badge badge-pill badge-secondary">1</span>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href={{ url_for('producer_products', producer_id = '5') }}>ТОВАРЫ</a>
@@ -29,8 +32,9 @@
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="text" placeholder="Поиск">
                 </form>
-                <a href={{ url_for('cart', user_id = '5') }} class="header-card px-2">
+                <a href={{ url_for('cart', user_id = '5') }} class="header-card px-2 header_card_badge">
                     <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg')}} class="header-logo" alt="Корзина">
+                    <span class="badge badge-pill badge-secondary">2</span>
                 </a>
                 <div class="btn-group px-3 header-dropdown-toggle">
                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
