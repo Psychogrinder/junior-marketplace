@@ -8,3 +8,5 @@ from models import *
 for model in [Consumer, Producer, Category, Order, Product]:
     db.session.query(model).delete()
 db.session.commit()
+
+sys.exit()
