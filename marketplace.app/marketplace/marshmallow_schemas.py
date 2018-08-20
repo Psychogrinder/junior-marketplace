@@ -32,14 +32,22 @@ class ProductSchema(ma.ModelSchema):
             return Product(**data)
 
 
+class ConsumerSignUpSchema(ma.ModelSchema):
+    class Meta:
+        model = Consumer
+        fields = ('id', 'email', 'password', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address')
+
+
+class ProducerSignUpSchema(ma.ModelSchema):
+    class Meta:
+        model = Producer
+        fields = ('id', 'email', 'password', 'name', 'person_to_contact', 'description', 'phone_number', 'address')
+
+
 class ConsumerSchema(ma.ModelSchema):
     class Meta:
         model = Consumer
         fields = ('id', 'email', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address')
-        
-        @post_load
-        def create_consumer(self, data):
-            return Order(**data)
 
 
 class ProducerSchema(ma.ModelSchema):
@@ -47,16 +55,11 @@ class ProducerSchema(ma.ModelSchema):
         model = Producer
         fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address')
 
-        @post_load
-        def create_producer(self, data):
-            return Producer(**data)
-
 
 class CategorySchema(ma.ModelSchema):
     class Meta:
         model = Category
-        
+
         @post_load
         def create_category(self, data):
             return Category(**data)
-
