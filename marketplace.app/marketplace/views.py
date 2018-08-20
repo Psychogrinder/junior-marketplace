@@ -1,6 +1,6 @@
 from flask import render_template, jsonify
 from marketplace import app
-from marketplace.models import Category, Product, Producer, Consumer
+from marketplace.models import Category, Product, Producer, Consumer, Order
 
 
 # каталог
@@ -10,9 +10,9 @@ def index():
     return render_template('index.html', categories=categories)
 
 
-@app.route('/category/<category_slug>')
-def category(category_slug):
-    category = Category.query.filter_by(slug=category_slug)
+@app.route('/category/<category_name>')
+def category(category_name):
+    category = Category.query.filter_by(slug=category_name)
     products = Product.query.filter_by(category_id=category.id)
     return render_template('category.html', products=products)
 
@@ -51,7 +51,7 @@ def edit_customer(user_id):
 
 @app.route('/order_history/<user_id>')
 def order_history(user_id):
-    orders = Consumer.query.filter_by(consumer_id=user_id)
+    orders = Order.query.filter_by(consumer_id=user_id)
     return render_template('order_history.html', orders=orders)
 
 
