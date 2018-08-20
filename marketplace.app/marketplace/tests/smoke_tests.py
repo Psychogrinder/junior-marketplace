@@ -42,6 +42,7 @@ class TestSmoke(unittest.TestCase):
     def testConnection(self):
         self.assertEqual(200, (urlopen(self.url).getcode()))
 
+
         #проверяет корректность категорий по ссылке
         for category in range(len(self.categories)):
             for key, value in self.links.items():
@@ -56,10 +57,7 @@ class TestSmoke(unittest.TestCase):
     #def testPageTitle(self):
     #    self.browser.get(self.url)
     #    self.assertIn(self.title, self.browser.title)
-    '''
-    def testRoutes(self):
-        pass
-    '''
+
     def tearDown(self):
         pass
 
