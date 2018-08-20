@@ -30,6 +30,7 @@
                 <span class="product_id">123456</span>
                 <span class="product_price_title">ЦЕНА</span>
                 <span class="product_price_value">100 руб/кг</span>
+                <!-- TODO : выводить добавление в корзину только для покупателя-->
                 <div class="row">
                     <form class="product_quantity">
                         <div class="value-button" id="decrease" onclick="decreaseQuantity()" value="Decrease Value">-</div>
@@ -40,7 +41,9 @@
                 </div>
             </div>
             <div class="col-3">
-                <span class="stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg") }}>Нет в наличии</span>
+                <p class="out-of-stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg") }}>Нет в наличии</p>
+                <!--TODO: выводить редактирование товара только для производителя-->
+                <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
             </div>
         </div>
         <div class="row description-product">
