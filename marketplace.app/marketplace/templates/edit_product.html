@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Редактирование товара{% endblock %}
+
+{% block body %}
+<main>
+    <div class="container edit-product-card">
+        <section class="breadcrumbs">
+            <span><a href="#">Товары</a></span>
+            <span><a class="active">Яблоки такие-та</a></span>
+        </section>
+        <form action="#">
+            <div class="row edit-product-item">
+                <label for="editName" class="col-4 col-sm-2">Название</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="editName" placeholder="Иван" required>
+            </div>
+            <div class="row edit-product-item">
+                <label for="editPhoto" class="col-4 col-sm-2">Фотография</label>
+                <input type="file" class="form-control-file col-8 col-sm-4" id="editPhoto" aria-describedby="fileHelp"
+                       required>
+            </div>
+            <div class="row edit-product-item">
+                <label for="editPrice" class="col-4 col-sm-2">Цена</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" pattern="^[ 0-9]+$"
+                       required>
+            </div>
+            <div class="row edit-product-item">
+                <label for="editArticle" class="col-4 col-sm-2">Артикул</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="editArticle" value="564895" disabled>
+            </div>
+            <div class="row edit-product-item">
+                <label for="editCategory" class="col-4 col-sm-2">Категория</label>
+                <select class="form-control col-8 col-sm-4" name="category" id="editCategory" required>
+                    <option value="" disabled selected>Категория</option>
+                    <option>Фрукты</option>
+                    <option>Овощи</option>
+                    <option>Мясо</option>
+                    <option>Птица</option>
+                    <option>Мёд</option>
+                    <option>Молочные продукты</option>
+                    <option>Рыба</option>
+                    <option>Яйца</option>
+                </select>
+            </div>
+            <div class="row edit-product-item">
+                <label for="editSubcategory" class="col-4 col-sm-2">Подкатегория</label>
+                <select class="form-control col-8 col-sm-4" name="subcategory" id="editSubcategory" required>
+                    <option value="" disabled selected>Подкатегория</option>
+                    <option>Яблоки</option>
+                    <option>Бананы</option>
+                    <option>Киви</option>
+                    <option>Апельсины</option>
+                </select>
+            </div>
+            <div class="row edit-product-item">
+                <label for="editCount" class="col-4 col-sm-2">Количество товара</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="editCount" placeholder="10" pattern="^[ 0-9]+$">
+            </div>
+            <div class="row edit-product-item">
+                <label for="editUnits" class="col-4 col-sm-2">Единицы измерения</label>
+                <select class="form-control col-8 col-sm-4" name="units" id="editUnits" required>
+                    <option>Кг</option>
+                    <option>Литр</option>
+                    <option>Упаковка</option>
+                </select>
+            </div>
+            <!-- TODO: вес должен всплывать если выбрана упаковка -->
+            <div class="row edit-product-item">
+                <label for="editWeigth" class="col-4 col-sm-2">Вес</label>
+                <input type="text" class="form-control col-4 col-sm-2" pattern="^[ 0-9]+$" name="weigth" id="editWeigth">
+                <select class="form-control col-4 col-sm-1" name="weigth_init" required>
+                    <option>Литр</option>
+                    <option>Кг</option>
+                    <option>Шт</option>
+                </select>
+            </div>
+            <div class="row edit-product-item">
+                <label for="editDescription" class="col-4 col-sm-2">Описание</label>
+                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription" name="description">
+                    </textarea>
+            </div>
+            <div class="col-12 col-sm-10 edit-product-save">
+                <button type="submit" class="btn btn-success">СОХРАНИТЬ</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
