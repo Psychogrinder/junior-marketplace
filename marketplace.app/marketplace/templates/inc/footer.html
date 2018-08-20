@@ -4,28 +4,43 @@
         <div class="row">
             <div class="col-12 col-sm-6 col-lg-3 footer-item">
                 <h3>ПОКУПАТЕЛЯМ</h3>
-                <p><a href="#">Каталог товаров</a></p>
-                <p><a href="#">Помощь</a></p>
+                <p><a href={{ url_for( 'index' ) }}>Каталог товаров</a></p>
+                <p><a href={{ url_for('customer_help') }}>Помощь</a></p>
+                <p><a href={{ url_for('about_us') }}>О нас</a></p>
             </div>
             <div class="col-12 col-sm-6 col-lg-3 footer-item">
                 <h3>ПРОИЗВОДИТЕЛЯМ</h3>
                 <p><a href="#" data-toggle="modal" data-target="#regProducer">Подключение к маркетплейс </a></p>
-                <p><a href="#">Помощь для производителей</a></p>
+                <p><a href={{ url_for('producer_help') }}>Помощь для производителей</a></p>
             </div>
             <div class="col-12 col-sm-6 col-lg-3 footer-item">
                 <h3>КОНТАКТЫ</h3>
-                <p><a href="#">emailexample@gmail.com</a></p>
-                <p><a href="#">+79110558596</a></p>
+                <p><a href="mailto:emailexample@gmail.com">emailexample@gmail.com</a></p>
+                <p><a href="tel:+79110558596">+79110558596</a></p>
             </div>
             <div class="col-12 col-sm-6 col-lg-3 footer-item footer-item-social">
                 <b>МЫ В СОЦИАЛЬНЫХ СЕТЯХ</b>
                 <div class="footer-social-icon">
-                    <div class="fb-icon"><img src={{ url_for('static', filename ="img/fb.svg") }} alt="Фейсбук"></div>
-                    <div class="insta-icon"><img src={{ url_for('static', filename ="img/insta.svg") }} alt="Инстаграмм"></div>
-                    <div class="vk-icon"><img src={{ url_for('static', filename ="img/vk.svg") }} alt="Вконтакте"></div>
+                    <div class="fb-icon">
+                        <a href="https://www.facebook.com/allcontext/">
+                            <img src={{ url_for('static', filename ="img/fb.svg") }} alt="Фейсбук">
+                        </a>
+                    </div>
+                    <div class="insta-icon">
+                        <a href="https://www.instagram.com/elamainside/">
+                            <img src={{ url_for('static', filename ="img/insta.svg") }}
+                            alt="Инстаграмм">
+                        </a>
+                    </div>
+                    <div class="vk-icon">
+                        <a href="https://vk.com/juniorlab">
+                            <img src={{ url_for('static', filename ="img/vk.svg") }} alt="Вконтакте">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
         <p class="watermark">© Junior Marketplace 2018</p>
     </div>
 </footer>
+
