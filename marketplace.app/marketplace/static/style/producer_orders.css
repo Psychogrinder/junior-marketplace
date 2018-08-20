@@ -43,8 +43,14 @@
     border-bottom: 2px solid #eee;
 }
 
-.item_order:last-of-type{
-    border: none;
+.item_order:first-child,
+.table_container:first-child{
+    margin-top: 40px;
+}
+
+.item_order:last-of-type,
+.table_container:last-of-type{
+    border-bottom: none;
 }
 
 .delivery span,
