@@ -5,9 +5,11 @@ except:
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import MONEY
+from flask_login import UserMixin
+from marketplace import login
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'user'
     __mapper_args = {'polymorphic_on': 'discriminator'}
     id = db.Column(db.Integer, primary_key=True)
@@ -59,7 +61,7 @@ class Consumer(User):
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
 
-    def __init__(self, email, password, first_name, last_name, phone_number='', address='', patronymic=''):
+    def __init__(self, email, password, first_name='', last_name='', phone_number='', address='', patronymic=''):
         super().__init__(email, password, 'consumer', phone_number, address)
         self.first_name = first_name
         self.last_name = last_name
@@ -183,3 +185,8 @@ class Category(db.Model):
 
     def get_subcategories(self):
         return Category.query.filter_by(parent_id=self.id).all()
+
+
+@login.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
