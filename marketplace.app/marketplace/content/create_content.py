@@ -125,8 +125,12 @@ product_names = {"птица": {
 for cat, subcats in product_names.items():
     for subcat_name, products in subcats.items():
         for product_name in products:
-            category_id = Category.query.filter_by(name=subcat_name).first().id
-            product = Product(choice(prices), product_name, choice(quantity), choice(producer_ids), category_id, choice(measurement_units), choice(weights), choice(product_descriptions))
+            category = Category.query.filter_by(name=subcat_name).first()
+            producer_id = choice(producer_ids)
+            producer = Producer.query.filter_by(id=producer_id).first()
+            product = Product(choice(prices), product_name, choice(quantity), producer_id, category.id, choice(measurement_units), choice(weights), choice(product_descriptions))
             db.session.add(product)
+            producer.categories.append(category)
+
 
 db.session.commit()
