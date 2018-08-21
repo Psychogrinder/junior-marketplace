@@ -1,7 +1,9 @@
+import os
 from flask import render_template, jsonify
 from marketplace import app
 from marketplace.models import Category, Product, Producer, Consumer, Order
 import marketplace.api_folder.api_utils as utils
+
 
 # каталог
 @app.route('/')
@@ -22,15 +24,18 @@ def category(category_name):
     category_name = category.name.title()
     producers = Producer.query.filter_by(entity='producer').all()
     products = utils.get_products_by_category_id(category.id)
-    return render_template('category.html', products=products, subcategories=subcategories, category=category, category_name=category_name, producers=producers)
+    return render_template('category.html', products=products, subcategories=subcategories, category=category,
+                           category_name=category_name, producers=producers)
 
 
 @app.route('/products/<product_id>')
 def product_card(product_id):
     product = Product.query.filter_by(id=product_id).first()
+    category = utils.get_category_by_id(product.category_id)
     category_name = utils.get_category_by_id(product.category_id).name.title()
     producer_name = utils.get_producer_by_id(product.producer_id).name.title()
-    return render_template('product_card.html', category_name=category_name, product=product, producer_name=producer_name)
+    return render_template('product_card.html', category_name=category_name, product=product,
+                           producer_name=producer_name, category=category)
 
 
 # товары производителя
@@ -42,7 +47,25 @@ def producer_products(producer_id):
 
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
 def edit_product(producer_id, product_id):
-    return render_template('edit_product.html')
+    product = Product.query.filter_by(id=product_id).first()
+    base_categories = Category.query.filter_by(parent_id=0).all()
+    category = utils.get_category_by_id(product.category_id)
+    category_name = utils.get_category_by_id(product.category_id).name
+    parent_category_name = Category.query.filter_by(id=category.parent_id).first().name
+    all_categories = {}
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(dir_path+'/content/data/categories.txt', 'r') as f:
+        cat = None
+        sub_cats = None
+        for i, line in enumerate(f.readlines()):
+            if i % 2 == 0:
+                cat = line.strip()
+            else:
+                sub_cats = [item.rstrip('\n') for item in line.split(', ')]
+                all_categories[cat] = sub_cats
+
+    return render_template('edit_product.html', product=product, category=category, category_name=category_name,
+                           base_categories=base_categories, parent_category_name=parent_category_name, all_categories=all_categories)
 
 
 @app.route('/producer/<producer_id>/create_product')
@@ -118,6 +141,14 @@ def producer_help():
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
+
+
+@app.context_processor
+def utility_functions():
+    def print_in_console(message):
+        print(str(message))
+
+    return dict(mdebug=print_in_console)
 
 
 if __name__ == '__main__':

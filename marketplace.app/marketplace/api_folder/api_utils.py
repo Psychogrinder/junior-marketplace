@@ -28,6 +28,9 @@ def abort_if_category_doesnt_exist(category_id):
     if Category.query.get(category_id) is None:
         abort(404, message='Category with id = {} doesn\'t exists'.format(category_id))
 
+def abort_if_category_doesnt_exist_slug(category_slug):
+    if Category.query.filter_by(slug=category_slug) is None:
+        abort(404, message='Category with name = {} doesn\'t exists'.format(category_slug))
 
 def abort_if_product_doesnt_exist(product):
     if Product.query.get(product) is None:
@@ -70,6 +73,10 @@ def get_subcategories_by_category_id(category_id):
     abort_if_category_doesnt_exist(category_id)
     return Category.query.filter_by(parent_id=category_id).all()
 
+def get_subcategories_by_category_slug(category_slug):
+    abort_if_category_doesnt_exist_slug(category_slug)
+    category_id = Category.query.filter_by(slug=category_slug).first().id
+    return Category.query.filter_by(parent_id=category_id).all()
 
 def get_product_by_id(product_id):
     abort_if_product_doesnt_exist(product_id)

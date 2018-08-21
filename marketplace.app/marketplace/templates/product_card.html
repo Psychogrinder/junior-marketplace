@@ -6,7 +6,7 @@
 <main>
     <section class="container breadcrumbs">
         <span><a href={{ url_for( 'index' ) }}>Каталог</a></span>
-        <span><a href={{ url_for( 'category', category_name = 'fruits' )}}>{{ category_name }}</a></span>
+        <span><a href={{ url_for( 'category', category_name = category.slug )}}>{{ category_name }}</a></span>
         <span><a class="active">Яблоки Антоновка</a></span>
     </section>
     <div class="container">
@@ -25,7 +25,7 @@
             </div>
             <div class="col-4 product_info">
                 <span class="producer_title">ПРОДАВЕЦ</span>
-                <span class="producer_title_name"><a href={{ url_for('producer_profile', producer_id ="5") }}>{{ producer_name }}</a></span>
+                <span class="producer_title_name"><a href={{ url_for('producer_profile', producer_id = product.producer_id ) }}>{{ producer_name }}</a></span>
                 <span class="product_title_id">АРТИКУЛ</span>
                 <span class="product_id">{{ product.id }}</span>
                 <span class="product_price_title">ЦЕНА</span>

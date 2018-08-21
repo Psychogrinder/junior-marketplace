@@ -13,6 +13,9 @@ class Subcategories(Resource):
     def get(self, category_id):
         return category_schema_list.dump(utils.get_subcategories_by_category_id(category_id)).data
 
+class SubcategoriesBySlug(Resource):
+    def get(self, category_slug):
+        return category_schema_list.dump(utils.get_subcategories_by_category_slug(category_slug)).data
 
 class ProductsByCategory(Resource):
     def get(self, category_id):

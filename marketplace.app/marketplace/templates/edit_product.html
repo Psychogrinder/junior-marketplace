@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}Редактирование товара{% endblock %}
+{% block meta_title %}Редактирование товара {{ product.name }} {% endblock %}
 
 {% block body %}
 <main>
     <div class="container edit-product-card">
         <section class="breadcrumbs">
-            <span><a href="#">Товары</a></span>
-            <span><a class="active">Яблоки такие-та</a></span>
+            <span><a href={{ url_for('producer_products', producer_id = product.producer_id)}}>Товары</a></span>
+            <span><a class="active">{{ product.name }}</a></span>
         </section>
         <form action="#">
             <div class="row edit-product-item">
                 <label for="editName" class="col-4 col-sm-2">Название</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editName" placeholder="Иван" required>
+                <input type="text" class="form-control col-8 col-sm-4" id="editName" placeholder="Иван" required value='{{ product.name }}'>
             </div>
             <div class="row edit-product-item">
                 <label for="editPhoto" class="col-4 col-sm-2">Фотография</label>
@@ -22,39 +22,42 @@
             <div class="row edit-product-item">
                 <label for="editPrice" class="col-4 col-sm-2">Цена</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" pattern="^[ 0-9]+$"
-                       required>
+                       required value={{ product.price}}>
             </div>
             <div class="row edit-product-item">
                 <label for="editArticle" class="col-4 col-sm-2">Артикул</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editArticle" value="564895" disabled>
+                <input type="text" class="form-control col-8 col-sm-4" id="editArticle" value="564895" disabled value={{ product.id }}>
             </div>
             <div class="row edit-product-item">
                 <label for="editCategory" class="col-4 col-sm-2">Категория</label>
                 <select class="form-control col-8 col-sm-4" name="category" id="editCategory" required>
                     <option value="" disabled selected>Категория</option>
-                    <option>Фрукты</option>
-                    <option>Овощи</option>
-                    <option>Мясо</option>
-                    <option>Птица</option>
-                    <option>Мёд</option>
-                    <option>Молочные продукты</option>
-                    <option>Рыба</option>
-                    <option>Яйца</option>
+                    {% for category in base_categories %}
+                    {% if parent_category_name == category.name %}
+                    <option selected value={{ category.slug }}>{{ category.name }}</option>
+                    {% else %}
+                    <option value={{ category.slug }}>{{ category.name }}</option>
+                    {% endif %}
+                    {% endfor %}
                 </select>
             </div>
+            <p>{{ all_categories }}</p>
             <div class="row edit-product-item">
                 <label for="editSubcategory" class="col-4 col-sm-2">Подкатегория</label>
                 <select class="form-control col-8 col-sm-4" name="subcategory" id="editSubcategory" required>
-                    <option value="" disabled selected>Подкатегория</option>
-                    <option>Яблоки</option>
-                    <option>Бананы</option>
-                    <option>Киви</option>
-                    <option>Апельсины</option>
+                    <option value={{ product.category_id }} disabled selected>Подкатегория</option>
+                    {% for subcat in all_categories[parent_category_name] %}
+                    {% if category_name == subcat %}
+                    <option value="" selected class="subcategory_option">{{ subcat }}</option>
+                    {% else %}
+                    <option value="" class="subcategory_option">{{ subcat }}</option>
+                    {% endif %}
+                    {% endfor %}
                 </select>
             </div>
             <div class="row edit-product-item">
                 <label for="editCount" class="col-4 col-sm-2">Количество товара</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editCount" placeholder="10" pattern="^[ 0-9]+$">
+                <input type="text" class="form-control col-8 col-sm-4" id="editCount" placeholder="10" pattern="^[ 0-9]+$" value={{ product.quantity }}>
             </div>
             <div class="row edit-product-item">
                 <label for="editUnits" class="col-4 col-sm-2">Единицы измерения</label>
@@ -76,8 +79,8 @@
             </div>
             <div class="row edit-product-item">
                 <label for="editDescription" class="col-4 col-sm-2">Описание</label>
-                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription" name="description">
-                    </textarea>
+                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription" name="description">{{ product.description }}
+                </textarea>
             </div>
             <div class="col-12 col-sm-10 edit-product-save">
                 <button type="submit" class="btn btn-success">СОХРАНИТЬ</button>
