@@ -1,8 +1,10 @@
-import os
-from flask import render_template, jsonify
+from flask import render_template, jsonify, redirect, url_for, flash
+from flask_restful import reqparse
 from marketplace import app
-from marketplace.models import Category, Product, Producer, Consumer, Order
+from marketplace.models import Category, Product, Producer, Consumer, Order, User
 import marketplace.api_folder.api_utils as utils
+from flask_login import current_user, login_user, logout_user
+
 
 
 # каталог
@@ -36,7 +38,6 @@ def product_card(product_id):
     producer_name = utils.get_producer_by_id(product.producer_id).name.title()
     return render_template('product_card.html', category_name=category_name, product=product,
                            producer_name=producer_name, category=category)
-
 
 # товары производителя
 @app.route('/producer/<producer_id>/products')
@@ -158,13 +159,30 @@ def producer_help():
 def version():
     return jsonify(version=1.0)
 
+  
+# Login and Logout
 
-@app.context_processor
-def utility_functions():
-    def print_in_console(message):
-        print(str(message))
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    parser = reqparse.RequestParser()
+    parser.add_argument('email')
+    parser.add_argument('password')
+    args = parser.parse_args()
+    if args is not None:
+        user = User.query.filter_by(email=args['email']).first()
+        if user is None or not user.check_password(args['password']):
+            return 'Invalid email or password'
+        login_user(user, True)
+        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
-    return dict(mdebug=print_in_console)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

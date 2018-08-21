@@ -6,6 +6,7 @@ Flask-SQLalchemy
 Flask-Script
 Flask-Migrate
 Flask-Session
+Flask-Login
 marshmallow
 marshmallow-sqlalchemy
 psycopg2-binary
