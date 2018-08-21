@@ -13,7 +13,7 @@
 .header-login img,
 .header-card img {
 	max-width: 80%;
-} 
+}
 
 .header-dropdown-toggle .dropdown-menu .btn-secondary {
     background: #F3969A;
@@ -41,6 +41,20 @@
     background: #FF7851;
     padding-right: 0;
     border-radius: 5px;
+}
+
+.nav-link-producer_orders{
+	display: flex;
+	align-items: center;
+}
+
+.header_card_badge{
+	display: flex;
+	align-items: flex-start;
+}
+
+.nav-link .badge{
+	margin-left: 5px;
 }
 
 @media (max-width: 990px) {

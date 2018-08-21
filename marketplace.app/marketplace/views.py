@@ -1,6 +1,10 @@
-from flask import render_template, jsonify
+from flask import render_template, jsonify, redirect, url_for, flash
+from flask_restful import reqparse
+
 from marketplace import app
-from marketplace.models import Category, Product, Producer, Consumer, Order
+from marketplace.models import Category, Product, Producer, Consumer, Order, User
+import marketplace.api_folder.api_utils as utils
+from flask_login import current_user, login_user, logout_user
 
 
 # каталог
@@ -18,14 +22,20 @@ def index():
 @app.route('/category/<category_name>')
 def category(category_name):
     category = Category.query.filter_by(slug=category_name).first()
-    products = Product.query.filter_by(category_id=category.id).all()
-    return render_template('category.html', products=products)
-
+    subcategories = Category.query.filter_by(parent_id=category.id).all()
+    category_name = category.name.title()
+    producers = Producer.query.filter_by(entity='producer').all()
+    products = utils.get_products_by_category_id(category.id)
+    return render_template('category.html', products=products, subcategories=subcategories, category=category,
+                           category_name=category_name, producers=producers)
 
 @app.route('/category/<category_name>/<product_id>')
 def product_card(category_name, product_id):
     product = Product.query.filter_by(id=product_id).first()
-    return render_template('product_card.html', product=product)
+    category_name = utils.get_category_by_id(product.category_id).name.title()
+    producer_name = utils.get_producer_by_id(product.producer_id).name.title()
+    return render_template('product_card.html', category_name=category_name, product=product,
+                           producer_name=producer_name)
 
 
 # товары производителя
@@ -113,6 +123,31 @@ def producer_help():
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
+
+
+# Login and Logout
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    parser = reqparse.RequestParser()
+    parser.add_argument('email')
+    parser.add_argument('password')
+    args = parser.parse_args()
+    if args is not None:
+        user = User.query.filter_by(email=args['email']).first()
+        if user is None or not user.check_password(args['password']):
+            return 'Invalid email or password'
+        login_user(user, True)
+        return redirect(url_for('index'))
+    return redirect(url_for('index'))
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
