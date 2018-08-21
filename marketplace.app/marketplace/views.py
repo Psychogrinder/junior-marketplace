@@ -4,7 +4,7 @@ from marketplace import app
 from marketplace.models import Category, Product, Producer, Consumer, Order, User
 import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user
-
+import os
 
 
 # каталог
@@ -21,10 +21,10 @@ def index():
 
 @app.route('/category/<category_name>')
 def category(category_name):
-    category = Category.query.filter_by(slug=category_name).first()
-    subcategories = Category.query.filter_by(parent_id=category.id).all()
+    category = utils.get_category_by_name(category_name)
+    subcategories = utils.get_subcategories_by_category_id(category.id)
     category_name = category.name.title()
-    producers = Producer.query.filter_by(entity='producer').all()
+    producers = utils.get_all_producers()
     products = utils.get_products_by_category_id(category.id)
     return render_template('category.html', products=products, subcategories=subcategories, category=category,
                            category_name=category_name, producers=producers)
@@ -32,27 +32,27 @@ def category(category_name):
 
 @app.route('/products/<product_id>')
 def product_card(product_id):
-    product = Product.query.filter_by(id=product_id).first()
+    product = utils.get_product_by_id(product_id)
     category = utils.get_category_by_id(product.category_id)
-    category_name = utils.get_category_by_id(product.category_id).name.title()
-    producer_name = utils.get_producer_by_id(product.producer_id).name.title()
-    return render_template('product_card.html', category_name=category_name, product=product,
-                           producer_name=producer_name, category=category)
+    producer = utils.get_producer_by_id(product.producer_id)
+    return render_template('product_card.html', category_name=category.name.title(), product=product,
+                           producer_name=producer.name.title(), category=category)
+
 
 # товары производителя
 @app.route('/producer/<producer_id>/products')
 def producer_products(producer_id):
-    products = Product.query.filter_by(producer_id=producer_id).all()
+    products = utils.get_products_by_producer_id(producer_id)
     return render_template('producer_products.html', products=products)
 
+# Продумать что делать с неиспользованными id в методах
 
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
 def edit_product(producer_id, product_id):
-    product = Product.query.filter_by(id=product_id).first()
-    base_categories = Category.query.filter_by(parent_id=0).all()
+    product = utils.get_product_by_id(product_id)
+    base_categories = utils.get_all_base_categories()
     category = utils.get_category_by_id(product.category_id)
-    category_name = utils.get_category_by_id(product.category_id).name
-    parent_category_name = Category.query.filter_by(id=category.parent_id).first().name
+    parent_category = utils.get_category_by_id(category.parent_id)
     all_categories = {}
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open(dir_path + '/content/data/categories.txt', 'r') as f:
@@ -80,9 +80,10 @@ def edit_product(producer_id, product_id):
 
     measurement_units = ['кг', 'литры', 'штуки']
 
-    return render_template('edit_product.html', product=product, category=category, category_name=category_name,
-                           base_categories=base_categories, parent_category_name=parent_category_name,
-                           all_categories=all_categories, eng_rus_cats=eng_rus_cats, measurement_units=measurement_units )
+    return render_template('edit_product.html', product=product, category=category, category_name=category.name,
+                           base_categories=base_categories, parent_category_name=parent_category.name,
+                           all_categories=all_categories, eng_rus_cats=eng_rus_cats,
+                           measurement_units=measurement_units)
 
 
 @app.route('/producer/<producer_id>/create_product')
@@ -159,7 +160,7 @@ def producer_help():
 def version():
     return jsonify(version=1.0)
 
-  
+
 # Login and Logout
 
 @app.route('/login', methods=['GET', 'POST'])
