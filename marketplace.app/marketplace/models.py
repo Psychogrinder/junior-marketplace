@@ -86,7 +86,7 @@ class Producer(User):
         "Category",
         secondary=producer_category_association_table,
         lazy='subquery',
-        backref=db.backref('producers', lazy=True))
+        backref=db.backref('category_producers', lazy=True))
 
     def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
         super().__init__(email, password, 'producer', phone_number, address)
@@ -181,9 +181,7 @@ class Category(db.Model):
     name = db.Column(db.String(128))
     slug = db.Column(db.String(128))
     parent_id = db.Column(db.Integer)
-    # producers = db.relationship(
-    #     "Producer",
-    #     back_populates="categories")
+
 
     def __init__(self, name, slug=None, parent_id=0):
         self.name = name
