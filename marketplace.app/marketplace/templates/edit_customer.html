@@ -4,10 +4,10 @@
 {% include 'inc/modal_delete_customer.html' %}
 
 {% block body %}
-<main class="edit_customer">
+<main>
     <div class="container edit-profile">
         <section class="breadcrumbs">
-            <span><a href="#">Профиль</a></span>
+            <span><a href={{ url_for('customer_profile', user_id = user.id)}}>Профиль</a></span>
             <span><a class="active">Редактирование профиля</a></span>
         </section>
         <div class="delete-profile">
@@ -20,12 +20,20 @@
         </div>
         <form action="#">
             <div class="row edit-profile-item">
-                <label for="customer_name" class="col-4 col-sm-2">Имя</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="customer_name" placeholder="Иван">
+                <label for="customer_first_name" class="col-4 col-sm-2">Имя</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="customer_first_name" placeholder="Иван" value={{user.first_name}}>
+            </div>
+            <div class="row edit-profile-item">
+                <label for="customer_last_name" class="col-4 col-sm-2">Фамилия</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="customer_last_name" placeholder="Иванович" value={{user.last_name}}>
+            </div>
+            <div class="row edit-profile-item">
+                <label for="customer_patronymic" class="col-4 col-sm-2">Отчество</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="customer_patronymic" placeholder="Иванов" value={{user.patronymic}}>
             </div>
             <div class="row edit-profile-item">
                 <label for="customer_email" class="col-4 col-sm-2">Email</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="customer_email" value="example@mail.com" disabled>
+                <input type="text" class="form-control col-8 col-sm-4" id="customer_email" value={{ user.email }} disabled>
             </div>
             <div class="row edit-profile-item">
                 <label for="customer_photo" class="col-4 col-sm-2">Фотография</label>
@@ -33,13 +41,13 @@
             </div>
             <div class="row edit-profile-item">
                 <label for="customer_phone" class="col-4 col-sm-2">Телефон</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="customer_phone" placeholder="89110881856"
+                <input type="text" class="form-control col-8 col-sm-4" id="customer_phone" placeholder="89110881856" value={{ user.phone_number }}
                        pattern="^[ 0-9]+$">
             </div>
             <div class="row edit-profile-item">
                 <label for="customer_adress" class="col-4 col-sm-2">Адрес</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="customer_adress"
-                       placeholder="Улица Пушкина д 14 кв 58">
+                       placeholder="Улица Пушкина д 14 кв 58" value={{ user.address}} >
             </div>
             <div class="col-12 col-sm-6 edit-profile-save">
                 <button type="submit" class="btn btn-success">СОХРАНИТЬ</button>

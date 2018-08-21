@@ -1,10 +1,10 @@
 from flask import render_template, jsonify, redirect, url_for, flash
 from flask_restful import reqparse
-
 from marketplace import app
 from marketplace.models import Category, Product, Producer, Consumer, Order, User
 import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user
+
 
 
 # каталог
@@ -33,11 +33,11 @@ def category(category_name):
 @app.route('/products/<product_id>')
 def product_card(product_id):
     product = Product.query.filter_by(id=product_id).first()
+    category = utils.get_category_by_id(product.category_id)
     category_name = utils.get_category_by_id(product.category_id).name.title()
     producer_name = utils.get_producer_by_id(product.producer_id).name.title()
     return render_template('product_card.html', category_name=category_name, product=product,
-                           producer_name=producer_name)
-
+                           producer_name=producer_name, category=category)
 
 # товары производителя
 @app.route('/producer/<producer_id>/products')
@@ -48,7 +48,41 @@ def producer_products(producer_id):
 
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
 def edit_product(producer_id, product_id):
-    return render_template('edit_product.html')
+    product = Product.query.filter_by(id=product_id).first()
+    base_categories = Category.query.filter_by(parent_id=0).all()
+    category = utils.get_category_by_id(product.category_id)
+    category_name = utils.get_category_by_id(product.category_id).name
+    parent_category_name = Category.query.filter_by(id=category.parent_id).first().name
+    all_categories = {}
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(dir_path + '/content/data/categories.txt', 'r') as f:
+        cat = None
+        sub_cats = None
+        for i, line in enumerate(f.readlines()):
+            if i % 2 == 0:
+                cat = line.strip()
+            else:
+                sub_cats = [item.rstrip('\n') for item in line.split(', ')]
+                all_categories[cat] = sub_cats
+
+    eng_cats = []
+    with open(dir_path + '/content/data/categories_eng.txt', 'r') as f:
+        for line in f.readlines():
+            eng_cats += [word.strip('\n') for word in line.split(',')]
+
+    rus_cats = []
+    for k, v in all_categories.items():
+        rus_cats += [k] + v
+
+    eng_rus_cats = {}
+    for i, rus_cat in enumerate(rus_cats):
+        eng_rus_cats[rus_cat] = eng_cats[i]
+
+    measurement_units = ['кг', 'литры', 'штуки']
+
+    return render_template('edit_product.html', product=product, category=category, category_name=category_name,
+                           base_categories=base_categories, parent_category_name=parent_category_name,
+                           all_categories=all_categories, eng_rus_cats=eng_rus_cats, measurement_units=measurement_units )
 
 
 @app.route('/producer/<producer_id>/create_product')
@@ -125,7 +159,7 @@ def producer_help():
 def version():
     return jsonify(version=1.0)
 
-
+  
 # Login and Logout
 
 @app.route('/login', methods=['GET', 'POST'])
