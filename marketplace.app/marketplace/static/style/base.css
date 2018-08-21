@@ -9,6 +9,7 @@ h2 {
 main {
     margin-top: 40px;
     margin-bottom: 40px;
+    min-height: calc(100vh - 400px);
 }
 
 input[type="text"] {

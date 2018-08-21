@@ -45,9 +45,10 @@
                 <p class="out-of-stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg") }}>Нет в наличии</p>
                 {% endif %}
                 <!--TODO: выводить редактирование товара только для производителя-->
-                <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
+                <p class="edit-product"><a href={{ url_for('edit_product', producer_id = product.producer_id, product_id = product.id )}}><img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
             </div>
         </div>
+        {% if product.description %}
         <div class="row description-product">
             <div class="col-12">
                 <h2>Описание</h2>
@@ -56,6 +57,7 @@
                 </p>
             </div>
         </div>
+        {% endif %}
     </div>
 </main>
 

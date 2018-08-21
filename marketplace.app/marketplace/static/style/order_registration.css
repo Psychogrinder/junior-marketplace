@@ -1,9 +1,8 @@
-h1 {
-    font-size: 2rem;
-}
+
 
 .order-registration-header h1 {
     margin-left: 0.8rem;
+    margin-top: 2rem;
 }
 
 .order-sum {
