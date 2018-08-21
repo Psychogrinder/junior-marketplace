@@ -1,12 +1,11 @@
 try:
-    from marketplace import db
+    from marketplace import db, login
 except:
-    from content.data_app import db
+    from content.data_app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import MONEY
 from flask_login import UserMixin
-from marketplace import login
 
 producer_category_association_table = db.Table('producers_categories',
     db.Column('producer_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),

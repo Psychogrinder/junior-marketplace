@@ -18,13 +18,13 @@ file = open('data/producer-description.txt', 'r')
 description = file.read()
 file.close()
 
-with urllib.request.urlopen(f"https://randomuser.me/api/?results={len(producer_names)}") as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names))) as response:
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
         producer = Producer(company['login']['password'], company['email'], 'Совхоз ' + producer_names.pop().title(),
                             company['phone'], company['location']['street'],
-                            f"{company['name']['first']} {company['name']['last']}", description)
+                            "{} {}".format(company['name']['first'], company['name']['last']), description)
         db.session.add(producer)
 
 for i, producer in enumerate(Producer.query.all()):
