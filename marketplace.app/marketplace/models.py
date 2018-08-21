@@ -6,6 +6,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import MONEY
 
+producer_category_association_table = db.Table('producers_categories',
+    db.Column('producer_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('category_id', db.Integer, db.ForeignKey('category.id'), primary_key=True)
+)
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -78,6 +82,11 @@ class Producer(User):
     name = db.Column(db.String(128), unique=True)
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
+    categories = db.relationship(
+        "Category",
+        secondary=producer_category_association_table,
+        lazy='subquery',
+        backref=db.backref('producers', lazy=True))
 
     def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
         super().__init__(email, password, 'producer', phone_number, address)
@@ -172,6 +181,9 @@ class Category(db.Model):
     name = db.Column(db.String(128))
     slug = db.Column(db.String(128))
     parent_id = db.Column(db.Integer)
+    # producers = db.relationship(
+    #     "Producer",
+    #     back_populates="categories")
 
     def __init__(self, name, slug=None, parent_id=0):
         self.name = name
