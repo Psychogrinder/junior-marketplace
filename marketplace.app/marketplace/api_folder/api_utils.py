@@ -2,7 +2,7 @@ from operator import itemgetter
 
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
-from marketplace.models import Order, Consumer, Producer, Category, Product
+from marketplace.models import Order, Consumer, Producer, Category, Product, Basket
 from flask_restful import abort
 from marketplace import db
 
@@ -103,6 +103,11 @@ def get_products_by_producer_id(producer_id):
     return producer.get_products()
 
 
+def get_basket_by_consumer_id(consumer_id):
+    basket = Basket.query.filter_by(consumer_id=consumer_id).first()
+    return basket if basket is not None else post_basket(consumer_id)
+
+
 # Get by name
 
 def get_category_by_name(category_name):
@@ -169,12 +174,27 @@ def post_producer(args):
 
 
 def post_product(args):
-    abort_if_producer_doesnt_exist(['producer_id'])
-    abort_if_category_doesnt_exist(['category_id'])
+    abort_if_producer_doesnt_exist(args['producer_id'])
+    abort_if_category_doesnt_exist(args['category_id'])
     new_product = product_schema.load(args).data
     db.session.add(new_product)
     db.session.commit()
     return new_product
+
+
+def post_basket(consumer_id):
+    basket = Basket(consumer_id)
+    db.session.add(basket)
+    db.session.commit()
+    return basket
+
+
+def post_item_to_basket_by_consumer_id(args, consumer_id):
+    abort_if_product_doesnt_exist(int(args['product_id']))
+    basket = get_basket_by_consumer_id(consumer_id)
+    basket.put_item(args['product_id'], args['quantity'])
+    db.session.commit()
+    return basket
 
 
 # Put methods

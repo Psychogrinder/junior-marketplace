@@ -1,4 +1,5 @@
 from marketplace import api
+from marketplace.api_folder.basket_api import GlobalBasket
 from marketplace.api_folder.category_api import BaseCategories, Subcategories, SubcategoriesBySlug, PopularProductsByCategory, ProductsByCategory
 from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders
 from marketplace.api_folder.order_api import GlobalOrders, Orders
@@ -10,7 +11,8 @@ from marketplace.api_folder.product_api import GlobalProducts, ProductRest
 api.add_resource(GlobalOrders, '/orders')
 api.add_resource(Orders, '/orders/<int:order_id>')
 api.add_resource(ConsumerOrders, '/consumers/<int:consumer_id>/orders')
-api.add_resource(ProducerOrders, '/producers/<int:consumer_id>/orders')
+api.add_resource(ProducerOrders, '/producers/<int:producer_id>/orders')
+api.add_resource(GlobalBasket, '/consumers/<int:consumer_id>/basket')
 
 # checked
 api.add_resource(BaseCategories, '/categories/base')
