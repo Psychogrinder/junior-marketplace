@@ -21,6 +21,11 @@ def abort_if_consumer_doesnt_exist(consumer_id):
 
 
 def abort_if_producer_doesnt_exist(producer_id):
+    print('__________________DEBUG_________________________')
+    print('__________________DEBUG_________________________')
+    print(producer_id)
+    print('__________________DEBUG_________________________')
+    print('__________________DEBUG_________________________')
     if Producer.query.get(producer_id) is None:
         abort(404, message='Producer with id = {} doesn\'t exists'.format(producer_id))
 
@@ -169,8 +174,8 @@ def post_producer(args):
 
 
 def post_product(args):
-    abort_if_producer_doesnt_exist(['producer_id'])
-    abort_if_category_doesnt_exist(['category_id'])
+    abort_if_producer_doesnt_exist(args['producer_id'])
+    abort_if_category_doesnt_exist(args['category_id'])
     new_product = product_schema.load(args).data
     db.session.add(new_product)
     db.session.commit()
