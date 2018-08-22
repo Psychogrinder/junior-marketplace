@@ -23,11 +23,17 @@ def confirm_token(token):
 
 def _send_email(to, template, subject):
     msg = Message(
-
+        subject=subject,
+        recepient=[to],
+        html=template
     )
+    mail.send(msg)
+
 
 def send_confirmation_email(user_email):
     token = generate_confirmation_token(user_email)
     subject = 'MARKETPLACE. Подтверждение электронной почты'
     confirm_url = url_for('.email_confirm', token=token, _external=True)
     html = render_template('email_confirm.html', confirm_url=confirm_url)
+    print(confirm_url)
+    # _send_email(user_email, html, subject)
