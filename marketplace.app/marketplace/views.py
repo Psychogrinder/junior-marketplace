@@ -3,7 +3,7 @@ from flask_restful import reqparse
 from marketplace import app
 from marketplace.models import Category, Product, Producer, Consumer, Order, User
 import marketplace.api_folder.api_utils as utils
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 import os
 
 
@@ -44,6 +44,7 @@ def product_card(product_id):
 def producer_products(producer_id):
     products = utils.get_products_by_producer_id(producer_id)
     return render_template('producer_products.html', products=products)
+
 
 # Продумать что делать с неиспользованными id в методах
 
@@ -159,31 +160,6 @@ def producer_help():
 @app.route('/version')
 def version():
     return jsonify(version=1.0)
-
-
-# Login and Logout
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    parser = reqparse.RequestParser()
-    parser.add_argument('email')
-    parser.add_argument('password')
-    args = parser.parse_args()
-    if args is not None:
-        user = User.query.filter_by(email=args['email']).first()
-        if user is None or not user.check_password(args['password']):
-            return 'Invalid email or password'
-        login_user(user, True)
-        return redirect(url_for('index'))
-    return redirect(url_for('index'))
-
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

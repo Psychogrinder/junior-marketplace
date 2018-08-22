@@ -1,8 +1,7 @@
-from operator import itemgetter
-
+from flask_login import login_user, logout_user
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
-from marketplace.models import Order, Consumer, Producer, Category, Product, Cart
+from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
 from marketplace import db
 
@@ -248,4 +247,20 @@ def delete_product_by_id(product_id):
     product = get_product_by_id(product_id)
     db.session.delete(product)
     db.session.commit()
-    return {"message": "Product with id {} has been deleted succesfully".format(product_id)}
+    return {"message": "Product with id {} has been deleted successfully".format(product_id)}
+
+
+# Login/Logout
+
+def login(args):
+    user = User.query.filter_by(email=args['email']).first()
+    if user is None or not user.check_password(args['password']):
+        return 'Invali email or password'
+    # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
+    login_user(user, True)
+    return 'Congrat'
+
+
+def logout():
+    logout_user()
+    return 'Logout'
