@@ -6,7 +6,8 @@ a.btn.btn-success {
     color: #ffffff;
 }
 
-span#authUserAlert {
+span#authUserAlert,
+span#NonEqualPassword {
     color: #FF7851;
     display: none;
 }
