@@ -1,4 +1,4 @@
-from marketplace.models import Order, Product, Consumer, Producer, Category, Basket
+from marketplace.models import Order, Product, Consumer, Producer, Category, Cart
 from marketplace import ma
 from marshmallow import fields, post_load
 from marshmallow_sqlalchemy import ModelConverter
@@ -65,6 +65,6 @@ class CategorySchema(ma.ModelSchema):
             return Category(**data)
 
 
-class BasketSchema(ma.ModelSchema):
+class CartSchema(ma.ModelSchema):
     class Meta:
-        model = Basket
+        model = Cart

@@ -103,9 +103,9 @@ def get_products_by_producer_id(producer_id):
     return producer.get_products()
 
 
-def get_basket_by_consumer_id(consumer_id):
-    basket = Basket.query.filter_by(consumer_id=consumer_id).first()
-    return basket if basket is not None else post_basket(consumer_id)
+def get_cart_by_consumer_id(consumer_id):
+    cart = Basket.query.filter_by(consumer_id=consumer_id).first()
+    return cart if cart is not None else post_cart(consumer_id)
 
 
 # Get by name
@@ -182,19 +182,19 @@ def post_product(args):
     return new_product
 
 
-def post_basket(consumer_id):
-    basket = Basket(consumer_id)
-    db.session.add(basket)
+def post_cart(consumer_id):
+    cart = Basket(consumer_id)
+    db.session.add(cart)
     db.session.commit()
-    return basket
+    return cart
 
 
-def post_item_to_basket_by_consumer_id(args, consumer_id):
+def post_item_to_cart_by_consumer_id(args, consumer_id):
     abort_if_product_doesnt_exist(int(args['product_id']))
-    basket = get_basket_by_consumer_id(consumer_id)
-    basket.put_item(args['product_id'], args['quantity'])
+    cart = get_cart_by_consumer_id(consumer_id)
+    cart.put_item(args['product_id'], args['quantity'])
     db.session.commit()
-    return basket
+    return cart
 
 
 # Put methods

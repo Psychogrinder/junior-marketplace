@@ -1,5 +1,5 @@
 from marketplace.marshmallow_schemas import OrderSchema, ConsumerSchema, ConsumerSignUpSchema, ProducerSchema, \
-    ProducerSignUpSchema, CategorySchema, ProductSchema, BasketSchema
+    ProducerSignUpSchema, CategorySchema, ProductSchema,  CartSchema
 
 order_schema = OrderSchema()
 consumer_schema = ConsumerSchema()
@@ -8,7 +8,7 @@ producer_schema = ProducerSchema()
 producer_sign_up_schema = ProducerSignUpSchema()
 category_schema = CategorySchema()
 product_schema = ProductSchema()
-basket_schema = BasketSchema()
+cart_schema = CartSchema()
 order_schema_list = OrderSchema(many=True)
 consumer_schema_list = ConsumerSchema(many=True)
 producer_schema_list = ProducerSchema(many=True)

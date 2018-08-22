@@ -84,7 +84,7 @@ class Consumer(User):
                                                               last_name=self.last_name).strip()
 
 
-class Basket(db.Model):
+class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     consumer_id = db.Column(db.Integer)
     items = db.Column(MutableDict.as_mutable(JSON), server_default='{}', nullable=False, default={})
