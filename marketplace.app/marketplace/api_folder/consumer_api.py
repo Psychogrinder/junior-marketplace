@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
 from marketplace.api_folder.schemas import consumer_schema_list, consumer_schema, order_schema
 
-consumer_args = ['first_name', 'last_name', 'email', 'password', 'phone', 'category_id', 'address', 'photo_url']
+consumer_args = ['first_name', 'last_name', 'email', 'password', 'phone_number', 'category_id', 'address', 'photo_url', 'patronymic']
 parser = reqparse.RequestParser()
 
 for arg in consumer_args:

@@ -143,6 +143,43 @@ def get_all_products():
     return Product.query.all()
 
 
+# Category methods
+def delete_categories_if_it_was_the_last_product(product):
+    products = Product.query.filter_by(producer_id=product.producer_id).all()
+    quantity_of_products_with_this_category = 0
+    for prod in products:
+        if prod.category_id == product.category_id:
+            quantity_of_products_with_this_category += 1
+    if quantity_of_products_with_this_category == 1:
+        category = get_category_by_id(product.category_id)
+        producer = get_producer_by_id(product.producer_id)
+        producer.categories.remove(category)
+        categories_with_the_same_parent = Category.query.filter_by(parent_id=category.parent_id).all()
+        has_such_categories = False
+        for cat in categories_with_the_same_parent:
+            if cat in producer.categories:
+                has_such_categories = True
+                break
+        if not has_such_categories:
+            parent_category = get_category_by_id(category.parent_id)
+            producer.categories.remove(parent_category)
+
+
+def add_product_categories_if_necessary(product, new_category_id):
+    producer = get_producer_by_id(product.producer_id)
+    category = Category.query.get(new_category_id)
+    parent_category = Category.query.get(category.parent_id)
+    for category in (category, parent_category):
+        if category not in producer.categories:
+            producer.categories.append(category)
+
+
+def check_producer_categories(new_category_id, product):
+    if product.category_id != int(new_category_id):
+        delete_categories_if_it_was_the_last_product(product)
+        add_product_categories_if_necessary(product, new_category_id)
+
+
 # Post methods
 
 def post_order(args):
@@ -171,6 +208,12 @@ def post_producer(args):
 def post_product(args):
     abort_if_producer_doesnt_exist(args['producer_id'])
     abort_if_category_doesnt_exist(args['category_id'])
+    producer = Producer.query.get(args['producer_id'])
+    category = Category.query.get(args['category_id'])
+    parent_category = Category.query.get(category.parent_id)
+    for category in (category, parent_category):
+        if category not in producer.categories:
+            producer.categories.append(category)
     new_product = product_schema.load(args).data
     db.session.add(new_product)
     db.session.commit()
@@ -189,32 +232,35 @@ def put_order(args, order_id):
 
 def put_producer(args, producer_id):
     producer = get_producer_by_id(producer_id)
-    # Изменяет producer, но мы пока не придумали как именно
+    args['id'] = None
+    for k, v in args.items():
+        if v:
+            setattr(producer, k, v)
     db.session.commit()
     return producer
 
 
 def put_consumer(args, consumer_id):
     consumer = get_consumer_by_id(consumer_id)
-    # Изменяет consumer, но мы пока не придумали как именно
+    args['id'] = None
+    for k, v in args.items():
+        if v:
+            setattr(consumer, k, v)
     db.session.commit()
     return consumer
 
 
 def put_product(args, product_id):
-    print('___________DEBUG_______________')
-    print('___________DEBUG_______________')
-    print('___args________DEBUG_______________')
-    print(args)
-    print('___product________DEBUG_______________')
     product = get_product_by_id(product_id)
-    print(product)
-    print('___________DEBUG_______________')
+
+    if args['category_id']:
+        check_producer_categories(args['category_id'], product)
+
     args['id'] = None
+    args['producer_id'] = None
     for k, v in args.items():
-        if v is not None:
+        if v:
             setattr(product, k, v)
-    # Изменяет product, но мы пока не придумали как именно
     db.session.commit()
     return product
 
@@ -237,6 +283,7 @@ def delete_producer_by_id(producer_id):
 
 def delete_product_by_id(product_id):
     product = get_product_by_id(product_id)
+    delete_categories_if_it_was_the_last_product(product)
     db.session.delete(product)
     db.session.commit()
     return {"message": "Product with id {} has been deleted succesfully".format(product_id)}

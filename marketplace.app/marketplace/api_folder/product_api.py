@@ -15,6 +15,7 @@ class GlobalProducts(Resource):
 
     def post(self):
         args = parser.parse_args()
+        print(args)
         return product_schema.dump(utils.post_product(args)).data, 201
 
 
