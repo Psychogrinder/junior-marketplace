@@ -34,12 +34,12 @@ def abort_if_order_doesnt_exist(order_id):
 
 
 def abort_if_consumer_doesnt_exist(consumer_id):
-    if Consumer.query.get(consumer_id) is None:
+    if Consumer.query.filter_by(entity='consumer').filter_by(id=consumer_id).first() is None:
         abort(404, message='Consumer with id = {} doesn\'t exists'.format(consumer_id))
 
 
 def abort_if_producer_doesnt_exist(producer_id):
-    if Producer.query.get(producer_id) is None:
+    if Producer.query.filter_by(entity='producer').filter_by(id=producer_id).first() is None:
         abort(404, message='Producer with id = {} doesn\'t exists'.format(producer_id))
 
 
