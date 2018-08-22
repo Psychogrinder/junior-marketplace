@@ -26,14 +26,15 @@ css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/ca
              'style/category.css',
              'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/edit_profile.css', 'style/profile.css',
              'style/order_history.css', 'style/producer_products.css', 'style/edit_product.css',
-             'style/producer_products.css', 'style/producer_orders.css', 'style/order_registration.css', 'style/sing.css',
+             'style/producer_products.css', 'style/producer_orders.css', 'style/order_registration.css',
+             'style/sing.css',
 
              filters=['cssmin'], output='bundle.min.css')
 assets.register('css_all', css)
 
-
-js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.js', 'script/registration_customer.js', 'script/authorisation.js',
-             filters=['jsmin'], output='app.min.js')
+js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.js', 'script/registration_customer.js',
+            'script/authorisation.js', 'script/registration_producer.js',
+            filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)
 

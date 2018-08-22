@@ -1,3 +1,5 @@
+import re
+
 from flask_login import login_user, logout_user
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
@@ -8,6 +10,23 @@ from marketplace import db
 
 # Abort methods
 
+def failed_email_check(email):
+    abort(406, message='Given email = {} doesn\'t email is not valid'.format(email))
+
+
+def failed_password_len_check():
+    abort(406, message='Given password is too short')
+
+
+def failed_email_uniqueness_check(email):
+    abort(406, message='User with given email = {} already exists'.format(email))
+
+
+def failed_producer_name_uniqueness_check(name):
+    abort(406, message='Producer with given name = {} already exists'.format(name))
+
+
+# Abort if methods
 
 def abort_if_order_doesnt_exist(order_id):
     if Order.query.get(order_id) is None:
@@ -15,12 +34,12 @@ def abort_if_order_doesnt_exist(order_id):
 
 
 def abort_if_consumer_doesnt_exist(consumer_id):
-    if Consumer.query.get(consumer_id) is None:
+    if Consumer.query.filter_by(entity='consumer').filter_by(id=consumer_id).first() is None:
         abort(404, message='Consumer with id = {} doesn\'t exists'.format(consumer_id))
 
 
 def abort_if_producer_doesnt_exist(producer_id):
-    if Producer.query.get(producer_id) is None:
+    if Producer.query.filter_by(entity='producer').filter_by(id=producer_id).first() is None:
         abort(404, message='Producer with id = {} doesn\'t exists'.format(producer_id))
 
 
@@ -107,10 +126,18 @@ def get_cart_by_consumer_id(consumer_id):
     return cart if cart is not None else post_cart(consumer_id)
 
 
-# Get by name
+# Get by other params
 
 def get_category_by_name(category_name):
     return Category.query.filter_by(slug=category_name).first()
+
+
+def get_user_by_email(email):
+    return User.query.filter_by(email=email).first()
+
+
+def get_producer_by_name(name):
+    return Producer.query.filter_by(name=name).first()
 
 
 # Get sorted
@@ -183,6 +210,7 @@ def check_producer_categories(new_category_id, product):
         delete_categories_if_it_was_the_last_product(product)
         add_product_categories_if_necessary(product, new_category_id)
 
+
 # Product methods
 def producer_has_product_with_such_name(args):
     producer = Producer.query.get(args['producer_id'])
@@ -202,6 +230,8 @@ def post_order(args):
 
 
 def post_consumer(args):
+    validate_registration_data(args['email'], args['password'])
+    check_email_uniqueness(args['email'])
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
@@ -209,6 +239,9 @@ def post_consumer(args):
 
 
 def post_producer(args):
+    validate_registration_data(args['email'], args['password'])
+    check_email_uniqueness(args['email'])
+    check_producer_name_uniqueness(args['name'])
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
@@ -319,12 +352,35 @@ def delete_product_by_id(product_id):
 def login(args):
     user = User.query.filter_by(email=args['email']).first()
     if user is None or not user.check_password(args['password']):
-        return 'Invali email or password'
+        return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return 'Congrat'
+    return True
 
 
 def logout():
     logout_user()
     return 'Logout'
+
+
+# Validation
+
+def validate_registration_data(email, password):
+    email_pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    if re.match(email_pattern, email) is None:
+        failed_email_check(email)
+    if len(password) < 6:
+        failed_password_len_check()
+    return True
+
+
+# Checkers
+
+def check_email_uniqueness(email):
+    if get_user_by_email(email) is not None:
+        failed_email_uniqueness_check(email)
+
+
+def check_producer_name_uniqueness(name):
+    if get_producer_by_name(name) is not None:
+        failed_producer_name_uniqueness_check(name)

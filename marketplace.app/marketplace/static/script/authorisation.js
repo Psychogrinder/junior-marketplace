@@ -15,9 +15,16 @@ $("#authButton").click(function () {
                 password: password_authorisation,
             },
             function (status) {
-                $('#singInUser').removeClass('show');
-                $('#singInUser').css("display", "none");
-                $('.modal-backdrop').css("display", "none");
+                if(status) {
+                    $('#singInUser').removeClass('show');
+                    $('#singInUser').css("display", "none");
+                    $('.modal-backdrop').css("display", "none");
+                    location.reload();
+                }
+                else {
+                    console.log('jopa');
+                    $('#authUserAlert').css("display","block");
+                }
             });
 
     }
