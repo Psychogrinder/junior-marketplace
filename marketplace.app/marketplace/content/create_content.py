@@ -18,13 +18,13 @@ file = open('data/producer-description.txt', 'r')
 description = file.read()
 file.close()
 
-with urllib.request.urlopen(f"https://randomuser.me/api/?results={len(producer_names)}") as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names))) as response:
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
         producer = Producer(company['login']['password'], company['email'], 'Совхоз ' + producer_names.pop().title(),
                             company['phone'], company['location']['street'],
-                            f"{company['name']['first']} {company['name']['last']}", description)
+                            "{} {}".format(company['name']['first'], company['name']['last']), description)
         db.session.add(producer)
 
 for i, producer in enumerate(Producer.query.all()):
@@ -125,8 +125,12 @@ product_names = {"птица": {
 for cat, subcats in product_names.items():
     for subcat_name, products in subcats.items():
         for product_name in products:
-            category_id = Category.query.filter_by(name=subcat_name).first().id
-            product = Product(choice(prices), product_name, choice(quantity), choice(producer_ids), category_id, choice(measurement_units), choice(weights), choice(product_descriptions))
+            category = Category.query.filter_by(name=subcat_name).first()
+            producer_id = choice(producer_ids)
+            producer = Producer.query.filter_by(id=producer_id).first()
+            product = Product(choice(prices), product_name, choice(quantity), producer_id, category.id, choice(measurement_units), choice(weights), choice(product_descriptions))
             db.session.add(product)
+            producer.categories.append(category)
+
 
 db.session.commit()

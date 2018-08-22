@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}Яблоки Антоновка{% endblock %}
+{% block meta_title %}{{ product.name }}{% endblock %}
 
 {% block body %}
 <main>
     <section class="container breadcrumbs">
         <span><a href={{ url_for( 'index' ) }}>Каталог</a></span>
-        <span><a href={{ url_for( 'category', category_name = 'fruits' )}}>Фрукты</a></span>
+        <span><a href={{ url_for( 'category', category_name = category.slug )}}>{{ category_name }}</a></span>
         <span><a class="active">Яблоки Антоновка</a></span>
     </section>
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1 class="product_title">Яблоки Антоновка</h1>
+                <h1 class="product_title">{{ product.name }}</h1>
             </div>
         </div>
     </div>
@@ -25,11 +25,11 @@
             </div>
             <div class="col-4 product_info">
                 <span class="producer_title">ПРОДАВЕЦ</span>
-                <span class="producer_title_name"><a href={{ url_for('producer_profile', producer_id ="5") }}>Садовое хозяйство «Заречное»</a></span>
+                <span class="producer_title_name"><a href={{ url_for('producer_profile', producer_id = product.producer_id ) }}>{{ producer_name }}</a></span>
                 <span class="product_title_id">АРТИКУЛ</span>
-                <span class="product_id">123456</span>
+                <span class="product_id">{{ product.id }}</span>
                 <span class="product_price_title">ЦЕНА</span>
-                <span class="product_price_value">100 руб/кг</span>
+                <span class="product_price_value">{{ product.price }} руб/{{ product.measurement_unit }}</span>
                 <!-- TODO : выводить добавление в корзину только для покупателя-->
                 <div class="row">
                     <form class="product_quantity">
@@ -41,24 +41,23 @@
                 </div>
             </div>
             <div class="col-3">
+                {% if product.quantity == 0 %}
                 <p class="out-of-stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg") }}>Нет в наличии</p>
+                {% endif %}
                 <!--TODO: выводить редактирование товара только для производителя-->
-                <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
+                <p class="edit-product"><a href={{ url_for('edit_product', producer_id = product.producer_id, product_id = product.id )}}><img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
             </div>
         </div>
+        {% if product.description %}
         <div class="row description-product">
             <div class="col-12">
                 <h2>Описание</h2>
                 <p>
-                    Try cuting chili decorateed with whipped cream, mashed up with cumin.
-                    Try blending the iced tea blueberries with yellow buttermilk and cream,
-                    sautéed.Mix each side of the chickpeas with half a kilo of pickles.
-                    Try cuting chili decorateed with whipped cream, mashed up with cumin.
-                    Try blending the iced tea blueberries with yellow buttermilk and cream,
-                    sautéed.Mix each side of the chickpeas with half a kilo of pickles.
+                    {{ product.description }}
                 </p>
             </div>
         </div>
+        {% endif %}
     </div>
 </main>
 

@@ -11,9 +11,9 @@
             </div>
             <div class="col-9">
                 <div class="name_container">
-                    <h1>Совхоз «Светлый путь»</h1>
+                    <h1>{{ producer.name }}</h1>
                     <p class="edit-profile">
-                        <a href={{ url_for( 'edit_producer', producer_id = '8') }}>
+                        <a href={{ url_for( 'edit_producer', producer_id = producer.id) }}>
                             <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
                             Редактировать
                         </a>
@@ -33,12 +33,12 @@
                 <span>Описание:</span>
             </div>
             <div class="col-9 profile-values">
-                <span class="main-text">Совхоз «Светлый путь»</span>
-                <span class="main-text">Василий Петрович</span>
-                <span class="main-text">ferma@example.com</span>
-                <span class="main-text">+7 999 888-12-34</span>
-                <span class="main-text">Ленинградская область, Тихвинский район, д. Верхее Десятниково</span>
-                <span class="main-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, officia itaque odit repudiandae quisquam! Nobis, quaerat cupiditate qui id maxime dolor fuga voluptatum quidem corrupti delectus a, suscipit sit sed! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, officia itaque odit repudiandae quisquam! Nobis, quaerat cupiditate qui id maxime dolor fuga voluptatum quidem corrupti delectus a, suscipit sit sed! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, officia itaque odit repudiandae quisquam! Nobis, quaerat cupiditate qui id maxime dolor fuga voluptatum quidem corrupti delectus a, suscipit sit sed!</span>
+                <span class="main-text">{{ producer.name }}</span>
+                <span class="main-text">{{ producer.person_to_contact}}</span>
+                <span class="main-text">{{ producer.email }}</span>
+                <span class="main-text">{{ producer.phone_number }}</span>
+                <span class="main-text">{{ producer.address }}</span>
+                <span class="main-text">{{ producer.description }}</span>
             </div>
         </div>
     </div>
