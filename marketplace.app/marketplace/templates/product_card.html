@@ -6,7 +6,7 @@
 <main>
     <section class="container breadcrumbs">
         <span><a href={{ url_for( 'index' ) }}>Каталог</a></span>
-        <span><a href={{ url_for( 'category', category_name = 'fruits' )}}>{{ category_name }}</a></span>
+        <span><a href={{ url_for( 'category', category_name = category.slug )}}>{{ category_name }}</a></span>
         <span><a class="active">Яблоки Антоновка</a></span>
     </section>
     <div class="container">
@@ -25,7 +25,7 @@
             </div>
             <div class="col-4 product_info">
                 <span class="producer_title">ПРОДАВЕЦ</span>
-                <span class="producer_title_name"><a href={{ url_for('producer_profile', producer_id ="5") }}>{{ producer_name }}</a></span>
+                <span class="producer_title_name"><a href={{ url_for('producer_profile', producer_id = product.producer_id ) }}>{{ producer_name }}</a></span>
                 <span class="product_title_id">АРТИКУЛ</span>
                 <span class="product_id">{{ product.id }}</span>
                 <span class="product_price_title">ЦЕНА</span>
@@ -45,9 +45,10 @@
                 <p class="out-of-stock"><img src={{ url_for('static', filename ="img/exclamation-circle-solid.svg") }}>Нет в наличии</p>
                 {% endif %}
                 <!--TODO: выводить редактирование товара только для производителя-->
-                <p class="edit-product"><a href={{ url_for('edit_product', producer_id = '5', product_id = '5' )}}><img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
+                <p class="edit-product"><a href={{ url_for('edit_product', producer_id = product.producer_id, product_id = product.id )}}><img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>Редактировать</a></p>
             </div>
         </div>
+        {% if product.description %}
         <div class="row description-product">
             <div class="col-12">
                 <h2>Описание</h2>
@@ -56,6 +57,7 @@
                 </p>
             </div>
         </div>
+        {% endif %}
     </div>
 </main>
 

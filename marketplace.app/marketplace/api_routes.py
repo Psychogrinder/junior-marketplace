@@ -1,5 +1,5 @@
 from marketplace import api
-from marketplace.api_folder.category_api import BaseCategories, Subcategories, PopularProductsByCategory, ProductsByCategory
+from marketplace.api_folder.category_api import BaseCategories, Subcategories, SubcategoriesBySlug, PopularProductsByCategory, ProductsByCategory
 from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders
 from marketplace.api_folder.order_api import GlobalOrders, Orders
 from marketplace.api_folder.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders
@@ -15,6 +15,7 @@ api.add_resource(ProducerOrders, '/producers/<int:consumer_id>/orders')
 # checked
 api.add_resource(BaseCategories, '/categories/base')
 api.add_resource(Subcategories, '/categories/<int:category_id>/subcategories/')
+api.add_resource(SubcategoriesBySlug, '/categories/slug/<string:category_slug>/subcategories/')
 api.add_resource(GlobalProducts, '/products')
 api.add_resource(ProductRest, '/products/<int:product_id>')
 api.add_resource(ProductsByCategory, '/categories/<int:category_id>')

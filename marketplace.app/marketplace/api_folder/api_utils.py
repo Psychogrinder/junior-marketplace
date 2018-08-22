@@ -1,6 +1,7 @@
 from operator import itemgetter
 
-from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, product_schema
+from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
+    product_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product
 from flask_restful import abort
 from marketplace import db
@@ -27,6 +28,11 @@ def abort_if_producer_doesnt_exist(producer_id):
 def abort_if_category_doesnt_exist(category_id):
     if Category.query.get(category_id) is None:
         abort(404, message='Category with id = {} doesn\'t exists'.format(category_id))
+
+
+def abort_if_category_doesnt_exist_slug(category_slug):
+    if Category.query.filter_by(slug=category_slug) is None:
+        abort(404, message='Category with name = {} doesn\'t exists'.format(category_slug))
 
 
 def abort_if_product_doesnt_exist(product):
@@ -71,6 +77,12 @@ def get_subcategories_by_category_id(category_id):
     return Category.query.filter_by(parent_id=category_id).all()
 
 
+def get_subcategories_by_category_slug(category_slug):
+    abort_if_category_doesnt_exist_slug(category_slug)
+    category_id = Category.query.filter_by(slug=category_slug).first().id
+    return Category.query.filter_by(parent_id=category_id).all()
+
+
 def get_product_by_id(product_id):
     abort_if_product_doesnt_exist(product_id)
     return Product.query.get(product_id)
@@ -91,6 +103,12 @@ def get_products_by_producer_id(producer_id):
     return producer.get_products()
 
 
+# Get by name
+
+def get_category_by_name(category_name):
+    return Category.query.filter_by(slug=category_name).first()
+
+
 # Get sorted
 
 
@@ -101,6 +119,7 @@ def get_popular_products_by_category_id(category_id):
 
 def get_popular_products():
     return sorted(get_all_products(), key=lambda product: product.times_ordered, reverse=True)
+
 
 # Get all methods
 
@@ -116,7 +135,7 @@ def get_all_producers():
     return Producer.query.filter_by(entity='producer').all()
 
 
-def get_all_default_categories():
+def get_all_base_categories():
     return Category.query.filter_by(parent_id=0).all()
 
 
@@ -150,8 +169,8 @@ def post_producer(args):
 
 
 def post_product(args):
-    abort_if_producer_doesnt_exist(['producer_id'])
-    abort_if_category_doesnt_exist(['category_id'])
+    abort_if_producer_doesnt_exist(args['producer_id'])
+    abort_if_category_doesnt_exist(args['category_id'])
     new_product = product_schema.load(args).data
     db.session.add(new_product)
     db.session.commit()
@@ -210,4 +229,3 @@ def delete_product_by_id(product_id):
     db.session.delete(product)
     db.session.commit()
     return {"message": "Product with id {} has been deleted succesfully".format(product_id)}
-

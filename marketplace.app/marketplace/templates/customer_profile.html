@@ -11,9 +11,9 @@
             </div>
             <div class="col-9">
                 <div class="name_container">
-                    <h1>Иван Фёдоров</h1>
+                    <h1>{{ user.first_name }} {{user.last_name}}</h1>
                     <p class="edit-profile">
-                        <a href={{ url_for( 'edit_customer', user_id = '5') }}>
+                        <a href={{ url_for( 'edit_customer', user_id = user.id) }}>
                             <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
                             Редактировать
                         </a>
@@ -30,9 +30,9 @@
                 <span>Адрес:</span>
             </div>
             <div class="col-9 col-sm-10 profile-values">
-                <span class="main-text">example@example.com</span>
-                <span class="main-text">+7 999 123-45-67</span>
-                <span class="main-text">Санкт-Петерург, Большой пр. П.С., д. 22, кв. 12</span>
+                <span class="main-text">{{ user.email }}</span>
+                <span class="main-text">{{ user.phone_number }}</span>
+                <span class="main-text">{{ user.address }}</span>
             </div>
         </div>
     </div>
