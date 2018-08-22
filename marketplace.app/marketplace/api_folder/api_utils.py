@@ -1,3 +1,5 @@
+import re
+
 from flask_login import login_user, logout_user
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
@@ -8,6 +10,15 @@ from marketplace import db
 
 # Abort methods
 
+def failed_email_check(email):
+    abort(406, message='Given email = {} doesn\'t match email regex pattern'.format(email))
+
+
+def failed_password_len_check():
+    abort(406, message='Given password is too short')
+
+
+# Abort if methods
 
 def abort_if_order_doesnt_exist(order_id):
     if Order.query.get(order_id) is None:
@@ -183,6 +194,7 @@ def check_producer_categories(new_category_id, product):
         delete_categories_if_it_was_the_last_product(product)
         add_product_categories_if_necessary(product, new_category_id)
 
+
 # Product methods
 def producer_has_product_with_such_name(args):
     producer = Producer.query.get(args['producer_id'])
@@ -202,6 +214,7 @@ def post_order(args):
 
 
 def post_consumer(args):
+    validate_registration_data(args['email'], args['password'])
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
@@ -209,6 +222,7 @@ def post_consumer(args):
 
 
 def post_producer(args):
+    validate_registration_data(args['email'], args['password'])
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
@@ -328,3 +342,14 @@ def login(args):
 def logout():
     logout_user()
     return 'Logout'
+
+
+# Validation
+
+def validate_registration_data(email, password):
+    email_pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    if re.match(email_pattern, email) is None:
+        failed_email_check(email)
+    if len(password) < 6:
+        failed_password_len_check()
+    return True
