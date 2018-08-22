@@ -21,11 +21,6 @@ def abort_if_consumer_doesnt_exist(consumer_id):
 
 
 def abort_if_producer_doesnt_exist(producer_id):
-    print('__________________DEBUG_________________________')
-    print('__________________DEBUG_________________________')
-    print(producer_id)
-    print('__________________DEBUG_________________________')
-    print('__________________DEBUG_________________________')
     if Producer.query.get(producer_id) is None:
         abort(404, message='Producer with id = {} doesn\'t exists'.format(producer_id))
 
