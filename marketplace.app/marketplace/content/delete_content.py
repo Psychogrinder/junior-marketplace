@@ -7,7 +7,7 @@ from models import *
 
 categories = Category.query.all()
 for category in categories:
-    category.category_producers = []
+    category.producers = []
     db.session.commit()
 
 for model in [Consumer, Producer, Category, Order, Product]:
