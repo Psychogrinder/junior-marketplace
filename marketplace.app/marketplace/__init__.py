@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_assets import Environment, Bundle
 from marketplace.config import Config
 from flask_sqlalchemy import SQLAlchemy
@@ -8,11 +8,13 @@ from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
 import cssmin
 import jsmin
+from flask_mail import Mail
+
 
 app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(Config)
-app.secret_key = '1234'
+mail = Mail(app)
 ma = Marshmallow(app)
 api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
@@ -28,7 +30,6 @@ css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/ca
              'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/edit_profile.css', 'style/profile.css',
              'style/order_history.css', 'style/producer_products.css', 'style/edit_product.css',
              'style/producer_products.css', 'style/producer_orders.css', 'style/order_registration.css',
-
              filters=['cssmin'], output='bundle.min.css')
 assets.register('css_all', css)
 
