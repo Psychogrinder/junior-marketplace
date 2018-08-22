@@ -179,6 +179,12 @@ def check_producer_categories(new_category_id, product):
         delete_categories_if_it_was_the_last_product(product)
         add_product_categories_if_necessary(product, new_category_id)
 
+# Product methods
+def producer_has_product_with_such_name(args):
+    producer = Producer.query.get(args['producer_id'])
+    if Product.query.filter_by(producer_id=args['producer_id']).filter_by(name=args['name']).first():
+        return True
+
 
 # Post methods
 
@@ -208,14 +214,14 @@ def post_producer(args):
 def post_product(args):
     abort_if_producer_doesnt_exist(args['producer_id'])
     abort_if_category_doesnt_exist(args['category_id'])
+    new_product = product_schema.load(args).data
+    db.session.add(new_product)
     producer = Producer.query.get(args['producer_id'])
     category = Category.query.get(args['category_id'])
     parent_category = Category.query.get(category.parent_id)
     for category in (category, parent_category):
         if category not in producer.categories:
             producer.categories.append(category)
-    new_product = product_schema.load(args).data
-    db.session.add(new_product)
     db.session.commit()
     return new_product
 
