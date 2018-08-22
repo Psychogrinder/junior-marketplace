@@ -1,8 +1,7 @@
-from operator import itemgetter
-
+from flask_login import login_user, logout_user
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
-from marketplace.models import Order, Consumer, Producer, Category, Product
+from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
 from marketplace import db
 
@@ -101,6 +100,11 @@ def get_products_by_category_id(category_id):
 def get_products_by_producer_id(producer_id):
     producer = get_producer_by_id(producer_id)
     return producer.get_products()
+
+
+def get_cart_by_consumer_id(consumer_id):
+    cart = Cart.query.filter_by(consumer_id=consumer_id).first()
+    return cart if cart is not None else post_cart(consumer_id)
 
 
 # Get by name
@@ -226,6 +230,21 @@ def post_product(args):
     return new_product
 
 
+def post_cart(consumer_id):
+    cart = Cart(consumer_id)
+    db.session.add(cart)
+    db.session.commit()
+    return cart
+
+
+def post_item_to_cart_by_consumer_id(args, consumer_id):
+    abort_if_product_doesnt_exist(int(args['product_id']))
+    cart = get_cart_by_consumer_id(consumer_id)
+    cart.put_item(args['product_id'], args['quantity'])
+    db.session.commit()
+    return cart
+
+
 # Put methods
 
 def put_order(args, order_id):
@@ -292,4 +311,20 @@ def delete_product_by_id(product_id):
     delete_categories_if_it_was_the_last_product(product)
     db.session.delete(product)
     db.session.commit()
-    return {"message": "Product with id {} has been deleted succesfully".format(product_id)}
+    return {"message": "Product with id {} has been deleted successfully".format(product_id)}
+
+
+# Login/Logout
+
+def login(args):
+    user = User.query.filter_by(email=args['email']).first()
+    if user is None or not user.check_password(args['password']):
+        return 'Invali email or password'
+    # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
+    login_user(user, True)
+    return 'Congrat'
+
+
+def logout():
+    logout_user()
+    return 'Logout'
