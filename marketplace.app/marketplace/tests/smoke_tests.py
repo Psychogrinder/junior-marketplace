@@ -1,23 +1,25 @@
-#import sys
-#sys.path.insert(0, '/home/elama/dev-tools/Projects/junior-marketplace/marketplace.app/marketplace')
+#from ..api_folder import category_api
+
 import unittest
 from urllib.request import Request, urlopen
 from selenium import webdriver
-#подменяет '<name_category>' на имя существующей категории для домтупа по ссылке
+
+
 def addCategoryLinks(link, category):
+    """заменяет '<name_category>' на имя корректное категории
+    для проверки респонса"""
     return link.replace('<name_category>', category)
-# --/-- <id> с базы данных
+
 def addIdLinks(link, id):
+    """ --/-- <id>"""
     return link.replace('<id>', str(id))
 
 class TestSmoke(unittest.TestCase):
 
     def setUp(self):
-        #self.browser = webdriver.Firefox()
-        #self.addCleanup(self.browser.quit)
-        self.url = 'http://127.0.0.1:5000'
+        self.url = 'http://127.0.0.1:8000'
         self.title = 'Маркетплейс'
-        self.categories = [#'poultry',
+        self.categories = ['poultry',
                            'eggs', 'fish', 'fruits',
                            'honey', 'meat', 'milk', 'vegetables'
                            ]
@@ -25,17 +27,19 @@ class TestSmoke(unittest.TestCase):
                       'orders': '/producer/<id>/orders', # producer orders
                       'products': '/producer/<id>/products',
                       'category': '/category/<name_category>',
-                      'add_product': '/producer/<id>/create_product',
+                      #'add_product': '/producer/<id>/create_product',
                       'product': '/category/<name_category>',
                       'profile': '/user/<id>',
                       'confirm_order': '/cart/<id>/order_registration/'
                       }
-        self.id_user = 17
+        self.id_user = 5
 
     def testConnection(self):
+        """проверка подключения"""
         self.assertEqual(200, (urlopen(self.url).getcode()))
 
-        #проверяет корректность категорий по ссылке
+    def testRoutes(self):
+        """проверка роутов"""
         for category in range(len(self.categories)):
             for key, value in self.links.items():
                 link = addCategoryLinks(value, self.categories[category])
@@ -43,14 +47,9 @@ class TestSmoke(unittest.TestCase):
                 test_url = self.url + link
                 print(test_url)
                 self.assertEqual(200, (urlopen(test_url).getcode()))
-    #def testPageTitle(self):
-    #    self.browser.get(self.url)
-    #    self.assertIn(self.title, self.browser.title)
-    '''
-    def testRoutes(self):
-        pass
-    '''
+
     def tearDown(self):
         pass
+
 if __name__ == '__main__':
    unittest.main()
