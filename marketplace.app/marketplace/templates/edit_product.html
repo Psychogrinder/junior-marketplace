@@ -33,27 +33,14 @@
             <div class="row edit-product-item">
                 <label for="editCategory" class="col-5 col-sm-3">Категория</label>
                 <select class="form-control col-8 col-sm-4" name="category" id="editCategory" required>
-                    <option value="" disabled selected>Категория</option>
-                    {% for category in base_categories %}
-                    {% if parent_category_name == category.name %}
-                    <option selected value={{ category.slug }}>{{ category.name }}</option>
-                    {% else %}
-                    <option value={{ category.slug }}>{{ category.name }}</option>
-                    {% endif %}
-                    {% endfor %}
+                    <option value="" disabled>Категория</option>
                 </select>
             </div>
             <div class="row edit-product-item">
                 <label for="editSubcategory" class="col-5 col-sm-3">Подкатегория</label>
                 <select class="form-control col-8 col-sm-4" name="subcategory" id="editSubcategory" required>
-                    <option value={{ product.category_id }} disabled selected>Подкатегория</option>
-                    {% for subcat in all_categories[parent_category_name] %}
-                    {% if category_name == subcat %}
-                    <option value={{ eng_rus_cats[subcat] }} selected class="subcategory_option">{{ subcat }}</option>
-                    {% else %}
-                    <option value={{ eng_rus_cats[subcat] }} class="subcategory_option">{{ subcat }}</option>
-                    {% endif %}
-                    {% endfor %}
+                    <option value="" disabled selected>Подкатегория</option>
+
                 </select>
             </div>
             <div class="row edit-product-item">
@@ -61,15 +48,6 @@
                 <input type="text" class="form-control col-8 col-sm-4" id="editCount" placeholder="10"
                        pattern="^[ 0-9]+$" value={{ product.quantity }}>
             </div>
-            <!--<div class="row edit-product-item">-->
-            <!--<label for="editUnits" class="col-5 col-sm-3">Единицы измерения</label>-->
-            <!--<select class="form-control col-8 col-sm-4" name="units" id="editUnits" required>-->
-            <!--<option>Кг</option>-->
-            <!--<option>Литр</option>-->
-            <!--<option>Упаковка</option>-->
-            <!--</select>-->
-            <!--</div>-->
-            <!--<p>{{ product.measurement_unit }}</p>-->
             <!-- TODO: вес должен всплывать если выбрана упаковка -->
             <div class="row edit-product-item">
                 <label for="editWeigth" class="col-5 col-sm-3">Вес/Единицы измерения</label>

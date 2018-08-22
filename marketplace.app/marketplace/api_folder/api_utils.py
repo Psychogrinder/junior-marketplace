@@ -107,6 +107,11 @@ def get_cart_by_consumer_id(consumer_id):
     return cart if cart is not None else post_cart(consumer_id)
 
 
+def get_parent_category_by_category_id(category_id):
+    parent_category_id = Category.query.filter_by(id=category_id).first().parent_id
+    return get_category_by_id(parent_category_id)
+
+
 # Get by name
 
 def get_category_by_name(category_name):
@@ -182,6 +187,7 @@ def check_producer_categories(new_category_id, product):
     if product.category_id != int(new_category_id):
         delete_categories_if_it_was_the_last_product(product)
         add_product_categories_if_necessary(product, new_category_id)
+
 
 # Product methods
 def producer_has_product_with_such_name(args):
