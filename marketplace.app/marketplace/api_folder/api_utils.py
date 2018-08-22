@@ -2,7 +2,7 @@ from operator import itemgetter
 
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
-from marketplace.models import Order, Consumer, Producer, Category, Product, Basket
+from marketplace.models import Order, Consumer, Producer, Category, Product, Cart
 from flask_restful import abort
 from marketplace import db
 
@@ -104,7 +104,7 @@ def get_products_by_producer_id(producer_id):
 
 
 def get_cart_by_consumer_id(consumer_id):
-    cart = Basket.query.filter_by(consumer_id=consumer_id).first()
+    cart = Cart.query.filter_by(consumer_id=consumer_id).first()
     return cart if cart is not None else post_cart(consumer_id)
 
 
@@ -183,7 +183,7 @@ def post_product(args):
 
 
 def post_cart(consumer_id):
-    cart = Basket(consumer_id)
+    cart = Cart(consumer_id)
     db.session.add(cart)
     db.session.commit()
     return cart
