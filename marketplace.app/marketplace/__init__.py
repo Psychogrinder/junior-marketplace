@@ -17,7 +17,6 @@ ma = Marshmallow(app)
 api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
 login = LoginManager(app)
-login.login_view = 'login'
 migrate = Migrate(app, db)
 db.init_app(app)
 
