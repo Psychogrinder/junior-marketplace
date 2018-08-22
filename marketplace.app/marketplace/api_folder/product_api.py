@@ -15,6 +15,8 @@ class GlobalProducts(Resource):
 
     def post(self):
         args = parser.parse_args()
+        if utils.producer_has_product_with_such_name(args):
+            return {'message': f'У этого производителя уже есть товар с именем {args["name"]}'}
         return product_schema.dump(utils.post_product(args)).data, 201
 
 
