@@ -14,4 +14,5 @@ Flask-RESTful
 cssmin
 jsmin
 SQLAlchemy
-
+flask_mail
+python-dotenv
