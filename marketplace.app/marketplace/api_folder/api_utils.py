@@ -202,7 +202,18 @@ def put_consumer(args, consumer_id):
 
 
 def put_product(args, product_id):
+    print('___________DEBUG_______________')
+    print('___________DEBUG_______________')
+    print('___args________DEBUG_______________')
+    print(args)
+    print('___product________DEBUG_______________')
     product = get_product_by_id(product_id)
+    print(product)
+    print('___________DEBUG_______________')
+    args['id'] = None
+    for k, v in args.items():
+        if v is not None:
+            setattr(product, k, v)
     # Изменяет product, но мы пока не придумали как именно
     db.session.commit()
     return product
