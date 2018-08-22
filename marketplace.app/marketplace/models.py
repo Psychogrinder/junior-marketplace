@@ -87,7 +87,7 @@ class Producer(User):
         "Category",
         secondary=producer_category_association_table,
         lazy='subquery',
-        backref=db.backref('category_producers', lazy=True))
+        backref=db.backref('producers', lazy=True))
 
     def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
         super().__init__(email, password, 'producer', phone_number, address)
