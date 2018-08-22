@@ -1,3 +1,4 @@
+import os
 from flask import render_template, jsonify, redirect, url_for, flash
 from flask_restful import reqparse
 from marketplace import app
@@ -107,6 +108,7 @@ def order_registration(user_id):
 def customer_profile(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     return render_template('customer_profile.html', user=user)
+
 
 
 @app.route('/user/edit/<user_id>')
