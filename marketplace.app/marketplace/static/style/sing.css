@@ -5,3 +5,8 @@ span.invalid-feedback {
 a.btn.btn-success {
     color: #ffffff;
 }
+
+span#authUserAlert {
+    color: #FF7851;
+    display: none;
+}

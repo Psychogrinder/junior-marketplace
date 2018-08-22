@@ -255,10 +255,10 @@ def delete_product_by_id(product_id):
 def login(args):
     user = User.query.filter_by(email=args['email']).first()
     if user is None or not user.check_password(args['password']):
-        return 'Invali email or password'
+        return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return 'Congrat'
+    return True
 
 
 def logout():
