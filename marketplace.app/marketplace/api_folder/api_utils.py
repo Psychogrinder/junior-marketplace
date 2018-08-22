@@ -11,7 +11,7 @@ from marketplace import db
 # Abort methods
 
 def failed_email_check(email):
-    abort(406, message='Given email = {} doesn\'t match email regex pattern'.format(email))
+    abort(406, message='Given email = {} doesn\'t email is not valid'.format(email))
 
 
 def failed_password_len_check():
