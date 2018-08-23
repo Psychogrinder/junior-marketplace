@@ -1,5 +1,6 @@
 import os
 import sys
+import ssl
 import urllib.request
 import json
 from random import choice
@@ -8,6 +9,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 dir_path = os.path.dirname(os.path.realpath(dir_path))
 sys.path.insert(0, dir_path)
 from models import *
+
+context = ssl._create_unverified_context()
 
 producer_names = ['безбрежный', 'бездонный', 'безмятежный', 'белоснежный', 'беспредельный', 'колоссальный',
                   'мировой', 'неиссякаемый', 'щедрый']
@@ -18,7 +21,7 @@ file = open('data/producer-description.txt', 'r')
 description = file.read()
 file.close()
 
-with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names))) as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names)), context=context) as response:
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
@@ -30,7 +33,7 @@ with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(p
 for i, producer in enumerate(Producer.query.all()):
     producer.id = i+1
 
-with urllib.request.urlopen("https://randomuser.me/api/?results=100") as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results=100", context=context) as response:
     data = response.read()
     data = json.loads(data)
     for person in data["results"]:
@@ -133,8 +136,10 @@ for cat, subcats in product_names.items():
             producer.categories.append(category)
             parent_category = Category.query.filter_by(id=category.parent_id).first()
             producer.categories.append(parent_category)
-            
+        
+        
 for i, cat in enumerate(Category.query.all()):
     cat.name = cat.name.title()
+
     
 db.session.commit()
