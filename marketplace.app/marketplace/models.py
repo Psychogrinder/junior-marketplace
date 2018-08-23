@@ -25,8 +25,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128), unique=True)
     email_auth_status = db.Column(db.Boolean)
     password_hash = db.Column(db.String(1024))
-    phone_number = db.Column(db.String(16))
-    address = db.Column(db.String(128))
+    phone_number = db.Column(db.String(16), default='')
+    address = db.Column(db.String(128), default='')
     photo_url = db.Column(db.String(256))
     entity = db.Column(db.String(16))
 

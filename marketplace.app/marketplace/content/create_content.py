@@ -25,7 +25,7 @@ with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(p
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
-        producer = Producer(company['login']['password'], company['email'], 'Совхоз ' + producer_names.pop().title(),
+        producer = Producer('123123', company['email'], 'Совхоз ' + producer_names.pop().title(),
                             company['phone'], company['location']['street'],
                             "{} {}".format(company['name']['first'], company['name']['last']), description)
         db.session.add(producer)
@@ -37,7 +37,7 @@ with urllib.request.urlopen("https://randomuser.me/api/?results=100", context=co
     data = response.read()
     data = json.loads(data)
     for person in data["results"]:
-        consumer = Consumer(person['email'], person['login']['password'], person['name']['first'],
+        consumer = Consumer(person['email'], '123123', person['name']['first'],
                             person['name']['last'], person['phone'], person['location']['street'])
         db.session.add(consumer)
 
