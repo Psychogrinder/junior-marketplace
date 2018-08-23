@@ -62,7 +62,6 @@ $(document).ready(function () {
         var phone_producer = $("#phoneRegProducer").val();
         var address_producer = $("#addressRegProducer").val();
         var description_producer = $("#descriptionRegProducer").val();
-        console.log(phone_producer, address_producer, description_producer);
         var emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
         if (!email_producer || (!(emailRegular.test(email_producer)))) {
@@ -102,6 +101,7 @@ $(document).ready(function () {
                         $('#regProducer').removeClass('show');
                         $('#regProducer').css("display", "none");
                         $('.modal-backdrop').css("display", "none");
+                        location.reload();
                     }
                 });
         }

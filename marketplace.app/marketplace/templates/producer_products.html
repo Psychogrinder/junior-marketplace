@@ -9,6 +9,7 @@
         <section class="breadcrumbs">
             <span><a class="active">Товары</a></span>
         </section>
+        {% if products %}
         <section class="product-filter">
             <form action="#">
                 <div class="filter-block col-6 col-sm-4">
@@ -54,6 +55,13 @@
             </div>
             {% endfor %}
         </section>
+        {% else %}
+        <section class="producer_products_empty">
+            <h2>У вас нет товаров</h2>
+            <a class="btn btn-secondary add-product" href={{ url_for( 'create_product', producer_id =
+            current_user.id ) }} > Добавить товар</a>
+        </section>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

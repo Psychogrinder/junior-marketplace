@@ -11,9 +11,9 @@
             </div>
             <div class="col-9">
                 <div class="name_container">
-                    <h1>{{ user.first_name }} {{user.last_name}}</h1>
+                    <h1>{{ user.first_name }}{{user.last_name}}</h1>
                     <p class="edit-profile">
-                        <a href={{ url_for( 'edit_customer', user_id = user.id) }}>
+                        <a href={{ url_for( 'edit_consumer', user_id = user.id) }}>
                             <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
                             Редактировать
                         </a>
@@ -26,13 +26,21 @@
         <div class="row">
             <div class="col-3 col-sm-2 profile-keys">
                 <span>E-mail:</span>
+                {% if user.phone_number %}
                 <span>Телефон:</span>
+                {% endif %}
+                {% if user.address %}
                 <span>Адрес:</span>
+                {% endif %}
             </div>
             <div class="col-9 col-sm-10 profile-values">
                 <span class="main-text">{{ user.email }}</span>
+                {% if user.phone_number %}
                 <span class="main-text">{{ user.phone_number }}</span>
+                {% endif %}
+                {% if user.address %}
                 <span class="main-text">{{ user.address }}</span>
+                {% endif %}
             </div>
         </div>
     </div>
