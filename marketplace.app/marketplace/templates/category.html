@@ -30,7 +30,7 @@
                 <div class="filter-block col-6 col-sm-3">
                     <select class="form-control" name="subcategory">
                         <option value="" disabled selected>Производитель</option>
-                        {% for producer in producers %}
+                        {% for producer in category.producers %}
                         <option>{{ producer.name }}</option>
                         {% endfor %}
                     </select>
@@ -48,6 +48,7 @@
         </section>
         <section class="product-card row">
             {% for product in products %}
+
             <div class="col-6 col-sm-3 card-item">
                 <a href={{ url_for( 'product_card', product_id = product.id )}}>
                 <div class="product-item-photo">
@@ -56,7 +57,11 @@
                 <div class="product-item-description">
                     <p>{{ product.price }} ₽</p>
                     <b>{{ product.name }}</b>
-                    <p>{{ product.producer_id }}</p>
+                    {% for producer in producers %}
+                    {% if product.producer_id == producer.id %}
+                    <p>{{ producer.name }}</p>
+                    {% endif %}
+                    {% endfor %}
                 </div>
                 </a>
             </div>

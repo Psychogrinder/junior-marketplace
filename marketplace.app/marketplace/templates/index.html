@@ -27,7 +27,11 @@
                 <div class="product-item-description">
                     <p>{{ product.price }} ₽</p>
                     <b>{{ product.name }}</b>
-                    <p>{{ product.producer_id }}</p>
+                    {% for producer in producers %}
+                    {% if product.producer_id == producer.id %}
+                    <p>{{ producer.name }}</p>
+                    {% endif %}
+                    {% endfor %}
                 </div>
                 </a>
             </div>
