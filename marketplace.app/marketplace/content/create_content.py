@@ -98,7 +98,7 @@ product_names = {"птица": {
     "фрукты": {
         "груши": ["Груши Совхозные", "Груши Колхозные", "Груши Городские"],
         "дыни": ["Дыни Совхозные", "Дыни Колхозные", "Дыни Городские"],
-        "яблоки": ["Дыни Совхозные", "Дыни Колхозные", "Дыни Городские"]
+        "яблоки": ["Яблоки Совхозные", "Яблоки Колхозные", "Яблоки Городские"]
     },
     "мёд": {
         "гречишный": ["Мёд гречишный Совхозный", "Мёд гречишный Колхозный", "Мёд гречишный Городскый"],
@@ -131,6 +131,6 @@ for cat, subcats in product_names.items():
             product = Product(choice(prices), product_name, choice(quantity), producer_id, category.id, choice(measurement_units), choice(weights), choice(product_descriptions))
             db.session.add(product)
             producer.categories.append(category)
-
-
+            parent_category = Category.query.filter_by(id=category.parent_id).first()
+            producer.categories.append(parent_category)
 db.session.commit()

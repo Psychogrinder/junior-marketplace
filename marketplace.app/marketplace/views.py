@@ -16,7 +16,8 @@ def index():
     return render_template(
         'index.html',
         categories=categories,
-        popular_products=popular_products
+        popular_products=popular_products,
+        producers=Producer.query.all()
     )
 
 
@@ -52,16 +53,11 @@ def producer_products(producer_id):
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
 def edit_product(producer_id, product_id):
     product = utils.get_product_by_id(product_id)
-    base_categories = utils.get_all_base_categories()
-    category = utils.get_category_by_id(product.category_id)
-    parent_category = utils.get_category_by_id(category.parent_id)
-    all_categories = {}
-
     categories = Category.query.all()
-
     measurement_units = ['кг', 'литры', 'штуки']
 
-    return render_template('edit_product.html', product=product, categories=categories)
+
+    return render_template('edit_product.html', product=product, categories=categories, measurement_units=measurement_units)
 
 @app.route('/producer/<producer_id>/create_product')
 def create_product(producer_id):
