@@ -11,7 +11,7 @@ from marketplace import db
 # Abort methods
 
 def failed_email_check(email):
-    abort(406, message='Given email = {} doesn\'t email is not valid'.format(email))
+    abort(406, message='Given email = \'{}\'  is invalid'.format(email))
 
 
 def failed_password_len_check():
@@ -367,7 +367,7 @@ def logout():
 
 def validate_registration_data(email, password):
     email_pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-    if re.match(email_pattern, email) is None:
+    if not re.match(email_pattern, email):
         failed_email_check(email)
     if len(password) < 6:
         failed_password_len_check()
