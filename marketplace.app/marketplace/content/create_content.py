@@ -76,7 +76,7 @@ for i, cat in enumerate(Category.query.all()):
 prices = range(50, 1000)
 quantity = range(100, 500)
 producer_ids = range(1, number_of_producers+1)
-measurement_units = ['кг', 'литры', 'штуки']
+measurement_units = ['кг', 'л', 'шт']
 weights = range(5, 50)
 product_descriptions = ['Очень вкусный продукт', 'Самый вкусный продукт']
 
