@@ -30,7 +30,7 @@ def category(category_name):
     producers = utils.get_all_producers()
     products = utils.get_products_by_category_id(category.id)
     return render_template('category.html', products=products, subcategories=subcategories, category=category,
-                           category_name=category_name, producers=producers)
+                           category_name=category_name, producers=producers, current_user=current_user)
 
 
 @app.route('/products/<product_id>')
@@ -39,7 +39,7 @@ def product_card(product_id):
     category = utils.get_category_by_id(product.category_id)
     producer = utils.get_producer_by_id(product.producer_id)
     return render_template('product_card.html', category_name=category.name.title(), product=product,
-                           producer_name=producer.name.title(), category=category)
+                           producer_name=producer.name.title(), category=category, current_user=current_user)
 
 
 # товары производителя
@@ -69,7 +69,7 @@ def edit_product(producer_id, product_id):
 @login_required
 def create_product(producer_id):
     if current_user.id == int(producer_id):
-        return render_template('create_product.html')
+        return render_template('create_product.html', current_user=current_user)
     else:
         return redirect(url_for('index'))
 
@@ -79,7 +79,7 @@ def create_product(producer_id):
 def cart(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     if current_user.id == int(user_id):
-        return render_template('cart.html', user=user)
+        return render_template('cart.html', user=user, current_user=current_user)
     else:
         return redirect(url_for('index'))
 
@@ -128,14 +128,14 @@ def order_history(user_id):
 @app.route('/producer/<producer_id>')
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
-    return render_template('producer_profile.html', producer=producer)
+    return render_template('producer_profile.html', producer=producer, current_user=current_user)
 
 
 @app.route('/producer/<producer_id>/edit')
 def edit_producer(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
     if current_user.id == int(producer_id):
-        return render_template('edit_producer.html', producer=producer)
+        return render_template('edit_producer.html', producer=producer, current_user=current_user)
     else:
         return redirect(url_for('index'))
 
