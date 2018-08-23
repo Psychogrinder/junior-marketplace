@@ -133,4 +133,8 @@ for cat, subcats in product_names.items():
             producer.categories.append(category)
             parent_category = Category.query.filter_by(id=category.parent_id).first()
             producer.categories.append(parent_category)
+            
+for i, cat in enumerate(Category.query.all()):
+    cat.name = cat.name.title()
+    
 db.session.commit()
