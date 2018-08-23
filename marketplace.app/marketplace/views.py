@@ -97,7 +97,7 @@ def order_registration(user_id):
 @app.route('/user/<user_id>')
 @login_required
 def consumer_profile(user_id):
-    user = Consumer.query.filter_by(id=user_id).first()
+    user = Consumer.query.filter_by(id=user_id).first()    
     if current_user.id == int(user_id):
         return render_template('consumer_profile.html', user=user, current_user=current_user)
     else:
@@ -106,6 +106,7 @@ def consumer_profile(user_id):
 
 
 @app.route('/user/edit/<user_id>')
+@login_required
 def edit_consumer(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     if current_user.id == int(user_id):
