@@ -1,7 +1,7 @@
 import marketplace.api_folder.api_utils as utils
 from flask_restful import Resource
 
-from marketplace.api_folder.schemas import category_schema_list, product_schema_list
+from marketplace.api_folder.schemas import category_schema_list, product_schema_list, category_schema
 
 
 class BaseCategories(Resource):
@@ -25,3 +25,7 @@ class ProductsByCategory(Resource):
 class PopularProductsByCategory(Resource):
     def get(self, category_id):
         return product_schema_list.dump(utils.get_popular_products_by_category_id(category_id)).data
+
+class ParentCategoryBySubcategoryId(Resource):
+    def get(self, category_id):
+        return category_schema.dump(utils.get_parent_category_by_category_id(category_id)).data

@@ -127,6 +127,12 @@ def get_cart_by_consumer_id(consumer_id):
 
 
 # Get by other params
+def get_parent_category_by_category_id(category_id):
+    parent_category_id = Category.query.filter_by(id=category_id).first().parent_id
+    return get_category_by_id(parent_category_id)
+
+
+# Get by name
 
 def get_category_by_name(category_name):
     return Category.query.filter_by(slug=category_name).first()
