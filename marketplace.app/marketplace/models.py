@@ -30,12 +30,12 @@ class User(UserMixin, db.Model):
     photo_url = db.Column(db.String(256))
     entity = db.Column(db.String(16))
 
-    def __init__(self, email, password, entity, phone_number='', address=''):
+    def __init__(self, email, password, entity, phone_number, address):
         self.email = email
         self.email_auth_status = False
-        self.phone_number = phone_number
+        self.phone_number = get_string_or_default(phone_number)
         self.password_hash = generate_password_hash(password)
-        self.address = address
+        self.address = get_string_or_default(address)
         self.entity = entity
 
     def set_password(self, password):
@@ -70,11 +70,11 @@ class Consumer(User):
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
 
-    def __init__(self, email, password, first_name='', last_name='', phone_number='', address='', patronymic=''):
+    def __init__(self, email, password, first_name, last_name, phone_number, address, patronymic):
         super().__init__(email, password, 'consumer', phone_number, address)
-        self.first_name = first_name
-        self.last_name = last_name
-        self.patronymic = patronymic
+        self.first_name = get_string_or_default(first_name)
+        self.last_name = get_string_or_default(last_name)
+        self.patronymic = get_string_or_default(patronymic)
 
     def get_orders(self):
         return Order.query.filter_by(consumer_id=self.id).all()
@@ -107,11 +107,11 @@ class Producer(User):
         lazy='subquery',
         backref=db.backref('producers', lazy=True))
 
-    def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
+    def __init__(self, password, email, name, phone_number, address, person_to_contact, description):
         super().__init__(email, password, 'producer', phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
-        self.description = description
+        self.description = get_string_or_default(description)
 
     def get_products(self):
         return Product.query.filter_by(producer_id=self.id).all()
@@ -174,7 +174,7 @@ class Product(db.Model):
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
 
-    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description=''):
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description):
         self.price = float(price)
         self.name = name
         self.quantity = quantity
@@ -183,7 +183,7 @@ class Product(db.Model):
         self.measurement_unit = measurement_unit
         self.times_ordered = 0
         self.weight = weight
-        self.description = description
+        self.description = get_string_or_default(description)
 
     def set_description(self, description):
         self.description = description
@@ -216,3 +216,7 @@ class Category(db.Model):
 @login.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def get_string_or_default(item):
+    return item if item is not None else ''
