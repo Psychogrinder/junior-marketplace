@@ -5,7 +5,7 @@ from marketplace import app
 from marketplace.models import Category, Product, Producer, Consumer, Order, User
 import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
-import os
+
 
 
 # каталог
@@ -17,7 +17,8 @@ def index():
         'index.html',
         categories=categories,
         popular_products=popular_products,
-        producers=Producer.query.all()
+        producers=Producer.query.all(),
+        current_user=current_user
     )
 
 
@@ -43,57 +44,84 @@ def product_card(product_id):
 
 # товары производителя
 @app.route('/producer/<producer_id>/products')
+@login_required
 def producer_products(producer_id):
     products = utils.get_products_by_producer_id(producer_id)
-    return render_template('producer_products.html', products=products)
+    return render_template('producer_products.html', products=products, current_user=current_user)
 
 
 # Продумать что делать с неиспользованными id в методах
 
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
+@login_required
 def edit_product(producer_id, product_id):
     product = utils.get_product_by_id(product_id)
     categories = Category.query.all()
-    measurement_units = ['кг', 'литры', 'штуки']
+    measurement_units = ['кг', 'л', 'шт']
+    if current_user.id == int(producer_id):
+        return render_template('edit_product.html', product=product, categories=categories,
+                               measurement_units=measurement_units, current_user=current_user)
+    else:
+        return redirect(url_for('index'))
 
-
-    return render_template('edit_product.html', product=product, categories=categories, measurement_units=measurement_units)
 
 @app.route('/producer/<producer_id>/create_product')
+@login_required
 def create_product(producer_id):
-    return render_template('create_product.html')
+    if current_user.id == int(producer_id):
+        return render_template('create_product.html')
+    else:
+        return redirect(url_for('index'))
 
 
 # корзина
 @app.route('/cart/<user_id>')
 def cart(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
-    return render_template('cart.html', user=user)
+    if current_user.id == int(user_id):
+        return render_template('cart.html', user=user)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/cart/<user_id>/order_registration/')
 def order_registration(user_id):
-    return render_template('order_registration.html')
+    if current_user.id == int(user_id):
+        return render_template('order_registration.html', current_user=current_user)
+    else:
+        return redirect(url_for('index'))
+
 
 
 # покупатель
 @app.route('/user/<user_id>')
-def customer_profile(user_id):
+@login_required
+def consumer_profile(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
-    return render_template('customer_profile.html', user=user)
+    if current_user.id == int(user_id):
+        return render_template('consumer_profile.html', user=user, current_user=current_user)
+    else:
+        return redirect(url_for('index'))
 
 
 
 @app.route('/user/edit/<user_id>')
-def edit_customer(user_id):
+def edit_consumer(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
-    return render_template('edit_customer.html', user=user)
+    if current_user.id == int(user_id):
+        return render_template('edit_consumer.html', user=user, current_user=current_user)
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/order_history/<user_id>')
 def order_history(user_id):
     orders = Order.query.filter_by(consumer_id=user_id)
-    return render_template('order_history.html', orders=orders)
+    if current_user.id == int(user_id):
+        return render_template('order_history.html', orders=orders, current_user=current_user)
+    else:
+        return redirect(url_for('index'))
+
 
 
 # производитель
@@ -106,12 +134,20 @@ def producer_profile(producer_id):
 @app.route('/producer/<producer_id>/edit')
 def edit_producer(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
-    return render_template('edit_producer.html', producer=producer)
+    if current_user.id == int(producer_id):
+        return render_template('edit_producer.html', producer=producer)
+    else:
+        return redirect(url_for('index'))
+
 
 
 @app.route('/producer/<producer_id>/orders')
 def producer_orders(producer_id):
-    return render_template('producer_orders.html')
+    if current_user.id == int(producer_id):
+        return render_template('producer_orders.html', current_user=current_user)
+    else:
+        return redirect(url_for('index'))
+
 
 
 # о нас и помощь
@@ -120,9 +156,9 @@ def about_us():
     return render_template('about_us.html')
 
 
-@app.route('/customer_help')
-def customer_help():
-    return render_template('customer_help.html')
+@app.route('/consumer_help')
+def consumer_help():
+    return render_template('consumer_help.html')
 
 
 @app.route('/producer_help')

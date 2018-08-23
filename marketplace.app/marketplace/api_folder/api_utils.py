@@ -117,8 +117,7 @@ def get_products_by_category_id(category_id):
 
 
 def get_products_by_producer_id(producer_id):
-    producer = get_producer_by_id(producer_id)
-    return producer.get_products()
+    return Product.query.filter_by(producer_id=producer_id).all()
 
 
 def get_cart_by_consumer_id(consumer_id):

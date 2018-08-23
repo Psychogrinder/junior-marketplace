@@ -26,6 +26,10 @@ main.main-footer-bottom + .modal + footer {
     width: 100%;
 }
 
+form .filter-block:first-child {
+    padding-left: 0;
+}
+
 @media (max-width: 800px) {
     main.main-footer-bottom + .modal + footer {
         position: relative;

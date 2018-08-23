@@ -12,14 +12,14 @@
         </section>
         <section class="product-filter">
             <form action="#">
-                <div class="filter-block col-6 col-sm-3">
+                <div class="filter-block  col-6 col-sm-4">
                     <select class="form-control" name="sort_by">
                         <option>По цене ↑</option>
                         <option>По цене ↓</option>
                         <option>По популярности</option>
                     </select>
                 </div>
-                <div class="filter-block col-6 col-sm-3">
+                <div class="filter-block col-6 col-sm-4">
                     <select class="form-control" name="subcategory">
                         <option value="" disabled selected>Подкатегория</option>
                         {% for subcategory in subcategories %}
@@ -27,7 +27,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="filter-block col-6 col-sm-3">
+                <div class="filter-block col-6 col-sm-4">
                     <select class="form-control" name="subcategory">
                         <option value="" disabled selected>Производитель</option>
                         {% for producer in category.producers %}
@@ -35,7 +35,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="filter-block col-6 col-sm-3">
+                <div class="filter-block col-6 col-sm-4">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="in_stock" name="in_stock">
                         <label class="form-check-label" for="in_stock">
