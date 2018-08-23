@@ -1,3 +1,16 @@
+
+
+$("#emailRegistration").change(function () {
+    var email_registration = $("#emailRegistration").val();
+    var emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    if (!email_registration || (!(emailRegular.test(email_registration)))) {
+        $('#emailRegistration').css("border-color", "#FF7851");
+    }
+    else {
+        $('#emailRegistration').css("border-color", "#ced4da");
+    }
+});
+
 $("#passwordRegistration").change(function () {
     var password_registration = $("#passwordRegistration").val();
     if (password_registration.length < 6) {
@@ -24,14 +37,14 @@ $("#reg_button").click(function () {
     var password_registration = $("#passwordRegistration").val();
     var re_password_registration = $("#re_passwordRegistration").val();
     var emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    if (password_registration.length < 6) {
+    if (!email_registration || (!(emailRegular.test(email_registration)))) {
+        $('#emailRegistration').css("border-color", "#FF7851");
+    }
+    else if (password_registration.length < 6) {
         $('#sixSimbolsAlert').css("color", "#FF7851");
     }
     else if (password_registration != re_password_registration) {
         $('.invalid-feedback').css("display", "block");
-    }
-    else if (!email_registration || (!(emailRegular.test(email_registration)))) {
-        $('#emailRegistration').css("border-color", "#FF7851");
     }
     else {
         $.post("/api/v1/consumers",
@@ -39,13 +52,12 @@ $("#reg_button").click(function () {
                 email: email_registration,
                 password: password_registration,
             },
-            function (status) {
-                console.log(status);
-
-                $('#singUpUser').removeClass('show');
-                $('#singUpUser').css("display", "none");
-                $('.modal-backdrop').css("display", "none");
-
+            function (data, status) {
+                if (status == 'success') {
+                    $('#singUpUser').removeClass('show');
+                    $('#singUpUser').css("display", "none");
+                    $('.modal-backdrop').css("display", "none");
+                }
             });
 
     }
