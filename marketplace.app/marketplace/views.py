@@ -17,7 +17,8 @@ def index():
         'index.html',
         categories=categories,
         popular_products=popular_products,
-        producers=Producer.query.all()
+        producers=Producer.query.all(),
+        current_user=current_user
     )
 
 

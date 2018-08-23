@@ -10,7 +10,7 @@
             {% for category in categories %}
             <div class="col-6 col-sm-3 catalog-category-item">
                 <a href={{ url_for( 'category', category_name = category.slug )}}>
-                <img src={{ url_for('static', filename ="img/category/bird.jpg") }} alt="">
+                <img src={{ url_for('static', filename ="img/category/" + category.slug + ".jpg") }} alt="">
                 <p>{{ category.name }}</p>
                 </a>
             </div>
