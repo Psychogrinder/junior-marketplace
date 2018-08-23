@@ -48,7 +48,6 @@
         </section>
         <section class="product-card row">
             {% for product in products %}
-
             <div class="col-6 col-sm-3 card-item">
                 <a href={{ url_for( 'product_card', product_id = product.id )}}>
                 <div class="product-item-photo">

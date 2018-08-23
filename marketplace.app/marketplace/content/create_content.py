@@ -79,7 +79,7 @@ for i, cat in enumerate(Category.query.all()):
 prices = range(50, 1000)
 quantity = range(100, 500)
 producer_ids = range(1, number_of_producers+1)
-measurement_units = ['кг', 'литры', 'штуки']
+measurement_units = ['кг', 'л', 'шт']
 weights = range(5, 50)
 product_descriptions = ['Очень вкусный продукт', 'Самый вкусный продукт']
 
@@ -136,8 +136,10 @@ for cat, subcats in product_names.items():
             producer.categories.append(category)
             parent_category = Category.query.filter_by(id=category.parent_id).first()
             producer.categories.append(parent_category)
-
+        
+        
 for i, cat in enumerate(Category.query.all()):
     cat.name = cat.name.title()
 
+    
 db.session.commit()
