@@ -56,42 +56,12 @@ def edit_product(producer_id, product_id):
     category = utils.get_category_by_id(product.category_id)
     parent_category = utils.get_category_by_id(category.parent_id)
     all_categories = {}
-    # dir_path = os.path.dirname(os.path.realpath(__file__))
-    # with open(dir_path + '/content/data/categories.txt', 'r') as f:
-    #     cat = None
-    #     sub_cats = None
-    #     for i, line in enumerate(f.readlines()):
-    #         if i % 2 == 0:
-    #             cat = line.strip()
-    #         else:
-    #             sub_cats = [item.rstrip('\n') for item in line.split(', ')]
-    #             all_categories[cat] = sub_cats
-    #
-    # eng_cats = []
-    # with open(dir_path + '/content/data/categories_eng.txt', 'r') as f:
-    #     for line in f.readlines():
-    #         eng_cats += [word.strip('\n') for word in line.split(',')]
-    #
-    # rus_cats = []
-    # for k, v in all_categories.items():
-    #     rus_cats += [k] + v
-    #
-    # eng_rus_cats = {}
-    # for i, rus_cat in enumerate(rus_cats):
-    #     eng_rus_cats[rus_cat] = eng_cats[i]
 
     categories = Category.query.all()
 
     measurement_units = ['кг', 'литры', 'штуки']
 
     return render_template('edit_product.html', product=product, categories=categories)
-
-
-    # return render_template('edit_product.html', product=product, category=category, category_name=category.name,
-    #                        base_categories=base_categories, parent_category_name=parent_category.name,
-    #                        all_categories=all_categories,
-    #                        measurement_units=measurement_units, categories=categories)
-
 
 @app.route('/producer/<producer_id>/create_product')
 def create_product(producer_id):
