@@ -6,12 +6,15 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
+import os
 import cssmin
 import jsmin
 
 app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(Config)
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 app.secret_key = '1234'
 ma = Marshmallow(app)
 api = Api(app, prefix='/api/v1')
@@ -33,7 +36,7 @@ css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/ca
 assets.register('css_all', css)
 
 js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.js', 'script/registration_consumer.js',
-            'script/authorisation.js', 'script/registration_producer.js','script/menu_backlighting.js',
+            'script/authorisation.js', 'script/registration_producer.js','script/menu_backlighting.js','script/edit_consumer_profile.js',
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)
