@@ -1,5 +1,5 @@
 from marketplace import api
-from marketplace.api_folder.cart_api import GlobalCart
+from marketplace.api_folder.cart_api import GlobalCart, NumberOfProductsInCart
 from marketplace.api_folder.category_api import BaseCategories, Subcategories, SubcategoriesBySlug, \
     PopularProductsByCategory, ProductsByCategory, ParentCategoryBySubcategoryId
 from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders
@@ -15,6 +15,7 @@ api.add_resource(Orders, '/orders/<int:order_id>')
 api.add_resource(ConsumerOrders, '/consumers/<int:consumer_id>/orders')
 api.add_resource(ProducerOrders, '/producers/<int:producer_id>/orders')
 api.add_resource(GlobalCart, '/consumers/<int:consumer_id>/cart')
+api.add_resource(NumberOfProductsInCart, '/consumers/<int:consumer_id>/cart/quantity')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 

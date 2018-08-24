@@ -16,3 +16,8 @@ class GlobalCart(Resource):
     def post(self, consumer_id):
         args = parser.parse_args()
         return cart_schema.dump(utils.post_item_to_cart_by_consumer_id(args, consumer_id)).data, 201
+
+
+class NumberOfProductsInCart(Resource):
+    def get(self, consumer_id):
+        return {"number_of_products": utils.get_number_of_products_in_cart(consumer_id)}

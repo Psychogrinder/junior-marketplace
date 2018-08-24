@@ -131,6 +131,11 @@ def get_parent_category_by_category_id(category_id):
     return get_category_by_id(parent_category_id)
 
 
+def get_number_of_products_in_cart(consumer_id):
+    items = Cart.query.filter_by(consumer_id=consumer_id).first().items
+    return sum(int(v) for k, v in items.items())
+
+
 # Get by name
 
 def get_category_by_name(category_name):
@@ -357,7 +362,7 @@ def login(args):
         return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return True
+    return {"id": user.id}
 
 
 def logout():

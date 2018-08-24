@@ -34,6 +34,7 @@ assets.register('css_all', css)
 
 js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.js', 'script/registration_consumer.js',
             'script/authorisation.js', 'script/registration_producer.js', 'script/edit_consumer_profile.js',
+            'script/cart.js',
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)
