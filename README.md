@@ -17,12 +17,12 @@
 docker-compose up -d
 ```
 
-Перейти в корневую директорию и выполнить 
+Перейти в корневую директорию и выполнить
 ```
 bin/create_virtualenv.sh
 ```
 
-После выполнить 
+После выполнить
 ```
 bin/run-flask-app.sh или bin/init_db_and_run.sh
 ```
@@ -38,3 +38,14 @@ Front-сервер для обслуживания домена.
 ### delete-content
 Скрипт для удаления контента из базы данных. Убедитесь что Docker с базой данных запущен. Находясь в папке junior-marketpalce выполните команду:
 ./bin/delete-content.sh
+
+### Для отправки почты
+
+Перейти в директорию ./marketplace.app и выполнить
+```
+docker-compose -f docker-compose-redis.yml up -d
+```
+Запустить celery в отдельном процессе
+```
+celery -A marketplace.celery worker
+```
