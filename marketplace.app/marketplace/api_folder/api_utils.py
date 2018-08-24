@@ -141,7 +141,7 @@ def get_products_by_producer_id(producer_id):
 
 
 def get_cart_by_consumer_id(consumer_id):
-    abort_if_consumer_doesnt_exist_or_get()
+    abort_if_consumer_doesnt_exist_or_get(consumer_id)
     cart = Cart.query.filter_by(consumer_id=consumer_id).first()
     return cart if cart is not None else post_cart(consumer_id)
 

@@ -1,12 +1,13 @@
 var number_of_products_in_cart = 0;
 var putToCart = function (consumer_id, product_id) {
-    console.log(consumer_id, product_id);
+    console.log("consumer_id:" + consumer_id, "product_id:" + product_id);
     $.post("/api/v1/consumers/" + consumer_id + "/cart",
         {
             product_id: product_id,
             quantity: $(".product_quantity_input").val()
         },
         function (data, status) {
+            console.log("data: " + data);
             number_of_products_in_cart = 0;
             for (var k in data.items) {
                 if (data.items.hasOwnProperty(k)) {

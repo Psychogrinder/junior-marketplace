@@ -10,179 +10,89 @@
         <section class="breadcrumbs">
             <span><a class="active">Корзина</a></span>
         </section>
-        <div class="row cart_producer_title">
-            <span>Сельхоз «Октябрьский»</span>
-        </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px" height="auto">
+    <section>
+        {% for producer in producers %}
+        <section>
+            <div class="row cart_producer_title container">
+                <h2>{{ producer.name }}</h2>
             </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
+            {% for product in products %}
+            {% if product.producer_id == producer.id %}
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px"
+                            height="auto">
+                        </div>
+                        <div class="col-1 cart_product_stock_title">
+                            <span>Название</span>
+                            <span>Цена</span>
+                            <span>Артикул</span>
+                        </div>
+                        <div class="col-3 cart_product_stock_info">
+                            <span>{{ product.name }}</span>
+                            <span>{{ product.price }}руб/{{ product.measurement_unit }}</span>
+                            <span>{{ product.id }}</span>
+                        </div>
+                        <div class="col-1">
+                            <span>Вес</span>
+                        </div>
+                        <div class="col-4 quantity_container">
+                            <span>Количество</span>
+                            <form class="product_quantity">
+                                <div class="value-button" id="decrease001" onclick="decreaseQuantity('number001')"
+                                     value="Decrease Value">-
+                                </div>
+                                {% for product_id, quantity in items.items() %}
+                                {% if product.id == product_id %}
+                                <input class="product_quantity_input" type="number" id="number001" value="{{ quantity }}"/>
+                                {% endif %}
+                                {% endfor %}
+                                <div class="value-button" id="increase001" onclick="increaseQuantity('number001')"
+                                     value="Increase Value">+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+            {% endfor %}
+            <div class="container delivery">
+                <div class="row">
+                    <div class="col-3">
+                        <span>Способ доставки</span>
+                        <select class="form-control" name="subcategory">
+                            <option value="disable selected">Курьером</option>
+                            <option>Самовывоз</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яйца</span>
-                <span>100 руб/упаковка</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество</span>
-                <form class="product_quantity">
-                  <div class="value-button" id="decrease001" onclick="decreaseQuantity('number001')" value="Decrease Value">-</div>
-                  <input class="product_quantity_input" type="number" id="number001" value="2" />
-                  <div class="value-button" id="increase001" onclick="increaseQuantity('number001')" value="Increase Value">+</div>
-                </form>
-            </div>
-            <div class="col-1">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px" height="auto">
-            </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
-            </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яйца</span>
-                <span>100 руб/упаковка</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество</span>
-                <form class="product_quantity">
-                  <div class="value-button product_quantity_decrease" id="decrease002" onclick="decreaseQuantity('number002')" value="Decrease Value">-</div>
-                  <input class="product_quantity_input" type="number" id="number002" value="2" />
-                  <div class="value-button product_quantity_increase" id="increase002" onclick="increaseQuantity('number002')" value="Increase Value">+</div>
-                </form>
-            </div>
-            <div class="col-1">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="container delivery">
-        <div class="row">
-            <div class="col-3">
-                <span>Способ доставки</span>
-                <select class="form-control" name="subcategory">
-                    <option value="disable selected">Курьером</option>
-                    <option>Самовывоз</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row cart_producer_title">
-            <span>Сельхоз «Ноябрьский»</span>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px" height="auto">
-            </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
-            </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яблоки</span>
-                <span>100 руб/кг</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество</span>
-                <form class="product_quantity">
-                  <div class="value-button product_quantity_decrease" id="decrease003" onclick="decreaseQuantity('number003')" value="Decrease Value">-</div>
-                  <input class="product_quantity_input" type="number" id="number003" value="2" />
-                  <div class="value-button product_quantity_increase" id="increase003" onclick="increaseQuantity('number003')" value="Increase Value">+</div>
-                </form>
-            </div>
-            <div class="col-1">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        </section>
+        {% endfor %}
+
+        <div class="container total_container">
+            <div class="row">
+                <div class="col-8 total_box">
+                    <span>ИТОГО:</span>
+                    <span class="total_value">1200 P</span>
+                </div>
+                <div class="col-4 order_box">
+                    <a href={{ url_for( 'order_registration', user_id = '5' )}} class="btn btn-primary
+                    btn_order">ОФОРМИТЬ
+                    ЗАКАЗ</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px" height="auto">
-            </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
-            </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яблоки</span>
-                <span>100 руб/кг</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество</span>
-                <form class="product_quantity">
-                  <div class="value-button product_quantity_decrease" id="decrease004" onclick="decreaseQuantity('number004')" value="Decrease Value">-</div>
-                  <input class="product_quantity_input" type="number" id="number004" value="2" />
-                  <div class="value-button product_quantity_increase" id="increase004" onclick="increaseQuantity('number004')" value="Increase Value">+</div>
-                </form>
-            </div>
-            <div class="col-1">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="container delivery">
-        <div class="row">
-            <div class="col-3">
-                <span>Способ доставки</span>
-                <select class="form-control" name="subcategory">
-                    <option value="disable selected">Курьером</option>
-                    <option>Самовывоз</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="container total_container">
-        <div class="row">
-            <div class="col-8 total_box">
-                <span>ИТОГО:</span>
-                <span class="total_value">1200 P</span>
-            </div>
-            <div class="col-4 order_box">
-                <a href={{ url_for( 'order_registration', user_id = '5' )}}  class="btn btn-primary btn_order">ОФОРМИТЬ ЗАКАЗ</a>
-            </div>
-        </div>
-    </div>
+    </section>
+
 </main>
 {% endblock %}
