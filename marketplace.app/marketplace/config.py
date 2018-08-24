@@ -1,12 +1,11 @@
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
-
 
 class Config(object):
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@localhost/marketplace.db'
+    UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/user_images'
     SECRET_KEY = 'secret-key'
     SECURITY_PASSWORD_SALT = 'secret-salt'
 

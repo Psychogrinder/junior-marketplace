@@ -6,7 +6,7 @@
 <main>
     <div class="container edit-product-card">
         <section class="breadcrumbs">
-            <span><a href={{ url_for('producer_products', producer_id = product.producer_id)}}>Товары</a></span>
+            <span><a href={{ url_for('producer_products', producer_id = current_user.id )}}>Товары</a></span>
             <span><a class="active">Создание совара</a></span>
         </section>
         <form action="#">

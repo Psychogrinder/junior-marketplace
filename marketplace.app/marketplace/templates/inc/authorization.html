@@ -10,17 +10,15 @@
             <div class="modal-body">
                 <form action="#">
                     <p>
-                        <label for="email">Email</label>
-                        <input type="email" autofocus class="form-control" id="email" placeholder="email@email.ru">
+                        <label for="emailAuthorisation">Email</label>
+                        <input type="email" autofocus class="form-control" id="emailAuthorisation" placeholder="email@email.ru" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                     </p>
                     <p>
-                        <label for="password">Пароль</label>
-                        <input type="password" class="form-control" placeholder="*******" id="password" name="password">
-                        <span>Минимум 6 символов</span>
+                        <label for="passwordAuthorisation">Пароль</label>
+                        <input type="password" class="form-control" placeholder="*******" id="passwordAuthorisation" name="password">
+                        <span id="authUserAlert">Неверный логин или пароль</span>
                     </p>
-                    <button type="submit" class="btn btn-success">
-                        Вход
-                    </button>
+                    <input type="button" class="btn btn-success" value="Вход" id="authButton">
                     <p class="registration-link"><a href="" data-toggle="modal" data-target="#singUpUser" aria-label="Close" data-dismiss="modal">Регистрация</a></p>
                     <p class="registration-link"><a href="" data-toggle="modal" data-target="#resetPasssword" aria-label="Close" data-dismiss="modal">Забыли пароль?</a></p>
                 </form>

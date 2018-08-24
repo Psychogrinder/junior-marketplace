@@ -26,10 +26,19 @@ main.main-footer-bottom + .modal + footer {
     width: 100%;
 }
 
+form .filter-block:first-child {
+    padding-left: 0;
+}
+
 @media (max-width: 800px) {
     main.main-footer-bottom + .modal + footer {
         position: relative;
     }
+}
+
+.backlighting_nav_item.active .header-card {
+    background: #FF5722;
+    border-radius: 5px;
 }
 
 

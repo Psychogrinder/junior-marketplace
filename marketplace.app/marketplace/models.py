@@ -1,3 +1,6 @@
+from sqlalchemy import JSON
+from sqlalchemy.ext.mutable import MutableDict
+
 try:
     from marketplace import db, login
 except:
@@ -8,9 +11,12 @@ from sqlalchemy.dialects.postgresql import MONEY
 from flask_login import UserMixin
 
 producer_category_association_table = db.Table('producers_categories',
-    db.Column('producer_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('category_id', db.Integer, db.ForeignKey('category.id'), primary_key=True)
-)
+                                               db.Column('producer_id', db.Integer, db.ForeignKey('user.id'),
+                                                         primary_key=True),
+                                               db.Column('category_id', db.Integer, db.ForeignKey('category.id'),
+                                                         primary_key=True)
+                                               )
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -27,9 +33,9 @@ class User(UserMixin, db.Model):
     def __init__(self, email, password, entity, phone_number='', address=''):
         self.email = email
         self.email_auth_status = False
-        self.phone_number = phone_number
+        self.phone_number = get_string_or_default(phone_number)
         self.password_hash = generate_password_hash(password)
-        self.address = address
+        self.address = get_string_or_default(address)
         self.entity = entity
 
     def set_password(self, password):
@@ -63,12 +69,12 @@ class Consumer(User):
     last_name = db.Column(db.String(128))
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
-
-    def __init__(self, email, password, first_name='', last_name='', phone_number='', address='', patronymic=''):
+    
+    def __init__(self, email, password, first_name, last_name, phone_number, address, patronymic=''):
         super().__init__(email, password, 'consumer', phone_number, address)
-        self.first_name = first_name
-        self.last_name = last_name
-        self.patronymic = patronymic
+        self.first_name = get_string_or_default(first_name)
+        self.last_name = get_string_or_default(last_name)
+        self.patronymic = get_string_or_default(patronymic)
 
     def get_orders(self):
         return Order.query.filter_by(consumer_id=self.id).all()
@@ -76,6 +82,18 @@ class Consumer(User):
     def get_full_name(self):
         return "{first_name} {patronymic} {last_name}".format(first_name=self.first_name, patronymic=self.patronymic,
                                                               last_name=self.last_name).strip()
+
+
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    consumer_id = db.Column(db.Integer)
+    items = db.Column(MutableDict.as_mutable(JSON), server_default='{}', nullable=False, default={})
+
+    def __init__(self, consumer_id):
+        self.consumer_id = consumer_id
+
+    def put_item(self, product_id, quantity):
+        self.items[product_id] = quantity
 
 
 class Producer(User):
@@ -93,7 +111,7 @@ class Producer(User):
         super().__init__(email, password, 'producer', phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
-        self.description = description
+        self.description = get_string_or_default(description)
 
     def get_products(self):
         return Product.query.filter_by(producer_id=self.id).all()
@@ -165,7 +183,7 @@ class Product(db.Model):
         self.measurement_unit = measurement_unit
         self.times_ordered = 0
         self.weight = weight
-        self.description = description
+        self.description = get_string_or_default(description)
 
     def set_description(self, description):
         self.description = description
@@ -176,13 +194,15 @@ class Product(db.Model):
     def get_category(self):
         return Category.query.filter_by(id=self.category_id).all()
 
+    def set_photo_url(self, photo_url):
+        self.photo_url = photo_url
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     slug = db.Column(db.String(128))
     parent_id = db.Column(db.Integer)
-
 
     def __init__(self, name, slug=None, parent_id=0):
         self.name = name
@@ -199,3 +219,7 @@ class Category(db.Model):
 @login.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def get_string_or_default(item):
+    return item if item is not None else ''
