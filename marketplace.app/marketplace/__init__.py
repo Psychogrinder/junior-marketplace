@@ -9,6 +9,7 @@ from flask_login import LoginManager
 import cssmin
 import jsmin
 from flask_mail import Mail
+from marketplace import _celery
 
 
 app = Flask(__name__)
@@ -22,8 +23,11 @@ login = LoginManager(app)
 login.login_view = 'login'
 migrate = Migrate(app, db)
 db.init_app(app)
+celery = _celery.make_celery(app)
+
 
 from marketplace import models, views, api_routes
+
 
 css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css',
              'style/category.css',
