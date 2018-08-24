@@ -1,6 +1,6 @@
 .vagrant/
 .idea/
-.webassets-cache 
+.webassets-cache
 
 __pycache__/
 
@@ -19,3 +19,5 @@ app.min.js
 
 .env.prod
 .env.stage
+
+3.6/
