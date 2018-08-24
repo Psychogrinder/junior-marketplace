@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
     photo_url = db.Column(db.String(256))
     entity = db.Column(db.String(16))
 
-    def __init__(self, email, password, entity, phone_number, address):
+    def __init__(self, email, password, entity, phone_number='', address=''):
         self.email = email
         self.email_auth_status = False
         self.phone_number = get_string_or_default(phone_number)
@@ -70,7 +70,7 @@ class Consumer(User):
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
 
-    def __init__(self, email, password, first_name, last_name, phone_number, address, patronymic):
+    def __init__(self, email, password, first_name='', last_name='', phone_number='', address='', patronymic=''):
         super().__init__(email, password, 'consumer', phone_number, address)
         self.first_name = get_string_or_default(first_name)
         self.last_name = get_string_or_default(last_name)
@@ -107,7 +107,7 @@ class Producer(User):
         lazy='subquery',
         backref=db.backref('producers', lazy=True))
 
-    def __init__(self, password, email, name, phone_number, address, person_to_contact, description):
+    def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
         super().__init__(email, password, 'producer', phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
@@ -174,7 +174,7 @@ class Product(db.Model):
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
 
-    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description):
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description=''):
         self.price = float(price)
         self.name = name
         self.quantity = quantity
@@ -193,6 +193,9 @@ class Product(db.Model):
 
     def get_category(self):
         return Category.query.filter_by(id=self.category_id).all()
+
+    def set_photo_url(self, photo_url):
+        self.photo_url = photo_url
 
 
 class Category(db.Model):
