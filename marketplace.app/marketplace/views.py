@@ -44,16 +44,13 @@ def product_card(product_id):
 
 # товары производителя
 @app.route('/producer/<producer_id>/products')
-@login_required
 def producer_products(producer_id):
     products = utils.get_products_by_producer_id(producer_id)
     return render_template('producer_products.html', products=products, current_user=current_user)
 
 
 # Продумать что делать с неиспользованными id в методах
-
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
-@login_required
 def edit_product(producer_id, product_id):
     product = utils.get_product_by_id(product_id)
     categories = Category.query.all()
@@ -66,7 +63,6 @@ def edit_product(producer_id, product_id):
 
 
 @app.route('/producer/<producer_id>/create_product')
-@login_required
 def create_product(producer_id):
     if current_user.id == int(producer_id):
         return render_template('create_product.html', current_user=current_user)
@@ -95,7 +91,6 @@ def order_registration(user_id):
 
 # покупатель
 @app.route('/user/<user_id>')
-@login_required
 def consumer_profile(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     if current_user.id == int(user_id):

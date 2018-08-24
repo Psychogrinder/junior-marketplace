@@ -34,7 +34,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/v1/logout',
             success: function () {
-                location.reload();
+                location.replace(window.location.origin);
             }
         });
     });
