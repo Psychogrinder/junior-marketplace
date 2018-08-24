@@ -18,7 +18,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(producerObject),
             success: function(data, status) {
-                alert(data, status);
+                
             }
         });
     });
