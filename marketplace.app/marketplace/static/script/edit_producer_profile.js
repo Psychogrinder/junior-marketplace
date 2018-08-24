@@ -3,7 +3,6 @@ $(document).ready(function () {
         var addr = window.location + '';
         addr = addr.split('/');
         var producer_id = addr[addr.length - 2];
-        console.log(producer_id);
         var producerObject = {
             name: $('#producer_name').val(),
             person_to_contact: $('#producer_contact_person').val(),
