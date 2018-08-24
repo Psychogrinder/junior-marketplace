@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_assets import Environment, Bundle
 from marketplace.config import Config
 from flask_sqlalchemy import SQLAlchemy
@@ -9,19 +9,24 @@ from flask_login import LoginManager
 import os
 import cssmin
 import jsmin
+from flask_mail import Mail
+from marketplace import _celery
+
 
 app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(Config)
+mail = Mail(app)
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
-app.secret_key = '1234'
 ma = Marshmallow(app)
 api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
 login = LoginManager(app)
 migrate = Migrate(app, db)
 db.init_app(app)
+celery = _celery.make_celery(app)
+
 
 from marketplace import models, views, api_routes
 
@@ -31,8 +36,8 @@ css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/ca
              'style/order_history.css', 'style/producer_products.css', 'style/edit_product.css',
              'style/producer_products.css', 'style/producer_orders.css', 'style/order_registration.css',
              'style/sing.css',
-
              filters=['cssmin'], output='bundle.min.css')
+
 assets.register('css_all', css)
 
 js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.js', 'script/registration_consumer.js',

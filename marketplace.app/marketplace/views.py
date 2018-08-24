@@ -1,7 +1,7 @@
+from flask import render_template, jsonify, redirect, url_for, flash, abort
 import os
-from flask import render_template, jsonify, redirect, url_for, flash
 from flask_restful import reqparse
-from marketplace import app
+from marketplace import app, email, db
 from marketplace.models import Category, Product, Producer, Consumer, Order, User
 import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
@@ -165,6 +165,23 @@ def producer_help():
 def version():
     return jsonify(version=1.0)
 
+  
+@app.route('/email_confirm/<token>')
+def email_confirm(token):
+    user_email = email.confirm_token(token)
+    if user_email is None:
+        # TODO перенаправить на красивую страничку для ошибок
+        return abort(404)
+    user = User.query.filter_by(email=user_email).first()
+    if user is None:
+        # TODO перенаправить на красивую страничку для ошибок
+        return abort(404)
+    user.verify_email()
+    db.session.add(user)
+    db.session.commit()
+    flash('Адрес электронной почты подтвержден', category='info')
+    return redirect(url_for('index'))
 
+  
 if __name__ == '__main__':
     app.run(port=8000)

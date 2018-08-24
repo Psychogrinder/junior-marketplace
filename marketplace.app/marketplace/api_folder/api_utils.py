@@ -1,9 +1,9 @@
+from operator import itemgetter
+from marketplace import email
 import os
 import re
-
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
-
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
@@ -258,6 +258,7 @@ def post_consumer(args):
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
+    email.send_confirmation_email(new_consumer.email)
     return new_consumer
 
 
@@ -268,6 +269,7 @@ def post_producer(args):
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
+    email.send_confirmation_email(new_producer.email)
     return new_producer
 
 
