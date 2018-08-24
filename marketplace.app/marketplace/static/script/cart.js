@@ -18,8 +18,6 @@ var putToCart = function (consumer_id, product_id) {
         });
 };
 
-// document.getElementById('numberOfProductsInCart').innerHTML = 5;
-// });
 var getNumberOfProductsInCart;
 $(document).ready(function () {
     var user_id = localStorage.getItem("globalUserId");

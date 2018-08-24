@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
@@ -18,7 +20,16 @@ producer_category_association_table = db.Table('producers_categories',
                                                )
 
 
-class User(UserMixin, db.Model):
+class SetPhotoUrlMixin():
+    def set_photo_url(self, photo_url):
+        if self.photo_url is None:
+            self.photo_url = photo_url
+        elif self.photo_url is not None and self.photo_url != photo_url:
+            os.remove(self.photo_url)
+            self.photo_url = photo_url
+
+
+class User(SetPhotoUrlMixin, UserMixin, db.Model):
     __tablename__ = 'user'
     __mapper_args = {'polymorphic_on': 'discriminator'}
     id = db.Column(db.Integer, primary_key=True)
@@ -30,7 +41,7 @@ class User(UserMixin, db.Model):
     photo_url = db.Column(db.String(256))
     entity = db.Column(db.String(16))
 
-    def __init__(self, email, password, entity, phone_number, address):
+    def __init__(self, email, password, entity, phone_number='', address=''):
         self.email = email
         self.email_auth_status = False
         self.phone_number = get_string_or_default(phone_number)
@@ -50,9 +61,6 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    def set_photo_url(self, photo_url):
-        self.photo_url = photo_url
 
     def verify_email(self):
         self.email_auth_status = True
@@ -107,7 +115,7 @@ class Producer(User):
         lazy='subquery',
         backref=db.backref('producers', lazy=True))
 
-    def __init__(self, password, email, name, phone_number, address, person_to_contact, description):
+    def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
         super().__init__(email, password, 'producer', phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
@@ -161,7 +169,7 @@ class Order(db.Model):
         self.status = status
 
 
-class Product(db.Model):
+class Product(SetPhotoUrlMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     description = db.Column(db.String(256))
@@ -174,7 +182,7 @@ class Product(db.Model):
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
 
-    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description):
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description=''):
         self.price = float(price)
         self.name = name
         self.quantity = quantity

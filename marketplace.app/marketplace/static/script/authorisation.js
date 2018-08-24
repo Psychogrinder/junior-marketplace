@@ -1,5 +1,3 @@
-
-
 $(document).ready(function () {
     $("#authButton").click(function () {
         var email_authorisation = $("#emailAuthorisation").val();
@@ -39,7 +37,7 @@ $(document).ready(function () {
             url: '/api/v1/logout',
             success: function () {
                 localStorage.setItem("globalUserId", null);
-                location.reload();
+                location.replace(window.location.origin);
             }
         });
     });

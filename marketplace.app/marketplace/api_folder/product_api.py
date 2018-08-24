@@ -1,3 +1,4 @@
+from flask import request
 from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
 from marketplace.api_folder.schemas import product_schema_list, product_schema
@@ -35,3 +36,8 @@ class ProductRest(Resource):
 class PopularProducts(Resource):
     def get(self):
         return product_schema_list.dump(utils.get_popular_products()).data
+
+
+class UploadImageProduct(Resource):
+    def post(self, product_id):
+        return utils.upload_product_image(product_id, request.files), 201

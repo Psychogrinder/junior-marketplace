@@ -1,7 +1,7 @@
+from flask import render_template, jsonify, redirect, url_for, flash, abort
 import os
-from flask import render_template, jsonify, redirect, url_for, flash
 from flask_restful import reqparse
-from marketplace import app
+from marketplace import app, email, db
 from marketplace.models import Category, Product, Producer, Consumer, Order, User
 import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
@@ -30,7 +30,7 @@ def category(category_name):
     producers = utils.get_all_producers()
     products = utils.get_products_by_category_id(category.id)
     return render_template('category.html', products=products, subcategories=subcategories, category=category,
-                           category_name=category_name, producers=producers)
+                           category_name=category_name, producers=producers, current_user=current_user)
 
 
 @app.route('/products/<product_id>')
@@ -39,21 +39,18 @@ def product_card(product_id):
     category = utils.get_category_by_id(product.category_id)
     producer = utils.get_producer_by_id(product.producer_id)
     return render_template('product_card.html', category_name=category.name.title(), product=product,
-                           producer_name=producer.name.title(), category=category)
+                           producer_name=producer.name.title(), category=category, current_user=current_user)
 
 
 # товары производителя
 @app.route('/producer/<producer_id>/products')
-@login_required
 def producer_products(producer_id):
     products = utils.get_products_by_producer_id(producer_id)
     return render_template('producer_products.html', products=products, current_user=current_user)
 
 
 # Продумать что делать с неиспользованными id в методах
-
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
-@login_required
 def edit_product(producer_id, product_id):
     product = utils.get_product_by_id(product_id)
     categories = Category.query.all()
@@ -66,10 +63,9 @@ def edit_product(producer_id, product_id):
 
 
 @app.route('/producer/<producer_id>/create_product')
-@login_required
 def create_product(producer_id):
     if current_user.id == int(producer_id):
-        return render_template('create_product.html')
+        return render_template('create_product.html', current_user=current_user)
     else:
         return redirect(url_for('index'))
 
@@ -79,7 +75,7 @@ def create_product(producer_id):
 def cart(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     if current_user.id == int(user_id):
-        return render_template('cart.html', user=user)
+        return render_template('cart.html', user=user, current_user=current_user)
     else:
         return redirect(url_for('index'))
 
@@ -95,7 +91,6 @@ def order_registration(user_id):
 
 # покупатель
 @app.route('/user/<user_id>')
-# @login_required
 def consumer_profile(user_id):
     user = Consumer.query.filter_by(id=user_id).first()    
     if current_user.id == int(user_id):
@@ -106,7 +101,6 @@ def consumer_profile(user_id):
 
 
 @app.route('/user/edit/<user_id>')
-# @login_required
 def edit_consumer(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     if current_user.id == int(user_id):
@@ -129,14 +123,14 @@ def order_history(user_id):
 @app.route('/producer/<producer_id>')
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
-    return render_template('producer_profile.html', producer=producer)
+    return render_template('producer_profile.html', producer=producer, current_user=current_user)
 
 
 @app.route('/producer/<producer_id>/edit')
 def edit_producer(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
     if current_user.id == int(producer_id):
-        return render_template('edit_producer.html', producer=producer)
+        return render_template('edit_producer.html', producer=producer, current_user=current_user)
     else:
         return redirect(url_for('index'))
 
@@ -171,6 +165,23 @@ def producer_help():
 def version():
     return jsonify(version=1.0)
 
+  
+@app.route('/email_confirm/<token>')
+def email_confirm(token):
+    user_email = email.confirm_token(token)
+    if user_email is None:
+        # TODO перенаправить на красивую страничку для ошибок
+        return abort(404)
+    user = User.query.filter_by(email=user_email).first()
+    if user is None:
+        # TODO перенаправить на красивую страничку для ошибок
+        return abort(404)
+    user.verify_email()
+    db.session.add(user)
+    db.session.commit()
+    flash('Адрес электронной почты подтвержден', category='info')
+    return redirect(url_for('index'))
 
+  
 if __name__ == '__main__':
     app.run(port=8000)

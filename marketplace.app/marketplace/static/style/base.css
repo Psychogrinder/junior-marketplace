@@ -36,4 +36,9 @@ form .filter-block:first-child {
     }
 }
 
+.backlighting_nav_item.active .header-card {
+    background: #FF5722;
+    border-radius: 5px;
+}
+
 
