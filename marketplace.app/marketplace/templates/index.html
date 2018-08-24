@@ -3,40 +3,40 @@
 {% block meta_title %}Каталог{% endblock %}
 
 {% block body %}
-<main>
-    <div class="container catalog">
-        <h1>КАТЕГОРИИ ТОВАРОВ</h1>
-        <div class="row catalog-category">
-            {% for category in categories %}
-            <div class="col-6 col-sm-3 catalog-category-item">
-                <a href={{ url_for( 'category', category_name = category.slug )}}>
-                <img src={{ url_for('static', filename ="img/category/" + category.slug + ".jpg") }} alt="">
-                <p>{{ category.name }}</p>
-                </a>
+    <main>
+        <div class="container catalog">
+            <h1>КАТЕГОРИИ ТОВАРОВ</h1>
+            <div class="row catalog-category">
+                {% for category in categories %}
+                    <div class="col-6 col-sm-3 catalog-category-item">
+                        <a href={{ url_for( 'category', category_name = category.slug ) }}>
+                            <img src={{ url_for('static', filename ="img/category/" + category.slug + ".jpg") }} alt="">
+                            <p>{{ category.name }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        <h1>ПОПУЛЯРНЫЕ ТОВАРЫ</h1>
-        <div class="row popular-product">
-            {% for product in popular_products %}
-            <div class="col-6 col-sm-3 card-item">
-                <a href={{ url_for( 'product_card', product_id = product.id )}}>
-                <div class="product-item-photo">
-                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
-                </div>
-                <div class="product-item-description">
-                    <p>{{ product.price }} ₽</p>
-                    <b>{{ product.name }}</b>
-                    {% for producer in producers %}
-                    {% if product.producer_id == producer.id %}
-                    <p>{{ producer.name }}</p>
-                    {% endif %}
-                    {% endfor %}
-                </div>
-                </a>
+            <h1>ПОПУЛЯРНЫЕ ТОВАРЫ</h1>
+            <div class="row popular-product">
+                {% for product in popular_products %}
+                    <div class="col-6 col-sm-3 card-item">
+                        <a href={{ url_for( 'product_card', product_id = product.id ) }}>
+                            <div class="product-item-photo">
+                                <img src={{ url_for('static', filename="img/apple.jpg") }} alt="">
+                            </div>
+                            <div class="product-item-description">
+                                <p>{{ product.price }} ₽</p>
+                                <b>{{ product.name }}</b>
+                                {% for producer in producers %}
+                                    {% if product.producer_id == producer.id %}
+                                        <p>{{ producer.name }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
-</main>
+    </main>
 {% endblock %}
