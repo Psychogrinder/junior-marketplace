@@ -69,8 +69,8 @@ class Consumer(User):
     last_name = db.Column(db.String(128))
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
-
-    def __init__(self, email, password, first_name='', last_name='', phone_number='', address='', patronymic=''):
+    
+    def __init__(self, email, password, first_name, last_name, phone_number, address, patronymic=''):
         super().__init__(email, password, 'consumer', phone_number, address)
         self.first_name = get_string_or_default(first_name)
         self.last_name = get_string_or_default(last_name)
