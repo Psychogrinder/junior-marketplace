@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
@@ -52,7 +54,11 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def set_photo_url(self, photo_url):
-        self.photo_url = photo_url
+        if self.photo_url is None:
+            self.photo_url = photo_url
+        elif self.photo_url is not None and self.photo_url != photo_url:
+            os.remove(self.photo_url)
+            self.photo_url = photo_url
 
     def verify_email(self):
         self.email_auth_status = True
@@ -195,7 +201,13 @@ class Product(db.Model):
         return Category.query.filter_by(id=self.category_id).all()
 
     def set_photo_url(self, photo_url):
-        self.photo_url = photo_url
+        if self.photo_url is None:
+            self.photo_url = photo_url
+        elif self.photo_url is None and self.photo_url != photo_url:
+            os.remove(self.photo_url)
+            self.photo_url = photo_url
+
+
 
 
 class Category(db.Model):
