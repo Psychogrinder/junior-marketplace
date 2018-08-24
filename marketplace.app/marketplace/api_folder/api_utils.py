@@ -210,7 +210,7 @@ def add_product_categories_if_producer_doesnt_have_them(product, new_category_id
 def check_producer_categories(new_category_id, product):
     if product.category_id != int(new_category_id):
         delete_categories_if_it_was_the_last_product(product)
-        add_product_categories_if_necessary(product, new_category_id)
+        add_product_categories_if_producer_doesnt_have_them(product, new_category_id)
 
 
 # Product methods
