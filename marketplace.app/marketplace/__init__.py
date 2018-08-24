@@ -6,12 +6,15 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
+import os
 import cssmin
 import jsmin
 
 app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(Config)
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 app.secret_key = '1234'
 ma = Marshmallow(app)
 api = Api(app, prefix='/api/v1')

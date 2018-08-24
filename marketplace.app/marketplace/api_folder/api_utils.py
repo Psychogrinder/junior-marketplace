@@ -1,11 +1,14 @@
+import os
 import re
 
 from flask_login import login_user, logout_user
+from werkzeug.utils import secure_filename
+
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
-from marketplace import db
+from marketplace import db, app
 
 
 # Abort methods
@@ -26,7 +29,16 @@ def failed_producer_name_uniqueness_check(name):
     abort(406, message='Producer with given name = {} already exists'.format(name))
 
 
+def no_file_part_in_request():
+    abort(406, message='No file part in request')
+
+
+def no_image_presented():
+    abort(406, message='No image presented')
+
+
 # Abort if methods
+
 
 def abort_if_order_doesnt_exist(order_id):
     if Order.query.get(order_id) is None:
@@ -386,3 +398,42 @@ def check_email_uniqueness(email):
 def check_producer_name_uniqueness(name):
     if get_producer_by_name(name) is not None:
         failed_producer_name_uniqueness_check(name)
+
+
+# Uploaders
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
+
+def allowed_extension(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def upload_image(uploader, files):
+    if 'image' not in files:
+        no_file_part_in_request()
+    image = files['image']
+    if image.filename == '':
+        no_image_presented()
+    if image and allowed_extension(image.filename):
+        image_url = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(image.filename))
+        image.save(image_url)
+        uploader.set_photo_url(image_url)
+        db.session.commit()
+    return True
+
+
+def upload_consumer_image(consumer_id, files):
+    consumer = get_consumer_by_id(consumer_id)
+    return upload_image(consumer, files)
+
+
+def upload_producer_image(producer_id, files):
+    producer = get_producer_by_id(producer_id)
+    return upload_image(producer, files)
+
+
+def upload_product_image(product_id, files):
+    product = get_product_by_id(product_id)
+    return upload_image(product, files)
