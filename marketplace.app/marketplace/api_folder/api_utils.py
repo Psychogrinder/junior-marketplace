@@ -39,10 +39,6 @@ def no_image_presented():
 
 # Abort if methods
 
-def abort_if_user_doesnt_exist(user_id):
-    if User.query.get(user_id) is None:
-        abort(404, message='User with id = {} doesn\'t exists'.format(user_id))
-
 
 def abort_if_order_doesnt_exist(order_id):
     if Order.query.get(order_id) is None:
@@ -89,11 +85,6 @@ def get_orders_by_consumer_id(consumer_id):
 def get_order_by_id(order_id):
     abort_if_order_doesnt_exist(order_id)
     return Order.query.get(order_id)
-
-
-def get_user_by_id(user_id):
-    abort_if_user_doesnt_exist(user_id)
-    return User.query.get(user_id)
 
 
 def get_consumer_by_id(consumer_id):
@@ -419,8 +410,7 @@ def allowed_extension(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def upload_image(user_id, files):
-    user = get_user_by_id(user_id)
+def upload_image(uploader, files):
     if 'image' not in files:
         no_file_part_in_request()
     image = files['image']
@@ -429,6 +419,21 @@ def upload_image(user_id, files):
     if image and allowed_extension(image.filename):
         image_url = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(image.filename))
         image.save(image_url)
-        user.set_photo_url(image_url)
+        uploader.set_photo_url(image_url)
         db.session.commit()
     return True
+
+
+def upload_consumer_image(consumer_id, files):
+    consumer = get_consumer_by_id(consumer_id)
+    return upload_image(consumer, files)
+
+
+def upload_producer_image(producer_id, files):
+    producer = get_producer_by_id(producer_id)
+    return upload_image(producer, files)
+
+
+def upload_product_image(product_id, files):
+    product = get_product_by_id(product_id)
+    return upload_image(product, files)
