@@ -6,7 +6,7 @@ __pycache__/
 
 *.log
 *.egg-info
-
+*.pyc
 
 marketplace.app/flask_sessions/
 marketplace.app/.venv/
