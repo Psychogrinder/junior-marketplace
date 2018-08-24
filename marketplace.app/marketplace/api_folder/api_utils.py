@@ -1,11 +1,14 @@
+import os
 import re
 
 from flask_login import login_user, logout_user
+from werkzeug.utils import secure_filename
+
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
     product_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
-from marketplace import db
+from marketplace import db, app
 
 
 # Abort methods
@@ -26,7 +29,20 @@ def failed_producer_name_uniqueness_check(name):
     abort(406, message='Producer with given name = {} already exists'.format(name))
 
 
+def no_file_part_in_request():
+    abort(406, message='No file part in request')
+
+
+def no_image_presented():
+    abort(406, message='No image presented')
+
+
 # Abort if methods
+
+def abort_if_user_doesnt_exist(user_id):
+    if User.query.get(user_id) is None:
+        abort(404, message='User with id = {} doesn\'t exists'.format(user_id))
+
 
 def abort_if_order_doesnt_exist(order_id):
     if Order.query.get(order_id) is None:
@@ -73,6 +89,11 @@ def get_orders_by_consumer_id(consumer_id):
 def get_order_by_id(order_id):
     abort_if_order_doesnt_exist(order_id)
     return Order.query.get(order_id)
+
+
+def get_user_by_id(user_id):
+    abort_if_user_doesnt_exist(user_id)
+    return User.query.get(user_id)
 
 
 def get_consumer_by_id(consumer_id):
@@ -386,3 +407,28 @@ def check_email_uniqueness(email):
 def check_producer_name_uniqueness(name):
     if get_producer_by_name(name) is not None:
         failed_producer_name_uniqueness_check(name)
+
+
+# Uploaders
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
+
+def allowed_extension(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def upload_image(user_id, files):
+    user = get_user_by_id(user_id)
+    if 'image' not in files:
+        no_file_part_in_request()
+    image = files['image']
+    if image.filename == '':
+        no_image_presented()
+    if image and allowed_extension(image.filename):
+        image_url = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(image.filename))
+        image.save(image_url)
+        user.set_photo_url(image_url)
+        db.session.commit()
+    return True
