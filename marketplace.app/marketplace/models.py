@@ -20,7 +20,16 @@ producer_category_association_table = db.Table('producers_categories',
                                                )
 
 
-class User(UserMixin, db.Model):
+class SetPhotoUrlMixin():
+    def set_photo_url(self, photo_url):
+        if self.photo_url is None:
+            self.photo_url = photo_url
+        elif self.photo_url is not None and self.photo_url != photo_url:
+            os.remove(self.photo_url)
+            self.photo_url = photo_url
+
+
+class User(SetPhotoUrlMixin, UserMixin, db.Model):
     __tablename__ = 'user'
     __mapper_args = {'polymorphic_on': 'discriminator'}
     id = db.Column(db.Integer, primary_key=True)
@@ -53,13 +62,6 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def set_photo_url(self, photo_url):
-        if self.photo_url is None:
-            self.photo_url = photo_url
-        elif self.photo_url is not None and self.photo_url != photo_url:
-            os.remove(self.photo_url)
-            self.photo_url = photo_url
-
     def verify_email(self):
         self.email_auth_status = True
 
@@ -75,7 +77,7 @@ class Consumer(User):
     last_name = db.Column(db.String(128))
     patronymic = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
-    
+
     def __init__(self, email, password, first_name, last_name, phone_number, address, patronymic=''):
         super().__init__(email, password, 'consumer', phone_number, address)
         self.first_name = get_string_or_default(first_name)
@@ -167,7 +169,7 @@ class Order(db.Model):
         self.status = status
 
 
-class Product(db.Model):
+class Product(SetPhotoUrlMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     description = db.Column(db.String(256))
@@ -199,15 +201,6 @@ class Product(db.Model):
 
     def get_category(self):
         return Category.query.filter_by(id=self.category_id).all()
-
-    def set_photo_url(self, photo_url):
-        if self.photo_url is None:
-            self.photo_url = photo_url
-        elif self.photo_url is None and self.photo_url != photo_url:
-            os.remove(self.photo_url)
-            self.photo_url = photo_url
-
-
 
 
 class Category(db.Model):
