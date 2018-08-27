@@ -15,15 +15,17 @@ $(document).ready(function () {
                     email: email_authorisation,
                     password: password_authorisation,
                 },
-                function (status) {
+                function (data, status) {
                     if (status) {
                         $('#singInUser').removeClass('show');
                         $('#singInUser').css("display", "none");
                         $('.modal-backdrop').css("display", "none");
+                        var globalUserId = data.id;
+                        localStorage.setItem("globalUserId", globalUserId);
                         location.reload();
+
                     }
                     else {
-                        console.log('jopa');
                         $('#authUserAlert').css("display", "block");
                     }
                 });
@@ -34,6 +36,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/v1/logout',
             success: function () {
+                localStorage.setItem("globalUserId", null);
                 location.replace(window.location.origin);
             }
         });

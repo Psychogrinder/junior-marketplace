@@ -49,10 +49,9 @@
                            header_card_badge">
                             <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg') }} class="header-logo"
                                  alt="Корзина">
-                            <span class="badge badge-pill badge-secondary">2</span>
+                            <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
                         </a>
                     </div>
-
                 {% endif %}
                 {% if current_user.entity=='producer' or current_user.entity=='consumer' %}
                     <div class="btn-group px-3 header-dropdown-toggle">

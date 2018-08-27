@@ -22,3 +22,9 @@ class GlobalCart(Resource):
 
     def delete(self, consumer_id):
         return utils.clear_cart_by_consumer_id(consumer_id), 201
+
+
+class NumberOfProductsInCart(Resource):
+    def get(self, consumer_id):
+        return {"number_of_products": utils.get_number_of_products_in_cart(consumer_id)}
+

@@ -152,10 +152,21 @@ def get_parent_category_by_category_id(category_id):
     return get_category_by_id(parent_category_id)
 
 
+def get_number_of_products_in_cart(consumer_id):
+    items = Cart.query.filter_by(consumer_id=consumer_id).first().items
+    return sum(int(v) for k, v in items.items())
+
+
+def get_products_from_cart(items):
+    items = {int(k): int(v) for k, v in items.items()}
+    products = [get_product_by_id(id) for id in items]
+    return products
+
+
 # Get by name
 
-def get_category_by_name(category_name):
-    return Category.query.filter_by(slug=category_name).first()
+def get_category_by_name(slug):
+    return Category.query.filter_by(slug=slug).first()
 
 
 def get_user_by_email(email):
@@ -400,7 +411,7 @@ def login(args):
         return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return True
+    return {"id": user.id}
 
 
 def logout():

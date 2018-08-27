@@ -41,3 +41,9 @@ class PopularProducts(Resource):
 class UploadImageProduct(Resource):
     def post(self, product_id):
         return utils.upload_product_image(product_id, request.files), 201
+
+
+class ProductsInCart(Resource):
+    def get(self, consumer_id):
+        return product_schema_list.dump(
+            utils.get_products_from_cart(utils.get_cart_by_consumer_id(consumer_id).items)).data

@@ -1,14 +1,14 @@
 from marketplace import api
-from marketplace.api_folder.cart_api import GlobalCart
+from marketplace.api_folder.cart_api import GlobalCart, NumberOfProductsInCart
 from marketplace.api_folder.category_api import BaseCategories, Subcategories, SubcategoriesBySlug, \
-    PopularProductsByCategory, ProductsByCategory, ParentCategoryBySubcategoryId
+    PopularProductsByCategory, ProductsByCategory, ParentCategoryBySubcategoryId, CategoryRest
 from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders, UploadImageConsumer
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders
 from marketplace.api_folder.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders, \
     UploadImageProducer
-from marketplace.api_folder.product_api import GlobalProducts, ProductRest, UploadImageProduct
+from marketplace.api_folder.product_api import GlobalProducts, ProductRest, UploadImageProduct, ProductsInCart
 # TODO CHECK
 
 api.add_resource(GlobalOrders, '/orders')
@@ -16,12 +16,14 @@ api.add_resource(Orders, '/orders/<int:order_id>')
 api.add_resource(ConsumerOrders, '/consumers/<int:consumer_id>/orders')
 api.add_resource(ProducerOrders, '/producers/<int:producer_id>/orders')
 api.add_resource(GlobalCart, '/consumers/<int:consumer_id>/cart')
+api.add_resource(NumberOfProductsInCart, '/consumers/<int:consumer_id>/cart/quantity')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(UploadImageConsumer, '/consumers/<int:consumer_id>/upload')
 api.add_resource(UploadImageProducer, '/producers/<int:producer_id>/upload')
 api.add_resource(UploadImageProduct, '/products/<int:product_id>/upload')
-
+api.add_resource(CategoryRest, '/categories/<string:slug>')
+api.add_resource(ProductsInCart, '/products/<int:consumer_id>/cart')
 # checked
 api.add_resource(BaseCategories, '/categories/base')
 api.add_resource(Subcategories, '/categories/<int:category_id>/subcategories/')
