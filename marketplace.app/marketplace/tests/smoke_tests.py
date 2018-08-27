@@ -1,12 +1,10 @@
-from path_for_smoke_tests import *
-
-import marketplace
-
+#from path_for_smoke_tests import *
+#import db
 import unittest
 from urllib.request import Request, urlopen
 from selenium import webdriver
 
-def parseApiRoutesFile():
+def parseApiRoutesFromFile():
     file = '../api_routes.py'
     with open(file) as f:
         routes = {}
@@ -23,28 +21,29 @@ def parseApiRoutesFile():
     routes = {k: str(v[0]) for k, v in routes.items()} #list to string
     return routes
 
-def addCategoryLinks(link, category):
-    """преобразование <int:order_id> на id"""
+print(parseApiRoutesFromFile())
+
+def addIdLinks(link, category):
+    """преобразование <int:____id> на существующие id"""
     return link.replace('<id>', str(id))
 
 class TestSmoke(unittest.TestCase):
 
     def setUp(self):
         self.url = 'http://127.0.0.1:8000'
-        self.routes = parseApiRoutesFile()
+        self.routes = parseApiRoutesFromFile()
         self.id_user = 5
 
     def testConnection(self):
-        """проверка подключения"""
         self.assertEqual(200, (urlopen(self.url).getcode()))
 
     def testRoutes(self):
-        """проверка роутов"""
         for key, value in self.routes.items():
 
             link = addIdLinks(value, self.id_user)
             test_url = self.url + link
             print(test_url)
+
             #self.assertEqual(200, (urlopen(test_url).getcode()))
 
     def tearDown(self):
