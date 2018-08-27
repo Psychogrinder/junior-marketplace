@@ -103,6 +103,12 @@ class Cart(db.Model):
     def put_item(self, product_id, quantity):
         self.items[product_id] = quantity
 
+    def remove_item(self, product_id):
+        self.items.pop(product_id, None)
+
+    def clear_cart(self):
+        self.items.clear()
+
 
 class Producer(User):
     __mapper_args__ = {'polymorphic_identity': 'producer'}
