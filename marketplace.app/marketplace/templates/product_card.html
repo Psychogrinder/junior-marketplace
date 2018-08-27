@@ -37,7 +37,7 @@
                         <input class="product_quantity_input" type="number" id="number" value="1"/>
                         <div class="value-button" id="increase" onclick="increaseQuantity('number')" value="Increase Value">+</div>
                     </form>
-                    <button type="button" class="btn btn-success">В КОРЗИНУ</button>
+                    <button type="button" class="btn btn-success" onclick="putToCart({{ current_user.id }}, {{ product.id }})">В КОРЗИНУ</button>
                 </div>
                 {% endif %}
             </div>

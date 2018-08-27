@@ -1,8 +1,8 @@
 from itsdangerous import URLSafeSerializer, BadSignature
-from marketplace import app, mail
+from marketplace import app, mail, celery
 from flask import url_for, render_template
 from flask_mail import Message
-from marketplace import celery
+
 
 
 def generate_confirmation_token(user_email):
