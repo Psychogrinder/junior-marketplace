@@ -74,8 +74,7 @@ def create_product(producer_id):
 def cart(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     items = Cart.query.filter_by(consumer_id=user.id).first().items
-    items = {int(k): int(v) for k,v in items.items()}
-    products = [utils.get_product_by_id(id) for id in items]
+    products = utils.get_products_from_cart(items)
     producer_ids = set(product.producer_id for product in products)
     producers = [utils.get_producer_by_id(id) for id in producer_ids]
 

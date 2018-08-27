@@ -20,6 +20,7 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: 1234
+      LANG: 'ru_RU.UTF-8'
 
   adminer:
     image: adminer
