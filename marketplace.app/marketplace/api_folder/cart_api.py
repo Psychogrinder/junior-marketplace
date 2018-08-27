@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
 from marketplace.api_folder.schemas import cart_schema
 
-cart_args = ['product_id', 'quantity']
+cart_args = ['mode', 'product_id', 'quantity']
 parser = reqparse.RequestParser()
 
 for arg in cart_args:
@@ -15,4 +15,10 @@ class GlobalCart(Resource):
 
     def post(self, consumer_id):
         args = parser.parse_args()
-        return cart_schema.dump(utils.post_item_to_cart_by_consumer_id(args, consumer_id)).data, 201
+        if args['mode'] == 'remove':
+            return cart_schema.dump(utils.remove_item_from_cart_by_consumer_id(args, consumer_id)).data, 201
+        else:
+            return cart_schema.dump(utils.post_item_to_cart_by_consumer_id(args, consumer_id)).data, 201
+
+    def delete(self, consumer_id):
+        return utils.clear_cart_by_consumer_id(consumer_id), 201
