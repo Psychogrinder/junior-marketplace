@@ -10,6 +10,7 @@ export FLASK_APP=runserver.py
 export FLASK_DEBUG=1
 
 #Перед запуском убедитесь, что у вас запущен postgres в доккере
+#И создана marketplace.db на сервере.
 
 if [ -d "migrations" ]; then
   rm -rf migrations
