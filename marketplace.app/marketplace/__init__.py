@@ -12,7 +12,6 @@ import jsmin
 from flask_mail import Mail
 from marketplace import _celery
 
-
 app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(Config)
@@ -27,7 +26,6 @@ migrate = Migrate(app, db)
 db.init_app(app)
 celery = _celery.make_celery(app)
 
-
 from marketplace import models, views, api_routes
 
 css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css',
@@ -41,8 +39,9 @@ css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/ca
 assets.register('css_all', css)
 
 js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.js', 'script/registration_consumer.js',
-            'script/authorisation.js', 'script/registration_producer.js','script/menu_backlighting.js','script/edit_consumer_profile.js','script/edit_producer_profile.js',
-
+            'script/authorisation.js', 'script/registration_producer.js', 'script/menu_backlighting.js',
+            'script/edit_consumer_profile.js', 'script/edit_producer_profile.js',
+            'script/cart.js',
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)

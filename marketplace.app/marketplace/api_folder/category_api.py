@@ -4,6 +4,10 @@ from flask_restful import Resource
 from marketplace.api_folder.schemas import category_schema_list, product_schema_list, category_schema
 
 
+class CategoryRest(Resource):
+    def get(self, slug):
+        return category_schema.dump(utils.get_category_by_name(slug)).data
+
 class BaseCategories(Resource):
     def get(self):
         return category_schema_list.dump(utils.get_all_base_categories()).data
