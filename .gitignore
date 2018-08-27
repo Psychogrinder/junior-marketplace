@@ -1,17 +1,17 @@
 .vagrant/
 .idea/
-.webassets-cache 
+.webassets-cache
 
 __pycache__/
 
 *.log
 *.egg-info
-
+*.pyc
 
 marketplace.app/flask_sessions/
 marketplace.app/.venv/
 marketplace.app/migrations/
-
+marketplace.app/marketplace/user_images/
 
 node_modules/
 bundle.min.css
@@ -19,3 +19,5 @@ app.min.js
 
 .env.prod
 .env.stage
+
+3.6/

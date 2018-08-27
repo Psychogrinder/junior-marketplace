@@ -12,12 +12,14 @@
             <div class="col-9">
                 <div class="name_container">
                     <h1>{{ producer.name }}</h1>
+                    {% if current_user.id == producer.id %}
                     <p class="edit-profile">
                         <a href={{ url_for( 'edit_producer', producer_id = producer.id) }}>
                             <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
                             Редактировать
                         </a>
                     </p>
+                    {% endif %}
                 </div>
             </div>
         </div>

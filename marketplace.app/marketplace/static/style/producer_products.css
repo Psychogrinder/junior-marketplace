@@ -42,3 +42,13 @@ p.out-of-stock{
 	color: #FF7851;
 	margin-top: 0.5rem;
 }
+
+.producer_products_empty {
+	margin-top: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.producer_products_empty h2 {
+    margin-bottom: 1.5rem;
+}

@@ -1,5 +1,6 @@
 import os
 import sys
+import ssl
 import urllib.request
 import json
 from random import choice
@@ -8,6 +9,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 dir_path = os.path.dirname(os.path.realpath(dir_path))
 sys.path.insert(0, dir_path)
 from models import *
+
+context = ssl._create_unverified_context()
 
 producer_names = ['безбрежный', 'бездонный', 'безмятежный', 'белоснежный', 'беспредельный', 'колоссальный',
                   'мировой', 'неиссякаемый', 'щедрый']
@@ -18,11 +21,11 @@ file = open('data/producer-description.txt', 'r')
 description = file.read()
 file.close()
 
-with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names))) as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names)), context=context) as response:
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
-        producer = Producer(company['login']['password'], company['email'], 'Совхоз ' + producer_names.pop().title(),
+        producer = Producer('123123', company['email'], 'Совхоз ' + producer_names.pop().title(),
                             company['phone'], company['location']['street'],
                             "{} {}".format(company['name']['first'], company['name']['last']), description)
         db.session.add(producer)
@@ -30,11 +33,11 @@ with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(p
 for i, producer in enumerate(Producer.query.all()):
     producer.id = i+1
 
-with urllib.request.urlopen("https://randomuser.me/api/?results=100") as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results=100", context=context) as response:
     data = response.read()
     data = json.loads(data)
     for person in data["results"]:
-        consumer = Consumer(person['email'], person['login']['password'], person['name']['first'],
+        consumer = Consumer(person['email'], '123123', person['name']['first'],
                             person['name']['last'], person['phone'], person['location']['street'])
         db.session.add(consumer)
 
@@ -76,7 +79,7 @@ for i, cat in enumerate(Category.query.all()):
 prices = range(50, 1000)
 quantity = range(100, 500)
 producer_ids = range(1, number_of_producers+1)
-measurement_units = ['кг', 'литры', 'штуки']
+measurement_units = ['кг', 'л', 'шт']
 weights = range(5, 50)
 product_descriptions = ['Очень вкусный продукт', 'Самый вкусный продукт']
 
@@ -98,7 +101,7 @@ product_names = {"птица": {
     "фрукты": {
         "груши": ["Груши Совхозные", "Груши Колхозные", "Груши Городские"],
         "дыни": ["Дыни Совхозные", "Дыни Колхозные", "Дыни Городские"],
-        "яблоки": ["Дыни Совхозные", "Дыни Колхозные", "Дыни Городские"]
+        "яблоки": ["Яблоки Совхозные", "Яблоки Колхозные", "Яблоки Городские"]
     },
     "мёд": {
         "гречишный": ["Мёд гречишный Совхозный", "Мёд гречишный Колхозный", "Мёд гречишный Городскый"],
@@ -131,6 +134,12 @@ for cat, subcats in product_names.items():
             product = Product(choice(prices), product_name, choice(quantity), producer_id, category.id, choice(measurement_units), choice(weights), choice(product_descriptions))
             db.session.add(product)
             producer.categories.append(category)
+            parent_category = Category.query.filter_by(id=category.parent_id).first()
+            producer.categories.append(parent_category)
+        
+        
+for i, cat in enumerate(Category.query.all()):
+    cat.name = cat.name.title()
 
-
+    
 db.session.commit()
