@@ -1,3 +1,5 @@
 # Docker stage
 
-export DOCKER_HOST=tcp://192.168.201.27:15000
+export DOCKER_HOST=tcp://
+export DOCKER_TLS_VERIFY=0
+export DOCKER_CERT_PATH=""
