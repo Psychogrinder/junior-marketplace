@@ -15,10 +15,10 @@ class GlobalCart(Resource):
 
     def post(self, consumer_id):
         args = parser.parse_args()
-        if args['mode'] == 'add':
-            return cart_schema.dump(utils.post_item_to_cart_by_consumer_id(args, consumer_id)).data, 201
-        elif args['mode'] == 'remove':
+        if args['mode'] == 'remove':
             return cart_schema.dump(utils.remove_item_from_cart_by_consumer_id(args, consumer_id)).data, 201
+        else:
+            return cart_schema.dump(utils.post_item_to_cart_by_consumer_id(args, consumer_id)).data, 201
 
     def delete(self, consumer_id):
         return utils.clear_cart_by_consumer_id(consumer_id), 201

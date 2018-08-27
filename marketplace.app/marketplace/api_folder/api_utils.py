@@ -298,7 +298,12 @@ def post_cart(consumer_id):
 def post_item_to_cart_by_consumer_id(args, consumer_id):
     abort_if_product_doesnt_exist_or_get(int(args['product_id']))
     cart = get_cart_by_consumer_id(consumer_id)
-    cart.put_item(args['product_id'], args['quantity'])
+    if args['mode'] == 'add':
+        cart.add_item(args['product_id'], args['quantity'])
+    elif args['mode'] == 'sub':
+        cart.decrease_item(args['product_id'], args['quantity'])
+    else:
+        cart.set_item(args['product_id'], args['quantity'])
     db.session.commit()
     return cart
 
