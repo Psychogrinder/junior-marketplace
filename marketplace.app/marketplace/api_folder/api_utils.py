@@ -159,8 +159,8 @@ def get_number_of_products_in_cart(consumer_id):
 
 # Get by name
 
-def get_category_by_name(category_name):
-    return Category.query.filter_by(slug=category_name).first()
+def get_category_by_name(slug):
+    return Category.query.filter_by(slug=slug).first()
 
 
 def get_user_by_email(email):

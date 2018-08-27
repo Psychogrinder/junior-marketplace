@@ -1,7 +1,7 @@
 from marketplace import api
 from marketplace.api_folder.cart_api import GlobalCart, NumberOfProductsInCart
 from marketplace.api_folder.category_api import BaseCategories, Subcategories, SubcategoriesBySlug, \
-    PopularProductsByCategory, ProductsByCategory, ParentCategoryBySubcategoryId
+    PopularProductsByCategory, ProductsByCategory, ParentCategoryBySubcategoryId, CategoryRest
 from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders, UploadImageConsumer
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
@@ -22,6 +22,7 @@ api.add_resource(Logout, '/logout')
 api.add_resource(UploadImageConsumer, '/consumers/<int:consumer_id>/upload')
 api.add_resource(UploadImageProducer, '/producers/<int:producer_id>/upload')
 api.add_resource(UploadImageProduct, '/products/<int:product_id>/upload')
+api.add_resource(CategoryRest, '/categories/<string:slug>')
 
 # checked
 api.add_resource(BaseCategories, '/categories/base')
