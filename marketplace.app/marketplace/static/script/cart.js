@@ -25,7 +25,6 @@ $(document).ready(function () {
     getNumberOfProductsInCart = function (user_id) {
         $.get("/api/v1/consumers/" + user_id + "/cart/quantity",
             function (data, status) {
-                console.log("data.number_of_products: " + data.number_of_products);
                 if (data.number_of_products) {
                     document.getElementById('numberOfProductsInCart').innerHTML = data.number_of_products;
                 }
@@ -35,4 +34,17 @@ $(document).ready(function () {
 });
 
 
+function deleteProduct(product_id, producer_id) {
+    $('#'+product_id).remove();
+    var producer = $('#producer'+producer_id);
+    var products = producer.find('section');
+    if ( products.length == 0) {
+        producer.remove();
+    }
+    
+}
+
+function countFullPrice() {
+
+}
 

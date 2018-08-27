@@ -13,13 +13,13 @@
     </div>
     <section>
         {% for producer in producers %}
-        <section>
+        <section id='producer{{ producer.id }}'>
             <div class="row cart_producer_title container">
                 <h2>{{ producer.name }}</h2>
             </div>
             {% for product in products %}
             {% if product.producer_id == producer.id %}
-            <section>
+            <section id = {{ product.id }} class="product">
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
@@ -42,21 +42,21 @@
                         <div class="col-4 quantity_container">
                             <span>Количество</span>
                             <form class="product_quantity">
-                                <div class="value-button" id="decrease001" onclick="decreaseQuantity('number001')"
+                                <div class="value-button" id='decrease{{ product.id }}' onclick="decreaseQuantity('number{{ product.id }}')"
                                      value="Decrease Value">-
                                 </div>
                                 {% for product_id, quantity in items.items() %}
                                 {% if product.id == product_id %}
-                                <input class="product_quantity_input" type="number" id="number001" value="{{ quantity }}"/>
+                                <input class="product_quantity_input" type="number" id='number{{ product.id }}' value="{{ quantity }}"/>
                                 {% endif %}
                                 {% endfor %}
-                                <div class="value-button" id="increase001" onclick="increaseQuantity('number001')"
+                                <div class="value-button" id='increase{{ product.id }}' onclick="increaseQuantity('number{{ product.id }}')"
                                      value="Increase Value">+
                                 </div>
                             </form>
                         </div>
                         <div class="col-1">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close"  onclick="deleteProduct('{{ product.id }}','{{ producer.id }}')">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -83,7 +83,7 @@
             <div class="row">
                 <div class="col-8 total_box">
                     <span>ИТОГО:</span>
-                    <span class="total_value">1200 P</span>
+                    <span class="total_value" id="fullPrice">{{ product }} P</span>
                 </div>
                 <div class="col-4 order_box">
                     <a href={{ url_for( 'order_registration', user_id = '5' )}} class="btn btn-primary
