@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <main>
+    <main id="cartMain">
         <div class="container">
             <section class="breadcrumbs">
                 <span><a class="active">Корзина</a></span>
@@ -45,18 +45,18 @@
                                                 <span>Количество</span>
                                                 <form class="product_quantity">
                                                     <div class="value-button" id='decrease{{ product.id }}'
-                                                         onclick="decreaseQuantity('number{{ product.id }}')"
+                                                         onclick="decreaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
                                                          value="Decrease Value">-
                                                     </div>
                                                     {% for product_id, quantity in items.items() %}
                                                         {% if product.id == product_id %}
 
                                                             <input class="product_quantity_input" type="number"
-                                                                   id='number{{ product.id }}' value="{{ quantity }}"/>
+                                                                   id='number{{ product.id }}' value="{{ quantity }}" onchange="changeQuantityOfProduct({{ product.id }})"/>
                                                         {% endif %}
                                                     {% endfor %}
                                                     <div class="value-button" id='increase{{ product.id }}'
-                                                         onclick="increaseQuantity('number{{ product.id }}')"
+                                                         onclick="increaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
                                                          value="Increase Value">+
                                                     </div>
                                                 </form>
