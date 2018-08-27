@@ -141,7 +141,7 @@ def get_products_by_producer_id(producer_id):
 
 
 def get_cart_by_consumer_id(consumer_id):
-    abort_if_consumer_doesnt_exist_or_get()
+    abort_if_consumer_doesnt_exist_or_get(consumer_id)
     cart = Cart.query.filter_by(consumer_id=consumer_id).first()
     return cart if cart is not None else post_cart(consumer_id)
 
@@ -298,7 +298,20 @@ def post_cart(consumer_id):
 def post_item_to_cart_by_consumer_id(args, consumer_id):
     abort_if_product_doesnt_exist_or_get(int(args['product_id']))
     cart = get_cart_by_consumer_id(consumer_id)
-    cart.put_item(args['product_id'], args['quantity'])
+    if args['mode'] == 'inc':
+        cart.increase_item_quantity(args['product_id'], args['quantity'])
+    elif args['mode'] == 'dec':
+        cart.decrease_item_quantity(args['product_id'], args['quantity'])
+    elif args['mode'] == 'set':
+        cart.set_item_quantity(args['product_id'], args['quantity'])
+    db.session.commit()
+    return cart
+
+
+def remove_item_from_cart_by_consumer_id(args, consumer_id):
+    abort_if_product_doesnt_exist_or_get(int(args['product_id']))
+    cart = get_cart_by_consumer_id(consumer_id)
+    cart.remove_item(args['product_id'])
     db.session.commit()
     return cart
 
@@ -370,6 +383,13 @@ def delete_product_by_id(product_id):
     db.session.delete(product)
     db.session.commit()
     return {"message": "Product with id {} has been deleted successfully".format(product_id)}
+
+
+def clear_cart_by_consumer_id(consumer_id):
+    cart = get_cart_by_consumer_id(consumer_id)
+    cart.clear_cart()
+    db.session.commit()
+    return {"message": "Cart has been cleared successfully".format(consumer_id)}
 
 
 # Login/Logout

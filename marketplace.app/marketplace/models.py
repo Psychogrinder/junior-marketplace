@@ -100,8 +100,28 @@ class Cart(db.Model):
     def __init__(self, consumer_id):
         self.consumer_id = consumer_id
 
-    def put_item(self, product_id, quantity):
-        self.items[product_id] = quantity
+    def set_item_quantity(self, product_id, quantity):
+        self.items[product_id] = int(quantity)
+
+    def increase_item_quantity(self, product_id, inc):
+        if product_id in self.items.keys():
+            self.items[product_id] += int(inc)
+        else:
+            self.set_item_quantity(product_id, inc)
+
+    def decrease_item_quantity(self, product_id, dec):
+        if product_id in self.items.keys():
+            sub = self.items[product_id] - int(dec)
+            if sub <= 0:
+                self.items[product_id] = 0
+            else:
+                self.items[product_id] = sub
+
+    def remove_item(self, product_id):
+        self.items.pop(product_id, None)
+
+    def clear_cart(self):
+        self.items.clear()
 
 
 class Producer(User):
