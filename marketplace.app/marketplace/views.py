@@ -1,10 +1,11 @@
 from flask import render_template, jsonify, redirect, url_for, flash, abort
 import os
 from flask_restful import reqparse
-from marketplace import app, email, db
+from marketplace import app, email_tools, db
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
 import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
+
 
 
 # каталог
@@ -74,10 +75,10 @@ def create_product(producer_id):
 def cart(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     items = Cart.query.filter_by(consumer_id=user.id).first().items
+    items = {int(k): (v) for k, v in items.items()}
     products = utils.get_products_from_cart(items)
     producer_ids = set(product.producer_id for product in products)
     producers = [utils.get_producer_by_id(id) for id in producer_ids]
-
     if current_user.id == int(user_id):
         return render_template('cart.html', user=user, current_user=current_user, producers=producers, items=items,
                                products=products)
@@ -93,14 +94,16 @@ def order_registration(user_id):
         return redirect(url_for('index'))
 
 
+
 # покупатель
 @app.route('/user/<user_id>')
 def consumer_profile(user_id):
-    user = Consumer.query.filter_by(id=user_id).first()
+    user = Consumer.query.filter_by(id=user_id).first()    
     if current_user.id == int(user_id):
         return render_template('consumer_profile.html', user=user, current_user=current_user)
     else:
         return redirect(url_for('index'))
+
 
 
 @app.route('/user/edit/<user_id>')
@@ -121,6 +124,7 @@ def order_history(user_id):
         return redirect(url_for('index'))
 
 
+
 # производитель
 @app.route('/producer/<producer_id>')
 def producer_profile(producer_id):
@@ -137,12 +141,14 @@ def edit_producer(producer_id):
         return redirect(url_for('index'))
 
 
+
 @app.route('/producer/<producer_id>/orders')
 def producer_orders(producer_id):
     if current_user.id == int(producer_id):
         return render_template('producer_orders.html', current_user=current_user)
     else:
         return redirect(url_for('index'))
+
 
 
 # о нас и помощь
@@ -165,7 +171,7 @@ def producer_help():
 def version():
     return jsonify(version=1.0)
 
-
+  
 @app.route('/email_confirm/<token>')
 def email_confirm(token):
     user_email = email.confirm_token(token)
@@ -182,6 +188,6 @@ def email_confirm(token):
     flash('Адрес электронной почты подтвержден', category='info')
     return redirect(url_for('index'))
 
-
+  
 if __name__ == '__main__':
     app.run(port=8000)

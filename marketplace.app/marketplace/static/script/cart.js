@@ -54,11 +54,52 @@ function deleteProduct(product_id, producer_id, consumer_id) {
     var products = producer.find('section');
     if (products.length == 0) {
         producer.remove();
+        $('#notEmptyCart').css('display', 'none');
+        $('#emptyCart').css('display', 'block');
     }
+    countTotalCost();
 
 }
 
-function countFullPrice() {
-    $.get("/api/v1/")
+function getProductsByUserId() {
+    var user_id = localStorage.getItem("globalUserId");
+    $.get("/api/v1/products/" + user_id + "/cart",
+        function (products, status) {
+            if (status) {
+                getCartInformation(products);
+            }
+        }
+    )
 }
+
+function getCartInformation(products) {
+    var user_id = localStorage.getItem("globalUserId");
+    $.get("/api/v1/consumers/" + user_id + "/cart",
+        function (items, status) {
+            if (status) {
+                countTotalCostInner(items, products);
+            }
+        })
+}
+
+function countTotalCostInner(items, products) {
+    var total = 0;
+    for (var i in items.items) {
+        for (var p = 0; p < products.length; p++) {
+            if (i == products[p].id) {
+                var sum = items.items[i] * products[p].price;
+                total += sum;
+            }
+        }
+    }
+    $('#totalCost').html(total);
+}
+
+function countTotalCost() {
+    getProductsByUserId();
+}
+
+countTotalCost();
+
+
 
