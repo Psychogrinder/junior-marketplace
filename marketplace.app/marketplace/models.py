@@ -100,11 +100,18 @@ class Cart(db.Model):
     def __init__(self, consumer_id):
         self.consumer_id = consumer_id
 
-    def put_item(self, product_id, quantity):
-        if product_id not in self.items.keys():
-            self.items[product_id] = int(quantity)
+    def add_item(self, product_id, add):
+        self.items[product_id] += int(add)
+
+    def set_item(self, product_id, quantity):
+        self.items[product_id] = int(quantity)
+
+    def decrease_item(self, product_id, subtract):
+        sub = self.items[product_id] - int(subtract)
+        if sub <= 0:
+            self.items[product_id] = 0
         else:
-            self.items[product_id] += int(quantity)
+            self.items[product_id] = sub
 
     def remove_item(self, product_id):
         self.items.pop(product_id, None)
