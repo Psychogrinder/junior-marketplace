@@ -17,7 +17,8 @@ class GlobalOrders(Resource):
 
     def post(self):
         args = parser.parse_args()
-        return order_schema.dump(utils.post_order(args)).data, 201
+        utils.post_orders(args)
+        return "Заказ был успешно оформлен", 201
 
 
 class Orders(Resource):

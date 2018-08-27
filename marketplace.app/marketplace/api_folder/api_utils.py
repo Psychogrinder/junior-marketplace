@@ -254,13 +254,21 @@ def producer_has_product_with_such_name(args):
 
 # Post methods
 
-def post_order(args):
+def post_orders(args):
     abort_if_producer_doesnt_exist_or_get(args['producer_id'])
     abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
-    new_order = order_schema.load(args).data
-    db.session.add(new_order)
+    # new_order = order_schema.load(args).data
+    consumer_id = args['consumer_id']
+    delivery_address = args['delivery_address']
+    orders = args['orders']
+    for order in orders:
+        total_cost = 0
+        for product_id, quantity in order['order_items_json']:
+            total_cost += Product.query.get(int(product_id)).price * int(quantity)
+        new_order = Order(total_cost, order['order_items_json'], order['delivery_method'], delivery_address,
+                          order['consumer_phone'], order['consumer_email'], consumer_id, order['producer_id'])
+        db.session.add(new_order)
     db.session.commit()
-    return new_order
 
 
 def post_consumer(args):
