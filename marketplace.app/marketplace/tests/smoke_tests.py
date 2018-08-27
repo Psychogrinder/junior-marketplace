@@ -1,10 +1,12 @@
 from path_file import *
 
 #from marketplace import db
-from marketplace.models import Category
+from marketplace.models import Category, User
 import unittest
 from urllib.request import Request, urlopen
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
 
 def parseApiRoutes():
     file = '../views.py'
@@ -22,22 +24,36 @@ def parseApiRoutes():
 
 def getCategorySlug():
     category_slugs = []
+
     for category in Category.query.all():
         category_slugs.append(category.slug)
 
     return category_slugs
 
+def getUserIds():
+    user_ids = {'producer_ids': [], 'consumer_ids': []}
+
+    for user in User.query.all():
+        if user.entity == 'producer':
+            user_ids['producer_ids'].append(user.id)
+        else:
+            user_ids['consumer_ids'].append(user.id)
+
+    return user_ids #return dict with users id
+
 def replaceCategoryName(url, category_slug):
     if '<category_name>' in url:
         return url.replace('<category_name>', category_slug)
 
+
 class TestSmoke(unittest.TestCase):
 
     def setUp(self):
+
         self.url = 'http://127.0.0.1:8000'
         self.routes = parseApiRoutes()
-        self.id_user = 5
         self.category_slugs = getCategorySlug()
+
 
     def testConnection(self):
         self.assertEqual(200, (urlopen(self.url).getcode()))
@@ -57,8 +73,14 @@ class TestSmoke(unittest.TestCase):
             test_url = replaceCategoryName(self.url + matching[0], category_slug)
             self.assertEqual(200, (urlopen(test_url).getcode()))
 
+    def testUserRoutes(self):
+        user_ids = getUserIds()
+
+
+
     def tearDown(self):
         pass
+
 
 if __name__ == '__main__':
    unittest.main()
