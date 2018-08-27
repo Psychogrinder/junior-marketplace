@@ -1,16 +1,13 @@
 $(document).ready(function () {
+    var categoryId = null;
+
     $('#save_product_data').click(function(){
         var addr = window.location + '';
         addr = addr.split('/');
         var product_id = addr[addr.length - 2];
         var categorySlug = $('#editSubcategory option:selected').val();
 
-        $.get('/api/v1/categories/' + categorySlug,
-            function (data, status) {
-                if (status) {
-                    createProductObject(data);
-                }
-        });
+        categoryId = parseInt($('#editSubcategory option:selected').data('id'));
 
         function createProductObject(categoryId){
             var productObject = {
@@ -22,19 +19,17 @@ $(document).ready(function () {
                 measurement_unit: $('#editUnits option:selected').val(),
                 description: $('#editDescription').html()
             };
-            // console.log(productObject);
             return productObject;
         }
 
-        console.log(createProductObject(product_id));
 
         $.ajax({
             url: '/api/v1/products/' + product_id,
             type: 'PUT',
             contentType: 'application/json',
-            data: JSON.stringify(createProductObject(product_id)),
+            data: JSON.stringify(createProductObject(categoryId)),
             success: function(data, status) {
-                // console.log(data, status);
+
             }
         });
     });

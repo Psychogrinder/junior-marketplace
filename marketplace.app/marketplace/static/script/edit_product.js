@@ -65,6 +65,7 @@ $(document).ready(function () {
                     for (var i = 0; i < subcategories.length; i++) {
                         subcategory_option[i].innerHTML = subcategories[i].name;
                         $(subcategory_option[i]).val(subcategories[i].slug);
+                        subcategory_option[i].setAttribute('data-id', subcategories[i].id);
                         if (subcategories[i].id == category_id) {
                             $(subcategory_option[i]).attr("selected", true);
                         }
