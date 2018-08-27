@@ -8,8 +8,8 @@ from selenium import webdriver
 
 def parseApiRoutes():
     file = '../views.py'
+    routes = []
     with open(file) as f:
-        routes = []
         for s in f:
             if '@app.route' in s:
 
@@ -18,20 +18,18 @@ def parseApiRoutes():
                 first_symbol, last_symblol = s.find('/'), s.rfind('\'')
                 route = s[first_symbol: last_symblol]
                 routes.append(route)
-
-    #routes = {k: str(v[0]) for k, v in routes.items()} #list to string
     return routes
 
-def getCategoryIds():
-    categories_id = []
+def getCategorySlug():
+    category_slugs = []
     for category in Category.query.all():
-        categories_id.append(category.id)
+        category_slugs.append(category.slug)
 
-    return categories_id
+    return category_slugs
 
-def addIdLinks(link, category):
-    """преобразование <int:____id> на существующие id"""
-    return link.replace('<id>', str(id))
+def replaceCategoryName(url, category_slug):
+    if '<category_name>' in url:
+        return url.replace('<category_name>', category_slug)
 
 class TestSmoke(unittest.TestCase):
 
@@ -39,20 +37,25 @@ class TestSmoke(unittest.TestCase):
         self.url = 'http://127.0.0.1:8000'
         self.routes = parseApiRoutes()
         self.id_user = 5
-        self.category_ids = getCategoryIds()
+        self.category_slugs = getCategorySlug()
 
     def testConnection(self):
         self.assertEqual(200, (urlopen(self.url).getcode()))
 
-    def testRoutes(self):
+    def testBaseRoutes(self):
         for route in self.routes:
-            #link = addIdLinks(route, self.id_user)
             test_url = self.url + route
-
-            """преобразованные ссылки"""
             if '<' not in test_url:
-                print(test_url)
                 self.assertEqual(200, (urlopen(test_url).getcode()))
+            else:
+                print(test_url)
+
+    def testCategoryRoutes(self):
+        matching = [route for route in self.routes if '<category_name>' in route]
+
+        for category_slug in self.category_slugs:
+            test_url = replaceCategoryName(self.url + matching[0], category_slug)
+            self.assertEqual(200, (urlopen(test_url).getcode()))
 
     def tearDown(self):
         pass
