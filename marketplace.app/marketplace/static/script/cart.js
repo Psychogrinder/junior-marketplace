@@ -59,9 +59,7 @@ function deleteProduct(product_id, producer_id, consumer_id) {
         producer.remove();
     }
     var allProducerBlock = $('.notEmptyCart').find('section');
-    console.log(allProducerBlock.length);
     if (allProducerBlock.length == 0) {
-        console.log(allProducerBlock.length);
         $('.notEmptyCart').remove();
         $('#cartMain').append('<section class="container total_container py-4" id="emptyCart">\n' +
             '                 <h2>Ваша корзина пуста</h2>\n' +
@@ -114,7 +112,6 @@ if (localStorage.getItem("globalUserId") > 0) {
 }
 
 function changeQuantityOfProduct(product_id) {
-    console.log(product_id);
     let quantity = $('#number' + product_id).val();
     var user_id = localStorage.getItem("globalUserId");
     $.post("/api/v1/consumers/" + user_id + "/cart",
@@ -132,5 +129,6 @@ function changeQuantityOfProduct(product_id) {
             }
             document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
         });
+    countTotalCost();
 }
 
