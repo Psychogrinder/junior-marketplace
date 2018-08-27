@@ -1,5 +1,5 @@
 from operator import itemgetter
-from marketplace import email
+from marketplace import email_tools
 import os
 import re
 from flask_login import login_user, logout_user
