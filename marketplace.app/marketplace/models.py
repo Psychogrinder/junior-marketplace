@@ -194,7 +194,7 @@ class Product(SetPhotoUrlMixin, db.Model):
     name = db.Column(db.String(128))
     description = db.Column(db.String(256))
     photo_url = db.Column(db.String(256))
-    price = db.Column(db.Float)
+    price = db.Column(MONEY)
     quantity = db.Column(db.Integer)
     times_ordered = db.Column(db.Integer)
     producer_id = db.Column(db.Integer)
