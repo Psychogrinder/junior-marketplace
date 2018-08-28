@@ -129,7 +129,8 @@ def order_history(user_id):
 @app.route('/producer/<producer_id>')
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
-    return render_template('producer_profile.html', producer=producer, current_user=current_user)
+    if producer != None:
+        return render_template('producer_profile.html', producer=producer, current_user=current_user)
 
 
 @app.route('/producer/<producer_id>/edit')
