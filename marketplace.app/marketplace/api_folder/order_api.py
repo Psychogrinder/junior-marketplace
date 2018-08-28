@@ -2,7 +2,8 @@ from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
 from marketplace.api_folder.schemas import order_schema_list, order_schema
 
-order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost']
+order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost', 'first_name',
+              'last_name']
 parser = reqparse.RequestParser()
 
 for arg in order_args:

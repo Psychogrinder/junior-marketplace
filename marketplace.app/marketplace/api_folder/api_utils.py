@@ -164,6 +164,18 @@ def get_products_from_cart(items):
     return products
 
 
+def get_all_products_from_a_list_of_categories(categories):
+    all_products = []
+    for category in categories:
+        all_products += category.get_products()
+    return all_products
+
+
+def get_products_from_a_parent_category(parent_category_id):
+    subcategories = get_subcategories_by_category_id(parent_category_id)
+    return get_all_products_from_a_list_of_categories(subcategories)
+
+
 # Get by name
 
 def get_category_by_name(slug):
@@ -179,15 +191,72 @@ def get_producer_by_name(name):
 
 
 # Get sorted
+def get_sorted_and_filtered_products(args):
+    products = Product.query
 
+    if args['popularity']:
+        if args['popularity'] == 'down':
+            products = products.order_by(Product.times_ordered.desc())
 
-def get_popular_products_by_category_id(category_id):
-    category = get_category_by_id(category_id)
-    return sorted(category.get_products(), key=lambda product: product.times_ordered, reverse=True)
+    if args['category_name']:
+        category_id = Category.query.filter_by(name=args['category_name']).first().id
+        products = products.filter_by(category_id=category_id)
+
+    if args['producer_name']:
+        producer_id = Category.query.filter_by(name=args['producer_name']).first().id
+        products = products.filter_by(producer_id=producer_id)
+
+    if args['in_storage'] == int(1):
+        products = products.filter(Product.quantity > 0)
+
+    products = products.all()
+
+    if args['price']:
+        if args['price'] == 'down':
+            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=True)
+        elif args['price'] == 'up':
+            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')))
+
+    return products
 
 
 def get_popular_products():
-    return sorted(get_all_products(), key=lambda product: product.times_ordered, reverse=True)
+    return Product.query.order_by(Product.times_ordered.desc()).limit(12).all()
+
+
+def get_popular_products_by_category_id(category_id, direction):
+    """
+    Если direction == up, то товары возврщаются от наименее популярных до самых популярных. Если down, то наоборот.
+    """
+    if direction == 'up':
+        reverse = False
+    elif direction == 'down':
+        reverse = True
+
+    if get_category_by_id(category_id).parent_id != 0:
+        category = get_category_by_id(category_id)
+        return sorted(category.get_products(), key=lambda product: int(product.times_ordered), reverse=reverse)
+    else:
+        all_products = get_products_from_a_parent_category(category_id)
+        return sorted(all_products, key=lambda product: int(product.times_ordered), reverse=reverse)
+
+
+def get_products_by_category_id_sorted_by_price(category_id, direction):
+    """
+    Если direction == up, то товары возврщаются от самых дешёвых до самых дорогих. Если down, то наоборот.
+    """
+    if direction == 'up':
+        reverse = False
+    elif direction == 'down':
+        reverse = True
+
+    if get_category_by_id(category_id).parent_id != 0:
+        category = get_category_by_id(category_id)
+        return sorted(category.get_products(), key=lambda product: float(product.price.strip('₽').strip(' ')),
+                      reverse=reverse)
+    else:
+        all_products = get_products_from_a_parent_category(category_id)
+        return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
 
 
 # Get all methods
@@ -266,6 +335,8 @@ def post_orders(args):
     abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
     # new_order = order_schema.load(args).data
     consumer_id = args['consumer_id']
+    first_name = args['first_name']
+    last_name = args['second_name']
     delivery_address = args['delivery_address']
     phone = args['phone']
     email = args['email']
@@ -280,7 +351,7 @@ def post_orders(args):
                 current_items[product_id] = quantity
                 total_cost += float(Product.query.get(int(product_id)).price.strip(['$', '₽'])) * int(quantity)
         new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
-                          phone, email, consumer_id, order['producer_id'])
+                          phone, email, consumer_id, order['producer_id'], first_name=first_name, last_name=last_name)
         db.session.add(new_order)
     clear_cart_by_consumer_id(consumer_id)
     db.session.commit()
