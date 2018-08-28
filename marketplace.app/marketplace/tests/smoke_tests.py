@@ -1,11 +1,12 @@
 from path_file import *
 
-from marketplace.models import Category, User, Product
+from marketplace.models import Category, User, Product, Producer
 import unittest
 from urllib.request import Request, urlopen
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+unittest.TestLoader.sortTestMethodsUsing = None
 
 def parseApiRoutes():
     file = '../views.py'
@@ -65,20 +66,22 @@ def replaceProductId(url, product_id):
 class TestSmoke(unittest.TestCase):
 
     def setUp(self):
-
         self.url = 'http://127.0.0.1:8000'
         self.routes = parseApiRoutes()
         self.category_slugs = getCategorySlugs()
 
     def testConnection(self):
         self.assertEqual(200, (urlopen(self.url).getcode()))
+        print(self.url)
+        print('Connection is OK')
 
     def testBaseRoutes(self):
-        for route in self.routes:
+        for route in self.routes[1:]:
             test_url = self.url + route
             if '<' not in test_url:
                 self.assertEqual(200, (urlopen(test_url).getcode()))
-
+                print(test_url)
+        print('Base routes are OK.\n')
 
     def testCategoryRoutes(self):
         matching = [route for route in self.routes if '<category_name>' in route]
