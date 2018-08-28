@@ -5,17 +5,19 @@ networks:
     external: true
 
 volumes:
-  marketplace.db:
+  marketplacedb:
     external: false
 
 services:
   db:
     container_name: marketplace.db
-    image: postgres:10
+    build:
+      dockerfile: Dockerfile
+      context: .
     networks:
       - marketplace
     volumes:
-      - marketplace.db:/var/lib/postgresql/data
+      - marketplacedb:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
@@ -28,4 +30,4 @@ services:
     ports:
       - 8080:8080
     networks:
-      - marketplace 
+      - marketplace
