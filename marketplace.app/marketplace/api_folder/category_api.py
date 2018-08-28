@@ -27,8 +27,8 @@ class ProductsByCategory(Resource):
 
 
 class PopularProductsByCategory(Resource):
-    def get(self, category_id):
-        return product_schema_list.dump(utils.get_popular_products_by_category_id(category_id)).data
+    def get(self, category_id, direction):
+        return product_schema_list.dump(utils.get_popular_products_by_category_id(category_id, direction)).data
 
 class ParentCategoryBySubcategoryId(Resource):
     def get(self, category_id):

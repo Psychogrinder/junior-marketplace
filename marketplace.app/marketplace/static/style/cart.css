@@ -102,3 +102,11 @@
 .btn_order{
     display: block;
 }
+
+#placeOrderButton {
+    color: #fff;
+}
+
+.notEmptyCart {
+    margin-top: 2rem;
+}
