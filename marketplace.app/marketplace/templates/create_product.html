@@ -31,24 +31,12 @@
                 <label for="createCategory" class="col-4 col-sm-2">Категория</label>
                 <select class="form-control col-8 col-sm-4" name="category" id="createCategory" required>
                     <option value="" disabled selected>Категория</option>
-                    <option>Фрукты</option>
-                    <option>Овощи</option>
-                    <option>Мясо</option>
-                    <option>Птица</option>
-                    <option>Мёд</option>
-                    <option>Молочные продукты</option>
-                    <option>Рыба</option>
-                    <option>Яйца</option>
                 </select>
             </div>
             <div class="row edit-product-item">
                 <label for="createSubcategory" class="col-4 col-sm-2">Подкатегория</label>
                 <select class="form-control col-8 col-sm-4" name="subcategory" id="createSubcategory" required>
                     <option value="" disabled selected>Подкатегория</option>
-                    <option>Яблоки</option>
-                    <option>Бананы</option>
-                    <option>Киви</option>
-                    <option>Апельсины</option>
                 </select>
             </div>
             <div class="row edit-product-item">
@@ -63,11 +51,10 @@
                     <option>упаковка</option>
                 </select>
             </div>
-            <!-- TODO: вес должен всплывать если выбрана упаковка -->
             <div class="row edit-product-item">
                 <label for="createWeigth" class="col-4 col-sm-2">Вес</label>
                 <input type="text" class="form-control col-4 col-sm-2" pattern="^[ 0-9]+$" name="weigth" id="createWeigth">
-                <select class="form-control col-4 col-sm-1" name="weigth_init" required>
+                <select class="form-control col-4 col-sm-1" name="weigth_init" id="createMeasurementUnit" required>
                     <option>литр</option>
                     <option>кг</option>
                     <option>шт.</option>
@@ -79,7 +66,7 @@
                 </textarea>
             </div>
             <div class="col-12 col-sm-10 edit-product-save">
-                <button type="submit" class="btn btn-success" id="createProductSave">СОХРАНИТЬ</button>
+                <button type="button" class="btn btn-success" id="createProductSave">СОХРАНИТЬ</button>
             </div>
         </form>
     </div>

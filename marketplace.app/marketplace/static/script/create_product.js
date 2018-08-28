@@ -1,41 +1,95 @@
 $(document).ready(function () {
-    var unitType = $('#createUnits option:selected').val();
-    if (unitType != 'упаковка') {
-        $('#createWeigth').css('display', 'none');
+
+    var categoryId;
+    var default_category_id = 1;
+    var addr = window.location + '';
+    addr = addr.split('/');
+    var producerId = addr[addr.length - 2];
+
+    function createNewProductObject(){
+        categoryId = parseInt($('#createSubcategory option:selected').data('id'));
+        console.log(categoryId);
+        var obj = {
+            name: $('#createName').val(),
+            price: $('#createPrice').val(),
+            producer_id: producerId,
+            category_id: categoryId,
+            quantity: $('#createCount').val(),
+            measurement_unit: $('#createUnits option:selected').val(),
+            weight: $('#createWeigth').val()
+        };
+        return obj;
     }
 
-    // var categoryId = null;
+    function fillOptions(category_id) {
+        $.ajax({
+            url: "/api/v1/categories/base",
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    $("#createCategory").append('<option value="" class="category_option"></option>');
+                }
+
+                var category_option = $('.category_option');
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].id == category_id) {
+                        var parent_slug = data[i].slug;
+                    }
+                    category_option[i].innerHTML = data[i].name;
+                    $(category_option[i]).val(data[i].slug);
+                }
+                getSubcategories(parent_slug)
+            }
+        });
+    }
+
+    function getSubcategories(parent_slug) {
+        $.get("/api/v1/categories/slug/" + parent_slug + "/subcategories/",
+            function (data) {
+                var subcategories = data;
+                for (var i = 0; i < subcategories.length; i++) {
+                    $('#createSubcategory').append('<option value="" class="subcategory_option"></option>')
+                }
+                var subcategory_option = $('.subcategory_option');
+                for (var i = 0; i < subcategories.length; i++) {
+                    subcategory_option[i].innerHTML = subcategories[i].name;
+                    $(subcategory_option[i]).val(subcategories[i].slug);
+                    subcategory_option[i].setAttribute('data-id', subcategories[i].id);
+                    console.log(subcategory_option[i]);
+                }
+            });
+    }
+
+    fillOptions(default_category_id);
+
+    $('#createCategory').on('change', function () {
+        console.log(this.value);
+        $.get("/api/v1/categories/slug/" + this.value + "/subcategories/",
+            function (data) {
+                var subcategories = data;
+                $('.subcategory_option').remove();
+                for (var i = 0; i < subcategories.length; i++) {
+                    $('#createSubcategory').append('<option value="" class="subcategory_option"></option>')
+                }
+                var subcategory_option = $('.subcategory_option');
+                for (var i = 0; i < subcategories.length; i++) {
+                    subcategory_option[i].innerHTML = subcategories[i].name;
+                    $(subcategory_option[i]).val(subcategories[i].slug);
+                    subcategory_option[i].setAttribute('data-id', subcategories[i].id);
+                }
+            });
+    });
 
     $('#createProductSave').click(function(){
-        // var addr = window.location + '';
-        // addr = addr.split('/');
-        // var product_id = addr[addr.length - 2];
-        // var categorySlug = $('#editSubcategory option:selected').val();
-        //
-        // categoryId = parseInt($('#editSubcategory option:selected').data('id'));
-
-        function createNewProductObject(){
-            var newProductObject = {
-                name: $('#createName').val(),
-                price: $('#createPrice').val(),
-                product_id: ,
-                category_id: ,
-                quantity: $('#createCount').val(),
-                measurement_unit: $('#editUnits option:selected').val(),
-                weight: $('#createWeigth').val(),
-                description: $('#createDescription').html()
-            };
-            return newProductObject;
-        }
-
+        var newProductObject = createNewProductObject();
+        console.log(newProductObject);
 
         $.ajax({
-            url: '/api/v1/products/' + product_id,
+            url: '/api/v1/products',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(newProductObject),
             success: function(data, status) {
-
+                console.log('Success');
             }
         });
     });
