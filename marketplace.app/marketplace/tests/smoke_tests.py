@@ -3,10 +3,15 @@ from path_file import *
 from marketplace.models import Category, User, Product, Producer
 import unittest
 from urllib.request import Request, urlopen
+from flask_login import current_user, login_user, logout_user, login_required
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 unittest.TestLoader.sortTestMethodsUsing = None
+
+#http://127.0.0.1:8000/producer/1
+#http://127.0.0.1:8000/producer/1/products
 
 def parseApiRoutes():
     file = '../views.py'
@@ -17,7 +22,7 @@ def parseApiRoutes():
                                 seek first, last symbols in strings"""
             if '@app.route' in s:
                 first_symbol, last_symblol = s.find('/'), s.rfind('\'')
-                route = s[first_symbol: last_symblol]
+                route = s[first_symbol:last_symblol]
                 routes.append(route)
     return routes
 
@@ -73,13 +78,14 @@ class TestSmoke(unittest.TestCase):
     def testConnection(self):
         self.assertEqual(200, (urlopen(self.url).getcode()))
         print(self.url)
-        print('Connection is OK')
+        print('Connection is OK\n')
 
     def testBaseRoutes(self):
         for route in self.routes[1:]:
             test_url = self.url + route
             if '<' not in test_url:
                 self.assertEqual(200, (urlopen(test_url).getcode()))
+
                 print(test_url)
         print('Base routes are OK.\n')
 
