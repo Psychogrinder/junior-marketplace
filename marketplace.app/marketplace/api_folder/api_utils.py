@@ -164,6 +164,18 @@ def get_products_from_cart(items):
     return products
 
 
+def get_all_products_from_a_list_of_categories(categories):
+    all_products = []
+    for category in categories:
+        all_products += category.get_products()
+    return all_products
+
+
+def get_products_from_a_parent_category(parent_category_id):
+    subcategories = get_subcategories_by_category_id(parent_category_id)
+    return get_all_products_from_a_list_of_categories(subcategories)
+
+
 # Get by name
 
 def get_category_by_name(slug):
@@ -180,14 +192,38 @@ def get_producer_by_name(name):
 
 # Get sorted
 
+def get_popular_products_by_category_id(category_id, direction):
+    """
+    Если direction == up, то товары возврщаются от наименее популярных до самых популярных. Если down, то наоборот.
+    """
+    if direction == 'up':
+        reverse = False
+    elif direction == 'down':
+        reverse = True
 
-def get_popular_products_by_category_id(category_id):
-    category = get_category_by_id(category_id)
-    return sorted(category.get_products(), key=lambda product: product.times_ordered, reverse=True)
+    if get_category_by_id(category_id).parent_id != 0:
+        category = get_category_by_id(category_id)
+        return sorted(category.get_products(), key=lambda product: int(product.times_ordered), reverse=reverse)
+    else:
+        all_products = get_products_from_a_parent_category(category_id)
+        return sorted(all_products, key=lambda product: int(product.times_ordered), reverse=reverse)
 
 
-def get_popular_products():
-    return sorted(get_all_products(), key=lambda product: product.times_ordered, reverse=True)
+def get_products_by_category_id_sorted_by_price(category_id, direction):
+    """
+    Если direction == up, то товары возврщаются от самых дешёвых до самых дорогих. Если down, то наоборот.
+    """
+    if direction == 'up':
+        reverse = False
+    elif direction == 'down':
+        reverse = True
+
+    if get_category_by_id(category_id).parent_id != 0:
+        category = get_category_by_id(category_id)
+        return sorted(category.get_products(), key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
+    else:
+        all_products = get_products_from_a_parent_category(category_id)
+        return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
 
 
 # Get all methods

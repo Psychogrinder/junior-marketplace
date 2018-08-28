@@ -38,6 +38,11 @@ class PopularProducts(Resource):
         return product_schema_list.dump(utils.get_popular_products()).data
 
 
+class ProductsByPrice(Resource):
+    def get(self, category_id, direction):
+        return product_schema_list.dump(utils.get_products_by_category_id_sorted_by_price(category_id, direction)).data
+
+
 class UploadImageProduct(Resource):
     def post(self, product_id):
         return utils.upload_product_image(product_id, request.files), 201
