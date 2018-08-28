@@ -6,7 +6,7 @@ networks:
 
 volumes:
   marketplacedb:
-    external: false
+    external: true
 
 services:
   db:
