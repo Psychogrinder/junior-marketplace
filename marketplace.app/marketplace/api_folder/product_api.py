@@ -38,6 +38,11 @@ class PopularProducts(Resource):
         return product_schema_list.dump(utils.get_popular_products()).data
 
 
+class ProductsByPrice(Resource):
+    def get(self, category_id, direction):
+        return product_schema_list.dump(utils.get_products_by_category_id_sorted_by_price(category_id, direction)).data
+
+
 class UploadImageProduct(Resource):
     def post(self, product_id):
         return utils.upload_product_image(product_id, request.files), 201
@@ -47,3 +52,21 @@ class ProductsInCart(Resource):
     def get(self, consumer_id):
         return product_schema_list.dump(
             utils.get_products_from_cart(utils.get_cart_by_consumer_id(consumer_id).items)).data
+
+
+class PopularProducts(Resource):
+    def get(self):
+        return product_schema_list.dump(utils.get_popular_products()).data
+
+
+product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_storage']
+filter_parser = reqparse.RequestParser()
+
+for arg in product_args:
+    filter_parser.add_argument(arg)
+
+
+class ProductsSortedAndFiltered(Resource):
+    def post(self):
+        args = filter_parser.parse_args()
+        return product_schema_list.dump(utils.get_sorted_and_filtered_products(args)).data
