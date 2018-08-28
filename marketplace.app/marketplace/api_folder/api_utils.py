@@ -191,6 +191,38 @@ def get_producer_by_name(name):
 
 
 # Get sorted
+def get_sorted_and_filtered_products(args):
+    products = Product.query
+
+    if args['popularity']:
+        if args['popularity'] == 'down':
+            products = products.order_by(Product.times_ordered.desc())
+
+    if args['category_name']:
+        category_id = Category.query.filter_by(name=args['category_name']).first().id
+        products = products.filter_by(category_id=category_id)
+
+    if args['producer_name']:
+        producer_id = Category.query.filter_by(name=args['producer_name']).first().id
+        products = products.filter_by(producer_id=producer_id)
+
+    if args['in_storage'] == int(1):
+        products = products.filter(Product.quantity > 0)
+
+    products = products.all()
+
+    if args['price']:
+        if args['price'] == 'down':
+            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=True)
+        elif args['price'] == 'up':
+            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')))
+
+    return products
+
+
+def get_popular_products():
+    return Product.query.order_by(Product.times_ordered.desc()).limit(12).all()
+
 
 def get_popular_products_by_category_id(category_id, direction):
     """
@@ -220,7 +252,8 @@ def get_products_by_category_id_sorted_by_price(category_id, direction):
 
     if get_category_by_id(category_id).parent_id != 0:
         category = get_category_by_id(category_id)
-        return sorted(category.get_products(), key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
+        return sorted(category.get_products(), key=lambda product: float(product.price.strip('₽').strip(' ')),
+                      reverse=reverse)
     else:
         all_products = get_products_from_a_parent_category(category_id)
         return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)

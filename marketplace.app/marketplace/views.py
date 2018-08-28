@@ -12,7 +12,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 @app.route('/')
 def index():
     categories = Category.query.filter_by(parent_id=0).all()
-    popular_products = Product.query.order_by(Product.times_ordered.desc()).limit(12).all()
+    popular_products = utils.get_popular_products()
     return render_template(
         'index.html',
         categories=categories,
