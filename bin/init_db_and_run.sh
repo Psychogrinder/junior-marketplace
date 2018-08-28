@@ -1,16 +1,18 @@
 #!/bin/bash
-
 set -x
-cd marketplace.app
+
+docker container stop marketplace.db
+docker container rm marketplace.db
+docker volume rm marketplacedb
+docker volume create marketplacedb
+cd marketplace.db
+docker-compose up -d --build && cd ../marketplace.app
 
 source .venv/bin/activate
 
 pip3 install -r requirements.txt
 export FLASK_APP=runserver.py
 export FLASK_DEBUG=1
-
-#Перед запуском убедитесь, что у вас запущен postgres в доккере
-#И создана marketplace.db на сервере.
 
 if [ -d "migrations" ]; then
   rm -rf migrations
@@ -19,4 +21,6 @@ flask db init
 flask db migrate
 flask db upgrade
 
-flask run --port=8000
+cd ..
+bin/create_content.sh
+# flask run --port=8000

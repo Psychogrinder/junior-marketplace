@@ -18,18 +18,21 @@ var putToCart = function (consumer_id, product_id) {
 };
 
 var getNumberOfProductsInCart;
-$(document).ready(function () {
-    var user_id = localStorage.getItem("globalUserId");
-    getNumberOfProductsInCart = function (user_id) {
-        $.get("/api/v1/consumers/" + user_id + "/cart/quantity",
-            function (data, status) {
-                if (data.number_of_products) {
-                    document.getElementById('numberOfProductsInCart').innerHTML = data.number_of_products;
-                }
-            });
-    };
-    getNumberOfProductsInCart(user_id);
-});
+if (localStorage.getItem("globalUserId") > 0) {
+    $(document).ready(function () {
+        var user_id = localStorage.getItem("globalUserId");
+        getNumberOfProductsInCart = function (user_id) {
+            $.get("/api/v1/consumers/" + user_id + "/cart/quantity",
+                function (data, status) {
+                    if (data.number_of_products) {
+                        document.getElementById('numberOfProductsInCart').innerHTML = data.number_of_products;
+                    }
+                });
+        };
+        getNumberOfProductsInCart(user_id);
+    });
+
+}
 
 
 function deleteProduct(product_id, producer_id, consumer_id) {
@@ -54,8 +57,13 @@ function deleteProduct(product_id, producer_id, consumer_id) {
     var products = producer.find('section');
     if (products.length == 0) {
         producer.remove();
-        $('#notEmptyCart').css('display', 'none');
-        $('#emptyCart').css('display', 'block');
+    }
+    var allProducerBlock = $('.notEmptyCart').find('section');
+    if (allProducerBlock.length == 0) {
+        $('.notEmptyCart').remove();
+        $('#cartMain').append('<section class="container total_container py-4" id="emptyCart">\n' +
+            '                 <h2>Ваша корзина пуста</h2>\n' +
+            '            </section>')
     }
     countTotalCost();
 
@@ -99,7 +107,28 @@ function countTotalCost() {
     getProductsByUserId();
 }
 
-countTotalCost();
+if (localStorage.getItem("globalUserId") > 0) {
+    countTotalCost();
+}
 
-
+function changeQuantityOfProduct(product_id) {
+    let quantity = $('#number' + product_id).val();
+    var user_id = localStorage.getItem("globalUserId");
+    $.post("/api/v1/consumers/" + user_id + "/cart",
+        {
+            product_id: product_id,
+            quantity: quantity,
+            mode: 'set'
+        },
+        function (data, status) {
+            number_of_products_in_cart = 0;
+            for (var k in data.items) {
+                if (data.items.hasOwnProperty(k)) {
+                    number_of_products_in_cart += parseInt(data.items[k]);
+                }
+            }
+            document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
+        });
+    countTotalCost();
+}
 
