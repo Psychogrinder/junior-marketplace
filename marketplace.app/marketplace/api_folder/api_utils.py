@@ -282,6 +282,7 @@ def post_orders(args):
         new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
                           phone, email, consumer_id, order['producer_id'])
         db.session.add(new_order)
+    clear_cart_by_consumer_id(consumer_id)
     db.session.commit()
 
 

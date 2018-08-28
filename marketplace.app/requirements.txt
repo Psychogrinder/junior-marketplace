@@ -18,3 +18,4 @@ flask_mail
 python-dotenv
 celery
 redis
+
