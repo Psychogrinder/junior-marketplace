@@ -269,7 +269,7 @@ def post_consumer(args):
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
-    email.send_confirmation_email(new_consumer.email)
+    email_tools.send_confirmation_email(new_consumer.email)
     return new_consumer
 
 
@@ -280,7 +280,7 @@ def post_producer(args):
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
-    email.send_confirmation_email(new_producer.email)
+    email_tools.send_confirmation_email(new_producer.email)
     return new_producer
 
 
