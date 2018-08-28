@@ -7,12 +7,12 @@
     <div class="container edit-product-card">
         <section class="breadcrumbs">
             <span><a href={{ url_for('producer_products', producer_id = current_user.id )}}>Товары</a></span>
-            <span><a class="active">Создание совара</a></span>
+            <span><a class="active">Создание товара</a></span>
         </section>
         <form action="#">
             <div class="row edit-product-item">
                 <label for="createName" class="col-4 col-sm-2">Название</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="createName" placeholder="Иван" required value="">
+                <input type="text" class="form-control col-8 col-sm-4" id="createName" placeholder="Продукт" required value="">
             </div>
             <div class="row edit-product-item">
                 <label for="createPhoto" class="col-4 col-sm-2">Фотография</label>
@@ -58,9 +58,9 @@
             <div class="row edit-product-item">
                 <label for="createUnits" class="col-4 col-sm-2">Единицы измерения</label>
                 <select class="form-control col-8 col-sm-4" name="units" id="createUnits" required>
-                    <option>Кг</option>
-                    <option>Литр</option>
-                    <option>Упаковка</option>
+                    <option>кг</option>
+                    <option>литр</option>
+                    <option>упаковка</option>
                 </select>
             </div>
             <!-- TODO: вес должен всплывать если выбрана упаковка -->
@@ -68,9 +68,9 @@
                 <label for="createWeigth" class="col-4 col-sm-2">Вес</label>
                 <input type="text" class="form-control col-4 col-sm-2" pattern="^[ 0-9]+$" name="weigth" id="createWeigth">
                 <select class="form-control col-4 col-sm-1" name="weigth_init" required>
-                    <option>Литр</option>
-                    <option>Кг</option>
-                    <option>Шт</option>
+                    <option>литр</option>
+                    <option>кг</option>
+                    <option>шт.</option>
                 </select>
             </div>
             <div class="row edit-product-item">
