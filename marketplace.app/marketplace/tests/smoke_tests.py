@@ -10,12 +10,17 @@ from selenium.webdriver.common.keys import Keys
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
-#http://127.0.0.1:8000/producer/1
-#http://127.0.0.1:8000/producer/1/products
 
 def parseApiRoutes():
     file = '../views.py'
-    routes = []
+    routes = {'auth': [],
+              'not_auth': ['/category/<category_name>',
+                           '/products/<product_id>',
+                           '/producer/<producer_id>',
+                           '/producer/<producer_id>/products'
+                           ]
+              }
+
     with open(file) as f:
         for s in f:
             """ parsing classes of routes (keys) and routes:
@@ -23,8 +28,17 @@ def parseApiRoutes():
             if '@app.route' in s:
                 first_symbol, last_symblol = s.find('/'), s.rfind('\'')
                 route = s[first_symbol:last_symblol]
-                routes.append(route)
-    return routes
+
+                #роуты, доступные (не-)авторизованным пользователям
+                if route not in (routes['not_auth'] and routes['not_auth']):
+                    if ('<' or '>') not in route:
+                        routes['not_auth'].append(route)
+                    else:
+                        routes['auth'].append(route)
+
+    print(routes['not_auth'])
+    print(routes['auth'])
+
 
 def getCategorySlugs():
     category_slugs = []
