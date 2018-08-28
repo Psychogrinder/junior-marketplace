@@ -1,21 +1,13 @@
-{% extends 'base.html' %}
-
-{% block meta_title %}
-    Корзина
-{% endblock %}
-
-{% block body %}
-    <main id="cartMain">
-        <div class="container">
-            <section class="breadcrumbs">
-                <span><a class="active">Корзина</a></span>
-            </section>
-        </div>
-
-        {% if products %}
-            <section class="notEmptyCart">
-                {% for product in products %}
-                    <section class={{ product.id }}>
+<section class="notEmptyCart">
+    {% for producer in producers %}
+        <section id='producer{{ producer.id }}'>
+            <div class="row cart_producer_title container">
+                <h2>{{ producer.name }}</h2>
+                <p class="producer-id-hidden" style="display: none;">{{ producer.id }}</p>
+            </div>
+            {% for product in products %}
+                {% if product.producer_id == producer.id %}
+                    <section id={{ product.id }} class="product">
                         <div class="container">
                             <div class="row">
                                 <div class="col-2">
@@ -58,34 +50,41 @@
                                 </div>
                                 <div class="col-1">
                                     <button type="button" class="close"
-                                            onclick="deleteProduct('{{ product.id }}',{{ current_user.id }})">
+                                            onclick="deleteProduct('{{ product.id }}','{{ producer.id }}',{{ current_user.id }})">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </section>
-                {% endfor %}
-
-                <div class="container total_container ">
-                    <div class="row">
-                        <div class="col-8 total_box">
-                            <span>ИТОГО:</span>
-                            <span class="total_value" id="totalCost"></span><span> ₽</span>
-                        </div>
-                        <div class="col-4 order_box">
-                            <a class="btn btn-primary
-                               btn_order" id="placeOrderButton">
-                                ОФОРМИТЬ ЗАКАЗ
-                            </a>
-                        </div>
+                {% endif %}
+            {% endfor %}
+            <div class="container delivery">
+                <div class="row">
+                    <div class="col-3">
+                        <span>Способ доставки</span>
+                        <select class="form-control" id="deliverySelect">
+                            <option>Курьером</option>
+                            <option>Самовывоз</option>
+                        </select>
                     </div>
                 </div>
-            </section>
-        {% else %}
-            <section class="container total_container py-4" id="emptyCart">
-                <h2>Ваша корзина пуста</h2>
-            </section>
-        {% endif %}
-    </main>
-{% endblock %}
+            </div>
+        </section>
+    {% endfor %}
+
+    <div class="container total_container">
+        <div class="row">
+            <div class="col-8 total_box">
+                <span>ИТОГО:</span>
+                <span class="total_value" id="totalCost">{{ product }}</span><span> ₽</span>
+            </div>
+            <div class="col-4 order_box">
+                <a class="btn btn-primary
+                               btn_order" id="placeOrderButton">
+                    ОФОРМИТЬ ЗАКАЗ
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,44 +1,157 @@
 {% extends 'base.html' %}
 
 {% block meta_title %}
-Оформление заказа
+    Оформление заказа
 {% endblock %}
 
 {% block body %}
-<main>
-    <div class="container order_registration">
-        <section class="breadcrumbs">
-            <span><a href="#">Корзина</a></span>
-            <span><a class="active">Оформление заказа</a></span>
-        </section>
-        <div class="row order-registration-header">
-            <h1>КОНТАКТНАЯ ИНФОРМАЦИЯ</h1>
-            <div class="order-sum">
-                <b>СУММА ЗАКАЗА</b>
-                <span>1200Р</span>
-            </div>
+    <main>
+        <div class="container order_registration">
+            <section class="breadcrumbs">
+                <span><a href="#">Корзина</a></span>
+                <span><a class="active">Оформление заказа</a></span>
+            </section>
+            <sectoin class="registration-order-items-block">
+                <div class="row order-registration-header">
+                    <h1>ЗАКАЗ</h1>
+                    <div class="order-sum">
+                        <b>СУММА ЗАКАЗА</b>
+                        <span>1200Р</span>
+                    </div>
+                </div>
+                <div class="registration-order-items">
+                    <div class="registration-order-item">
+                        <div class="producer-name">
+                            <p>Сельхоз такой-та</p>
+                        </div>
+                        <div class="row order-item-header">
+                            <div class="col-4">
+                                Название товара
+                            </div>
+                            <div class="col-4">
+                                Количество
+                            </div>
+                            <div class="col-4">
+                                Цена
+                            </div>
+                        </div>
+                        <div class="row order-item">
+                            <div class="col-4">
+                                Курица
+                            </div>
+                            <div class="col-4">
+                                5
+                            </div>
+                            <div class="col-4">
+                                1500
+                            </div>
+                        </div>
+                        <div class="row order-item">
+                            <div class="col-4">
+                                Курица
+                            </div>
+                            <div class="col-4">
+                                5
+                            </div>
+                            <div class="col-4">
+                                1500
+                            </div>
+                        </div>
+                        <div class="row delivery-method">
+                            <div class="col-4">
+                                Способ доставки
+                            </div>
+                            <form class="col-3">
+                                <select class="form-control" id="deliveryMethodSelect" required>
+                                    <option value="">Курьером</option>
+                                    <option value="">Самовывоз</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="registration-order-items">
+                    <div class="registration-order-item">
+                        <div class="producer-name">
+                            <p>Сельхоз такой-та</p>
+                        </div>
+                        <div class="row order-item-header">
+                            <div class="col-4">
+                                Название товара
+                            </div>
+                            <div class="col-4">
+                                Количество
+                            </div>
+                            <div class="col-4">
+                                Цена
+                            </div>
+                        </div>
+                        <div class="row order-item">
+                            <div class="col-4">
+                                Курица
+                            </div>
+                            <div class="col-4">
+                                5
+                            </div>
+                            <div class="col-4">
+                                1500
+                            </div>
+                        </div>
+                        <div class="row order-item">
+                            <div class="col-4">
+                                Курица
+                            </div>
+                            <div class="col-4">
+                                5
+                            </div>
+                            <div class="col-4">
+                                1500
+                            </div>
+                        </div>
+                        <div class="row delivery-method">
+                            <div class="col-4">
+                                Способ доставки
+                            </div>
+                            <form class="col-3">
+                                <select class="form-control" id="deliveryMethodSelect" required>
+                                    <option value="">Курьером</option>
+                                    <option value="">Самовывоз</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </sectoin>
+            <section class="registraion-order-contact-inf">
+                <div class="row order-registration-header">
+                    <h1>КОНТАКТНАЯ ИНФОРМАЦИЯ</h1>
+                </div>
+                <form action="#">
+                    <div class="row order-registration-item">
+                        <label for="name" class="col-4 col-sm-2">Имя</label>
+                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistratonName"
+                               placeholder="Иван">
+                    </div>
+                    <div class="row order-registration-item">
+                        <label for="email" class="col-4 col-sm-2">Email</label>
+                        <input type="email" class="form-control col-8 col-sm-4" id="orderRegistratonEmail"
+                               aria-describedby="emailHelp" placeholder="example@email.com">
+                    </div>
+                    <div class="row order-registration-item">
+                        <label for="phone" class="col-4 col-sm-2">Телефон</label>
+                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistratonPhone"
+                               placeholder="+79110558963">
+                    </div>
+                    <div class="row order-registration-item">
+                        <label for="adress" class="col-4 col-sm-2">Адрес</label>
+                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegictrationAdress"
+                               placeholder="Улица Пушкина д.3 кв 62">
+                    </div>
+                    <div class="col-12 col-sm-6 order-registration-agree">
+                        <button type="submit" class="btn btn-success">ПОДТВЕРДИТЬ ЗАКАЗ</button>
+                    </div>
+                </form>
+            </section>
         </div>
-        <form action="#">
-            <div class="row order-registration-item">
-                <label for="name" class="col-4 col-sm-2">Имя</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="orderRegistratonName" placeholder="Иван">
-            </div>
-            <div class="row order-registration-item">
-                <label for="email" class="col-4 col-sm-2">Email</label>
-                <input type="email" class="form-control col-8 col-sm-4" id="orderRegistratonEmail" aria-describedby="emailHelp" placeholder="example@email.com">
-            </div>
-            <div class="row order-registration-item">
-                <label for="phone" class="col-4 col-sm-2">Телефон</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="orderRegistratonPhone" placeholder="+79110558963">
-            </div>
-            <div class="row order-registration-item">
-                <label for="adress" class="col-4 col-sm-2">Адрес</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="orderRegictrationAdress" placeholder="Улица Пушкина д.3 кв 62">
-            </div>
-            <div class="col-12 col-sm-6 order-registration-agree">
-               <button type="submit" class="btn btn-success">ПОДТВЕРДИТЬ ЗАКАЗ</button>
-            </div>
-        </form>
-    </div>
-</main>
+    </main>
 {% endblock %}
