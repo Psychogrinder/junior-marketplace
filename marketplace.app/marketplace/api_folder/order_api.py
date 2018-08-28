@@ -2,8 +2,7 @@ from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
 from marketplace.api_folder.schemas import order_schema_list, order_schema
 
-order_args = ['total_cost', 'order_items_json', 'delivery_method', 'delivery_address', 'consumer_phone',
-              'consumer_email', 'consumer_id', 'producer_id', 'status']
+order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost']
 parser = reqparse.RequestParser()
 
 for arg in order_args:
@@ -17,7 +16,8 @@ class GlobalOrders(Resource):
 
     def post(self):
         args = parser.parse_args()
-        return order_schema.dump(utils.post_order(args)).data, 201
+        utils.post_orders(args)
+        return "Заказ был успешно оформлен", 201
 
 
 class Orders(Resource):
