@@ -92,7 +92,7 @@ function countTotalCostInner(items, products) {
     for (var i in items.items) {
         for (var p = 0; p < products.length; p++) {
             if (i == products[p].id) {
-                var sum = items.items[i] * products[p].price;
+                var sum = items.items[i] * products[p].price.substring(0, products[p].price.length-1);
                 total += sum;
             }
         }

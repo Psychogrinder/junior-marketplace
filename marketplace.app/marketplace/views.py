@@ -7,7 +7,6 @@ import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
 
 
-
 # каталог
 @app.route('/')
 def index():
@@ -98,11 +97,10 @@ def order_registration(user_id):
     producer_ids = set(product.producer_id for product in products)
     producers = [utils.get_producer_by_id(id) for id in producer_ids]
     if current_user.id == int(user_id):
-        return render_template('order_registration.html', current_user=current_user,  producers=producers, items=items,
+        return render_template('order_registration.html', current_user=current_user, producers=producers, items=items,
                                products=products)
     else:
         return redirect(url_for('index'))
-
 
 
 # покупатель
@@ -113,7 +111,6 @@ def consumer_profile(user_id):
         return render_template('consumer_profile.html', user=user, current_user=current_user)
     else:
         return redirect(url_for('index'))
-
 
 
 @app.route('/user/edit/<user_id>')
@@ -127,12 +124,17 @@ def edit_consumer(user_id):
 
 @app.route('/order_history/<user_id>')
 def order_history(user_id):
-    orders = Order.query.filter_by(consumer_id=user_id)
+    orders = Order.query.filter_by(consumer_id=user_id).all()
+    all_products = []
+    producer_names = {}
+    for order in orders:
+        all_products += (utils.get_all_products_from_order(order.id))
+        producer_names[order.producer_id] = utils.get_producer_by_id(int(order.producer_id)).name
     if current_user.id == int(user_id):
-        return render_template('order_history.html', orders=orders, current_user=current_user)
+        return render_template('order_history.html', orders=orders, current_user=current_user, products=all_products,
+                               producer_names=producer_names)
     else:
         return redirect(url_for('index'))
-
 
 
 # производитель
@@ -152,14 +154,12 @@ def edit_producer(producer_id):
         return redirect(url_for('index'))
 
 
-
 @app.route('/producer/<producer_id>/orders')
 def producer_orders(producer_id):
     if current_user.id == int(producer_id):
         return render_template('producer_orders.html', current_user=current_user)
     else:
         return redirect(url_for('index'))
-
 
 
 # о нас и помощь

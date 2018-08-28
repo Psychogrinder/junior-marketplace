@@ -259,6 +259,14 @@ def get_products_by_category_id_sorted_by_price(category_id, direction):
         return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
 
 
+def get_all_products_from_order(order_id):
+    order_items = Order.query.filter_by(id=order_id).first().order_items_json
+    products = []
+    for item in order_items:
+        products.append(Product.query.filter_by(id=int(item)).first())
+    return products
+
+
 # Get all methods
 
 def get_all_orders():
@@ -336,7 +344,7 @@ def post_orders(args):
     # new_order = order_schema.load(args).data
     consumer_id = args['consumer_id']
     first_name = args['first_name']
-    last_name = args['second_name']
+    last_name = args['last_name']
     delivery_address = args['delivery_address']
     phone = args['phone']
     email = args['email']
@@ -349,7 +357,7 @@ def post_orders(args):
         for product_id, quantity in items.items():
             if Product.query.get(int(product_id)).producer_id == int(order['producer_id']):
                 current_items[product_id] = quantity
-                total_cost += float(Product.query.get(int(product_id)).price.strip(['$', '₽'])) * int(quantity)
+                total_cost += float(Product.query.get(int(product_id)).price.strip('₽').strip(' ')) * int(quantity)
         new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
                           phone, email, consumer_id, order['producer_id'], first_name=first_name, last_name=last_name)
         db.session.add(new_order)
@@ -363,7 +371,7 @@ def post_consumer(args):
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
-    email.send_confirmation_email(new_consumer.email)
+    email_tools.send_confirmation_email(new_consumer.email)
     return new_consumer
 
 
@@ -374,7 +382,7 @@ def post_producer(args):
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
-    email.send_confirmation_email(new_producer.email)
+    email_tools.send_confirmation_email(new_producer.email)
     return new_producer
 
 

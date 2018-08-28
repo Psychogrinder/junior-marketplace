@@ -1,188 +1,90 @@
 {% extends 'base.html' %}
 
 {% block meta_title %}
-Мои заказы
+    Мои заказы
 {% endblock %}
 
 {% block body %}
-<main>
-    <div class="container">
-        <section class="breadcrumbs">
+    <main class="order-history">
+        <section class="breadcrumbs container">
             <span><a class="active">Мои заказы</a></span>
         </section>
-        <div class="row order_history_info">
-            <div class="col-2">
-                <span>№ 123456</span>
+        {% for order in orders %}
+            <div class="container">
+                <div class="row order_history_info">
+                    <div class="col-2">
+                        <span>№ {{ order.id }}</span>
+                    </div>
+                    <div class="col-3">
+                        <span> {{ producer_names[order.producer_id] }}  </span>
+                    </div>
+                    <div class="col-4 order_history_date">
+                        <span class="orderTimeStamp">{{ (order.order_timestamp | string).split(' ')[0] }}</span>
+                    </div>
+                    <div class="col-3">
+                        <span>СУММА ЗАКАЗА: {{ order.total_cost }}</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-3">
-                <span>Сельхоз «Октябрьский»</span>
+            {% for item, quantity in order.order_items_json.items() %}
+                {% for product in products %}
+                    {% if product.id == item | int %}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
+                                         width="150px">
+                                </div>
+                                <div class="col-1 cart_product_stock_title">
+                                    <span>Название</span>
+                                    <span>Цена</span>
+                                    <span>Артикул</span>
+                                </div>
+                                <div class="col-3 cart_product_stock_info">
+                                    <span>{{ product.name }}</span>
+                                    <span>{{ product.price }}</span>
+                                    <span>{{ item }}</span>
+                                </div>
+                                <div class="col-1">
+                                    <span>Вес</span>
+                                    {% if (product.weight | string).split('.')[1] == '0' %}
+                                        <span>{{ (product.weight | string).split('.')[0] }}</span>
+                                    {% else %}
+                                        <span>{{ product.weight }}</span>
+                                    {% endif %}
+                                    <span> {{ product.measurement_unit }}</span>
+                                </div>
+                                <div class="col-4 quantity_container">
+                                    <span>Количество:</span>
+                                    <span>{{ quantity }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            <div class="container delivery_container">
+                <div class="row">
+                    <div class="col-2 delivery_value">
+                        <span>Доставка:</span>
+                        <span>Цена доставки:</span>
+                    </div>
+                    <div class="col-2 delivery_value">
+                        <span>Курьером</span>
+                        <span>400 Р</span>
+                    </div>
+                    <div class="col-3">
+                        <span>Статус заказа:</span>
+                    </div>
+                    <div class="col-2">
+                        <span>Необработан</span>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary btn_order">ОТМЕНИТЬ ЗАКАЗ</button>
+                        <button class="btn btn-primary btn_order">ПОВТОРИТЬ ЗАКАЗ</button>
+                    </div>
+                </div>
             </div>
-            <div class="col-4 order_history_date">
-                <span>20.07.2018</span>
-            </div>
-            <div class="col-3">
-                <span>СУММА ЗАКАЗА: 1200 Р</span>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
-            </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
-            </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яйца</span>
-                <span>100 руб/упаковка</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-                <span>12 шт.</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество:</span>
-                <span>2</span>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
-            </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
-            </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яйца</span>
-                <span>100 руб/упаковка</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-                <span>12 шт.</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество:</span>
-                <span>2</span>
-            </div>
-        </div>
-    </div>
-    <div class="container delivery_container">
-        <div class="row">
-            <div class="col-2 delivery_value">
-                <span>Доставка:</span>
-                <span>Цена доставки:</span>
-            </div>
-            <div class="col-2 delivery_value">
-                <span>Курьером</span>
-                <span>400 Р</span>
-            </div>
-            <div class="col-3">
-                <span>Статус заказа:</span>
-            </div>
-            <div class="col-2">
-                <span>Необработан</span>
-            </div>
-            <div class="col-3">
-                <button class="btn btn-primary btn_order">ОТМЕНИТЬ ЗАКАЗ</button>
-                <button class="btn btn-primary btn_order">ПОВТОРИТЬ ЗАКАЗ</button>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row order_history_info">
-            <div class="col-2">
-                <span>№ 123456</span>
-            </div>
-            <div class="col-3">
-                <span>Сельхоз «Ноябрьский»</span>
-            </div>
-            <div class="col-4 order_history_date">
-                <span>20.07.2018</span>
-            </div>
-            <div class="col-3">
-                <span>СУММА ЗАКАЗА: 1200 Р</span>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
-            </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
-            </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яблоки</span>
-                <span>100 руб/кг</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-                <span>2 кг</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество:</span>
-                <span>2</span>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
-            </div>
-            <div class="col-1 cart_product_stock_title">
-                <span>Название</span>
-                <span>Цена</span>
-                <span>Артикул</span>
-            </div>
-            <div class="col-3 cart_product_stock_info">
-                <span>Яблоки</span>
-                <span>100 руб/кг</span>
-                <span>123456</span>
-            </div>
-            <div class="col-1">
-                <span>Вес</span>
-                <span>2 кг</span>
-            </div>
-            <div class="col-4 quantity_container">
-                <span>Количество:</span>
-                <span>2</span>
-            </div>
-        </div>
-    </div>
-    <div class="container delivery_container">
-        <div class="row">
-            <div class="col-2 delivery_value">
-                <span>Доставка:</span>
-                <span>Цена доставки:</span>
-            </div>
-            <div class="col-2 delivery_value">
-                <span>Самовывоз</span>
-                <span>0 Р</span>
-            </div>
-            <div class="col-3">
-                <span>Статус заказа:</span>
-            </div>
-            <div class="col-2">
-                <span>Завершён</span>
-            </div>
-            <div class="col-3">
-                <button class="btn btn-primary btn_order">ПОВТОРИТЬ ЗАКАЗ</button>
-            </div>
-        </div>
-    </div>
-</main>
+        {% endfor %}
+    </main>
 {% endblock %}

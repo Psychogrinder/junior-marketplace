@@ -43,13 +43,13 @@ if ($('main .order_registration').length > 0) {
                     email: email,
                     phone: phone,
                     delivery_address: address,
-                    orders: orders,
+                    orders: JSON.stringify(orders),
                 },
                 function (data, status) {
                     if (status) {
                         $('.order_registration').remove()
                         $('main').append('<section class="container total_container py-4" id="emptyCart">\n' +
-                            '                 <h2>Ваш заказ был успешно оформлен. С Вами свяжутся в ближайшее времяю </h2>\n' +
+                            '                 <h2>Ваш заказ был успешно оформлен. С Вами свяжутся в ближайшее время. </h2>\n' +
                             '            </section>')
                     }
                 });
