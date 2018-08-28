@@ -8,147 +8,107 @@
     <main>
         <div class="container order_registration">
             <section class="breadcrumbs">
-                <span><a href="#">Корзина</a></span>
+                <span><a href={{ url_for('cart', user_id = current_user.id) }}>Корзина</a></span>
                 <span><a class="active">Оформление заказа</a></span>
             </section>
-            <sectoin class="registration-order-items-block">
+            <section class="registration-order-items-block">
                 <div class="row order-registration-header">
                     <h1>ЗАКАЗ</h1>
-                    <div class="order-sum">
-                        <b>СУММА ЗАКАЗА</b>
-                        <span>1200Р</span>
-                    </div>
                 </div>
-                <div class="registration-order-items">
-                    <div class="registration-order-item">
-                        <div class="producer-name">
-                            <p>Сельхоз такой-та</p>
-                        </div>
-                        <div class="row order-item-header">
-                            <div class="col-4">
-                                Название товара
+                {% for producer in producers %}
+                    <div class="registration-order-items{{ producer.id }}">
+                        <div class="registration-order-item">
+                            <div class="producer-name">
+                                <p>{{ producer.name }}</p>
+                                <span class="visuallyHiddenProducerId" style="display: none;">{{ producer.id }}</span>
                             </div>
-                            <div class="col-4">
-                                Количество
+                            <div class="row order-item-header">
+                                <div class="col-4">
+                                    Название товара
+                                </div>
+                                <div class="col-4">
+                                    Количество
+                                </div>
+                                <div class="col-4">
+                                    Цена
+                                </div>
                             </div>
-                            <div class="col-4">
-                                Цена
+                            {% for product in products %}
+                                {% if product.producer_id == producer.id %}
+                                    <div class="row order-item">
+                                        <div class="col-4">
+                                            {{ product.name }}
+                                        </div>
+                                        <div class="col-4">
+                                            {% for product_id, quantity in items.items() %}
+                                                {% if product.id == product_id %}
+                                                    {{ quantity }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="col-4">
+                                            {{ product.price }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div class="row delivery-method">
+                                <div class="col-4">
+                                    Способ доставки
+                                </div>
+                                <form class="col-3">
+                                    <select class="form-control deliveryMethodSelect" required>
+                                        <option value="Курьером">Курьером</option>
+                                        <option value="Самовывоз">Самовывоз</option>
+                                    </select>
+                                </form>
                             </div>
-                        </div>
-                        <div class="row order-item">
-                            <div class="col-4">
-                                Курица
-                            </div>
-                            <div class="col-4">
-                                5
-                            </div>
-                            <div class="col-4">
-                                1500
-                            </div>
-                        </div>
-                        <div class="row order-item">
-                            <div class="col-4">
-                                Курица
-                            </div>
-                            <div class="col-4">
-                                5
-                            </div>
-                            <div class="col-4">
-                                1500
-                            </div>
-                        </div>
-                        <div class="row delivery-method">
-                            <div class="col-4">
-                                Способ доставки
-                            </div>
-                            <form class="col-3">
-                                <select class="form-control" id="deliveryMethodSelect" required>
-                                    <option value="">Курьером</option>
-                                    <option value="">Самовывоз</option>
-                                </select>
-                            </form>
                         </div>
                     </div>
-                </div>
-                <div class="registration-order-items">
-                    <div class="registration-order-item">
-                        <div class="producer-name">
-                            <p>Сельхоз такой-та</p>
-                        </div>
-                        <div class="row order-item-header">
-                            <div class="col-4">
-                                Название товара
-                            </div>
-                            <div class="col-4">
-                                Количество
-                            </div>
-                            <div class="col-4">
-                                Цена
-                            </div>
-                        </div>
-                        <div class="row order-item">
-                            <div class="col-4">
-                                Курица
-                            </div>
-                            <div class="col-4">
-                                5
-                            </div>
-                            <div class="col-4">
-                                1500
-                            </div>
-                        </div>
-                        <div class="row order-item">
-                            <div class="col-4">
-                                Курица
-                            </div>
-                            <div class="col-4">
-                                5
-                            </div>
-                            <div class="col-4">
-                                1500
-                            </div>
-                        </div>
-                        <div class="row delivery-method">
-                            <div class="col-4">
-                                Способ доставки
-                            </div>
-                            <form class="col-3">
-                                <select class="form-control" id="deliveryMethodSelect" required>
-                                    <option value="">Курьером</option>
-                                    <option value="">Самовывоз</option>
-                                </select>
-                            </form>
-                        </div>
+                {% endfor %}
+                <div class="order-sum row">
+                    <div class="col-auto">
+                        СУММА ЗАКАЗА:
+                    </div>
+                    <div class="col-4" id="totalCost">
+                        <span id="totalCost">
+
+                        </span>₽
                     </div>
                 </div>
-            </sectoin>
+            </section>
             <section class="registraion-order-contact-inf">
                 <div class="row order-registration-header">
                     <h1>КОНТАКТНАЯ ИНФОРМАЦИЯ</h1>
                 </div>
                 <form action="#">
                     <div class="row order-registration-item">
-                        <label for="name" class="col-4 col-sm-2">Имя</label>
-                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistratonName"
-                               placeholder="Иван">
+                        <label for="orderRegistrationFirstName" class="col-4 col-sm-2">Имя</label>
+                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationFirstName"
+                               placeholder="Иван" value={{ current_user.first_name }}>
                     </div>
                     <div class="row order-registration-item">
-                        <label for="email" class="col-4 col-sm-2">Email</label>
-                        <input type="email" class="form-control col-8 col-sm-4" id="orderRegistratonEmail"
-                               aria-describedby="emailHelp" placeholder="example@email.com">
+                        <label for="orderRegistrationLastName" class="col-4 col-sm-2">Фамилия</label>
+                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationLastName"
+                               placeholder="Кузнецов" value={{ current_user.last_name }}>
                     </div>
                     <div class="row order-registration-item">
-                        <label for="phone" class="col-4 col-sm-2">Телефон</label>
-                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistratonPhone"
-                               placeholder="+79110558963">
+                        <label for="orderRegistrationEmail" class="col-4 col-sm-2">Email</label>
+                        <input type="email" class="form-control col-8 col-sm-4" id="orderRegistrationEmail"
+                               aria-describedby="emailHelp" placeholder="example@email.com" value={{ current_user.email }} disabled>
                     </div>
                     <div class="row order-registration-item">
-                        <label for="adress" class="col-4 col-sm-2">Адрес</label>
-                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegictrationAdress"
-                               placeholder="Улица Пушкина д.3 кв 62">
+                        <label for="orderRegistrationPhone" class="col-4 col-sm-2">Телефон</label>
+                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationPhone"
+                               placeholder="+79110558963" value={{ current_user.phone_number }}>
+                    </div>
+                    <div class="row order-registration-item">
+                        <label for="orderRegistrationAddress" class="col-4 col-sm-2">Адрес</label>
+                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationAddress"
+                               placeholder="Улица Пушкина д.3 кв 62" value={{ current_user.address }}>
                     </div>
                     <div class="col-12 col-sm-6 order-registration-agree">
-                        <button type="submit" class="btn btn-success">ПОДТВЕРДИТЬ ЗАКАЗ</button>
+                        <input type="button" class="btn btn-success" id="orderPlacementBtn" value="ПОДТВЕРДИТЬ ЗАКАЗ">
                     </div>
                 </form>
             </section>

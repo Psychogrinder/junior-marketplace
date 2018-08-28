@@ -53,3 +53,17 @@
 .delivery-method form select {
     color: #3c3a3a;
 }
+
+.registration-order-items-block .order-sum .col-4,
+.registration-order-items-block .order-sum .col-auto {
+    padding-left: 0;
+    color: #3c3a3a;
+}
+
+.registration-order-items-block .order-sum .col-auto {
+    margin-left: auto;
+}
+
+.registration-order-items-block .order-sum {
+    margin-top: 2rem;
+}
