@@ -2,6 +2,7 @@ from operator import itemgetter
 from marketplace import email_tools
 import os
 import re
+import json
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
@@ -255,18 +256,31 @@ def producer_has_product_with_such_name(args):
 # Post methods
 
 def post_orders(args):
-    abort_if_producer_doesnt_exist_or_get(args['producer_id'])
+    """
+    Сначала обявляем переменные, которые содержат общую информацию. Затем работаем с каждым заказом отдельно.
+    Для каждого заказа расчитываем итоговую стоимость, добавляем в заказ товары, у которых id производителя
+    совпадает с id производителя заказа.
+    :param args:
+    :return:
+    """
     abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
     # new_order = order_schema.load(args).data
     consumer_id = args['consumer_id']
     delivery_address = args['delivery_address']
+    phone = args['phone']
+    email = args['email']
     orders = args['orders']
+    items = get_cart_by_consumer_id(consumer_id).items
+    orders = json.loads(orders)
     for order in orders:
         total_cost = 0
-        for product_id, quantity in order['order_items_json']:
-            total_cost += Product.query.get(int(product_id)).price * int(quantity)
-        new_order = Order(total_cost, order['order_items_json'], order['delivery_method'], delivery_address,
-                          order['consumer_phone'], order['consumer_email'], consumer_id, order['producer_id'])
+        current_items = {}
+        for product_id, quantity in items.items():
+            if Product.query.get(int(product_id)).producer_id == int(order['producer_id']):
+                current_items[product_id] = quantity
+                total_cost += float(Product.query.get(int(product_id)).price.strip(['$', '₽'])) * int(quantity)
+        new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
+                          phone, email, consumer_id, order['producer_id'])
         db.session.add(new_order)
     db.session.commit()
 
