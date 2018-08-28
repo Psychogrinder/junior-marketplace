@@ -102,3 +102,7 @@
 .btn_order{
     display: block;
 }
+
+#placeOrderButton {
+    color: #fff;
+}

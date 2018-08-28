@@ -35,9 +35,8 @@ if (localStorage.getItem("globalUserId") > 0) {
 }
 
 
-function deleteProduct(product_id, producer_id, consumer_id) {
+function deleteProduct(product_id, consumer_id) {
     $('#' + product_id).remove();
-    var producer = $('#producer' + producer_id);
     $.post("/api/v1/consumers/" + consumer_id + "/cart",
         {
             product_id: product_id,
@@ -51,15 +50,13 @@ function deleteProduct(product_id, producer_id, consumer_id) {
                 }
             }
             document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
+            $('.notEmptyCart').find('.' + product_id).remove();
 
         });
 
-    var products = producer.find('section');
-    if (products.length == 0) {
-        producer.remove();
-    }
-    var allProducerBlock = $('.notEmptyCart').find('section');
-    if (allProducerBlock.length == 0) {
+    var allProductBlock = $('.notEmptyCart section');
+    console.log(allProductBlock.length);
+    if (allProductBlock.length == 1) {
         $('.notEmptyCart').remove();
         $('#cartMain').append('<section class="container total_container py-4" id="emptyCart">\n' +
             '                 <h2>Ваша корзина пуста</h2>\n' +
