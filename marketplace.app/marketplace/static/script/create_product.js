@@ -1,33 +1,39 @@
 $(document).ready(function () {
-    var categoryId = null;
+    var unitType = $('#createUnits option:selected').val();
+    if (unitType != 'упаковка') {
+        $('#createWeigth').css('display', 'none');
+    }
 
-    $('#save_product_data').click(function(){
-        var addr = window.location + '';
-        addr = addr.split('/');
-        var product_id = addr[addr.length - 2];
-        var categorySlug = $('#editSubcategory option:selected').val();
+    // var categoryId = null;
 
-        categoryId = parseInt($('#editSubcategory option:selected').data('id'));
+    $('#createProductSave').click(function(){
+        // var addr = window.location + '';
+        // addr = addr.split('/');
+        // var product_id = addr[addr.length - 2];
+        // var categorySlug = $('#editSubcategory option:selected').val();
+        //
+        // categoryId = parseInt($('#editSubcategory option:selected').data('id'));
 
-        function createProductObject(categoryId){
-            var productObject = {
-                name: $('#editName').val(),
-                price: $('#editPrice').val(),
-                category_id: categoryId,
-                quantity: $('#editCount').val(),
-                weight: $('#editWeigth').val(),
+        function createNewProductObject(){
+            var newProductObject = {
+                name: $('#createName').val(),
+                price: $('#createPrice').val(),
+                product_id: ,
+                category_id: ,
+                quantity: $('#createCount').val(),
                 measurement_unit: $('#editUnits option:selected').val(),
-                description: $('#editDescription').html()
+                weight: $('#createWeigth').val(),
+                description: $('#createDescription').html()
             };
-            return productObject;
+            return newProductObject;
         }
 
 
         $.ajax({
             url: '/api/v1/products/' + product_id,
-            type: 'PUT',
+            type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify(createProductObject(categoryId)),
+            data: JSON.stringify(newProductObject),
             success: function(data, status) {
 
             }
