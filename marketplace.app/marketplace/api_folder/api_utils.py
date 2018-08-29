@@ -9,6 +9,8 @@ from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
 from marketplace import db, app
+from sqlalchemy import func, desc
+from sqlalchemy_searchable import inspect_search_vectors
 
 
 # Abort methods
@@ -252,6 +254,12 @@ def producer_has_product_with_such_name(args):
         return True
 
 
+def search_product_by_params(search_query):
+    vector = inspect_search_vectors(Product)[0]
+    return db.session.query(Product).filter(
+            Product.search_vector.match(search_query)
+        ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+
 # Post methods
 
 def post_order(args):
@@ -269,7 +277,7 @@ def post_consumer(args):
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
-    email.send_confirmation_email(new_consumer.email)
+    email_tools.send_confirmation_email(new_consumer.email)
     return new_consumer
 
 
@@ -280,7 +288,7 @@ def post_producer(args):
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
-    email.send_confirmation_email(new_producer.email)
+    email_tools.send_confirmation_email(new_producer.email)
     return new_producer
 
 
