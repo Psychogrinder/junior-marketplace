@@ -70,3 +70,4 @@ class ProductsSortedAndFiltered(Resource):
     def post(self):
         args = filter_parser.parse_args()
         return product_schema_list.dump(utils.get_sorted_and_filtered_products(args)).data
+

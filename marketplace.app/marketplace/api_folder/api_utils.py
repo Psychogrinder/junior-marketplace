@@ -3,6 +3,7 @@ from marketplace import email_tools
 import os
 import re
 import json
+import string
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
@@ -190,6 +191,23 @@ def get_producer_by_name(name):
     return Producer.query.filter_by(name=name).first()
 
 
+def get_category_names_by_producer_name(producer_name):
+    return [category.name for category in Producer.query.filter_by(name=producer_name).first().categories]
+
+
+def get_subcategory_names_by_parent_category_slug_and_producer_name(parent_category_slug, producer_name):
+    subcategories = get_subcategories_by_category_id(Category.query.filter_by(slug=parent_category_slug).first().id)
+    all_producer_category_names = [category.name for category in
+                                   Producer.query.filter_by(name=producer_name).first().categories]
+    return [category.name for category in subcategories if category.name in all_producer_category_names]
+
+
+def get_producer_names_by_category_name(category_name):
+    category = Category.query.filter_by(name=category_name).first()
+    producers = get_all_producers()
+    return [producer.name for producer in producers if category in producer.categories]
+
+
 # Get sorted
 def get_sorted_and_filtered_products(args):
     products = Product.query
@@ -198,18 +216,21 @@ def get_sorted_and_filtered_products(args):
         if args['popularity'] == 'down':
             products = products.order_by(Product.times_ordered.desc())
 
-    if args['category_name']:
-        category_id = Category.query.filter_by(name=args['category_name']).first().id
-        products = products.filter_by(category_id=category_id)
-
     if args['producer_name']:
-        producer_id = Category.query.filter_by(name=args['producer_name']).first().id
+        producer_id = Producer.query.filter_by(name=args['producer_name']).first().id
         products = products.filter_by(producer_id=producer_id)
 
     if args['in_storage'] == int(1):
         products = products.filter(Product.quantity > 0)
 
-    products = products.all()
+    if args['category_name']:
+        # check if the category_name is in English
+        if args['category_name'][0] in string.ascii_lowercase:
+            category_id = Category.query.filter_by(slug=args['category_name']).first().id
+            products = get_products_from_a_parent_category(category_id)
+        else:
+            category_id = Category.query.filter_by(name=args['category_name']).first().id
+            products = products.filter_by(category_id=category_id).all()
 
     if args['price']:
         if args['price'] == 'down':
@@ -520,7 +541,7 @@ def login(args):
         return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return {"id": user.id}
+    return {"id": user.id, "entity": user.entity}
 
 
 def logout():
