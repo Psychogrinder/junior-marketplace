@@ -30,5 +30,4 @@ class Orders(Resource):
         return order_schema.dump(utils.put_order(args, order_id)).data, 201
 
     def delete(self, order_id):
-        utils.delete_order_by_id(order_id)
-        return "Заказ был успешно удалён", 202
+        return utils.delete_order_by_id(order_id), 202
