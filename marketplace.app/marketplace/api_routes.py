@@ -8,7 +8,7 @@ from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders
 from marketplace.api_folder.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders, \
     UploadImageProducer
-from marketplace.api_folder.product_api import GlobalProducts, ProductRest, UploadImageProduct, ProductsInCart
+from marketplace.api_folder.product_api import GlobalProducts, ProductRest, UploadImageProduct, ProductsInCart, ProductSearchByParams
 # TODO CHECK
 
 api.add_resource(GlobalOrders, '/orders')
@@ -31,6 +31,7 @@ api.add_resource(ParentCategoryBySubcategoryId, '/categories/<int:category_id>/p
 api.add_resource(SubcategoriesBySlug, '/categories/slug/<string:category_slug>/subcategories/')
 api.add_resource(GlobalProducts, '/products')
 api.add_resource(ProductRest, '/products/<int:product_id>')
+api.add_resource(ProductSearchByParams, '/products/search')
 api.add_resource(ProductsByCategory, '/categories/<int:category_id>')
 api.add_resource(PopularProductsByCategory, '/categories/<int:category_id>/popularity')
 api.add_resource(ProductsByProducer, '/producers/<int:producer_id>/products')
