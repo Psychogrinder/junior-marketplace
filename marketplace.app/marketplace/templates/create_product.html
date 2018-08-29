@@ -9,7 +9,7 @@
             <span><a href={{ url_for('producer_products', producer_id = current_user.id )}}>Товары</a></span>
             <span><a class="active">Создание товара</a></span>
         </section>
-        <form action="#">
+        <form id="createProductForm" action="#" data-parsley-validate>
             <div class="row edit-product-item">
                 <label for="createName" class="col-4 col-sm-2">Название</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="createName" placeholder="Продукт" required value="">
@@ -41,7 +41,7 @@
             </div>
             <div class="row edit-product-item">
                 <label for="createCount" class="col-4 col-sm-2">Количество товара</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="createCount" placeholder="10" pattern="^[ 0-9]+$">
+                <input type="text" class="form-control col-8 col-sm-4" id="createCount" placeholder="10" pattern="^[ 0-9]+$" required>
             </div>
             <div class="row edit-product-item">
                 <label for="editWeigth" class="col-5 col-sm-3">Вес / Единицы измерения</label>
@@ -59,7 +59,7 @@
                 </textarea>
             </div>
             <div class="col-12 col-sm-10 edit-product-save">
-                <button type="button" class="btn btn-success" id="createProductSave">СОХРАНИТЬ</button>
+                <button type="submit" class="btn btn-success" id="createProductSave">СОХРАНИТЬ</button>
             </div>
         </form>
     </div>
