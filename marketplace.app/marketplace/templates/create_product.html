@@ -44,20 +44,13 @@
                 <input type="text" class="form-control col-8 col-sm-4" id="createCount" placeholder="10" pattern="^[ 0-9]+$">
             </div>
             <div class="row edit-product-item">
-                <label for="createUnits" class="col-4 col-sm-2">Единицы измерения</label>
-                <select class="form-control col-8 col-sm-4" name="units" id="createUnits" required>
-                    <option>кг</option>
-                    <option>литр</option>
-                    <option>упаковка</option>
-                </select>
-            </div>
-            <div class="row edit-product-item">
-                <label for="createWeigth" class="col-4 col-sm-2">Вес</label>
-                <input type="text" class="form-control col-4 col-sm-2" pattern="^[ 0-9]+$" name="weigth" id="createWeigth">
-                <select class="form-control col-4 col-sm-1" name="weigth_init" id="createMeasurementUnit" required>
-                    <option>литр</option>
-                    <option>кг</option>
-                    <option>шт.</option>
+                <label for="editWeigth" class="col-5 col-sm-3">Вес / Единицы измерения</label>
+                <input type="text" class="form-control col-5 col-sm-3" pattern="^[ 0-9]+$" name="weigth"
+                       id="createWeigth">
+                <select class="form-control col-4 col-sm-1" name="weigth_init" id="createUnits" required>
+                    <option value="л">л</option>
+                    <option value="кг">кг</option>
+                    <option value="шт">шт</option>
                 </select>
             </div>
             <div class="row edit-product-item">
