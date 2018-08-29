@@ -520,7 +520,7 @@ def login(args):
         return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return {"id": user.id}
+    return {"id": user.id, "entity": user.entity}
 
 
 def logout():

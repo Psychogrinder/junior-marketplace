@@ -42,6 +42,7 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             'script/authorisation.js', 'script/registration_producer.js', 'script/menu_backlighting.js',
             'script/edit_consumer_profile.js', 'script/edit_producer_profile.js',
             'script/cart.js', 'script/order_placement.js','script/edit_product_post.js','script/order_history.js',
+            'script/producer_orders.js',
 
             filters=['jsmin'], output='app.min.js')
 
