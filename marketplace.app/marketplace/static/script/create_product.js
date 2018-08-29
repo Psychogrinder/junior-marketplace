@@ -8,7 +8,6 @@ $(document).ready(function () {
 
     function createNewProductObject(){
         categoryId = parseInt($('#createSubcategory option:selected').data('id'));
-        console.log(categoryId);
         var obj = {
             name: $('#createName').val(),
             price: $('#createPrice').val(),
@@ -54,7 +53,6 @@ $(document).ready(function () {
                     subcategory_option[i].innerHTML = subcategories[i].name;
                     $(subcategory_option[i]).val(subcategories[i].slug);
                     subcategory_option[i].setAttribute('data-id', subcategories[i].id);
-                    console.log(subcategory_option[i]);
                 }
             });
     }
@@ -62,7 +60,6 @@ $(document).ready(function () {
     fillOptions(default_category_id);
 
     $('#createCategory').on('change', function () {
-        console.log(this.value);
         $.get("/api/v1/categories/slug/" + this.value + "/subcategories/",
             function (data) {
                 var subcategories = data;
@@ -81,7 +78,6 @@ $(document).ready(function () {
 
     $('#createProductSave').click(function(){
         var newProductObject = createNewProductObject();
-        console.log(newProductObject);
 
         $.ajax({
             url: '/api/v1/products',
@@ -89,7 +85,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(newProductObject),
             success: function(data, status) {
-                console.log('Success');
+
             }
         });
     });

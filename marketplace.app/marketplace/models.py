@@ -206,7 +206,7 @@ class Product(SetPhotoUrlMixin, db.Model):
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
 
-    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description=''):
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight='', description=''):
         self.price = float(price)
         self.name = name
         self.quantity = quantity
