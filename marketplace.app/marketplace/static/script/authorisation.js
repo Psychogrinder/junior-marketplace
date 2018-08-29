@@ -23,7 +23,6 @@ $(document).ready(function () {
                         var globalUserId = data.id;
                         localStorage.setItem("globalUserId", globalUserId);
                         location.reload();
-
                     }
                     else {
                         $('#authUserAlert').css("display", "block");
