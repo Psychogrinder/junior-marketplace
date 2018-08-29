@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
+from marketplace import cache
 from marketplace.api_folder.schemas import product_schema_list, product_schema
 
 product_args = ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']
@@ -12,7 +13,12 @@ for arg in product_args:
 
 class GlobalProducts(Resource):
     def get(self):
-        return product_schema_list.dump(utils.get_all_products()).data
+        path = request.url
+        if not cache.exists(path):
+            products = product_schema_list.dump(utils.get_all_products()).data
+            return utils.cache_list_and_return(path, products), 200
+        else:
+            return utils.get_cached_list(path), 200
 
     def post(self):
         args = parser.parse_args()
@@ -23,7 +29,12 @@ class GlobalProducts(Resource):
 
 class ProductRest(Resource):
     def get(self, product_id):
-        return product_schema.dump(utils.get_product_by_id(product_id)).data
+        path = request.url
+        if not cache.exists(path):
+            product = product_schema.dump(utils.get_product_by_id(product_id)).data
+            return utils.cache_and_return(path, product), 200
+        else:
+            return utils.get_cached(path), 200
 
     def put(self, product_id):
         args = parser.parse_args()
@@ -35,12 +46,23 @@ class ProductRest(Resource):
 
 class PopularProducts(Resource):
     def get(self):
-        return product_schema_list.dump(utils.get_popular_products()).data
+        path = request.url
+        if not cache.exists(path):
+            products = product_schema_list.dump(utils.get_popular_products()).data
+            return utils.cache_list_and_return(path, products), 200
+        else:
+            return utils.get_cached_list(path), 200
 
 
 class ProductsByPrice(Resource):
     def get(self, category_id, direction):
-        return product_schema_list.dump(utils.get_products_by_category_id_sorted_by_price(category_id, direction)).data
+        path = request.url
+        if not cache.exists(path):
+            products = product_schema_list.dump(
+                utils.get_products_by_category_id_sorted_by_price(category_id, direction)).data
+            return utils.cache_list_and_return(path, products), 200
+        else:
+            return utils.get_cached_list(path), 200
 
 
 class UploadImageProduct(Resource):
@@ -50,13 +72,13 @@ class UploadImageProduct(Resource):
 
 class ProductsInCart(Resource):
     def get(self, consumer_id):
-        return product_schema_list.dump(
-            utils.get_products_from_cart(utils.get_cart_by_consumer_id(consumer_id).items)).data
-
-
-class PopularProducts(Resource):
-    def get(self):
-        return product_schema_list.dump(utils.get_popular_products()).data
+        path = request.url
+        if not cache.exists(path):
+            products = product_schema_list.dump(
+                utils.get_products_from_cart(utils.get_cart_by_consumer_id(consumer_id).items)).data
+            return utils.cache_list_and_return(path, products), 200
+        else:
+            return utils.get_cached_list(path), 200
 
 
 product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_storage']
