@@ -487,7 +487,7 @@ def delete_producer_by_id(producer_id):
     producer = get_producer_by_id(producer_id)
     db.session.delete(producer)
     db.session.commit()
-    return {"message": "Producer with id {} has been deleted succesfully".format(producer_id)}
+    return {"message": "Producer with id {} has been deleted successfully".format(producer_id)}
 
 
 def delete_product_by_id(product_id):
@@ -496,6 +496,13 @@ def delete_product_by_id(product_id):
     db.session.delete(product)
     db.session.commit()
     return {"message": "Product with id {} has been deleted successfully".format(product_id)}
+
+
+def delete_order_by_id(order_id):
+    order = get_order_by_id(int(order_id))
+    db.session.delete(order)
+    db.session.commit()
+    return {"message": "Order with id {} has been deleted successfully".format(order_id)}
 
 
 def clear_cart_by_consumer_id(consumer_id):
@@ -513,7 +520,7 @@ def login(args):
         return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return {"id": user.id}
+    return {"id": user.id, "entity": user.entity}
 
 
 def logout():
