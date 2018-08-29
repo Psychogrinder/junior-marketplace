@@ -2,7 +2,7 @@ import os
 
 from sqlalchemy import JSON
 from sqlalchemy.ext.mutable import MutableDict
-
+from flask_sqlalchemy import BaseQuery
 try:
     from marketplace import db, login
 except:
@@ -11,6 +11,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import MONEY
 from flask_login import UserMixin
+from sqlalchemy_searchable import SearchQueryMixin, make_searchable
+from sqlalchemy_utils.types.ts_vector import TSVectorType
+
+
+make_searchable(db.metadata)
 
 producer_category_association_table = db.Table('producers_categories',
                                                db.Column('producer_id', db.Integer, db.ForeignKey('user.id'),
@@ -189,7 +194,12 @@ class Order(db.Model):
         self.status = status
 
 
+class ProductQuery(BaseQuery, SearchQueryMixin):
+    pass
+
+
 class Product(SetPhotoUrlMixin, db.Model):
+    query_class = ProductQuery
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     description = db.Column(db.String(256))
@@ -201,6 +211,13 @@ class Product(SetPhotoUrlMixin, db.Model):
     category_id = db.Column(db.Integer)
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
+    search_vector = db.Column(TSVectorType(
+        'name',
+        'description',
+        weights={'name': 'A', 'description': 'B'},
+        regconfig='pg_catalog.russian'
+        ))
+
 
     def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight, description=''):
         self.price = float(price)
@@ -239,6 +256,7 @@ class Category(db.Model):
 
     def get_subcategories(self):
         return Category.query.filter_by(parent_id=self.id).all()
+
 
 
 @login.user_loader
