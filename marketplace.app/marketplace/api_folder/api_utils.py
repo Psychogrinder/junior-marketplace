@@ -254,7 +254,7 @@ def producer_has_product_with_such_name(args):
         return True
 
 
-def search_product_by_params(search_query):
+def search_products_by_param(search_query):
     vector = inspect_search_vectors(Product)[0]
     return db.session.query(Product).filter(
             Product.search_vector.match(search_query)
