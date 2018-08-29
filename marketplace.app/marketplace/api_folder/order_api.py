@@ -28,3 +28,6 @@ class Orders(Resource):
     def put(self, order_id):
         args = parser.parse_args()
         return order_schema.dump(utils.put_order(args, order_id)).data, 201
+
+    def delete(self, order_id):
+        return utils.delete_order_by_id(order_id), 202
