@@ -3,6 +3,7 @@ import os
 
 load_dotenv()
 
+
 class Config(object):
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@localhost/marketplace.db'
     UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/user_images'
@@ -16,4 +17,9 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
 
-    CELERY_BROKER_URL='redis://localhost:6379/0',
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+    CACHE_STORAGE_HOST = 'localhost'
+    CACHE_STORAGE_PORT = 6379
+    CACHE_STORAGE_DB = 1
+    REDIS_STORAGE_TIME = 10
