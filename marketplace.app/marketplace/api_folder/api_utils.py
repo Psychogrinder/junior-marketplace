@@ -1,5 +1,6 @@
+import ast
 from operator import itemgetter
-from marketplace import email_tools
+from marketplace import email_tools, cache, REDIS_STORAGE_TIME
 import os
 import re
 import json
@@ -588,3 +589,40 @@ def upload_producer_image(producer_id, files):
 def upload_product_image(product_id, files):
     product = get_product_by_id(product_id)
     return upload_image(product, files)
+
+
+# Converting
+
+def convert_byte_dict_keys_to_string(data):
+    if isinstance(data, bytes):
+        return data.decode('utf-8')
+    if isinstance(data, dict):
+        return dict(map(convert_byte_dict_keys_to_string, data.items()))
+    if isinstance(data, tuple):
+        return map(convert_byte_dict_keys_to_string, data)
+
+
+# Caching
+
+
+def cache_list_and_return(path, response):
+    for item in response:
+        cache.lpush(path, item)
+    cache.expire(path, REDIS_STORAGE_TIME)
+    return response
+
+
+def get_cached_list(path):
+    response = cache.lrange(path, 0, -1)
+    return [ast.literal_eval(item.decode('utf-8')) for item in response]
+
+
+def cache_and_return(path, response):
+    cache.hmset(path, response)
+    cache.expire(path, REDIS_STORAGE_TIME)
+    return response
+
+
+def get_cached(path):
+    response = cache.hgetall(path)
+    return convert_byte_dict_keys_to_string(response)
