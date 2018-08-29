@@ -30,11 +30,11 @@
                                 </div>
                                 <div class="col-3 cart_product_stock_info">
                                     <span>{{ product.name }}</span>
-                                    <span>{{ product.price }}руб/{{ product.measurement_unit }}</span>
+                                    <span>{{ product.price }}</span>
                                     <span id="productIdCart">{{ product.id }}</span>
                                 </div>
                                 <div class="col-1">
-                                    <span>Вес</span>
+                                    <span>Вес {{ product.weight }} {{ product.measurement_unit }}</span>
                                 </div>
                                 <div class="col-4 quantity_container">
                                     <span>Количество</span>
