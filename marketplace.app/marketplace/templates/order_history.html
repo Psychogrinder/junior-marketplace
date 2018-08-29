@@ -15,13 +15,13 @@
                     <div class="col-2">
                         <span>№ {{ order.id }}</span>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4 order-history-producer-name">
                         <span> {{ producer_names[order.producer_id] }}  </span>
                     </div>
-                    <div class="col-4 order_history_date">
+                    <div class="col-2 order_history_date">
                         <span class="orderTimeStamp">{{ (order.order_timestamp | string).split(' ')[0] }}</span>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                         <span>СУММА ЗАКАЗА: {{ order.total_cost }}</span>
                     </div>
                 </div>
@@ -32,31 +32,31 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-2">
-                                    <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
+                                    <img class="order-product-photo" src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
                                          width="150px">
                                 </div>
                                 <div class="col-1 cart_product_stock_title">
-                                    <span>Название</span>
-                                    <span>Цена</span>
-                                    <span>Артикул</span>
+                                    <p>Название</p>
+                                    <p>Цена</p>
+                                    <p>Артикул</p>
                                 </div>
                                 <div class="col-3 cart_product_stock_info">
-                                    <span>{{ product.name }}</span>
-                                    <span>{{ product.price }}</span>
-                                    <span>{{ item }}</span>
+                                    <p>{{ product.name }}</p>
+                                    <p>{{ product.price }}</p>
+                                    <p>{{ item }}</p>
                                 </div>
-                                <div class="col-1">
-                                    <span>Вес</span>
+                                <div class="col-2">
+                                    <span>Вес:</span>
                                     {% if (product.weight | string).split('.')[1] == '0' %}
-                                        <span>{{ (product.weight | string).split('.')[0] }}</span>
+                                        <span class="main-text">{{ (product.weight | string).split('.')[0] }}</span>
                                     {% else %}
-                                        <span>{{ product.weight }}</span>
+                                        <span class="main-text">{{ product.weight }}</span>
                                     {% endif %}
-                                    <span> {{ product.measurement_unit }}</span>
+                                    <span class="main-text"> {{ product.measurement_unit }}</span>
                                 </div>
                                 <div class="col-4 quantity_container">
                                     <span>Количество:</span>
-                                    <span>{{ quantity }}</span>
+                                    <span class="main-text">{{ quantity }}</span>
                                 </div>
                             </div>
                         </div>
@@ -65,25 +65,28 @@
             {% endfor %}
             <div class="container delivery_container">
                 <div class="row">
-                    <div class="col-2 delivery_value">
+                    <div class="col-3 delivery_value-header delivery_value">
                         <span>Доставка:</span>
-                        <span>Цена доставки:</span>
                     </div>
-                    <div class="col-2 delivery_value">
-                        <span>Курьером</span>
-                        <span>400 Р</span>
+                    <div class="col-3 delivery_value">
+                        <span class="main-text">{{ order.delivery_method }}</span>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <span>Статус заказа:</span>
                     </div>
                     <div class="col-2">
-                        <span>Необработан</span>
-                    </div>
-                    <div class="col-3">
-                        <button class="btn btn-primary btn_order">ОТМЕНИТЬ ЗАКАЗ</button>
-                        <button class="btn btn-primary btn_order">ПОВТОРИТЬ ЗАКАЗ</button>
+                        <span class="main-text">{{ order.status }}</span>
                     </div>
                 </div>
+                <div class="row order-history-btn-block">
+                    <div class="col-3">
+                        <button class="btn btn-primary">ОТМЕНИТЬ ЗАКАЗ</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary">ПОВТОРИТЬ ЗАКАЗ</button>
+                    </div>
+                </div>
+            </div>
             </div>
         {% endfor %}
     </main>
