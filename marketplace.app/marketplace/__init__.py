@@ -12,6 +12,8 @@ import jsmin
 from flask_mail import Mail
 from marketplace import _celery
 
+
+
 app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(Config)
@@ -23,7 +25,6 @@ api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
 login = LoginManager(app)
 migrate = Migrate(app, db)
-db.init_app(app)
 celery = _celery.make_celery(app)
 
 from marketplace import models, views, api_routes
