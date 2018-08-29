@@ -26,6 +26,7 @@ class ProductSchema(ma.ModelSchema):
     class Meta:
         model = Product
         model_converter = PostgresMoneyConverter
+        exclude = ('search_vector',)
 
         @post_load
         def create_product(self, data):
