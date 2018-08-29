@@ -7,6 +7,7 @@ from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
 import os
+import redis
 import cssmin
 import jsmin
 from flask_mail import Mail
@@ -25,6 +26,9 @@ login = LoginManager(app)
 migrate = Migrate(app, db)
 db.init_app(app)
 celery = _celery.make_celery(app)
+cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACHE_STORAGE_PORT'],
+                    db=app.config['CACHE_STORAGE_DB'])
+REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
 
 from marketplace import models, views, api_routes
 
@@ -41,7 +45,7 @@ assets.register('css_all', css)
 js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.js', 'script/registration_consumer.js',
             'script/authorisation.js', 'script/registration_producer.js', 'script/menu_backlighting.js',
             'script/edit_consumer_profile.js', 'script/edit_producer_profile.js',
-            'script/cart.js', 'script/order_placement.js','script/edit_product_post.js','script/order_history.js',
+            'script/cart.js', 'script/order_placement.js', 'script/edit_product_post.js', 'script/order_history.js',
 
             filters=['jsmin'], output='app.min.js')
 
