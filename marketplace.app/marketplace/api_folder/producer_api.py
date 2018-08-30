@@ -13,7 +13,12 @@ for arg in producer_args:
 
 class GlobalProducers(Resource):
     def get(self):
-        return producer_schema_list.dump(utils.get_all_producers()).data
+        response = dict()
+        page_number = request.args.get('page', type=int, default=1)
+        page = utils.get_all_producers(page_number)
+        response['meta'] = utils.get_meta_from_page(page_number, page)
+        response['body'] = product_schema_list.dump(page.items).data
+        return response, 200
 
     def post(self):
         args = parser.parse_args()
@@ -35,12 +40,22 @@ class ProducerRest(Resource):
 
 class ProducerOrders(Resource):
     def get(self, producer_id):
-        return order_schema_list.dump(utils.get_orders_by_producer_id(producer_id)).data
+        response = dict()
+        page_number = request.args.get('page', type=int, default=1)
+        page = utils.get_orders_by_producer_id(producer_id, page_number)
+        response['meta'] = utils.get_meta_from_page(page_number, page)
+        response['body'] = order_schema_list.dump(page.items).data
+        return response, 200
 
 
 class ProductsByProducer(Resource):
     def get(self, producer_id):
-        return product_schema_list.dump(utils.get_products_by_producer_id(producer_id)).data
+        response = dict()
+        page_number = request.args.get('page', type=int, default=1)
+        page = utils.get_products_by_producer_id(producer_id, page_number)
+        response['meta'] = utils.get_meta_from_page(page_number, page)
+        response['body'] = product_schema_list.dump(page.items).data
+        return response, 200
 
 
 class UploadImageProducer(Resource):

@@ -1,5 +1,5 @@
 from operator import itemgetter
-from marketplace import email_tools
+from marketplace import email_tools, ITEMS_PER_PAGE
 import os
 import re
 import json
@@ -85,14 +85,14 @@ def abort_if_product_doesnt_exist_or_get(product):
 
 # Get by id methods
 
-def get_orders_by_producer_id(producer_id):
+def get_orders_by_producer_id(producer_id, page):
     abort_if_producer_doesnt_exist_or_get(producer_id)
-    return Order.query.filter_by(producer_id=producer_id).all()
+    return Order.query.filter_by(producer_id=producer_id).paginate(page, ITEMS_PER_PAGE, False)
 
 
-def get_orders_by_consumer_id(consumer_id):
+def get_orders_by_consumer_id(consumer_id, page):
     abort_if_consumer_doesnt_exist_or_get(consumer_id)
-    return Order.query.filter_by(consumer_id=consumer_id).all()
+    return Order.query.filter_by(consumer_id=consumer_id).paginate(page, ITEMS_PER_PAGE, False)
 
 
 def get_order_by_id(order_id):
@@ -111,15 +111,15 @@ def get_category_by_id(category_id):
     return abort_if_category_doesnt_exist_or_get(category_id)
 
 
-def get_subcategories_by_category_id(category_id):
+def get_subcategories_by_category_id(category_id, page):
     abort_if_category_doesnt_exist_or_get(category_id)
-    return Category.query.filter_by(parent_id=category_id).all()
+    return Category.query.filter_by(parent_id=category_id).paginate(page, ITEMS_PER_PAGE, False)
 
 
-def get_subcategories_by_category_slug(category_slug):
+def get_subcategories_by_category_slug(category_slug, page):
     abort_if_category_doesnt_exist_slug_or_get(category_slug)
     category_id = Category.query.filter_by(slug=category_slug).first().id
-    return Category.query.filter_by(parent_id=category_id).all()
+    return get_subcategories_by_category_id(category_id, page)
 
 
 def get_product_by_id(product_id):
@@ -136,9 +136,9 @@ def get_products_by_category_id(category_id):
         return [product for subcategory in divided_products for product in subcategory]
 
 
-def get_products_by_producer_id(producer_id):
+def get_products_by_producer_id(producer_id, page):
     abort_if_producer_doesnt_exist_or_get(producer_id)
-    return Product.query.filter_by(producer_id=producer_id).all()
+    return Product.query.filter_by(producer_id=producer_id).paginate(page, ITEMS_PER_PAGE, False)
 
 
 def get_cart_by_consumer_id(consumer_id):
@@ -269,24 +269,24 @@ def get_all_products_from_order(order_id):
 
 # Get all methods
 
-def get_all_orders():
-    return Order.query.all()
+def get_all_orders(page):
+    return Order.query.paginate(page, ITEMS_PER_PAGE, False)
 
 
-def get_all_consumers():
-    return Consumer.query.filter_by(entity='consumer').all()
+def get_all_consumers(page):
+    return Consumer.query.filter_by(entity='consumer').paginate(page, ITEMS_PER_PAGE, False)
 
 
-def get_all_producers():
-    return Producer.query.filter_by(entity='producer').all()
+def get_all_producers(page):
+    return Producer.query.filter_by(entity='producer').paginate(page, ITEMS_PER_PAGE, False)
 
 
-def get_all_base_categories():
-    return Category.query.filter_by(parent_id=0).all()
+def get_all_base_categories(page):
+    return Category.query.filter_by(parent_id=0).paginate(page, ITEMS_PER_PAGE, False)
 
 
-def get_all_products():
-    return Product.query.all()
+def get_all_products(page):
+    return Product.query.paginate(page, ITEMS_PER_PAGE, False)
 
 
 # Category methods
@@ -588,3 +588,9 @@ def upload_producer_image(producer_id, files):
 def upload_product_image(product_id, files):
     product = get_product_by_id(product_id)
     return upload_image(product, files)
+
+
+# Pagination utils
+
+def get_meta_from_page(page_number, page):
+    return {'page': page_number, 'has_next': page.has_next, 'has_prev': page.has_prev}

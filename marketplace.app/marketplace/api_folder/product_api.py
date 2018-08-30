@@ -12,7 +12,12 @@ for arg in product_args:
 
 class GlobalProducts(Resource):
     def get(self):
-        return product_schema_list.dump(utils.get_all_products()).data
+        response = dict()
+        page_number = request.args.get('page', type=int, default=1)
+        page = utils.get_all_products(page_number)
+        response['meta'] = utils.get_meta_from_page(page_number, page)
+        response['body'] = product_schema_list.dump(page.items).dump
+        return response, 200
 
     def post(self):
         args = parser.parse_args()
@@ -52,11 +57,6 @@ class ProductsInCart(Resource):
     def get(self, consumer_id):
         return product_schema_list.dump(
             utils.get_products_from_cart(utils.get_cart_by_consumer_id(consumer_id).items)).data
-
-
-class PopularProducts(Resource):
-    def get(self):
-        return product_schema_list.dump(utils.get_popular_products()).data
 
 
 product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_storage']
