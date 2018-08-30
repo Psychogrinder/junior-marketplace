@@ -43,6 +43,8 @@ if ($('main.producer-orders').length > 0) {
                 $('#saveStatusOrderBtnTable').css('display', 'none');
                 $('#changeOrderStatusBtnTable').css('display', 'block');
                 $('#changeOrderStatusSelectTable').attr('disabled', 'disabled');
+                var hulla = new hullabaloo();
+                hulla.send("Статус заказа изменен", "secondary");
             }
         });
     }

@@ -16,7 +16,7 @@ input[type="text"] {
     color: black;
 }
 
-main.main-footer-bottom h1{
+main.main-footer-bottom h1 {
     margin-bottom: 2rem;
 }
 
@@ -41,4 +41,13 @@ form .filter-block:first-child {
     border-radius: 5px;
 }
 
+.hullabaloo.alert.alert-dismissible {
+    width: fit-content !important;
+    max-width: 500px  !important;
+}
 
+@media (max-width: 350px) {
+    .hullabaloo.alert.alert-dismissible {
+        right: 0 !important;
+    }
+}

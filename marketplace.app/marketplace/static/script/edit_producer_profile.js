@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $(".phone_mask").mask("+7(999)999-99-99");
 
-    $('#save_producer_profile').click(function(){
+    $('#save_producer_profile').click(function () {
         var addr = window.location + '';
         addr = addr.split('/');
         var producer_id = addr[addr.length - 2];
@@ -21,14 +21,17 @@ $(document).ready(function () {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(producerObject),
-                success: function(data, status) {
-
+                success: function (data, status) {
+                    var hulla = new hullabaloo();
+                    hulla.send("Профиль успешно изменен", "secondary");
                 }
             });
         };
 
-        $('#editProducerForm').submit(function() {
+        $('#editProducerForm').submit(function () {
             submitEditProfileForm();
+
         });
-    });
+    })
+    ;
 });
