@@ -16,6 +16,7 @@ from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders
 from marketplace.api_folder.producer_api import (
+    UnprocessedOrdersByProducerId,
     ProductsByProducer,
     GlobalProducers,
     ProducerRest,
@@ -54,7 +55,7 @@ api.add_resource(SubcategoryNamesByProducerName, '/categories/producer/<string:p
 api.add_resource(SubcategoryNamesByParentSlugAndProducerName,
                  '/categories/<string:parent_category_slug>/producer/<string:producer_name>')
 api.add_resource(ProducerNamesByCategoryName, '/producers/<string:category_name>')
-api.add_resource(UnrpocessedOrdersByProducerId, '/producers/<int:producer_id>/unprocessed_orders')
+api.add_resource(UnprocessedOrdersByProducerId, '/producers/<int:producer_id>/unprocessed_orders')
 # checked
 api.add_resource(BaseCategories, '/categories/base')
 api.add_resource(Subcategories, '/categories/<int:category_id>/subcategories/')
