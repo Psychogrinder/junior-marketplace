@@ -369,11 +369,12 @@ def search_products_by_param(search_query):
     vector = inspect_search_vectors(Product)[0]
     try:
         result = db.session.query(Product).filter(
-                Product.search_vector.match(search_query)
-            ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+            Product.search_vector.match(search_query)
+        ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
     except exc.ProgrammingError:
         return None
     return result
+
 
 # Post methods
 
@@ -637,6 +638,23 @@ def upload_product_image(product_id, files):
   
 def get_number_of_unprocessed_orders_by_producer_id(producer_id):
     return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
+
+def decrease_products_quantity_and_increase_times_ordered(consumer_id):
+    items = get_cart_by_consumer_id(consumer_id).items
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity -= int(quantity)
+        get_product_by_id(int(item)).times_ordered += 1
+        db.session.commit()
+
+
+def increase_products_quantity_and_decrease_times_ordered(order_id):
+    order = get_order_by_id(order_id)
+    items = order.order_items_json
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity += int(quantity)
+        get_product_by_id(int(item)).times_ordered -= 1
+        db.session.commit()
+
 
 # Pagination utils
 
