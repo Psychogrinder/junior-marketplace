@@ -22,4 +22,4 @@ class Config(object):
     CACHE_STORAGE_HOST = 'localhost'
     CACHE_STORAGE_PORT = 6379
     CACHE_STORAGE_DB = 1
-    REDIS_STORAGE_TIME = 10
+    REDIS_STORAGE_TIME = 1
