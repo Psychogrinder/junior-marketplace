@@ -55,7 +55,7 @@
                     <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
                 </div>
                 <div class="product-item-description">
-                    <p>{{ product.price }} ₽</p>
+                    <p>{{ product.price }}</p>
                     <b>{{ product.name }}</b>
                     {% for producer in producers %}
                     {% if product.producer_id == producer.id %}

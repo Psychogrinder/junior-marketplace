@@ -1,9 +1,14 @@
-// if ($('main.order-history').length > 0) {
-//     var newDate = $('.orderTimeStamp').html().split(' ');
-//     $('.orderTimeStamp').html(newDate[0]);
-//
-//     var newWeight = $('.productWeight').html().split('.');
-//     if (newWeight[1] == 0){
-//         $('.productWeight').html(newWeight[0]);
-//     }
-// }
+if ($('main.order-history').length > 0) {
+    function cancelOrder(order_id) {
+        $.ajax({
+            url: '/api/v1/orders/' + order_id,
+            type: 'DELETE',
+            success: function (result) {
+                $('#showOrderCancelModal').remove();
+                $('.modal-backdrop').css("display", "none");
+                $('.orders-block'+order_id).remove();
+                $('body').removeClass('modal-open');
+            }
+        });
+    }
+}

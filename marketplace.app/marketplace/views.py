@@ -157,7 +157,11 @@ def edit_producer(producer_id):
 @app.route('/producer/<producer_id>/orders')
 def producer_orders(producer_id):
     if current_user.id == int(producer_id):
-        return render_template('producer_orders.html', current_user=current_user)
+        orders = Order.query.filter_by(producer_id=int(producer_id)).all()
+        products = {}
+        for order in orders:
+            products[order.id] = utils.get_all_products_from_order(order.id)
+        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products )
     else:
         return redirect(url_for('index'))
 
