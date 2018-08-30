@@ -9,7 +9,7 @@ from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
 from marketplace import db, app
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, exc
 from sqlalchemy_searchable import inspect_search_vectors
 
 
@@ -256,9 +256,13 @@ def producer_has_product_with_such_name(args):
 
 def search_products_by_param(search_query):
     vector = inspect_search_vectors(Product)[0]
-    return db.session.query(Product).filter(
-            Product.search_vector.match(search_query)
-        ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+    try:
+        result = db.session.query(Product).filter(
+                Product.search_vector.match(search_query)
+            ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+    except exc.ProgrammingError:
+        return None
+    return result
 
 # Post methods
 
