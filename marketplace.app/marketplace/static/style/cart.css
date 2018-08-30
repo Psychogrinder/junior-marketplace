@@ -16,10 +16,6 @@
     color: #000;
 }
 
-.quantity_container{
-    text-align: center;
-}
-
 .product_quantity {
     display: inline-block;
     width: 200px;
@@ -101,4 +97,12 @@
 
 .btn_order{
     display: block;
+}
+
+#placeOrderButton {
+    color: #fff;
+}
+
+.notEmptyCart {
+    margin-top: 2rem;
 }

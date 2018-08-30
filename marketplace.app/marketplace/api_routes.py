@@ -8,7 +8,17 @@ from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders
 from marketplace.api_folder.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders, \
     UploadImageProducer
-from marketplace.api_folder.product_api import GlobalProducts, ProductRest, UploadImageProduct, ProductsInCart, ProductSearchByParams
+from marketplace.api_folder.product_api import (
+  GlobalProducts,
+  ProductRest,
+  UploadImageProduct,
+  ProductsInCart,
+  ProductsByPrice,
+  PopularProducts,
+  ProductsSortedAndFiltered,
+  ProductSearchByParams,
+)
+
 # TODO CHECK
 
 api.add_resource(GlobalOrders, '/orders')
@@ -33,9 +43,12 @@ api.add_resource(GlobalProducts, '/products')
 api.add_resource(ProductRest, '/products/<int:product_id>')
 api.add_resource(ProductSearchByParams, '/products/search')
 api.add_resource(ProductsByCategory, '/categories/<int:category_id>')
-api.add_resource(PopularProductsByCategory, '/categories/<int:category_id>/popularity')
+api.add_resource(PopularProductsByCategory, '/categories/<int:category_id>/popularity/<string:direction>')
+api.add_resource(ProductsByPrice, '/categories/<int:category_id>/price/<string:direction>')
 api.add_resource(ProductsByProducer, '/producers/<int:producer_id>/products')
 api.add_resource(GlobalConsumers, '/consumers')
 api.add_resource(ConsumerRest, '/consumers/<int:consumer_id>')
 api.add_resource(GlobalProducers, '/producers')
 api.add_resource(ProducerRest, '/producers/<int:producer_id>')
+api.add_resource(PopularProducts, '/products/popular')
+api.add_resource(ProductsSortedAndFiltered, '/products/filter')

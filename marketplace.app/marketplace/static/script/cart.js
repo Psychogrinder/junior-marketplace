@@ -18,7 +18,7 @@ var putToCart = function (consumer_id, product_id) {
 };
 
 var getNumberOfProductsInCart;
-if (localStorage.getItem("globalUserId") > 0) {
+if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'customer')) {
     $(document).ready(function () {
         var user_id = localStorage.getItem("globalUserId");
         getNumberOfProductsInCart = function (user_id) {
@@ -35,9 +35,8 @@ if (localStorage.getItem("globalUserId") > 0) {
 }
 
 
-function deleteProduct(product_id, producer_id, consumer_id) {
+function deleteProduct(product_id, consumer_id) {
     $('#' + product_id).remove();
-    var producer = $('#producer' + producer_id);
     $.post("/api/v1/consumers/" + consumer_id + "/cart",
         {
             product_id: product_id,
@@ -51,15 +50,13 @@ function deleteProduct(product_id, producer_id, consumer_id) {
                 }
             }
             document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
+            $('.notEmptyCart').find('.' + product_id).remove();
 
         });
 
-    var products = producer.find('section');
-    if (products.length == 0) {
-        producer.remove();
-    }
-    var allProducerBlock = $('.notEmptyCart').find('section');
-    if (allProducerBlock.length == 0) {
+    var allProductBlock = $('.notEmptyCart section');
+    console.log(allProductBlock.length);
+    if (allProductBlock.length == 1) {
         $('.notEmptyCart').remove();
         $('#cartMain').append('<section class="container total_container py-4" id="emptyCart">\n' +
             '                 <h2>Ваша корзина пуста</h2>\n' +
@@ -71,13 +68,15 @@ function deleteProduct(product_id, producer_id, consumer_id) {
 
 function getProductsByUserId() {
     var user_id = localStorage.getItem("globalUserId");
-    $.get("/api/v1/products/" + user_id + "/cart",
-        function (products, status) {
-            if (status) {
-                getCartInformation(products);
+    if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'customer')) {
+        $.get("/api/v1/products/" + user_id + "/cart",
+            function (products, status) {
+                if (status) {
+                    getCartInformation(products);
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 function getCartInformation(products) {
@@ -95,7 +94,7 @@ function countTotalCostInner(items, products) {
     for (var i in items.items) {
         for (var p = 0; p < products.length; p++) {
             if (i == products[p].id) {
-                var sum = items.items[i] * products[p].price;
+                var sum = items.items[i] * products[p].price.substring(0, products[p].price.length-1);
                 total += sum;
             }
         }

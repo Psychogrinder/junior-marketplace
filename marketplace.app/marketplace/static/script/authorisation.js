@@ -22,8 +22,9 @@ $(document).ready(function () {
                         $('.modal-backdrop').css("display", "none");
                         var globalUserId = data.id;
                         localStorage.setItem("globalUserId", globalUserId);
+                        var globalUserEntity = data.entity;
+                        localStorage.setItem("globalUserEntity", globalUserEntity);
                         location.reload();
-
                     }
                     else {
                         $('#authUserAlert').css("display", "block");

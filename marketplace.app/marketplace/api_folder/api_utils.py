@@ -2,6 +2,7 @@ from operator import itemgetter
 from marketplace import email_tools
 import os
 import re
+import json
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
@@ -165,6 +166,18 @@ def get_products_from_cart(items):
     return products
 
 
+def get_all_products_from_a_list_of_categories(categories):
+    all_products = []
+    for category in categories:
+        all_products += category.get_products()
+    return all_products
+
+
+def get_products_from_a_parent_category(parent_category_id):
+    subcategories = get_subcategories_by_category_id(parent_category_id)
+    return get_all_products_from_a_list_of_categories(subcategories)
+
+
 # Get by name
 
 def get_category_by_name(slug):
@@ -180,15 +193,80 @@ def get_producer_by_name(name):
 
 
 # Get sorted
+def get_sorted_and_filtered_products(args):
+    products = Product.query
 
+    if args['popularity']:
+        if args['popularity'] == 'down':
+            products = products.order_by(Product.times_ordered.desc())
 
-def get_popular_products_by_category_id(category_id):
-    category = get_category_by_id(category_id)
-    return sorted(category.get_products(), key=lambda product: product.times_ordered, reverse=True)
+    if args['category_name']:
+        category_id = Category.query.filter_by(name=args['category_name']).first().id
+        products = products.filter_by(category_id=category_id)
+
+    if args['producer_name']:
+        producer_id = Category.query.filter_by(name=args['producer_name']).first().id
+        products = products.filter_by(producer_id=producer_id)
+
+    if args['in_storage'] == int(1):
+        products = products.filter(Product.quantity > 0)
+
+    products = products.all()
+
+    if args['price']:
+        if args['price'] == 'down':
+            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=True)
+        elif args['price'] == 'up':
+            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')))
+
+    return products
 
 
 def get_popular_products():
-    return sorted(get_all_products(), key=lambda product: product.times_ordered, reverse=True)
+    return Product.query.order_by(Product.times_ordered.desc()).limit(12).all()
+
+
+def get_popular_products_by_category_id(category_id, direction):
+    """
+    Если direction == up, то товары возврщаются от наименее популярных до самых популярных. Если down, то наоборот.
+    """
+    if direction == 'up':
+        reverse = False
+    elif direction == 'down':
+        reverse = True
+
+    if get_category_by_id(category_id).parent_id != 0:
+        category = get_category_by_id(category_id)
+        return sorted(category.get_products(), key=lambda product: int(product.times_ordered), reverse=reverse)
+    else:
+        all_products = get_products_from_a_parent_category(category_id)
+        return sorted(all_products, key=lambda product: int(product.times_ordered), reverse=reverse)
+
+
+def get_products_by_category_id_sorted_by_price(category_id, direction):
+    """
+    Если direction == up, то товары возврщаются от самых дешёвых до самых дорогих. Если down, то наоборот.
+    """
+    if direction == 'up':
+        reverse = False
+    elif direction == 'down':
+        reverse = True
+
+    if get_category_by_id(category_id).parent_id != 0:
+        category = get_category_by_id(category_id)
+        return sorted(category.get_products(), key=lambda product: float(product.price.strip('₽').strip(' ')),
+                      reverse=reverse)
+    else:
+        all_products = get_products_from_a_parent_category(category_id)
+        return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
+
+
+def get_all_products_from_order(order_id):
+    order_items = Order.query.filter_by(id=order_id).first().order_items_json
+    products = []
+    for item in order_items:
+        products.append(Product.query.filter_by(id=int(item)).first())
+    return products
 
 
 # Get all methods
@@ -266,13 +344,37 @@ def search_products_by_param(search_query):
 
 # Post methods
 
-def post_order(args):
-    abort_if_producer_doesnt_exist_or_get(args['producer_id'])
+def post_orders(args):
+    """
+    Сначала обявляем переменные, которые содержат общую информацию. Затем работаем с каждым заказом отдельно.
+    Для каждого заказа расчитываем итоговую стоимость, добавляем в заказ товары, у которых id производителя
+    совпадает с id производителя заказа.
+    :param args:
+    :return:
+    """
     abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
-    new_order = order_schema.load(args).data
-    db.session.add(new_order)
+    # new_order = order_schema.load(args).data
+    consumer_id = args['consumer_id']
+    first_name = args['first_name']
+    last_name = args['last_name']
+    delivery_address = args['delivery_address']
+    phone = args['phone']
+    email = args['email']
+    orders = args['orders']
+    items = get_cart_by_consumer_id(consumer_id).items
+    orders = json.loads(orders)
+    for order in orders:
+        total_cost = 0
+        current_items = {}
+        for product_id, quantity in items.items():
+            if Product.query.get(int(product_id)).producer_id == int(order['producer_id']):
+                current_items[product_id] = quantity
+                total_cost += float(Product.query.get(int(product_id)).price.strip('₽').strip(' ')) * int(quantity)
+        new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
+                          phone, email, consumer_id, order['producer_id'], first_name=first_name, last_name=last_name)
+        db.session.add(new_order)
+    clear_cart_by_consumer_id(consumer_id)
     db.session.commit()
-    return new_order
 
 
 def post_consumer(args):
@@ -397,7 +499,7 @@ def delete_producer_by_id(producer_id):
     producer = get_producer_by_id(producer_id)
     db.session.delete(producer)
     db.session.commit()
-    return {"message": "Producer with id {} has been deleted succesfully".format(producer_id)}
+    return {"message": "Producer with id {} has been deleted successfully".format(producer_id)}
 
 
 def delete_product_by_id(product_id):
@@ -406,6 +508,13 @@ def delete_product_by_id(product_id):
     db.session.delete(product)
     db.session.commit()
     return {"message": "Product with id {} has been deleted successfully".format(product_id)}
+
+
+def delete_order_by_id(order_id):
+    order = get_order_by_id(int(order_id))
+    db.session.delete(order)
+    db.session.commit()
+    return {"message": "Order with id {} has been deleted successfully".format(order_id)}
 
 
 def clear_cart_by_consumer_id(consumer_id):
@@ -423,7 +532,7 @@ def login(args):
         return False
     # Вместо True потом добавить возможность пользователю выбирать запоминать его или нет
     login_user(user, True)
-    return {"id": user.id}
+    return {"id": user.id, "entity": user.entity}
 
 
 def logout():
