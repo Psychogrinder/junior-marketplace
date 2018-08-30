@@ -1,5 +1,5 @@
 .main-text{
-    color: black;
+    color: #242525e0;
 }
 
 .breadcrumb{
@@ -11,17 +11,14 @@
 .breadcrumb li {
     display: inline-block;
     font-size: 16px;
-    color: #000;
+    color: #242525e0;
     margin-right: 40px;
 }
 
-.order_history_date{
-    text-align: right;
-}
 
 .order_history_info{
     margin: 30px 0;
-    color: #000;
+    color: #242525e0;
 }
 
 .cart_product_stock_title span,
@@ -30,12 +27,9 @@
 }
 
 .cart_product_stock_info{
-    color: #000;
+    color: #242525e0;
 }
 
-.quantity_container{
-    text-align: center;
-}
 
 .item_order,
 .table_container{
@@ -72,7 +66,7 @@
 }
 
 .total_value{
-    color: #000;
+    color: #242525e0;
 }
 
 .btn_order{
@@ -107,4 +101,46 @@
 
 .hidden{
     display: none;
+}
+
+.select-order-status {
+    max-width: 200px;
+}
+
+.producer-orders .breadcrumbs {
+    margin-bottom: 2rem;
+}
+
+.producer-order-delivery {
+    justify-content: flex-end;
+}
+
+.table_global_cell.producer-orders-item {
+    padding: 0;
+    padding-left: 10px;
+}
+
+#saveStatusOrderBtn {
+    display: none;
+}
+
+#changeOrderStatusBtn,
+#saveStatusOrderBtn {
+    width: fit-content;
+    margin-top: auto;
+}
+
+.common-view-btn#changeOrderStatusBtn,
+.common-view-btn#saveStatusOrderBtn{
+    margin-top: 1rem;
+}
+
+#saveStatusOrderBtnTable {
+    display: none;
+}
+
+#changeOrderStatusBtnTable,
+#saveStatusOrderBtnTable {
+    width: fit-content;
+    margin-top: auto;
 }
