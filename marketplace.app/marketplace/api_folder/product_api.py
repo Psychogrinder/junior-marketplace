@@ -60,6 +60,7 @@ class ProductSearchByParams(Resource):
     def get(self):
         args = search_parser.parse_args()
         search_query = '&'.join(args['find'].split(' '))
-        return product_schema_list.dump(
-            utils.search_products_by_param(search_query)
-        ).data
+        result = utils.search_products_by_param(search_query)
+        if result is None:
+            return {}, 400
+        return product_schema_list.dump(result).data
