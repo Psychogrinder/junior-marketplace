@@ -21,12 +21,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(producerObject),
             success: function(data, status) {
-<<<<<<< HEAD
                 var hulla = new hullabaloo();
                 hulla.send("Профиль успешно изменен", "secondary");
-=======
-
->>>>>>> f87728aa55e77a01611bccf0cf985c096dce890f
             }
         });
     });

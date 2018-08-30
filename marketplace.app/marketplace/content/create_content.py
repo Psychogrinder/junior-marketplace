@@ -33,7 +33,7 @@ with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(p
 for i, producer in enumerate(Producer.query.all()):
     producer.id = i+1
 
-with urllib.request.urlopen("https://randomuser.me/api/?results=100", context=context) as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results=10", context=context) as response:
     data = response.read()
     data = json.loads(data)
     for person in data["results"]:
