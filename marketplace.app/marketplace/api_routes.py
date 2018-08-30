@@ -1,14 +1,40 @@
 from marketplace import api
 from marketplace.api_folder.cart_api import GlobalCart, NumberOfProductsInCart
-from marketplace.api_folder.category_api import BaseCategories, Subcategories, SubcategoriesBySlug, \
-    PopularProductsByCategory, ProductsByCategory, ParentCategoryBySubcategoryId, CategoryRest
-from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders, UploadImageConsumer
+from marketplace.api_folder.category_api import (
+    BaseCategories, Subcategories, SubcategoriesBySlug,
+    PopularProductsByCategory, ProductsByCategory,
+    ParentCategoryBySubcategoryId, CategoryRest, SubcategoryNamesByProducerName,
+    SubcategoryNamesByParentSlugAndProducerName,
+)
+from marketplace.api_folder.consumer_api import (
+    GlobalConsumers,
+    ConsumerRest,
+    ConsumerOrders,
+    UploadImageConsumer
+)
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders
-from marketplace.api_folder.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders, \
-    UploadImageProducer
-from marketplace.api_folder.product_api import GlobalProducts, ProductRest, UploadImageProduct, ProductsInCart, ProductsByPrice, PopularProducts, ProductsSortedAndFiltered
+from marketplace.api_folder.producer_api import (
+    ProductsByProducer,
+    GlobalProducers,
+    ProducerRest,
+    ProducerOrders,
+    UploadImageProducer,
+    ProducerNamesByCategoryName
+)
+from marketplace.api_folder.product_api import (
+  GlobalProducts,
+  ProductRest,
+  UploadImageProduct,
+  ProductsInCart,
+  ProductsByPrice,
+  PopularProducts,
+  ProductsSortedAndFiltered,
+  ProductSearchByParams,
+)
+
+
 # TODO CHECK
 
 api.add_resource(GlobalOrders, '/orders')
@@ -24,6 +50,11 @@ api.add_resource(UploadImageProducer, '/producers/<int:producer_id>/upload')
 api.add_resource(UploadImageProduct, '/products/<int:product_id>/upload')
 api.add_resource(CategoryRest, '/categories/<string:slug>')
 api.add_resource(ProductsInCart, '/products/<int:consumer_id>/cart')
+api.add_resource(SubcategoryNamesByProducerName, '/categories/producer/<string:producer_name>')
+api.add_resource(SubcategoryNamesByParentSlugAndProducerName,
+                 '/categories/<string:parent_category_slug>/producer/<string:producer_name>')
+api.add_resource(ProducerNamesByCategoryName, '/producers/<string:category_name>')
+api.add_resource(UnrpocessedOrdersByProducerId, '/producers/<int:producer_id>/unprocessed_orders')
 # checked
 api.add_resource(BaseCategories, '/categories/base')
 api.add_resource(Subcategories, '/categories/<int:category_id>/subcategories/')
@@ -31,6 +62,7 @@ api.add_resource(ParentCategoryBySubcategoryId, '/categories/<int:category_id>/p
 api.add_resource(SubcategoriesBySlug, '/categories/slug/<string:category_slug>/subcategories/')
 api.add_resource(GlobalProducts, '/products')
 api.add_resource(ProductRest, '/products/<int:product_id>')
+api.add_resource(ProductSearchByParams, '/products/search')
 api.add_resource(ProductsByCategory, '/categories/<int:category_id>')
 api.add_resource(PopularProductsByCategory, '/categories/<int:category_id>/popularity/<string:direction>')
 api.add_resource(ProductsByPrice, '/categories/<int:category_id>/price/<string:direction>')
