@@ -1,16 +1,39 @@
 from marketplace import api
 from marketplace.api_folder.cart_api import GlobalCart, NumberOfProductsInCart
-from marketplace.api_folder.category_api import BaseCategories, Subcategories, SubcategoriesBySlug, \
-    PopularProductsByCategory, ProductsByCategory, ParentCategoryBySubcategoryId, CategoryRest, \
-    SubcategoryNamesByProducerName, SubcategoryNamesByParentSlugAndProducerName
-from marketplace.api_folder.consumer_api import GlobalConsumers, ConsumerRest, ConsumerOrders, UploadImageConsumer
+from marketplace.api_folder.category_api import (
+    BaseCategories, Subcategories, SubcategoriesBySlug,
+    PopularProductsByCategory, ProductsByCategory,
+    ParentCategoryBySubcategoryId, CategoryRest, SubcategoryNamesByProducerName,
+    SubcategoryNamesByParentSlugAndProducerName,
+)
+from marketplace.api_folder.consumer_api import (
+    GlobalConsumers,
+    ConsumerRest,
+    ConsumerOrders,
+    UploadImageConsumer
+)
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
-from marketplace.api_folder.order_api import GlobalOrders, Orders, UnrpocessedOrdersByProducerId
-from marketplace.api_folder.producer_api import ProductsByProducer, GlobalProducers, ProducerRest, ProducerOrders, \
-    UploadImageProducer, ProducerNamesByCategoryName
-from marketplace.api_folder.product_api import GlobalProducts, ProductRest, UploadImageProduct, ProductsInCart, \
-    ProductsByPrice, PopularProducts, ProductsSortedAndFiltered
+from marketplace.api_folder.order_api import GlobalOrders, Orders
+from marketplace.api_folder.producer_api import (
+    ProductsByProducer,
+    GlobalProducers,
+    ProducerRest,
+    ProducerOrders,
+    UploadImageProducer,
+    ProducerNamesByCategoryName
+)
+from marketplace.api_folder.product_api import (
+  GlobalProducts,
+  ProductRest,
+  UploadImageProduct,
+  ProductsInCart,
+  ProductsByPrice,
+  PopularProducts,
+  ProductsSortedAndFiltered,
+  ProductSearchByParams,
+)
+
 
 # TODO CHECK
 
@@ -39,6 +62,7 @@ api.add_resource(ParentCategoryBySubcategoryId, '/categories/<int:category_id>/p
 api.add_resource(SubcategoriesBySlug, '/categories/slug/<string:category_slug>/subcategories/')
 api.add_resource(GlobalProducts, '/products')
 api.add_resource(ProductRest, '/products/<int:product_id>')
+api.add_resource(ProductSearchByParams, '/products/search')
 api.add_resource(ProductsByCategory, '/categories/<int:category_id>')
 api.add_resource(PopularProductsByCategory, '/categories/<int:category_id>/popularity/<string:direction>')
 api.add_resource(ProductsByPrice, '/categories/<int:category_id>/price/<string:direction>')
