@@ -210,34 +210,41 @@ def get_producer_names_by_category_name(category_name):
 
 # Get sorted
 def get_sorted_and_filtered_products(args):
-    products = Product.query
+    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url, Producer.name.label('producer_name')).filter(
+        Product.producer_id == Producer.id)
 
     if args['popularity']:
         if args['popularity'] == 'down':
-            products = products.order_by(Product.times_ordered.desc())
+            query = query.order_by(Product.times_ordered.desc())
 
     if args['producer_name']:
-        producer_id = Producer.query.filter_by(name=args['producer_name']).first().id
-        products = products.filter_by(producer_id=producer_id)
+        query = query.filter(Producer.name == args['producer_name'])
 
-    if args['in_storage'] == int(1):
-        products = products.filter(Product.quantity > 0)
+    if args['in_stock'] == 1:
+        query = query.filter(Product.quantity > 0)
 
     if args['category_name']:
-        # check if the category_name is in English
+        # check if the category_name is in English. Then it means it's a parent category
         if args['category_name'][0] in string.ascii_lowercase:
-            category_id = Category.query.filter_by(slug=args['category_name']).first().id
-            products = get_products_from_a_parent_category(category_id)
+            parent_category_id = db.session.query(Category.id).filter(Category.slug == args['category_name']).first()
+            subcategory_ids = [el[0] for el in db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
+            query = query.filter(Product.category_id.in_(subcategory_ids))
+        # else it's a subcategory and the name is in Russian
         else:
-            category_id = Category.query.filter_by(name=args['category_name']).first().id
-            products = products.filter_by(category_id=category_id).all()
+            category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
+            query = query.filter(Product.category_id == category_id)
 
     if args['price']:
         if args['price'] == 'down':
-            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=True)
+            query = query.order_by(Product.price.desc())
         elif args['price'] == 'up':
-            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')))
+            query = query.order_by(Product.price.asc())
 
+    product_schema = ("id", "name", "price", "photo_url", "producer_name")
+    products_data = query.all()
+    products = []
+    for product_data in products_data:
+        products.append(dict(zip(product_schema, product_data)))
     return products
 
 

@@ -59,7 +59,7 @@ class PopularProducts(Resource):
         return product_schema_list.dump(utils.get_popular_products()).data
 
 
-product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_storage']
+product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock']
 filter_parser = reqparse.RequestParser()
 
 for arg in product_args:
@@ -69,5 +69,6 @@ for arg in product_args:
 class ProductsSortedAndFiltered(Resource):
     def post(self):
         args = filter_parser.parse_args()
-        return product_schema_list.dump(utils.get_sorted_and_filtered_products(args)).data
+        # return product_schema_list.dump(utils.get_sorted_and_filtered_products(args)).data
+        return utils.get_sorted_and_filtered_products(args)
 
