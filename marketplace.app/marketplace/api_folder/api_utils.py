@@ -628,3 +628,9 @@ def upload_producer_image(producer_id, files):
 def upload_product_image(product_id, files):
     product = get_product_by_id(product_id)
     return upload_image(product, files)
+
+
+# other
+
+def get_number_of_unprocessed_orders_by_producer_id(producer_id):
+    return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())

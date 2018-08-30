@@ -34,6 +34,7 @@ from marketplace.api_folder.product_api import (
   ProductSearchByParams,
 )
 
+
 # TODO CHECK
 
 api.add_resource(GlobalOrders, '/orders')
@@ -53,6 +54,7 @@ api.add_resource(SubcategoryNamesByProducerName, '/categories/producer/<string:p
 api.add_resource(SubcategoryNamesByParentSlugAndProducerName,
                  '/categories/<string:parent_category_slug>/producer/<string:producer_name>')
 api.add_resource(ProducerNamesByCategoryName, '/producers/<string:category_name>')
+api.add_resource(UnrpocessedOrdersByProducerId, '/producers/<int:producer_id>/unprocessed_orders')
 # checked
 api.add_resource(BaseCategories, '/categories/base')
 api.add_resource(Subcategories, '/categories/<int:category_id>/subcategories/')
