@@ -15,6 +15,7 @@ if ($('main.producer-orders').length > 0) {
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(order_status),
+
             success: function (data, status) {
                 $('#saveStatusOrderBtn' + order_id).css('display', 'none');
                 $('#changeOrderStatusBtn' + order_id).css('display', 'block');

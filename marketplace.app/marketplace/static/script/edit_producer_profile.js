@@ -11,7 +11,7 @@ $(document).ready(function () {
             email: $('#producer_email').val(),
             // fileHelp: $('#producer_logo').val(),
             phone: $('#producer_phone').val(),
-            address: $('#producer_adress').val(),
+            address: $('#producer_address').val(),
             description: $('#producer_description').val()
         };
 
