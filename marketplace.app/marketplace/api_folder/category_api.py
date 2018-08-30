@@ -31,6 +31,7 @@ class Subcategories(Resource):
         return response, 200
 
 
+
 class SubcategoriesBySlug(Resource):
     def get(self, category_slug):
         response = dict()
@@ -39,6 +40,7 @@ class SubcategoriesBySlug(Resource):
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = category_schema_list.dump(page.items).data
         return response, 200
+
 
 
 class ProductsByCategory(Resource):
@@ -54,3 +56,14 @@ class PopularProductsByCategory(Resource):
 class ParentCategoryBySubcategoryId(Resource):
     def get(self, category_id):
         return category_schema.dump(utils.get_parent_category_by_category_id(category_id)).data
+
+class SubcategoryNamesByProducerName(Resource):
+    def get(self, producer_name):
+        return {'producer_name': producer_name,
+                "category_names": utils.get_subcategory_names_by_producer_name(producer_name)}
+
+
+class SubcategoryNamesByParentSlugAndProducerName(Resource):
+    def get(self, parent_category_slug, producer_name):
+        return utils.get_subcategory_names_by_parent_category_slug_and_producer_name(parent_category_slug,
+                                                                                     producer_name)
