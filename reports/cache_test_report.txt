@@ -1,0 +1,121 @@
+Для тестирование использовалась утилита wrk
+
+Тест1:
+
+Параметры запуска: wrk -t2 -c100 -d30s -R2000 http://127.0.0.1:5000/api/v1/consumers
+
+В базе 100 пользователей 
+
+Версия без кэширования: 
+
+Running 30s test @ http://127.0.0.1:5000/api/v1/consumers
+  2 threads and 100 connections
+  Thread calibration: mean lat.: 4970.412ms, rate sampling interval: 17793ms
+  Thread calibration: mean lat.: 4983.069ms, rate sampling interval: 17809ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.50s     5.56s   29.16s    58.62%
+    Req/Sec    24.00      0.00    24.00    100.00%
+  1498 requests in 30.05s, 24.68MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:     49.86
+Transfer/sec:    840.97KB
+
+
+Версия с кэшированием:
+
+Running 30s test @ http://127.0.0.1:5000/api/v1/consumers
+  2 threads and 100 connections
+  Thread calibration: mean lat.: 4925.010ms, rate sampling interval: 16859ms
+  Thread calibration: mean lat.: 5013.583ms, rate sampling interval: 16859ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.98s     5.76s   28.43s    51.42%
+    Req/Sec    25.00      0.00    25.00    100.00%
+  1223 requests in 30.05s, 44.38MB read
+  Socket errors: connect 0, read 0, write 0, timeout 351
+Requests/sec:     40.70
+Transfer/sec:      1.48MB
+
+###################################
+
+Тест2:
+
+Параметры запуска: wrk -t2 -c100 -d60s -R2000 http://127.0.0.1:5000/api/v1/consumers
+
+В базе 1000 пользователей
+
+Версия без кэширования:
+
+Running 1m test @ http://127.0.0.1:5000/api/v1/consumers
+  2 threads and 100 connections
+  Thread calibration: mean lat.: 5628.434ms, rate sampling interval: 17596ms
+  Thread calibration: mean lat.: 5526.053ms, rate sampling interval: 17842ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.77s    14.45s    0.99m    57.72%
+    Req/Sec     2.50      0.50     3.00    100.00%
+  353 requests in 1.00m, 58.97MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2602
+Requests/sec:      5.86
+Transfer/sec:      0.98MB
+
+Версия с кэшированием:
+
+Running 1m test @ http://127.0.0.1:5000/api/v1/consumers
+  2 threads and 100 connections
+  Thread calibration: mean lat.: 9223372036854776.000ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 9223372036854776.000ms, rate sampling interval: 10ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.38s    14.28s    0.98m    54.05%
+    Req/Sec     0.78      9.04   111.00     99.25%
+  74 requests in 1.00m, 86.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2926
+Requests/sec:      1.23
+Transfer/sec:      1.43MB
+
+
+###################################
+
+Тест3:
+
+Параметры запуска: wrk -t2 -c100 -d60s -R2000 http://127.0.0.1:5000/api/v1/consumers
+
+В базе 5000 пользователей
+
+Версия без кэширования:
+
+Running 1m test @ http://127.0.0.1:5000/api/v1/consumers
+  2 threads and 100 connections
+  Thread calibration: mean lat.: 9533.440ms, rate sampling interval: 20234ms
+  Thread calibration: mean lat.: 9223372036854776.000ms, rate sampling interval: 10ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.64s    13.94s    0.99m    59.68%
+    Req/Sec     0.65      8.18   111.00     99.37%
+  66 requests in 1.00m, 52.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2934
+  Non-2xx or 3xx responses: 4
+Requests/sec:      1.10
+Transfer/sec:      0.86MB
+root@pc0301:~/junior-market
+
+Версия с кэшированием:
+
+Running 1m test @ http://127.0.0.1:5000/api/v1/consumers
+  2 threads and 100 connections
+  Thread calibration: mean lat.: 8761.344ms, rate sampling interval: 17530ms
+  Thread calibration: mean lat.: 9223372036854776.000ms, rate sampling interval: 10ms
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.31s    13.90s    0.99m    52.86%
+    Req/Sec     0.72      8.60   111.00     99.29%
+  71 requests in 1.00m, 82.93MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2929
+Requests/sec:      1.18
+Transfer/sec:      1.38MB
+
+
+
+
+
+
+
+
+
+
