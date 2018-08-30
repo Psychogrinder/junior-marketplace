@@ -1,14 +1,18 @@
 var getNumberOfUnprocessedOrders;
-if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'producer')) {
-    $(document).ready(function () {
+$(document).ready(function () {
+    if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") === 'producer')) {
+
         var user_id = localStorage.getItem("globalUserId");
-        getNumberOfProductsInCart = function (user_id) {
-            $.get("/api/v1/consumers/" + user_id + "/cart/quantity",
+        getNumberOfUnprocessedOrders = function (user_id) {
+            $.get("/api/v1/producers/" + user_id + "/unprocessed_orders",
                 function (data, status) {
-                    if (data.number_of_products) {
-                        document.getElementById('numberOfProductsInCart').innerHTML = data.number_of_products;
+                    console.log('user id: ' + user_id);
+                    console.log('quantity ' + data.quantity);
+                    if (data.quantity) {
+                        $('#producerOrders').append('<span class=\"badge badge-pill badge-secondary\">' + data.quantity + '</span>');
                     }
                 });
         };
         getNumberOfUnprocessedOrders(user_id);
-    });
+    }
+});
