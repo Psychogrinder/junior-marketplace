@@ -19,6 +19,8 @@ if ($('main.producer-orders').length > 0) {
                 $('#saveStatusOrderBtn').css('display', 'none');
                 $('#changeOrderStatusBtn').css('display', 'block');
                 $('#changeOrderStatusSelect').attr('disabled', 'disabled');
+                var hulla = new hullabaloo();
+                hulla.send("Статус заказа изменен", "secondary");
             }
         });
     }
