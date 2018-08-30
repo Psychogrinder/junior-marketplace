@@ -43,11 +43,23 @@ form .filter-block:first-child {
 
 .hullabaloo.alert.alert-dismissible {
     width: fit-content !important;
-    max-width: 500px  !important;
+    max-width: 500px !important;
+    top: 70px !important;
 }
 
 @media (max-width: 350px) {
     .hullabaloo.alert.alert-dismissible {
         right: 0 !important;
     }
+}
+
+.goods-ended {
+    color: #FF7851 !important;
+    margin-top: 5px;
+    opacity: 0.8;
+}
+
+.goods-ended img {
+    margin-right: 18px;
+    height: 20px;
 }
