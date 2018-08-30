@@ -18,6 +18,7 @@ class GlobalOrders(Resource):
     def post(self):
         args = parser.parse_args()
         utils.post_orders(args)
+        utils.decrease_products_quantity(args['consumer_id'])
         return "Заказ был успешно оформлен", 201
 
 

@@ -210,7 +210,8 @@ def get_producer_names_by_category_name(category_name):
 
 # Get sorted
 def get_sorted_and_filtered_products(args):
-    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url, Producer.name.label('producer_name')).filter(
+    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
+                             Producer.name.label('producer_name')).filter(
         Product.producer_id == Producer.id)
 
     if args['popularity']:
@@ -227,7 +228,8 @@ def get_sorted_and_filtered_products(args):
         # check if the category_name is in English. Then it means it's a parent category
         if args['category_name'][0] in string.ascii_lowercase:
             parent_category_id = db.session.query(Category.id).filter(Category.slug == args['category_name']).first()
-            subcategory_ids = [el[0] for el in db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
+            subcategory_ids = [el[0] for el in
+                               db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
             query = query.filter(Product.category_id.in_(subcategory_ids))
         # else it's a subcategory and the name is in Russian
         else:
@@ -622,3 +624,11 @@ def upload_product_image(product_id, files):
 
 def get_number_of_unprocessed_orders_by_producer_id(producer_id):
     return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
+
+
+def decrease_products_quantity(consumer_id):
+    items = get_cart_by_consumer_id(consumer_id).items
+    for item, quantity in items.items:
+        get_product_by_id(int(item)).quantity -= int(quantity)
+
+def
