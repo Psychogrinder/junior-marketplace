@@ -7,17 +7,24 @@ import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
 
 
+
+
 # каталог
 @app.route('/')
 def index():
     categories = Category.query.filter_by(parent_id=0).all()
     popular_products = utils.get_popular_products()
+    if hasattr(current_user, 'id'):
+        number_of_unprocessed_orders = utils.get_number_of_unprocessed_orders_by_producer_id(current_user.id)
+    else:
+        number_of_unprocessed_orders = None
     return render_template(
         'index.html',
         categories=categories,
         popular_products=popular_products,
         producers=Producer.query.all(),
-        current_user=current_user
+        current_user=current_user,
+        number_of_unprocessed_orders=number_of_unprocessed_orders,
     )
 
 
