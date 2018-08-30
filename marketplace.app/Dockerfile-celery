@@ -1,0 +1,6 @@
+FROM python:3.6
+RUN pip3 install celery redis
+ENV FLASK_APP=runserver.py
+COPY marketplace/ /app/marketplace/
+WORKDIR /app
+CMD ["celery", "worker"]

@@ -1,0 +1,57 @@
+version: "3"
+
+networks:
+  marketplace:
+    external: true
+
+volumes:
+  marketplaceimages:
+    external: true
+  marketplaceapp:
+    external: true
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # args:
+      #   - CELERY_BROKER_URL
+      #   - SQLALCHEMY_DATABASE_URI
+    # environment:
+    #   - CELERY_BROKER_URL=redis://redis:6379/2
+    #   - SQLALCHEMY_DATABASE_URI=postgresql://postgres:1234@db/marketplace.db
+    ports:
+      - "8000:8000"
+    networks:
+      - marketplace
+    # volumes:
+    #   - "marketplaceimages:/app/marketplace/user_images"
+    #   - "marketplaceapp:/app"
+    entrypoint:
+      "flask run --port=8000 --host=0.0.0.0"
+
+
+  redis:
+    image: redis:5.0-rc
+    networks:
+      - marketplace
+
+
+  celery:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - CELERY_BROKER_URL
+    entrypoint:
+      "celery -A marketplace.celery worker --loglevel=info"
+    # volumes:
+    #   - "marketplaceapp:/app"
+    networks:
+      - marketplace
+    # environment:
+    #   - CELERY_BROKER_URL=redis://redis:6379/1
+    depends_on:
+      - redis
+      - app
