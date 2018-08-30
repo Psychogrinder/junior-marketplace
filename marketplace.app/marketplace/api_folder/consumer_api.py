@@ -17,7 +17,7 @@ for arg in consumer_args:
 class GlobalConsumers(Resource):
     def get(self):
         response = dict()
-        page_number = request.args.get('page', type=int, default=1)
+        page_number = utils.get_page_number()
         page = utils.get_all_consumers(page_number)
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = consumer_schema_list.dump(page.items).data
@@ -44,7 +44,7 @@ class ConsumerOrders(Resource):
 
     def get(self, consumer_id):
         response = dict()
-        page_number = request.args.get('page', type=int, default=1)
+        page_number = utils.get_page_number()
         page = utils.get_orders_by_consumer_id(consumer_id, page_number)
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = order_schema_list.dump(page.items).data

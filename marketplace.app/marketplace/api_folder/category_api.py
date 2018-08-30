@@ -1,5 +1,3 @@
-from flask import request
-
 import marketplace.api_folder.api_utils as utils
 from flask_restful import Resource
 
@@ -14,7 +12,7 @@ class CategoryRest(Resource):
 class BaseCategories(Resource):
     def get(self):
         response = dict()
-        page_number = request.args.get('page', type=int, default=1)
+        page_number = utils.get_page_number()
         page = utils.get_all_base_categories(page_number)
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = category_schema_list.dump(page.items).data
@@ -24,23 +22,21 @@ class BaseCategories(Resource):
 class Subcategories(Resource):
     def get(self, category_id):
         response = dict()
-        page_number = request.args.get('page', type=int, default=1)
+        page_number = utils.get_page_number()
         page = utils.get_subcategories_by_category_id(category_id, page_number)
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = category_schema_list.dump(page.items).data
         return response, 200
 
 
-
 class SubcategoriesBySlug(Resource):
     def get(self, category_slug):
         response = dict()
-        page_number = request.args.get('page', type=int, default=1)
+        page_number = utils.get_page_number()
         page = utils.get_subcategories_by_category_slug(category_slug, page_number)
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = category_schema_list.dump(page.items).data
         return response, 200
-
 
 
 class ProductsByCategory(Resource):
@@ -56,6 +52,7 @@ class PopularProductsByCategory(Resource):
 class ParentCategoryBySubcategoryId(Resource):
     def get(self, category_id):
         return category_schema.dump(utils.get_parent_category_by_category_id(category_id)).data
+
 
 class SubcategoryNamesByProducerName(Resource):
     def get(self, producer_name):

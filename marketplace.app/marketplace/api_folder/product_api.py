@@ -13,7 +13,7 @@ for arg in product_args:
 class GlobalProducts(Resource):
     def get(self):
         response = dict()
-        page_number = request.args.get('page', type=int, default=1)
+        page_number = utils.get_page_number()
         page = utils.get_all_products(page_number)
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = product_schema_list.dump(page.items).dump

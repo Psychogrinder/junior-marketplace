@@ -1,4 +1,3 @@
-from flask import request
 from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
 from marketplace.api_folder.schemas import order_schema_list, order_schema
@@ -15,7 +14,7 @@ class GlobalOrders(Resource):
 
     def get(self):
         response = dict()
-        page_number = request.args.get('page', type=int, default=1)
+        page_number = utils.get_page_number()
         page = utils.get_all_orders(page_number)
         response['meta'] = utils.get_meta_from_page(page_number, page)
         response['body'] = order_schema_list.dump(page.items).data
