@@ -1,5 +1,4 @@
-import ast
-from marketplace import cache, REDIS_STORAGE_TIME
+from marketplace import cache
 from flask import request
 from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
