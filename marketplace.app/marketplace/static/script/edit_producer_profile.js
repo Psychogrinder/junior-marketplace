@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    $(".phone_mask").mask("+7(999)999-99-99");
+
     $('#save_producer_profile').click(function(){
         var addr = window.location + '';
         addr = addr.split('/');
@@ -12,13 +14,14 @@ $(document).ready(function () {
             address: $('#producer_adress').val(),
             description: $('#producer_description').val()
         };
+        
         $.ajax({
             url: '/api/v1/producers/' + producer_id,
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(producerObject),
             success: function(data, status) {
-                
+
             }
         });
     });

@@ -3,11 +3,18 @@ from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
 from marketplace.api_folder.schemas import product_schema_list, product_schema
 
+
 product_args = ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']
 parser = reqparse.RequestParser()
 
 for arg in product_args:
     parser.add_argument(arg)
+
+search_parser = reqparse.RequestParser()
+search_parser.add_argument(
+    'find', type=str, location='args', required=True
+)
+
 
 
 class GlobalProducts(Resource):
@@ -60,6 +67,16 @@ class ProductsInCart(Resource):
 
 
 
+class ProductSearchByParams(Resource):
+    def get(self):
+        args = search_parser.parse_args()
+        search_query = '&'.join(args['find'].split(' '))
+        result = utils.search_products_by_param(search_query)
+        if result is None:
+            return {}, 400
+        return product_schema_list.dump(result).data
+                   
+                    
 product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_storage']
 
 filter_parser = reqparse.RequestParser()

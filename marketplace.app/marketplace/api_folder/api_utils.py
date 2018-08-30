@@ -14,6 +14,8 @@ from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
 from marketplace import db, app
+from sqlalchemy import func, desc, exc
+from sqlalchemy_searchable import inspect_search_vectors
 
 
 # Abort methods
@@ -363,6 +365,16 @@ def producer_has_product_with_such_name(args):
         return True
 
 
+def search_products_by_param(search_query):
+    vector = inspect_search_vectors(Product)[0]
+    try:
+        result = db.session.query(Product).filter(
+                Product.search_vector.match(search_query)
+            ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+    except exc.ProgrammingError:
+        return None
+    return result
+
 # Post methods
 
 def post_orders(args):
@@ -622,13 +634,16 @@ def upload_product_image(product_id, files):
     product = get_product_by_id(product_id)
     return upload_image(product, files)
 
+  
+def get_number_of_unprocessed_orders_by_producer_id(producer_id):
+    return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
 
 # Pagination utils
 
 def get_meta_from_page(page_number, page):
-    return {'page': page_number, 'has_next': page.has_next, 'has_prev': page.has_prev}
+  return {'page': page_number, 'has_next': page.has_next, 'has_prev': page.has_prev}
 
 
 def get_page_number():
-    page = request.args.get('page', type=int, default=1)
-    return page if page > 0 else 1
+  page = request.args.get('page', type=int, default=1)
+  return page if page > 0 else 1

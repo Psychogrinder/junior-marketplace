@@ -25,10 +25,9 @@
                     {% endif %}
                     {% if current_user.entity == 'producer' %}
                         <li class="nav-item backlighting_nav_item">
-                            <a class="nav-link nav-link-producer_orders" href={{ url_for( 'producer_orders', producer_id =
+                            <a class="nav-link nav-link-producer_orders" id="producerOrders" href={{ url_for( 'producer_orders', producer_id =
                         current_user.id ) }}>
                                 ЗАКАЗЫ
-                                <span class="badge badge-pill badge-secondary">1</span>
                             </a>
                         </li>
                         <li class="nav-item backlighting_nav_item">

@@ -5,6 +5,7 @@ load_dotenv()
 
 
 class Config(object):
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@localhost/marketplace.db'
     UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/user_images'
     SECRET_KEY = 'secret-key'
@@ -17,6 +18,8 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
 
+    
     CELERY_BROKER_URL = 'redis://localhost:6379/0',
 
     ITEMS_PER_PAGE = 10
+
