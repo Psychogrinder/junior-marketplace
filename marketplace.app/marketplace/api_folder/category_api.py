@@ -8,6 +8,7 @@ class CategoryRest(Resource):
     def get(self, slug):
         return category_schema.dump(utils.get_category_by_name(slug)).data
 
+
 class BaseCategories(Resource):
     def get(self):
         return category_schema_list.dump(utils.get_all_base_categories()).data
@@ -17,9 +18,11 @@ class Subcategories(Resource):
     def get(self, category_id):
         return category_schema_list.dump(utils.get_subcategories_by_category_id(category_id)).data
 
+
 class SubcategoriesBySlug(Resource):
     def get(self, category_slug):
         return category_schema_list.dump(utils.get_subcategories_by_category_slug(category_slug)).data
+
 
 class ProductsByCategory(Resource):
     def get(self, category_id):
@@ -30,6 +33,19 @@ class PopularProductsByCategory(Resource):
     def get(self, category_id, direction):
         return product_schema_list.dump(utils.get_popular_products_by_category_id(category_id, direction)).data
 
+
 class ParentCategoryBySubcategoryId(Resource):
     def get(self, category_id):
         return category_schema.dump(utils.get_parent_category_by_category_id(category_id)).data
+
+
+class SubcategoryNamesByProducerName(Resource):
+    def get(self, producer_name):
+        return {'producer_name': producer_name,
+                "category_names": utils.get_subcategory_names_by_producer_name(producer_name)}
+
+
+class SubcategoryNamesByParentSlugAndProducerName(Resource):
+    def get(self, parent_category_slug, producer_name):
+        return utils.get_subcategory_names_by_parent_category_slug_and_producer_name(parent_category_slug,
+                                                                                     producer_name)
