@@ -50,6 +50,12 @@
                         Редактировать
                         </a>
                     </p>
+                    {% if product.quantity == 0 %}
+                    <p class="goods-ended">
+                        <img src={{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}>
+                        Нет в наличии
+                    </p>
+                    {% endif %}
                 </div>
                 </a>
             </div>
