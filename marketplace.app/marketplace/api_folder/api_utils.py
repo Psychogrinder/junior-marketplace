@@ -366,11 +366,12 @@ def search_products_by_param(search_query):
     vector = inspect_search_vectors(Product)[0]
     try:
         result = db.session.query(Product).filter(
-                Product.search_vector.match(search_query)
-            ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+            Product.search_vector.match(search_query)
+        ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
     except exc.ProgrammingError:
         return None
     return result
+
 
 # Post methods
 
@@ -640,7 +641,15 @@ def get_number_of_unprocessed_orders_by_producer_id(producer_id):
 
 def decrease_products_quantity(consumer_id):
     items = get_cart_by_consumer_id(consumer_id).items
-    for item, quantity in items.items:
+    for item, quantity in items.items():
         get_product_by_id(int(item)).quantity -= int(quantity)
+        get_product_by_id(int(item)).times_ordered += 1
+        db.session.commit()
 
-def
+
+def increase_products_quantity(consumer_id):
+    items = get_cart_by_consumer_id(consumer_id).items
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity -= int(quantity)
+        get_product_by_id(int(item)).times_ordered += 1
+        db.session.commit()
