@@ -4,6 +4,7 @@ from marketplace import email_tools, cache, REDIS_STORAGE_TIME
 import os
 import re
 import json
+import string
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
@@ -11,6 +12,8 @@ from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
 from marketplace import db, app
+from sqlalchemy import func, desc, exc
+from sqlalchemy_searchable import inspect_search_vectors
 
 
 # Abort methods
@@ -191,33 +194,62 @@ def get_producer_by_name(name):
     return Producer.query.filter_by(name=name).first()
 
 
+def get_category_names_by_producer_name(producer_name):
+    return [category.name for category in Producer.query.filter_by(name=producer_name).first().categories]
+
+
+def get_subcategory_names_by_parent_category_slug_and_producer_name(parent_category_slug, producer_name):
+    subcategories = get_subcategories_by_category_id(Category.query.filter_by(slug=parent_category_slug).first().id)
+    all_producer_category_names = [category.name for category in
+                                   Producer.query.filter_by(name=producer_name).first().categories]
+    return [category.name for category in subcategories if category.name in all_producer_category_names]
+
+
+def get_producer_names_by_category_name(category_name):
+    category = Category.query.filter_by(name=category_name).first()
+    producers = get_all_producers()
+    return [producer.name for producer in producers if category in producer.categories]
+
+
 # Get sorted
 def get_sorted_and_filtered_products(args):
-    products = Product.query
+    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
+                             Producer.name.label('producer_name')).filter(
+        Product.producer_id == Producer.id)
 
     if args['popularity']:
         if args['popularity'] == 'down':
-            products = products.order_by(Product.times_ordered.desc())
-
-    if args['category_name']:
-        category_id = Category.query.filter_by(name=args['category_name']).first().id
-        products = products.filter_by(category_id=category_id)
+            query = query.order_by(Product.times_ordered.desc())
 
     if args['producer_name']:
-        producer_id = Category.query.filter_by(name=args['producer_name']).first().id
-        products = products.filter_by(producer_id=producer_id)
+        query = query.filter(Producer.name == args['producer_name'])
 
-    if args['in_storage'] == int(1):
-        products = products.filter(Product.quantity > 0)
+    if args['in_stock'] == 1:
+        query = query.filter(Product.quantity > 0)
 
-    products = products.all()
+    if args['category_name']:
+        # check if the category_name is in English. Then it means it's a parent category
+        if args['category_name'][0] in string.ascii_lowercase:
+            parent_category_id = db.session.query(Category.id).filter(Category.slug == args['category_name']).first()
+            subcategory_ids = [el[0] for el in
+                               db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
+            query = query.filter(Product.category_id.in_(subcategory_ids))
+        # else it's a subcategory and the name is in Russian
+        else:
+            category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
+            query = query.filter(Product.category_id == category_id)
 
     if args['price']:
         if args['price'] == 'down':
-            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=True)
+            query = query.order_by(Product.price.desc())
         elif args['price'] == 'up':
-            products = sorted(products, key=lambda product: float(product.price.strip('₽').strip(' ')))
+            query = query.order_by(Product.price.asc())
 
+    product_schema = ("id", "name", "price", "photo_url", "producer_name")
+    products_data = query.all()
+    products = []
+    for product_data in products_data:
+        products.append(dict(zip(product_schema, product_data)))
     return products
 
 
@@ -329,6 +361,17 @@ def check_producer_categories(new_category_id, product):
 def producer_has_product_with_such_name(args):
     if Product.query.filter_by(producer_id=args['producer_id']).filter_by(name=args['name']).first():
         return True
+
+
+def search_products_by_param(search_query):
+    vector = inspect_search_vectors(Product)[0]
+    try:
+        result = db.session.query(Product).filter(
+            Product.search_vector.match(search_query)
+        ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+    except exc.ProgrammingError:
+        return None
+    return result
 
 
 # Post methods
@@ -591,6 +634,7 @@ def upload_product_image(product_id, files):
     return upload_image(product, files)
 
 
+
 # Converting
 
 def convert_byte_dict_keys_to_string(data):
@@ -626,3 +670,24 @@ def cache_and_return(path, response):
 def get_cached(path):
     response = cache.hgetall(path)
     return convert_byte_dict_keys_to_string(response)
+
+def get_number_of_unprocessed_orders_by_producer_id(producer_id):
+    return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
+
+
+def decrease_products_quantity_and_increase_times_ordered(consumer_id):
+    items = get_cart_by_consumer_id(consumer_id).items
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity -= int(quantity)
+        get_product_by_id(int(item)).times_ordered += 1
+        db.session.commit()
+
+
+def increase_products_quantity_and_decrease_times_ordered(order_id):
+    order = get_order_by_id(order_id)
+    items = order.order_items_json
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity += int(quantity)
+        get_product_by_id(int(item)).times_ordered -= 1
+        db.session.commit()
+

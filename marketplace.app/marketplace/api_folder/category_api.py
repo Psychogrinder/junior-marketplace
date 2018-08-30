@@ -17,6 +17,7 @@ class CategoryRest(Resource):
             return utils.get_cached(path), 200
 
 
+
 class BaseCategories(Resource):
     def get(self):
         path = request.url
@@ -37,6 +38,7 @@ class Subcategories(Resource):
             return utils.get_cached_list(path), 200
 
 
+
 class SubcategoriesBySlug(Resource):
     def get(self, category_slug):
         path = request.url
@@ -45,6 +47,7 @@ class SubcategoriesBySlug(Resource):
             return utils.cache_list_and_return(path, subcategories), 200
         else:
             return utils.get_cached_list(path), 200
+
 
 
 class ProductsByCategory(Resource):
@@ -67,11 +70,28 @@ class PopularProductsByCategory(Resource):
             return utils.get_cached_list(path), 200
 
 
+
 class ParentCategoryBySubcategoryId(Resource):
     def get(self, category_id):
+
         path = request.url
         if not cache.exists(path):
             category = category_schema.dump(utils.get_parent_category_by_category_id(category_id)).data
             return utils.cache_and_return(path, category), 200
         else:
             return utils.get_cached(path), 200
+
+        return category_schema.dump(utils.get_parent_category_by_category_id(category_id)).data
+
+
+class SubcategoryNamesByProducerName(Resource):
+    def get(self, producer_name):
+        return {'producer_name': producer_name,
+                "category_names": utils.get_subcategory_names_by_producer_name(producer_name)}
+
+
+class SubcategoryNamesByParentSlugAndProducerName(Resource):
+    def get(self, parent_category_slug, producer_name):
+        return utils.get_subcategory_names_by_parent_category_slug_and_producer_name(parent_category_slug,
+                                                                                     producer_name)
+
