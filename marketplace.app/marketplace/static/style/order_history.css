@@ -14,11 +14,6 @@
 
 .delivery_container {
     padding-bottom: 30px;
-    border-bottom: 2px solid #eee;
-}
-
-.delivery_container:last-of-type {
-    border: none;
 }
 
 .delivery span,
@@ -51,4 +46,16 @@
 
 .order-product-photo {
     max-width: 100%;
+}
+
+.order-block-separator {
+    padding: 0;
+}
+
+.order-block-separator {
+    border-bottom: 1px solid #eee;
+}
+
+.order-block-separator:last-child {
+    border-bottom: none;
 }
