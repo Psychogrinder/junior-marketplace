@@ -66,7 +66,6 @@ def edit_product(producer_id, product_id):
 
 @app.route('/producer/<producer_id>/create_product')
 def create_product(producer_id):
-    # measurement_units = ['кг', 'л', 'шт']
     if current_user.id == int(producer_id):
         return render_template('create_product.html', current_user=current_user)
     else:
