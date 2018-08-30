@@ -7,6 +7,8 @@ import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
 
 
+
+
 # каталог
 @app.route('/')
 def index():
@@ -17,7 +19,7 @@ def index():
         categories=categories,
         popular_products=popular_products,
         producers=Producer.query.all(),
-        current_user=current_user
+        current_user=current_user,
     )
 
 
