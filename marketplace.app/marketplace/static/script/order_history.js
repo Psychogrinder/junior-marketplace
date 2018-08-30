@@ -7,6 +7,7 @@ if ($('main.order-history').length > 0) {
                 $('#showOrderCancelModal').remove();
                 $('.modal-backdrop').css("display", "none");
                 $('.orders-block'+order_id).remove();
+                $('body').removeClass('modal-open');
             }
         });
     }

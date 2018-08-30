@@ -5,6 +5,7 @@
 
 .edit-product-item {
     margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
 .edit-product-item #photo {
@@ -37,4 +38,4 @@ input::-moz-placeholder { font-weight: 100; }
 input::-webkit-input-placeholder { font-weight: 100; }
 input::-ms-input-placeholder { font-weight: 100; }
 input::-ms-input-placeholder { font-weight: 100; }
-input::placeholder { font-weight: 100; } 
+input::placeholder { font-weight: 100; }

@@ -56,10 +56,6 @@
     margin-right: 30px;
 }
 
-.total_box,
-.order_box{
-    padding: 30px 0;
-}
 
 .total_box span{
     display: inline-block;
@@ -101,4 +97,46 @@
 
 .hidden{
     display: none;
+}
+
+.select-order-status {
+    max-width: 200px;
+}
+
+.producer-orders .breadcrumbs {
+    margin-bottom: 2rem;
+}
+
+.producer-order-delivery {
+    justify-content: flex-end;
+}
+
+.table_global_cell.producer-orders-item {
+    padding: 0;
+    padding-left: 10px;
+}
+
+#saveStatusOrderBtn {
+    display: none;
+}
+
+#changeOrderStatusBtn,
+#saveStatusOrderBtn {
+    width: fit-content;
+    margin-top: auto;
+}
+
+.common-view-btn#changeOrderStatusBtn,
+.common-view-btn#saveStatusOrderBtn{
+    margin-top: 1rem;
+}
+
+#saveStatusOrderBtnTable {
+    display: none;
+}
+
+#changeOrderStatusBtnTable,
+#saveStatusOrderBtnTable {
+    width: fit-content;
+    margin-top: auto;
 }

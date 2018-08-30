@@ -24,20 +24,21 @@
                                          height="auto">
                                 </div>
                                 <div class="col-1 cart_product_stock_title">
-                                    <span>Название</span>
-                                    <span>Цена</span>
-                                    <span>Артикул</span>
+                                    <p>Название</p>
+                                    <p>Цена</p>
+                                    <p>Артикул</p>
+                                    <p>Вес</p>
                                 </div>
                                 <div class="col-3 cart_product_stock_info">
-                                    <span>{{ product.name }}</span>
-                                    <span>{{ product.price }}руб/{{ product.measurement_unit }}</span>
-                                    <span id="productIdCart">{{ product.id }}</span>
+                                    <p>{{ product.name }}</p>
+                                    <p>{{ product.price }}</p>
+                                    <p id="productIdCart">#{{ product.id }}</p>
+                                    <p>
+                                        {{ product.weight }} {{ product.measurement_unit }}
+                                    </p>
                                 </div>
-                                <div class="col-1">
-                                    <span>Вес</span>
-                                </div>
-                                <div class="col-4 quantity_container">
-                                    <span>Количество</span>
+                                <div class="col-3 quantity_container">
+                                    <p>Количество</p>
                                     <form class="product_quantity">
                                         <div class="value-button" id='decrease{{ product.id }}'
                                              onclick="decreaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
