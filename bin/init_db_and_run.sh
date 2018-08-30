@@ -17,9 +17,7 @@ export FLASK_DEBUG=1
 if [ -d "migrations" ]; then
   rm -rf migrations
 fi
-flask db init
-flask db migrate
-flask db upgrade
+python manage.py init_db
 
 cd ..
 bin/create_content.sh

@@ -3,7 +3,9 @@ import os
 
 load_dotenv()
 
+
 class Config(object):
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@localhost/marketplace.db'
     UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/user_images'
     SECRET_KEY = 'secret-key'

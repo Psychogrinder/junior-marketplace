@@ -19,4 +19,4 @@ flask_mail
 python-dotenv
 celery
 redis
-
+SQLAlchemy-Searchable

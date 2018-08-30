@@ -34,6 +34,6 @@ class Orders(Resource):
         return utils.delete_order_by_id(order_id), 202
 
 
-class UnrpocessedOrdersByProducerId(Resource):
+class UnprocessedOrdersByProducerId(Resource):
     def get(self, producer_id):
         return {"quantity": utils.get_number_of_unprocessed_orders_by_producer_id(producer_id)}, 200
