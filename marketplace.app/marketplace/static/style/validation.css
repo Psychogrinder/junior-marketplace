@@ -1,0 +1,5 @@
+.parsley-errors-list.filled {
+    margin: 0;
+    list-style: none;
+    color: red;
+}
