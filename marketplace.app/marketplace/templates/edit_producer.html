@@ -19,14 +19,14 @@
                 </a>
             </p>
         </div>
-        <form action="#">
+        <form action="#" id="editProducerForm" data-parsley-validate>
             <div class="row edit-profile-item">
                 <label for="producer_name" class="col-4 col-sm-2">Название фермы</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="producer_name" placeholder="Сельхоз Ивана" value={{ producer.name }}>
+                <input type="text" class="form-control col-8 col-sm-4" id="producer_name" placeholder="Сельхоз Ивана" value={{ producer.name }} required>
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_contact_person" class="col-4 col-sm-2">Контактное лицо</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="producer_contact_person" placeholder="Иван" value="{{ producer.person_to_contact }}">
+                <input type="text" class="form-control col-8 col-sm-4" id="producer_contact_person" placeholder="Иван" value="{{ producer.person_to_contact }}" required>
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_email" class="col-4 col-sm-2">Email</label>
@@ -38,12 +38,12 @@
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_phone" class="col-4 col-sm-2">Телефон</label>
-                <input type="text" class="form-control col-8 col-sm-4 phone_mask" id="producer_phone" placeholder="+7(___)___-__-__" value={{ producer.phone_number }}>
+                <input type="text" class="form-control col-8 col-sm-4 phone_mask" id="producer_phone" placeholder="+7(___)___-__-__" value={{ producer.phone_number }} required>
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_adress" class="col-4 col-sm-2">Адрес</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="producer_adress"
-                       placeholder="Улица Пушкина д 14 кв 58" value={{ producer.address }}>
+                       placeholder="Улица Пушкина д 14 кв 58" value={{ producer.address }} required>
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_description" class="col-4 col-sm-2">Описание</label>

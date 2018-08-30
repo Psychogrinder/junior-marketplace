@@ -14,15 +14,21 @@ $(document).ready(function () {
             address: $('#producer_adress').val(),
             description: $('#producer_description').val()
         };
-        
-        $.ajax({
-            url: '/api/v1/producers/' + producer_id,
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(producerObject),
-            success: function(data, status) {
 
-            }
+        function submitEditProfileForm() {
+            $.ajax({
+                url: '/api/v1/producers/' + producer_id,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(producerObject),
+                success: function(data, status) {
+
+                }
+            });
+        };
+
+        $('#editProducerForm').submit(function() {
+            submitEditProfileForm();
         });
     });
 });
