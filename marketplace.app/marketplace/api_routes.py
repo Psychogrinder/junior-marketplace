@@ -16,7 +16,7 @@ from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders
 from marketplace.api_folder.producer_api import (
-    UnprocessedOrdersByProducerId
+    UnprocessedOrdersByProducerId,
     ProductsByProducer,
     GlobalProducers,
     ProducerRest,
