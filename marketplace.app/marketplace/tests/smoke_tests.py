@@ -3,13 +3,7 @@ from path_file import *
 from marketplace.models import Category, User, Product, Producer
 import unittest
 from urllib.request import Request, urlopen
-
 from urllib.error import HTTPError
-from flask_login import current_user, login_user, logout_user, login_required
-
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-
 
 def parseApiRoutes():
     file = '../views.py'
@@ -147,10 +141,6 @@ class TestSmoke(unittest.TestCase):
             self.assertNotEqual(200, getResponseCode(test_url))
 
         print('Auth routes are OK.\n')
-
-
-    def testToken(self):
-        pass
 
     def tearDown(self):
         pass
