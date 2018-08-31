@@ -1,5 +1,5 @@
 from werkzeug.contrib.cache import MemcachedCache
-
+import json
 from marketplace import cache
 from flask import request
 from flask_restful import Resource, reqparse
@@ -16,18 +16,25 @@ parser = reqparse.RequestParser()
 for arg in consumer_args:
     parser.add_argument(arg)
 
-lcache = MemcachedCache(['127.0.0.1:11211'])
+# lcache = MemcachedCache(['127.0.0.1:11211'])
 
 class GlobalConsumers(Resource):
+    # def get(self):
+    #     path = request.url
+    #     response = lcache.get(path)
+    #     if response is None:
+    #         response =  consumer_schema_list.dump(utils.get_all_consumers()).data
+    #         lcache.set(path, response, 1)
+    #         return response, 200
+    #     else:
+    #         return response, 200
     def get(self):
         path = request.url
-        response = lcache.get(path)
-        if response is None:
-            response =  consumer_schema_list.dump(utils.get_all_consumers()).data
-            lcache.set(path, response, 1)
-            return response, 200
+        if not cache.exists(path):
+            consumers = consumer_schema_list.dump(utils.get_all_consumers()).data
+            return utils.cache_list_and_return(path, consumers), 200
         else:
-            return response, 200
+            return json.loads(utils.get_cached_list(path)), 200
 
     def post(self):
         args = parser.parse_args()
