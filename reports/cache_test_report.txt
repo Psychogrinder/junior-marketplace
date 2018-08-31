@@ -10,30 +10,28 @@
 
 Running 30s test @ http://127.0.0.1:5000/api/v1/consumers
   2 threads and 100 connections
-  Thread calibration: mean lat.: 4970.412ms, rate sampling interval: 17793ms
-  Thread calibration: mean lat.: 4983.069ms, rate sampling interval: 17809ms
+  Thread calibration: mean lat.: 4783.711ms, rate sampling interval: 17219ms
+  Thread calibration: mean lat.: 4379.800ms, rate sampling interval: 17743ms
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    19.50s     5.56s   29.16s    58.62%
-    Req/Sec    24.00      0.00    24.00    100.00%
-  1498 requests in 30.05s, 24.68MB read
-  Socket errors: connect 0, read 0, write 0, timeout 13
-Requests/sec:     49.86
-Transfer/sec:    840.97KB
-
+    Latency    19.09s     5.53s   28.51s    58.71%
+    Req/Sec    25.00      0.00    25.00    100.00%
+  1532 requests in 30.26s, 25.37MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:     50.63
+Transfer/sec:    858.59KB
 
 Версия с кэшированием:
 
 Running 30s test @ http://127.0.0.1:5000/api/v1/consumers
   2 threads and 100 connections
-  Thread calibration: mean lat.: 4925.010ms, rate sampling interval: 16859ms
-  Thread calibration: mean lat.: 5013.583ms, rate sampling interval: 16859ms
+  Thread calibration: mean lat.: 4396.101ms, rate sampling interval: 15450ms
+  Thread calibration: mean lat.: 4392.123ms, rate sampling interval: 15450ms
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.98s     5.76s   28.43s    51.42%
-    Req/Sec    25.00      0.00    25.00    100.00%
-  1223 requests in 30.05s, 44.38MB read
-  Socket errors: connect 0, read 0, write 0, timeout 351
-Requests/sec:     40.70
-Transfer/sec:      1.48MB
+    Latency    16.96s     4.83s   25.43s    58.41%
+    Req/Sec   153.00      0.00   153.00    100.00%
+  9125 requests in 30.01s, 151.11MB read
+Requests/sec:    304.10
+Transfer/sec:      5.04MB
 
 ###################################
 
@@ -61,16 +59,15 @@ Transfer/sec:      0.98MB
 
 Running 1m test @ http://127.0.0.1:5000/api/v1/consumers
   2 threads and 100 connections
-  Thread calibration: mean lat.: 9223372036854776.000ms, rate sampling interval: 10ms
-  Thread calibration: mean lat.: 9223372036854776.000ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 5782.755ms, rate sampling interval: 17334ms
+  Thread calibration: mean lat.: 5780.608ms, rate sampling interval: 17530ms
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    36.38s    14.28s    0.98m    54.05%
-    Req/Sec     0.78      9.04   111.00     99.25%
-  74 requests in 1.00m, 86.44MB read
-  Socket errors: connect 0, read 0, write 0, timeout 2926
-Requests/sec:      1.23
-Transfer/sec:      1.43MB
-
+    Latency    34.06s    13.80s    0.96m    59.67%
+    Req/Sec    23.50      0.50    24.00    100.00%
+  2724 requests in 1.00m, 449.75MB read
+  Socket errors: connect 0, read 0, write 0, timeout 323
+Requests/sec:     45.21
+Transfer/sec:      7.46MB
 
 ###################################
 
@@ -100,15 +97,16 @@ root@pc0301:~/junior-market
 
 Running 1m test @ http://127.0.0.1:5000/api/v1/consumers
   2 threads and 100 connections
-  Thread calibration: mean lat.: 8761.344ms, rate sampling interval: 17530ms
   Thread calibration: mean lat.: 9223372036854776.000ms, rate sampling interval: 10ms
+  Thread calibration: mean lat.: 9504.768ms, rate sampling interval: 19922ms
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    35.31s    13.90s    0.99m    52.86%
-    Req/Sec     0.72      8.60   111.00     99.29%
-  71 requests in 1.00m, 82.93MB read
-  Socket errors: connect 0, read 0, write 0, timeout 2929
-Requests/sec:      1.18
-Transfer/sec:      1.38MB
+    Latency    36.68s    15.02s    0.97m    46.69%
+    Req/Sec     2.40     17.96   333.00     98.02%
+  261 requests in 1.00m, 218.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2689
+Requests/sec:      4.33
+Transfer/sec:      3.62MB
+
 
 
 
