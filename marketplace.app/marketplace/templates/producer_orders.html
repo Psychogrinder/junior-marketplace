@@ -131,10 +131,10 @@
                                 {% else %}
                                 <option value="Обрабатывается">Обрабатывается</option>
                                 {% endif %}
-                                {% if order.status == 'Необработан' %}
-                                <option value="Необработан" selected>Не обработан</option>
+                                {% if order.status == 'Не обработан' %}
+                                <option value="Не обработан" selected>Не обработан</option>
                                 {% else %}
-                                <option value="Необработан">Не обработан</option>
+                                <option value="Не обработан">Не обработан</option>
                                 {% endif %}
                                 {% if order.status == 'Отправлен' %}
                                 <option value="Отправлен" selected>Отправлен</option>
@@ -167,7 +167,7 @@
 
     <!-- Table view -->
 
-    <div class="table_global_container">
+    <div class="table_global_container" id="producerOrderSectionTable">
         {% for order in orders %}
         <div class="container table_container hidden">
             <div class="table_global_row">
@@ -251,10 +251,10 @@
                         {% else %}
                         <option value="Обрабатывается">Обрабатывается</option>
                         {% endif %}
-                        {% if order.status == 'Необработан' %}
-                        <option value="Необработан" selected>Необработан</option>
+                        {% if order.status == 'Не обработан' %}
+                        <option value="Не обработан" selected>Не обработан</option>
                         {% else %}
-                        <option value="Необработан">Необработан</option>
+                        <option value="Не обработан">Не обработан</option>
                         {% endif %}
                         {% if order.status == 'Отправлен' %}
                         <option value="Отправлен" selected>Отправлен</option>

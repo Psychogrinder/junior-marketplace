@@ -54,6 +54,8 @@ if ($('main.producer-orders').length > 0) {
         });
     }
 
+    let currentOrders;
+
     // data for request to get filtered orders
     let orderFilter = {
         producer_id: null,
@@ -74,6 +76,10 @@ if ($('main.producer-orders').length > 0) {
         let producerOrderSection = document.getElementById("producerOrderSection");
         while (producerOrderSection.firstChild) {
             producerOrderSection.removeChild(producerOrderSection.firstChild);
+        }
+        let producerOrderSectionTable = document.getElementById("producerOrderSectionTable");
+        while (producerOrderSectionTable.firstChild) {
+            producerOrderSectionTable.removeChild(producerOrderSectionTable.firstChild);
         }
     }
 
@@ -118,16 +124,15 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="row">' +
                 '<div class="col-4">Статус заказа:</div>' +
                 '<div class="col-8">' +
-                '<select class="form-control select-order-status" disabled name="subcategory" id="changeOrderStatusSelect">' +
-                '<option value="Обрабатывается">Все</option>' +
-                '<option value="Обрабатывается">Не обработан</option>' +
+                '<select class="form-control select-order-status" disabled name="subcategory" id="changeOrderStatusSelect' + i + '">' +
+                '<option value="Не обработан">Не обработан</option>' +
                 '<option value="Обрабатывается">Обрабатывается</option>' +
-                '<option value="Обрабатывается">Отправлен</option>' +
-                '<option value="Обрабатывается">Готов к самовывозу</option>' +
-                '<option value="Обрабатывается">Завершён</option>' +
+                '<option value="Отправлен">Отправлен</option>' +
+                '<option value="Готов к самовывозу">Готов к самовывозу</option>' +
+                '<option value="Завершён">Завершён</option>' +
                 '</select>' +
-                '<button class="btn btn-warning common-view-btn" id="changeOrderStatusBtn">Изменить</button>' +
-                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtn" onclick="changeOrderStatus(' + orders[i].id + ')">Сохранить' +
+                '<button class="btn btn-warning common-view-btn" id="changeOrderStatusBtn' + i + '">Изменить</button>' +
+                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtn' + i + '" onclick="changeOrderStatus(' + orders[i].id + ')">Сохранить' +
                 '</button>' +
                 '</div>' +
                 '</div>' +
@@ -170,27 +175,148 @@ if ($('main.producer-orders').length > 0) {
         }
     }
 
+    function add_new_orders_table_view(orders) {
+        for (var i = 0; i < orders.length; i++) {
+            $("#producerOrderSectionTable").append(
+                '<div class="container table_container hidden">' +
+                '<div class="table_global_row">' +
+                '<div class="table_global_cell">' +
+                '<div>Номер заказа</div>' +
+                '<div class="main-text">' + orders[i].id + '</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Покупатель</div>' +
+                '<div class="main-text">' + orders[i].first_name + ' ' + orders[i].last_name + '</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Телефон</div>' +
+                '<div class="main-text">' + orders[i].consumer_phone + '</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>E-mail</div>' +
+                '<div class="main-text">' + orders[i].consumer_email + '</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Дата заказа</div>' +
+                '<div class="main-text">' + orders[i].order_timestamp + '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="table_global_row">' +
+                '<div class="table_global_cell">' +
+                '<div>Товар</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Цена</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Артикул</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Количество</div>' +
+                '</div>' +
+                '</div>' +
+                '<div id="innerTableProductsSection' + i + '"></div>' +
+                '<div class="table_global_row">' +
+                '<div class="table_global_cell">' +
+                '<div>Способ доставки</div>' +
+                '<div class="main-text">' + orders[i].delivery_method + '</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Адрес</div>' +
+                '<div class="main-text">' + orders[i].delivery_address + '</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Сумма заказа</div>' +
+                '<div class="main-text">' + orders[i].total_cost + '</div>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<div>Статус заказа</div>' +
+                '<select class="form-control select-order-status" id="changeOrderStatusSelectTable' + i + '" name="subcategory" disabled>' +
+                '<option value="Не обработан">Не обработан</option>' +
+                '<option value="Обрабатывается">Обрабатывается</option>' +
+                '<option value="Отправлен">Отправлен</option>' +
+                '<option value="Готов к самовывозу">Готов к самовывозу</option>' +
+                '<option value="Завершён">Завершён</option>' +
+                '</select>' +
+                '</div>' +
+                '<div class="table_global_cell">' +
+                '<button class="btn btn-warning" id="changeOrderStatusBtnTable' + i + '">Изменить</button>' +
+                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable' + i + '" ' +
+                'onclick="changeOrderStatusTable(' + orders[i].id + ')">Сохранить</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
+            );
+            var items = orders[i]['items'];
+            for (var p = 0; p < items.length; p++) {
+                $("#innerTableProductsSection" + i).append(
+                    '<div class="table_global_row">' +
+                    '<div class="table_global_cell producer-orders-item">' +
+                    '<div class="main-text">' + items[p].name + '</div>' +
+                    '</div>' +
+                    '<div class="table_global_cell producer-orders-item">' +
+                    '<div class="main-text">' + items[p].price + items[p].weight + items[p].measurement_unit + '</div>' +
+                    '</div>' +
+                    '<div class="table_global_cell producer-orders-item">' +
+                    '<div class="main-text">' + items[p].id + '</div>' +
+                    '</div>' +
+                    '<div class="table_global_cell producer-orders-item">' +
+                    '<div class="main-text">' + items[p].quantity + '</div>' +
+                    '</div>' +
+                    '</div>'
+                );
+            }
+        }
+    }
+
+    function set_selected_options() {
+        for (var i = 0; i < currentOrders.length; i++) {
+            let currentSelect = document.getElementById('changeOrderStatusSelect' + i);
+            for (var o = 0; o < currentSelect.options.length; o++) {
+                if (currentSelect.options[o].value === currentOrders[i].status) {
+                    currentSelect.options[o].selected = 'selected'
+                }
+            }
+        }
+    }
+
+    // TODO add save status functionality
+    function add_event_listeners_to_buttons(i) {
+        $('body').on('click', '#changeOrderStatusBtn' + i, function () {
+            this.style.display = 'none';
+            $('#changeOrderStatusSelect' + i).removeAttr('disabled');
+            $('#saveStatusOrderBtn' + i).css('display', 'block');
+        });
+
+         $('body').on('click', '#saveOrderStatusBtn' + i, function () {
+            this.style.display = 'none';
+            $('#changeOrderStatusSelect' + i).addAttr('disabled');
+            $('#saveStatusOrderBtn' + i).css('display', 'block');
+        });
+
+        $('#saveStatusOrderBtn' + i).css('display', 'none');
+        $('body').on('click', '#changeOrderStatusBtnTable' + i, function () {
+            this.style.display = 'none';
+            $('#changeOrderStatusSelectTable' + i).removeAttr('disabled');
+            $('#saveStatusOrderBtnTable' + i).css('display', 'block');
+        });
+        $('#saveStatusOrderBtnTable' + i).css('display', 'none');
+
+    }
+
+
     function display_new_orders(orderFilter) {
         $.post('/api/v1/producers/filtered_orders',
             orderFilter,
             function (orders, status) {
+                currentOrders = orders;
                 add_new_orders_common_view(orders);
+                add_new_orders_table_view(orders);
+                set_selected_options();
+                for (var i = 0; i < currentOrders.length; i++) {
+                    add_event_listeners_to_buttons(i);
+                }
             });
-    }
-
-    function add_event_listeners_to_buttons() {
-        $('body').on('click', '#changeOrderStatusBtn', function () {
-            let change_status_btn = $('#changeOrderStatusBtn');
-            $('#changeOrderStatusSelect').removeAttr('disabled');
-            change_status_btn.css('display', 'none');
-            $('#saveStatusOrderBtn').css('display', 'block');
-        });
-        $('body').on('click', '#changeOrderStatusBtnTable', function () {
-            let change_status_btn = $('#changeOrderStatusBtnTable');
-            $('#changeOrderStatusSelectTable').removeAttr('disabled');
-            change_status_btn.css('display', 'none');
-            $('#saveStatusOrderBtnTable').css('display', 'block');
-        });
     }
 
 
@@ -198,12 +324,10 @@ if ($('main.producer-orders').length > 0) {
         fill_order_filter(orderFilter);
         delete_current_orders();
         display_new_orders(orderFilter);
-        add_event_listeners_to_buttons();
     }
 
-    // update orders on change of the select
+// update orders on change of the select
     $('#statuses').change(function () {
-        console.log('IN select change');
         update_orders_page(orderFilter);
     });
 }

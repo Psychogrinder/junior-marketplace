@@ -664,7 +664,7 @@ def upload_product_image(product_id, files):
 # other
 
 def get_number_of_unprocessed_orders_by_producer_id(producer_id):
-    return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
+    return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Не обработан').all())
 
 
 def decrease_products_quantity_and_increase_times_ordered(consumer_id):
