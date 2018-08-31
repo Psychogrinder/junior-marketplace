@@ -33,13 +33,15 @@ with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(p
 for i, producer in enumerate(Producer.query.all()):
     producer.id = i+1
 
-with urllib.request.urlopen("https://randomuser.me/api/?results=10", context=context) as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results=100", context=context) as response:
     data = response.read()
     data = json.loads(data)
+    email_counter = 1
     for person in data["results"]:
-        consumer = Consumer(person['email'], '123123', person['name']['first'],
+        consumer = Consumer('{}mail.ru'.format(email_counter), '123123', person['name']['first'],
                             person['name']['last'], person['phone'], person['location']['street'])
         db.session.add(consumer)
+        email_counter += 1
 
 category_data = {}
 
