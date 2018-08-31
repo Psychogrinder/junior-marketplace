@@ -67,7 +67,7 @@ $(document).ready(function () {
                 contentType: 'application/json',
                 data: JSON.stringify(newProductObject),
                 success: function(data, status) {
-
+                    location.replace('/products/' + data.id);
                 }
             });
         }
@@ -91,7 +91,8 @@ $(document).ready(function () {
                 });
         });
 
-        $('#createProductForm').submit(function() {
+        $('#createProductForm').submit(function(e) {
+            e.preventDefault();
             createProduct();
         });
     }
