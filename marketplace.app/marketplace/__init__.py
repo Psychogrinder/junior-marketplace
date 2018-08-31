@@ -7,6 +7,7 @@ from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
 import os
+import redis
 import cssmin
 import jsmin
 from flask_mail import Mail
@@ -26,6 +27,9 @@ db = SQLAlchemy(app)
 login = LoginManager(app)
 migrate = Migrate(app, db)
 celery = _celery.make_celery(app)
+cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACHE_STORAGE_PORT'],
+                    db=app.config['CACHE_STORAGE_DB'])
+REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
 
 from marketplace import models, views, api_routes
 

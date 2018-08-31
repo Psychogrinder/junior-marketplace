@@ -17,7 +17,7 @@ export FLASK_DEBUG=1
 if [ -d "migrations" ]; then
   rm -rf migrations
 fi
-python manage.py init_db
+python3 manage.py init_db
 
 cd ..
 bin/create_content.sh

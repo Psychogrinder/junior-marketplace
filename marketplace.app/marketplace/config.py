@@ -18,4 +18,9 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
 
-    CELERY_BROKER_URL='redis://localhost:6379/0',
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+    CACHE_STORAGE_HOST = 'localhost'
+    CACHE_STORAGE_PORT = 6379
+    CACHE_STORAGE_DB = 1
+    REDIS_STORAGE_TIME = 1
