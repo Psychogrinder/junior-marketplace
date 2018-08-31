@@ -1,11 +1,10 @@
 from path_file import *
 
-from marketplace.api_folder.login_api import Login
-
-from marketplace.api_folder.api_utils import login
-import flask_login
 import requests, json
 import unittest
+from mock import Mock
+from smoke_tests import parseApiRoutes, replaceUserId, getResponseCode
+from urllib.request import Request, urlopen
 
 def get_cookie(login_url, email, password):
     payload = {
@@ -23,19 +22,19 @@ class TestCase(unittest.TestCase):
 
     def setUp(self):
 
-        self.first_name = 'Abra'
-        self.last_name = 'Cadabra'
-        self.base_route = 'http://127.0.0.1:8000/api/v1'
-        self.login_url = 'http://127.0.0.1:8000/api/v1/login'
-        self.email = 'annabelle.denys@example.com'
-        self.pw = '123123'
-        self.entity = 'consumer'
-        self.phone_number = '81212121'
+        self.user = Mock()
+        self.user.first_name = 'Abra'
+        self.user.last_name = 'Cadabra'
+        self.user.email = 'annabelle.denys@example.com'
+        self.user.pw = '123123'
+        self.user.phone_number = '81212121'
 
+        self.base_url = 'http://127.0.0.1:8000'
+        self.login_url = 'http://127.0.0.1:8000/api/v1/login'
 
 
     def testLogin(self):
-        cookie, response = get_cookie(self.login_url, self.email, self.pw)
+        cookie, response = get_cookie(self.login_url, self.user.email, self.user.pw)
 
         self.assertEqual(201, response.status_code)
         self.assertIn('remember_token', cookie)
@@ -49,10 +48,27 @@ class TestCase(unittest.TestCase):
         self.assertNotIn('session', response.cookies)
 
 
-    def testAuthPages(self):
+    def testGetAuthPages(self):
+        s = requests.Session()
+        cookie, response = get_cookie(self.login_url, self.user.email, self.user.pw)
 
-        cookie, response = get_cookie(self.login_url, self.email, self.pw)
-        r = requests.post(url, cookie)
+        user = json.loads(response.content)
+        user_id, user_entity = user['id'], user['entity']
+
+        #r = s.post(url, cookie)
+        routes = parseApiRoutes()
+        for route in routes['auth']:
+
+            if user_entity == 'producer' and '<producer_id>' in route:
+                """TODO: get method with session data"""
+
+                test_url = replaceUserId(self.base_url + route, user_id)
+                print(test_url)
+                #self.assertEqual(200, getResponseCode(test_url))
+                print(getResponseCode(test_url))
+            elif user_entity == 'consumer' and '<user_id>' in route:
+                pass
+
 
 if __name__ == '__main__':
     unittest.main()
