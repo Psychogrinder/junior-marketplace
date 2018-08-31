@@ -51,3 +51,8 @@ class UploadImageProducer(Resource):
 class ProducerNamesByCategoryName(Resource):
     def get(self, category_name):
         return utils.get_producer_names_by_category_name(category_name), 200
+
+
+class ProducerNameById(Resource):
+    def get(self, producer_id):
+        return {"producer_name": utils.get_producer_name_by_id(producer_id)}

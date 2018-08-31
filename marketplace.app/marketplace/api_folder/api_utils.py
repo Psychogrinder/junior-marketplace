@@ -7,7 +7,7 @@ import string
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
-    product_schema
+    product_schema, order_schema_list
 from marketplace.models import Order, Consumer, Producer, Category, Product, Cart, User
 from flask_restful import abort
 from marketplace import db, app
@@ -150,6 +150,10 @@ def get_cart_by_consumer_id(consumer_id):
     return cart if cart is not None else post_cart(consumer_id)
 
 
+def get_producer_name_by_id(producer_id):
+    return db.session.query(Producer.name).filter(Producer.id == producer_id).first()
+
+
 # Get by other params
 def get_parent_category_by_category_id(category_id):
     parent_category_id = Category.query.filter_by(id=category_id).first().parent_id
@@ -208,6 +212,30 @@ def get_producer_names_by_category_name(category_name):
     category = Category.query.filter_by(name=category_name).first()
     producers = get_all_producers()
     return [producer.name for producer in producers if category in producer.categories]
+
+
+def get_filtered_orders(args):
+    order_status = args['order_status']
+    if order_status == 'Все':
+        orders = order_schema_list.dump(Order.query.filter_by(producer_id=int(args['producer_id'])).all()).data
+    else:
+        orders = order_schema_list.dump(
+            Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).all()).data
+    for order in orders:
+        order['items'] = []
+        order['order_timestamp'] = order['order_timestamp'].split('T')[0]
+        for product_id, quantity in order['order_items_json'].items():
+            product_data = db.session.query(Product.id, Product.name, Product.price, Product.weight,
+                                            Product.photo_url, Product.measurement_unit).filter_by(id=int(product_id)).first()
+            order_product_schema = ("id", "name", "price", "weight", "photo_url", "measurement_unit")
+            product = dict(zip(order_product_schema, product_data))
+            product['quantity'] = quantity
+            if product['weight'].is_integer():
+                product['weight'] = int(product['weight'])
+            order['items'].append(product)
+            del order['order_items_json']
+
+    return orders
 
 
 # Get sorted

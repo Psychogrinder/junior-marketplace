@@ -173,7 +173,7 @@ class Order(db.Model):
     last_name = db.Column(db.String(128))
 
     def __init__(self, total_cost, order_items_json, delivery_method, delivery_address, consumer_phone, consumer_email,
-                 consumer_id, producer_id, status='Необработан', first_name='', last_name=''):
+                 consumer_id, producer_id, status='Не обработан', first_name='', last_name=''):
         self.total_cost = int(total_cost)
         self.order_items_json = order_items_json
         self.status = status
