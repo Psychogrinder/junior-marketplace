@@ -1,11 +1,8 @@
-import ast
-from operator import itemgetter
 from marketplace import email_tools, cache, REDIS_STORAGE_TIME
 import os
 import re
 import json
 import string
-import simplejson
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
