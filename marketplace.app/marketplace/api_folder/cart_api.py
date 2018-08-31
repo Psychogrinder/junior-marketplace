@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
-from marketplace import cache
+from marketplace.api_folder.decorators import get_cache
 from marketplace.api_folder.schemas import cart_schema
 
 cart_args = ['mode', 'product_id', 'quantity']
@@ -12,14 +12,13 @@ for arg in cart_args:
 
 
 class GlobalCart(Resource):
-    def get(self, consumer_id):
-        path = request.url
-        cart = utils.get_cached_json(path)
-        if cart is None:
-            cart = cart_schema.dump(utils.get_cart_by_consumer_id(consumer_id)).data
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            cart = cart_schema.dump(utils.get_cart_by_consumer_id(kwargs['consumer_id'])).data
             return utils.cache_json_and_get(path, cart), 200
         else:
-            return cart, 200
+            return cache, 200
 
     def post(self, consumer_id):
         args = parser.parse_args()

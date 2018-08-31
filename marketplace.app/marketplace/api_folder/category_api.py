@@ -1,87 +1,89 @@
 from flask import request
-
 import marketplace.api_folder.api_utils as utils
 from flask_restful import Resource
 
-from marketplace import cache
+from marketplace.api_folder.decorators import get_cache
 from marketplace.api_folder.schemas import category_schema_list, product_schema_list, category_schema
 
 
 class CategoryRest(Resource):
-    def get(self, slug):
-        path = request.url
-        category = utils.get_cached_json(path)
-        if category is None:
-            category = category_schema.dump(utils.get_category_by_name(slug)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            category = category_schema.dump(utils.get_category_by_name(kwargs['slug'])).data
             return utils.cache_json_and_get(path, category), 200
         else:
-            return category, 200
+            return cache, 200
 
 
 class BaseCategories(Resource):
-    def get(self):
-        path = request.url
-        categories = utils.get_cached_json(path)
-        if categories is None:
+
+    @get_cache
+    def get(self, path, cache):
+        if cache is None:
             categories = category_schema_list.dump(utils.get_all_base_categories()).data
             return utils.cache_json_and_get(path, categories), 200
         else:
-            return categories, 200
+            return cache, 200
 
 
 class Subcategories(Resource):
-    def get(self, category_id):
-        path = request.url
-        subcategories = utils.get_cached_json(path)
-        if subcategories is None:
-            subcategories = category_schema_list.dump(utils.get_subcategories_by_category_id(category_id)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            subcategories = category_schema_list.dump(
+                utils.get_subcategories_by_category_id(kwargs['category_id'])).data
             return utils.cache_json_and_get(path, subcategories), 200
         else:
-            return subcategories, 200
+            return cache, 200
 
 
 class SubcategoriesBySlug(Resource):
-    def get(self, category_slug):
-        path = request.url
-        subcategories = utils.get_cached_json(path)
-        if subcategories is None:
-            subcategories = category_schema_list.dump(utils.get_subcategories_by_category_slug(category_slug)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            subcategories = category_schema_list.dump(
+                utils.get_subcategories_by_category_slug(kwargs['category_slug'])).data
             return utils.cache_json_and_get(path, subcategories), 200
         else:
-            return subcategories, 200
+            return cache, 200
 
 
 class ProductsByCategory(Resource):
-    def get(self, category_id):
-        path = request.url
-        products = utils.get_cached_json(path)
-        if products is None:
-            products = product_schema_list.dump(utils.get_products_by_category_id(category_id)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            products = product_schema_list.dump(utils.get_products_by_category_id(kwargs['category_id'])).data
             return utils.cache_json_and_get(path, products), 200
         else:
-            return products, 200
+            return cache, 200
 
 
 class PopularProductsByCategory(Resource):
-    def get(self, category_id, direction):
-        path = request.url
-        products = utils.get_cached_json(path)
-        if products is None:
-            products = product_schema_list.dump(utils.get_popular_products_by_category_id(category_id, direction)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            products = product_schema_list.dump(
+                utils.get_popular_products_by_category_id(kwargs['category_id'], kwargs['direction'])).data
             return utils.cache_json_and_get(path, products), 200
         else:
-            return products, 200
+            return cache, 200
 
 
 class ParentCategoryBySubcategoryId(Resource):
-    def get(self, category_id):
-        path = request.url
-        category = utils.get_cached_json(path)
-        if category is None:
-            category = category_schema.dump(utils.get_parent_category_by_category_id(category_id)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            category = category_schema.dump(utils.get_parent_category_by_category_id(kwargs['category_id'])).data
             return utils.cache_json_and_get(path, category), 200
         else:
-            return category, 200
+            return cache, 200
 
 
 class SubcategoryNamesByProducerName(Resource):
