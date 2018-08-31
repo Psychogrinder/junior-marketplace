@@ -41,9 +41,8 @@
                     </form>
                 {% endif %}
                 {% if current_user.entity=='consumer' %}
-                    <div class="backlighting_nav_item">
-                        <a href={{ url_for('cart', user_id = current_user.id) }} class="header-card px-2
-                           header_card_badge">
+                    <div class="backlighting_nav_item cart_nav_container">
+                        <a href={{ url_for('cart', user_id = current_user.id) }} class="header-card px-2 header_card_badge cart_nav_link_container">
                         <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg') }} class="header-logo"
                              alt="Корзина">
                         <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
