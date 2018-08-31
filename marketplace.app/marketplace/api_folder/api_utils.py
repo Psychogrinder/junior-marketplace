@@ -5,6 +5,7 @@ import os
 import re
 import json
 import string
+import simplejson
 from flask_login import login_user, logout_user
 from werkzeug.utils import secure_filename
 from marketplace.api_folder.schemas import order_schema, consumer_sign_up_schema, producer_sign_up_schema, \
@@ -650,15 +651,13 @@ def convert_byte_dict_keys_to_string(data):
 
 
 def cache_list_and_return(path, response):
-    for item in response:
-        cache.lpush(path, item)
+    cache.execute_command('JSON.SET', path, '.', json.dumps(response))
     cache.expire(path, REDIS_STORAGE_TIME)
     return response
 
 
 def get_cached_list(path):
-    response = cache.lrange(path, 0, -1)
-    return [ast.literal_eval(item.decode('utf-8')) for item in response]
+    return cache.execute_command('JSON.GET', path)
 
 
 def cache_and_return(path, response):
@@ -670,6 +669,8 @@ def cache_and_return(path, response):
 def get_cached(path):
     response = cache.hgetall(path)
     return convert_byte_dict_keys_to_string(response)
+
+#
 
 def get_number_of_unprocessed_orders_by_producer_id(producer_id):
     return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
