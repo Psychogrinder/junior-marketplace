@@ -116,27 +116,27 @@
     padding-left: 10px;
 }
 
-#saveStatusOrderBtn {
+.saveStatusOrderBtn {
     display: none;
 }
 
-#changeOrderStatusBtn,
-#saveStatusOrderBtn {
+.changeOrderStatusBtn,
+.saveStatusOrderBtn {
     width: fit-content;
     margin-top: auto;
 }
 
-.common-view-btn#changeOrderStatusBtn,
-.common-view-btn#saveStatusOrderBtn{
+.common-view-btn.changeOrderStatusBtn,
+.common-view-btn.saveStatusOrderBtn{
     margin-top: 1rem;
 }
 
-#saveStatusOrderBtnTable {
+.saveStatusOrderBtnTable {
     display: none;
 }
 
-#changeOrderStatusBtnTable,
-#saveStatusOrderBtnTable {
+.changeOrderStatusBtnTable,
+.saveStatusOrderBtnTable {
     width: fit-content;
     margin-top: auto;
 }

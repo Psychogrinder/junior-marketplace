@@ -6,8 +6,6 @@ $(document).ready(function () {
         getNumberOfUnprocessedOrders = function (user_id) {
             $.get("/api/v1/producers/" + user_id + "/unprocessed_orders",
                 function (data, status) {
-                    console.log('user id: ' + user_id);
-                    console.log('quantity ' + data.quantity);
                     if (data.quantity) {
                         $('#producerOrders').append('<span class=\"badge badge-pill badge-secondary\">' + data.quantity + '</span>');
                     }

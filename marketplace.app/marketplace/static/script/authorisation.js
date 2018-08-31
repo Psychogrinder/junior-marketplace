@@ -38,6 +38,7 @@ $(document).ready(function () {
             url: '/api/v1/logout',
             success: function () {
                 localStorage.setItem("globalUserId", null);
+                localStorage.setItem("globalUserEntity", null);
                 location.replace(window.location.origin);
             }
         });

@@ -50,7 +50,7 @@
 
 .header_card_badge{
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 }
 
 .nav-link .badge{

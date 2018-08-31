@@ -8,7 +8,7 @@ $(document).ready(function () {
             first_name: $('#consumer_first_name').val(),
             last_name: $('#consumer_last_name').val(),
             phone_number: $('#consumer_phone').val(),
-            address: $('#consumer_adress').val(),
+            address: $('#consumer_address').val(),
             patronymic: $('#consumer_patronymic').val()
         };
         $.ajax({
@@ -17,7 +17,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(consumerObject),
             success: function(data, status) {
-                
+                location.replace('/user/' + consumer_id);
             }
         });
     });

@@ -14,6 +14,7 @@ Flask-RESTful
 cssmin
 jsmin
 SQLAlchemy
+SQLAlchemy-Searchable
 flask_mail
 python-dotenv
 celery

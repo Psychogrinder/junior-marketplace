@@ -10,6 +10,7 @@
             <section class="breadcrumbs">
                 <span><a class="active">Мои заказы</a></span>
             </section>
+            {% if orders %}
             <div class="row">
                 <div class="col-2">Статус</div>
                 <div class="col-4">
@@ -39,6 +40,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         <!-- Common view -->
@@ -124,7 +126,7 @@
                                 <div class="col-4">Статус заказа:</div>
                                 <div class="col-8">
                                     <select class="form-control select-order-status" disabled name="subcategory"
-                                            id="changeOrderStatusSelect">
+                                            id="changeOrderStatusSelect{{ order.id }}">
                                         {% if order.status == 'Обрабатывается' %}
                                             <option value="Обрабатывается" selected>Обрабатывается</option>
                                         {% else %}
@@ -151,9 +153,9 @@
                                             <option value="Завершен">Завершен</option>
                                         {% endif %}
                                     </select>
-                                    <button class="btn btn-warning common-view-btn" id="changeOrderStatusBtn">Изменить
+                                    <button class="btn btn-warning common-view-btn changeOrderStatusBtn" id="changeOrderStatusBtn{{ order.id }}" onclick="changeOrderStatusBtn({{ order.id }})" >Изменить
                                     </button>
-                                    <button class="btn btn-success common-view-btn" id="saveStatusOrderBtn" onclick="changeOrderStatus({{ order.id }})">Сохранить
+                                    <button class="btn btn-success common-view-btn saveStatusOrderBtn" id="saveStatusOrderBtn{{ order.id }}" onclick="changeOrderStatus({{ order.id }})">Сохранить
                                     </button>
                                 </div>
                             </div>
@@ -240,7 +242,7 @@
                         </div>
                         <div class="table_global_cell">
                             <div>Статус заказа</div>
-                            <select class="form-control select-order-status" id="changeOrderStatusSelectTable"
+                            <select class="form-control select-order-status" id="changeOrderStatusSelectTable{{ order.id }}"
                                     name="subcategory"
                                     disabled>
                                 {% if order.status == 'Обрабатывается' %}
@@ -271,8 +273,8 @@
                             </select>
                         </div>
                         <div class="table_global_cell">
-                            <button class="btn btn-warning" id="changeOrderStatusBtnTable">Изменить</button>
-                            <button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable"  onclick="changeOrderStatusTable({{ order.id }})">Сохранить
+                            <button class="btn btn-warning changeOrderStatusBtnTable" id="changeOrderStatusBtnTable{{ order.id }}" onclick="changeOrderStatusBtnTable({{ order.id }})">Изменить</button>
+                            <button class="btn btn-success common-view-btn saveStatusOrderBtnTable" id="saveStatusOrderBtnTable{{ order.id }}"  onclick="changeOrderStatusTable({{ order.id }})">Сохранить
                             </button>
                         </div>
                     </div>
