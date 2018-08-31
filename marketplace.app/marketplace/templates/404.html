@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}404{% endblock %}
+
+{% block body %}
+<main class="container">
+    <div class="row">
+        <div class="col-12 error_container">
+            <h1>Что-то пошло не так...</h1>
+            <a href={{ url_for( 'index' ) }}>
+                <img src={{ url_for('static', filename = 'img/404.gif') }} alt="" width="400px" height="">
+                <h2>Вернуться на главную</h2>
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}
