@@ -23,7 +23,6 @@ class GlobalConsumers(Resource):
             consumers = consumer_schema_list.dump(utils.get_all_consumers()).data
             return utils.cache_json_and_get(path, consumers), 200
         else:
-            print('cached')
             return cache, 200
 
     def post(self):
