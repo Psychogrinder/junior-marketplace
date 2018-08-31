@@ -4,7 +4,6 @@ import marketplace.api_folder.api_utils as utils
 from marketplace import cache
 from marketplace.api_folder.schemas import product_schema_list, product_schema
 
-
 product_args = ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']
 parser = reqparse.RequestParser()
 
@@ -17,15 +16,15 @@ search_parser.add_argument(
 )
 
 
-
 class GlobalProducts(Resource):
     def get(self):
         path = request.url
-        if not cache.exists(path):
+        products = utils.get_cached_json(path)
+        if products is None:
             products = product_schema_list.dump(utils.get_all_products()).data
-            return utils.cache_list_and_return(path, products), 200
+            return utils.cache_json_and_get(path, products), 200
         else:
-            return utils.get_cached_list(path), 200
+            return products, 200
 
     def post(self):
         args = parser.parse_args()
@@ -37,11 +36,12 @@ class GlobalProducts(Resource):
 class ProductRest(Resource):
     def get(self, product_id):
         path = request.url
-        if not cache.exists(path):
+        product = utils.get_cached_json(path)
+        if product is None:
             product = product_schema.dump(utils.get_product_by_id(product_id)).data
-            return utils.cache_and_return(path, product), 200
+            return utils.cache_json_and_get(path, product), 200
         else:
-            return utils.get_cached(path), 200
+            return product, 200
 
     def put(self, product_id):
         args = parser.parse_args()
@@ -54,22 +54,24 @@ class ProductRest(Resource):
 class PopularProducts(Resource):
     def get(self):
         path = request.url
-        if not cache.exists(path):
+        products = utils.get_cached_json(path)
+        if products is None:
             products = product_schema_list.dump(utils.get_popular_products()).data
-            return utils.cache_list_and_return(path, products), 200
+            return utils.cache_json_and_get(path, products), 200
         else:
-            return utils.get_cached_list(path), 200
+            return products, 200
 
 
 class ProductsByPrice(Resource):
     def get(self, category_id, direction):
         path = request.url
-        if not cache.exists(path):
+        products = utils.get_cached_json(path)
+        if products is None:
             products = product_schema_list.dump(
                 utils.get_products_by_category_id_sorted_by_price(category_id, direction)).data
-            return utils.cache_list_and_return(path, products), 200
+            return utils.cache_json_and_get(path, products), 200
         else:
-            return utils.get_cached_list(path), 200
+            return products, 200
 
 
 class UploadImageProduct(Resource):
@@ -80,29 +82,28 @@ class UploadImageProduct(Resource):
 class ProductsInCart(Resource):
     def get(self, consumer_id):
         path = request.url
-        if not cache.exists(path):
+        products = utils.get_cached_json(path)
+        if products is None:
             products = product_schema_list.dump(
                 utils.get_products_from_cart(utils.get_cart_by_consumer_id(consumer_id).items)).data
-            return utils.cache_list_and_return(path, products), 200
+            return utils.cache_json_and_get(path, products), 200
         else:
-            return utils.get_cached_list(path), 200
-        return product_schema_list.dump(
-            utils.get_products_from_cart(utils.get_cart_by_consumer_id(consumer_id).items)).data
+            return products, 200
 
 
 class ProductSearchByParams(Resource):
     def get(self):
-        args = search_parser.parse_args()
-        search_query = '&'.join(args['find'].split(' '))
-        result = utils.search_products_by_param(search_query)
+        path = request.url
+        result = utils.get_cached_json(path)
         if result is None:
-            return {}, 400
-        return product_schema_list.dump(result).data
-                    
-                    
-class PopularProducts(Resource):
-    def get(self):
-        return product_schema_list.dump(utils.get_popular_products()).data
+            args = search_parser.parse_args()
+            search_query = '&'.join(args['find'].split(' '))
+            result = utils.search_products_by_param(search_query)
+            if result is None:
+                return {}, 400
+            return utils.cache_json_and_get(path, product_schema_list.dump(result).data), 200
+        else:
+            return result
 
 
 product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock']
@@ -117,4 +118,3 @@ class ProductsSortedAndFiltered(Resource):
         args = filter_parser.parse_args()
         # return product_schema_list.dump(utils.get_sorted_and_filtered_products(args)).data
         return utils.get_sorted_and_filtered_products(args)
-

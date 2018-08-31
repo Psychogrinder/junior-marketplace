@@ -14,11 +14,12 @@ for arg in cart_args:
 class GlobalCart(Resource):
     def get(self, consumer_id):
         path = request.url
-        if not cache.exists(path):
+        cart = utils.get_cached_json(path)
+        if cart is None:
             cart = cart_schema.dump(utils.get_cart_by_consumer_id(consumer_id)).data
-            return utils.cache_and_return(path, cart), 200
+            return utils.cache_json_and_get(path, cart), 200
         else:
-            return utils.get_cached(path), 200
+            return cart, 200
 
     def post(self, consumer_id):
         args = parser.parse_args()

@@ -15,11 +15,12 @@ for arg in producer_args:
 class GlobalProducers(Resource):
     def get(self):
         path = request.url
-        if not cache.exists(path):
-            producers = utils.cache_list_and_return(path, producer_schema_list.dump(utils.get_all_producers()).data)
-            return utils.cache_list_and_return(path, producers), 200
+        producers = utils.get_cached_json(path)
+        if producers is None:
+            producers = producer_schema_list.dump(utils.get_all_producers()).data
+            return utils.cache_json_and_get(path, producers), 200
         else:
-            return utils.get_cached_list(path), 200
+            return producers, 200
 
     def post(self):
         args = parser.parse_args()
@@ -30,11 +31,12 @@ class ProducerRest(Resource):
 
     def get(self, producer_id):
         path = request.url
-        if not cache.exists(path):
+        producer = utils.get_cached_json(path)
+        if producer is None:
             producer = producer_schema.dump(utils.get_producer_by_id(producer_id)).data
-            return utils.cache_and_return(path, producer), 200
+            return utils.cache_json_and_get(path, producer), 200
         else:
-            return utils.get_cached(path), 200
+            return producer, 200
 
     def put(self, producer_id):
         args = parser.parse_args()
@@ -47,21 +49,23 @@ class ProducerRest(Resource):
 class ProducerOrders(Resource):
     def get(self, producer_id):
         path = request.url
-        if not cache.exists(path):
+        orders = utils.get_cached_json(path)
+        if orders is None:
             orders = order_schema_list.dump(utils.get_orders_by_producer_id(producer_id)).data
-            return utils.cache_list_and_return(path, orders), 200
+            return utils.cache_json_and_get(path, orders), 200
         else:
-            return utils.get_cached_list(path), 200
+            return orders, 200
 
 
 class ProductsByProducer(Resource):
     def get(self, producer_id):
         path = request.url
-        if not cache.exists(path):
+        products = utils.get_cached_json(path)
+        if products is None:
             products = product_schema_list.dump(utils.get_products_by_producer_id(producer_id)).data
-            return utils.cache_list_and_return(path, products), 200
+            return utils.cache_json_and_get(path, products), 200
         else:
-            return utils.get_cached_list(path), 200
+            return products, 200
 
 
 class UploadImageProducer(Resource):

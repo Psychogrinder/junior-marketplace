@@ -1,4 +1,3 @@
-from werkzeug.contrib.cache import MemcachedCache
 import json
 from marketplace import cache
 from flask import request
@@ -16,25 +15,16 @@ parser = reqparse.RequestParser()
 for arg in consumer_args:
     parser.add_argument(arg)
 
-# lcache = MemcachedCache(['127.0.0.1:11211'])
 
 class GlobalConsumers(Resource):
-    # def get(self):
-    #     path = request.url
-    #     response = lcache.get(path)
-    #     if response is None:
-    #         response =  consumer_schema_list.dump(utils.get_all_consumers()).data
-    #         lcache.set(path, response, 1)
-    #         return response, 200
-    #     else:
-    #         return response, 200
     def get(self):
         path = request.url
-        if not cache.exists(path):
+        consumers = utils.get_cached_json(path)
+        if consumers is None:
             consumers = consumer_schema_list.dump(utils.get_all_consumers()).data
-            return utils.cache_list_and_return(path, consumers), 200
+            return utils.cache_json_and_get(path, consumers), 200
         else:
-            return json.loads(utils.get_cached_list(path)), 200
+            return consumers, 200
 
     def post(self):
         args = parser.parse_args()
@@ -44,11 +34,12 @@ class GlobalConsumers(Resource):
 class ConsumerRest(Resource):
     def get(self, consumer_id):
         path = request.url
-        if not cache.exists(path):
+        consumer = utils.get_cached_json(path)
+        if consumer is None:
             consumer = consumer_schema.dump(utils.get_consumer_by_id(consumer_id)).data
-            return utils.cache_and_return(path, consumer), 200
+            return utils.cache_json_and_get(path, consumer), 200
         else:
-            return utils.get_cached(path), 200
+            return consumer, 200
 
     def put(self, consumer_id):
         args = parser.parse_args()
@@ -62,11 +53,12 @@ class ConsumerOrders(Resource):
 
     def get(self, consumer_id):
         path = request.url
-        if not cache.exists(path):
+        orders = utils.get_cached_json(path)
+        if orders is None:
             orders = order_schema_list.dump(utils.get_orders_by_consumer_id(consumer_id)).data
-            return utils.cache_list_and_return(path, orders), 200
+            return utils.cache_json_and_get(path, orders), 200
         else:
-            return utils.get_cached_list(path), 200
+            return orders, 200
 
 
 class UploadImageConsumer(Resource):
