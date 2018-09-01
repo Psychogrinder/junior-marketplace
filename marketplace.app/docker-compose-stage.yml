@@ -4,10 +4,6 @@ networks:
   marketplace:
     external: true
 
-# volumes:
-#   marketplaceapp:
-#     external: true
-
 services:
   app:
     build:
@@ -16,9 +12,11 @@ services:
       args:
         - CELERY_BROKER_URL
         - FLASK_DEBUG
+        - SQLALCHEMY_DATABASE_URI
     environment:
       - FLASK_DEBUG=${FLASK_DEBUG}
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
     ports:
       - "8000:8000"
     command:
@@ -26,7 +24,6 @@ services:
     networks:
       - marketplace
     volumes:
-      # - ".:/app"
       - "./marketplace/:/app/marketplace"
 
 
@@ -42,9 +39,6 @@ services:
       context: .
       args:
         - CELERY_BROKER_URL
-    volumes:
-      # - ".:/app"
-      - "./marketplace/:/app/marketplace"
     command:
       "celery -A marketplace.celery --loglevel=info worker"
     networks:
