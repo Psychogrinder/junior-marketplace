@@ -14,11 +14,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
-                    {% if current_user.entity!='producer' %}
-                        <li class="nav-item backlighting_nav_item">
-                            <a class="nav-link" href={{ url_for( 'index' ) }}>КАТАЛОГ</a>
-                        </li>
-                    {% endif %}
+                    <li class="nav-item backlighting_nav_item">
+                        <a class="nav-link" href={{ url_for( 'index' ) }}>КАТАЛОГ</a>
+                    </li>
                     {% if current_user.entity == 'consumer' %}
                         <li class="nav-item backlighting_nav_item">
                             <a class="nav-link" href={{ url_for( 'order_history', user_id = current_user.id ) }}>МОИ
@@ -27,10 +25,9 @@
                     {% endif %}
                     {% if current_user.entity == 'producer' %}
                         <li class="nav-item backlighting_nav_item">
-                            <a class="nav-link nav-link-producer_orders" href={{ url_for( 'producer_orders', producer_id =
+                            <a class="nav-link nav-link-producer_orders" id="producerOrders" href={{ url_for( 'producer_orders', producer_id =
                         current_user.id ) }}>
                                 ЗАКАЗЫ
-                                <span class="badge badge-pill badge-secondary">1</span>
                             </a>
                         </li>
                         <li class="nav-item backlighting_nav_item">
@@ -44,12 +41,11 @@
                     </form>
                 {% endif %}
                 {% if current_user.entity=='consumer' %}
-                    <div class="backlighting_nav_item">
-                        <a href={{ url_for('cart', user_id = current_user.id) }} class="header-card px-2
-                           header_card_badge">
-                            <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg') }} class="header-logo"
-                                 alt="Корзина">
-                            <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
+                    <div class="backlighting_nav_item cart_nav_container">
+                        <a href={{ url_for('cart', user_id = current_user.id) }} class="header-card px-2 header_card_badge cart_nav_link_container">
+                        <img src={{ url_for('static', filename ='img/shopping-cart-solid.svg') }} class="header-logo"
+                             alt="Корзина">
+                        <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
                         </a>
                     </div>
                 {% endif %}

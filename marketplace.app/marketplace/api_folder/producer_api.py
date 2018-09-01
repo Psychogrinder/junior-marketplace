@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, reqparse
 import marketplace.api_folder.api_utils as utils
+from marketplace.api_folder.decorators import get_cache
 from marketplace.api_folder.schemas import producer_schema_list, producer_schema, order_schema_list, product_schema_list
 
 producer_args = ['email', 'name', 'password', 'person_to_contact', 'description', 'phone_number', 'address']
@@ -12,8 +13,14 @@ for arg in producer_args:
 
 
 class GlobalProducers(Resource):
-    def get(self):
-        return producer_schema_list.dump(utils.get_all_producers()).data
+
+    @get_cache
+    def get(self, path, cache):
+        if cache is None:
+            producers = producer_schema_list.dump(utils.get_all_producers()).data
+            return utils.cache_json_and_get(path, producers), 200
+        else:
+            return cache, 200
 
     def post(self):
         args = parser.parse_args()
@@ -22,8 +29,13 @@ class GlobalProducers(Resource):
 
 class ProducerRest(Resource):
 
-    def get(self, producer_id):
-        return producer_schema.dump(utils.get_producer_by_id(producer_id)).data
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            producer = producer_schema.dump(utils.get_producer_by_id(kwargs['producer_id'])).data
+            return utils.cache_json_and_get(path, producer), 200
+        else:
+            return cache, 200
 
     def put(self, producer_id):
         args = parser.parse_args()
@@ -34,15 +46,38 @@ class ProducerRest(Resource):
 
 
 class ProducerOrders(Resource):
-    def get(self, producer_id):
-        return order_schema_list.dump(utils.get_orders_by_producer_id(producer_id)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            orders = order_schema_list.dump(utils.get_orders_by_producer_id(kwargs['producer_id'])).data
+            return utils.cache_json_and_get(path, orders), 200
+        else:
+            return cache, 200
 
 
 class ProductsByProducer(Resource):
-    def get(self, producer_id):
-        return product_schema_list.dump(utils.get_products_by_producer_id(producer_id)).data
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            products = product_schema_list.dump(utils.get_products_by_producer_id(kwargs['producer_id'])).data
+            return utils.cache_json_and_get(path, products), 200
+        else:
+            return cache, 200
 
 
 class UploadImageProducer(Resource):
     def post(self, producer_id):
         return utils.upload_producer_image(producer_id, request.files), 201
+
+
+class ProducerNamesByCategoryName(Resource):
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            names = utils.get_producer_names_by_category_name(kwargs['category_name'])
+            return utils.cache_json_and_get(path, names), 200
+        else:
+            return cache, 200

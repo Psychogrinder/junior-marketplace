@@ -14,11 +14,14 @@ var putToCart = function (consumer_id, product_id) {
                 }
             }
             document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
+            var hulla = new hullabaloo();
+            hulla.send("Товар успешно добавлен в корзину", "secondary");
+
         });
 };
 
 var getNumberOfProductsInCart;
-if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'customer')) {
+if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'consumer')) {
     $(document).ready(function () {
         var user_id = localStorage.getItem("globalUserId");
         getNumberOfProductsInCart = function (user_id) {
@@ -68,7 +71,7 @@ function deleteProduct(product_id, consumer_id) {
 
 function getProductsByUserId() {
     var user_id = localStorage.getItem("globalUserId");
-    if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'customer')) {
+    if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'consumer')) {
         $.get("/api/v1/products/" + user_id + "/cart",
             function (products, status) {
                 if (status) {
@@ -94,7 +97,7 @@ function countTotalCostInner(items, products) {
     for (var i in items.items) {
         for (var p = 0; p < products.length; p++) {
             if (i == products[p].id) {
-                var sum = items.items[i] * products[p].price.substring(0, products[p].price.length-1);
+                var sum = items.items[i] * products[p].price.substring(0, products[p].price.length - 1);
                 total += sum;
             }
         }

@@ -48,9 +48,18 @@
 	align-items: center;
 }
 
+.cart_nav_container{
+	width: 80px;
+}
+
+.cart_nav_link_container{
+	display: flex;
+	justify-content: flex-start;
+}
+
 .header_card_badge{
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 }
 
 .nav-link .badge{

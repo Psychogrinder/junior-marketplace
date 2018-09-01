@@ -25,11 +25,11 @@
             </div>
             <div class="row edit-profile-item">
                 <label for="consumer_last_name" class="col-4 col-sm-2">Фамилия</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="consumer_last_name" placeholder="Иванович" value={{user.last_name}}>
+                <input type="text" class="form-control col-8 col-sm-4" id="consumer_last_name" placeholder="Иванов" value={{user.last_name}}>
             </div>
             <div class="row edit-profile-item">
                 <label for="consumer_patronymic" class="col-4 col-sm-2">Отчество</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="consumer_patronymic" placeholder="Иванов" value={{user.patronymic}}>
+                <input type="text" class="form-control col-8 col-sm-4" id="consumer_patronymic" placeholder="Иванович" value={{user.patronymic}}>
             </div>
             <div class="row edit-profile-item">
                 <label for="consumer_email" class="col-4 col-sm-2">Email</label>
@@ -41,11 +41,11 @@
             </div>
             <div class="row edit-profile-item">
                 <label for="consumer_phone" class="col-4 col-sm-2">Телефон</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="consumer_phone" placeholder="89110881856" value='{{ user.phone_number }}' pattern="[0-9]+$">
+                <input type="text" class="form-control col-8 col-sm-4 phone_mask" id="consumer_phone" placeholder="+7(___)___-__-__" value='{{ user.phone_number }}'>
             </div>
             <div class="row edit-profile-item">
-                <label for="consumer_adress" class="col-4 col-sm-2">Адрес</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="consumer_adress"
+                <label for="consumer_address" class="col-4 col-sm-2">Адрес</label>
+                <input type="text" class="form-control col-8 col-sm-4" id="consumer_address"
                        placeholder="Улица Пушкина д 14 кв 58" value={{ user.address}} >
             </div>
             <div class="col-12 col-sm-6 edit-profile-save">

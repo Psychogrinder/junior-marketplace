@@ -7,6 +7,8 @@ import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
 
 
+
+
 # каталог
 @app.route('/')
 def index():
@@ -17,7 +19,7 @@ def index():
         categories=categories,
         popular_products=popular_products,
         producers=Producer.query.all(),
-        current_user=current_user
+        current_user=current_user,
     )
 
 
@@ -202,6 +204,11 @@ def email_confirm(token):
     db.session.commit()
     flash('Адрес электронной почты подтвержден', category='info')
     return redirect(url_for('index'))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':

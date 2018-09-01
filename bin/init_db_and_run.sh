@@ -22,9 +22,7 @@ pip3 install -r requirements.txt
 if [ -d "migrations" ]; then
   rm -rf migrations
 fi
-flask db init
-flask db migrate
-flask db upgrade
+python3 manage.py init_db
 
 cd ..
 bin/create_content.sh

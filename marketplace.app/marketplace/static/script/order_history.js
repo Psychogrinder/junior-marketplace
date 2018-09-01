@@ -6,7 +6,10 @@ if ($('main.order-history').length > 0) {
             success: function (result) {
                 $('#showOrderCancelModal').remove();
                 $('.modal-backdrop').css("display", "none");
-                $('.orders-block'+order_id).remove();
+                $('.orders-block' + order_id).remove();
+                $('body').removeClass('modal-open');
+                var hulla = new hullabaloo();
+                hulla.send("Заказ отменен", "secondary");
             }
         });
     }
