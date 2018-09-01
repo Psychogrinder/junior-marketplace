@@ -19,12 +19,10 @@ class Config(object):
     MAIL_SERVER = 'smtp.rambler.ru'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    # MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-    # MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    # MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
-    MAIL_USERNAME = 'xtramarket'
-    MAIL_PASSWORD = 'dfkkJK931NNN12'
-    # MAIL_DEFAULT_SENDER = 'xtramarket@rambler.ru'
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
+    MAIL_DEFAULT_SENDER = 'xtramarket@rambler.ru'
 
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL') or 'redis://localhost:6379/0',
