@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_assets import Environment, Bundle
-from marketplace.config import Config
+from marketplace.config import Development, Production
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api
@@ -17,7 +17,9 @@ from marketplace import _celery
 
 app = Flask(__name__)
 assets = Environment(app)
-app.config.from_object(Config)
+app.config.from_object(
+    Development if os.getenv('FLASK_ENV') == 'development' else Production
+)
 mail = Mail(app)
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
@@ -53,6 +55,7 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)
+
 
 if __name__ == '__main__':
     app.run(port=8000)
