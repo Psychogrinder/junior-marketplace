@@ -191,7 +191,7 @@ def version():
 
 @app.route('/email_confirm/<token>')
 def email_confirm(token):
-    user_email = email.confirm_token(token)
+    user_email = email_tools.confirm_token(token)
     if user_email is None:
         # TODO перенаправить на красивую страничку для ошибок
         return abort(404)
@@ -209,6 +209,7 @@ def email_confirm(token):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
 
 
 if __name__ == '__main__':
