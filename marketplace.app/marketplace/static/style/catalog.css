@@ -47,25 +47,29 @@
 
 .product-item-description {
     margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: right;
 }
 
 .product-item-description b {
     display: block;
-    width: fit-content;
+    /* width: fit-content; */
     margin-left: auto;
 }
 
 .product-item-description p {
     margin-bottom: 0rem;
     display: block;
-    width: fit-content;
+    /* width: fit-content; */
     margin-left: auto;
     color: #343a40;
 }
 
 .card-item a:hover .product-item-description p {
     color: #78c2ad;
-    
+
 }
 
 .card-item a:hover {
