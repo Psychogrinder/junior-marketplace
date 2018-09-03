@@ -1,0 +1,75 @@
+from marketplace import db
+from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exist_or_get, \
+    abort_if_product_doesnt_exist_or_get
+from marketplace.api_folder.utils.order_utils import get_order_by_id
+from marketplace.api_folder.utils.product_utils import get_product_by_id
+from marketplace.models import Cart
+
+
+def get_cart_by_consumer_id(consumer_id):
+    abort_if_consumer_doesnt_exist_or_get(consumer_id)
+    cart = Cart.query.filter_by(consumer_id=consumer_id).first()
+    return cart if cart is not None else post_cart(consumer_id)
+
+
+def get_number_of_products_in_cart(consumer_id):
+    items = Cart.query.filter_by(consumer_id=consumer_id).first().items
+    return sum(int(v) for k, v in items.items())
+
+
+def get_products_from_cart(items):
+    items = {int(k): int(v) for k, v in items.items()}
+    products = [get_product_by_id(id) for id in items]
+    return products
+
+
+def post_cart(consumer_id):
+    cart = Cart(consumer_id)
+    db.session.add(cart)
+    db.session.commit()
+    return cart
+
+
+def post_item_to_cart_by_consumer_id(args, consumer_id):
+    abort_if_product_doesnt_exist_or_get(int(args['product_id']))
+    cart = get_cart_by_consumer_id(consumer_id)
+    if args['mode'] == 'inc':
+        cart.increase_item_quantity(args['product_id'], args['quantity'])
+    elif args['mode'] == 'dec':
+        cart.decrease_item_quantity(args['product_id'], args['quantity'])
+    elif args['mode'] == 'set':
+        cart.set_item_quantity(args['product_id'], args['quantity'])
+    db.session.commit()
+    return cart
+
+
+def remove_item_from_cart_by_consumer_id(args, consumer_id):
+    abort_if_product_doesnt_exist_or_get(int(args['product_id']))
+    cart = get_cart_by_consumer_id(consumer_id)
+    cart.remove_item(args['product_id'])
+    db.session.commit()
+    return cart
+
+
+def clear_cart_by_consumer_id(consumer_id):
+    cart = get_cart_by_consumer_id(consumer_id)
+    cart.clear_cart()
+    db.session.commit()
+    return {"message": "Cart has been cleared successfully".format(consumer_id)}
+
+
+def decrease_products_quantity_and_increase_times_ordered(consumer_id):
+    items = get_cart_by_consumer_id(consumer_id).items
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity -= int(quantity)
+        get_product_by_id(int(item)).times_ordered += 1
+        db.session.commit()
+
+
+def increase_products_quantity_and_decrease_times_ordered(order_id):
+    order = get_order_by_id(order_id)
+    items = order.order_items_json
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity += int(quantity)
+        get_product_by_id(int(item)).times_ordered -= 1
+        db.session.commit()
