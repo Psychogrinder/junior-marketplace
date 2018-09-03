@@ -28,7 +28,7 @@ def _send_email(to, template, subject):
         subject=subject,
         recipients=[to],
         html=template,
-        sender='xtramarket@mail.ru'
+        sender='xtramarket@rambler.ru'
     )
     mail.connect()
     mail.send(msg)
