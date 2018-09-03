@@ -14,26 +14,27 @@ from marketplace.api_folder.consumer_api import (
 )
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
-from marketplace.api_folder.order_api import GlobalOrders, Orders, UnprocessedOrdersByProducerId
+from marketplace.api_folder.order_api import GlobalOrders, Orders, UnprocessedOrdersByProducerId, \
+    FilteredOrdersByProducerId
 from marketplace.api_folder.producer_api import (
     ProductsByProducer,
     GlobalProducers,
     ProducerRest,
     ProducerOrders,
     UploadImageProducer,
-    ProducerNamesByCategoryName
+    ProducerNamesByCategoryName,
+    ProducerNameById
 )
 from marketplace.api_folder.product_api import (
-  GlobalProducts,
-  ProductRest,
-  UploadImageProduct,
-  ProductsInCart,
-  ProductsByPrice,
-  PopularProducts,
-  ProductsSortedAndFiltered,
-  ProductSearchByParams,
+    GlobalProducts,
+    ProductRest,
+    UploadImageProduct,
+    ProductsInCart,
+    ProductsByPrice,
+    PopularProducts,
+    ProductsSortedAndFiltered,
+    ProductSearchByParams,
 )
-
 
 # TODO CHECK
 
@@ -55,6 +56,8 @@ api.add_resource(SubcategoryNamesByParentSlugAndProducerName,
                  '/categories/<string:parent_category_slug>/producer/<string:producer_name>')
 api.add_resource(ProducerNamesByCategoryName, '/producers/<string:category_name>')
 api.add_resource(UnprocessedOrdersByProducerId, '/producers/<int:producer_id>/unprocessed_orders')
+api.add_resource(ProducerNameById, '/producers/<int:producer_id>/name')
+api.add_resource(FilteredOrdersByProducerId, '/producers/filtered_orders')
 # checked
 api.add_resource(BaseCategories, '/categories/base')
 api.add_resource(Subcategories, '/categories/<int:category_id>/subcategories/')

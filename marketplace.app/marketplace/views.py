@@ -2,8 +2,8 @@ from flask import render_template, jsonify, redirect, url_for, flash, abort
 import os
 from flask_restful import reqparse
 from marketplace import app, email_tools, db
+from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
-import marketplace.api_folder.api_utils as utils
 from flask_login import current_user, login_user, logout_user, login_required
 
 
@@ -13,7 +13,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 @app.route('/')
 def index():
     categories = Category.query.filter_by(parent_id=0).all()
-    popular_products = utils.get_popular_products()
+    popular_products = product_utils.get_popular_products()
     return render_template(
         'index.html',
         categories=categories,
@@ -25,20 +25,20 @@ def index():
 
 @app.route('/category/<category_name>')
 def category(category_name):
-    category = utils.get_category_by_name(category_name)
-    subcategories = utils.get_subcategories_by_category_id(category.id)
+    category = category_utils.get_category_by_name(category_name)
+    subcategories = category_utils.get_subcategories_by_category_id(category.id)
     category_name = category.name.title()
-    producers = utils.get_all_producers()
-    products = utils.get_products_by_category_id(category.id)
+    producers = producer_utils.get_all_producers()
+    products = product_utils.get_products_by_category_id(category.id)
     return render_template('category.html', products=products, subcategories=subcategories, category=category,
                            category_name=category_name, producers=producers, current_user=current_user)
 
 
 @app.route('/products/<product_id>')
 def product_card(product_id):
-    product = utils.get_product_by_id(product_id)
-    category = utils.get_category_by_id(product.category_id)
-    producer = utils.get_producer_by_id(product.producer_id)
+    product = product_utils.get_product_by_id(product_id)
+    category = category_utils.get_category_by_id(product.category_id)
+    producer = producer_utils.get_producer_by_id(product.producer_id)
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user)
 
@@ -46,7 +46,7 @@ def product_card(product_id):
 # товары производителя
 @app.route('/producer/<producer_id>/products')
 def producer_products(producer_id):
-    products = utils.get_products_by_producer_id(producer_id)
+    products = product_utils.get_products_by_producer_id(producer_id)
     if current_user.id == int(producer_id):
         return render_template('producer_products.html', products=products, current_user=current_user)
     else:
@@ -56,7 +56,7 @@ def producer_products(producer_id):
 # Продумать что делать с неиспользованными id в методах
 @app.route('/producer/<producer_id>/products/<product_id>/edit')
 def edit_product(producer_id, product_id):
-    product = utils.get_product_by_id(product_id)
+    product = product_utils.get_product_by_id(product_id)
     categories = Category.query.all()
     measurement_units = ['кг', 'л', 'шт']
     if current_user.id == int(producer_id):
@@ -80,7 +80,7 @@ def cart(user_id):
     # user = Consumer.query.filter_by(id=user_id).first()
     items = Cart.query.filter_by(consumer_id=current_user.id).first().items
     items = {int(k): (v) for k, v in items.items()}
-    products = utils.get_products_from_cart(items)
+    products = cart_utils.get_products_from_cart(items)
     # producer_ids = set(product.producer_id for product in products)
     # producers = [utils.get_producer_by_id(id) for id in producer_ids]
     if current_user.id == int(user_id):
@@ -95,9 +95,9 @@ def order_registration(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
     items = Cart.query.filter_by(consumer_id=user.id).first().items
     items = {int(k): (v) for k, v in items.items()}
-    products = utils.get_products_from_cart(items)
+    products = cart_utils.get_products_from_cart(items)
     producer_ids = set(product.producer_id for product in products)
-    producers = [utils.get_producer_by_id(id) for id in producer_ids]
+    producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
     if current_user.id == int(user_id):
         return render_template('order_registration.html', current_user=current_user, producers=producers, items=items,
                                products=products)
@@ -130,8 +130,8 @@ def order_history(user_id):
     all_products = []
     producer_names = {}
     for order in orders:
-        all_products += (utils.get_all_products_from_order(order.id))
-        producer_names[order.producer_id] = utils.get_producer_by_id(int(order.producer_id)).name
+        all_products += (product_utils.get_all_products_from_order(order.id))
+        producer_names[order.producer_id] = producer_utils.get_producer_by_id(int(order.producer_id)).name
     if current_user.id == int(user_id):
         return render_template('order_history.html', orders=orders, current_user=current_user, products=all_products,
                                producer_names=producer_names)
@@ -162,7 +162,7 @@ def producer_orders(producer_id):
         orders = Order.query.filter_by(producer_id=int(producer_id)).all()
         products = {}
         for order in orders:
-            products[order.id] = utils.get_all_products_from_order(order.id)
+            products[order.id] = order_utils.get_all_products_from_order(order.id)
         return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products )
     else:
         return redirect(url_for('index'))

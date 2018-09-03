@@ -1,9 +1,9 @@
 import json
 
 from marketplace import db
+from marketplace.api_folder.utils import product_utils
 from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exist_or_get, \
     abort_if_consumer_doesnt_exist_or_get, abort_if_order_doesnt_exist_or_get
-from marketplace.api_folder.utils.product_utils import get_product_by_id
 from marketplace.models import Order
 
 
@@ -25,7 +25,7 @@ def get_all_products_from_order(order_id):
     order_items = Order.query.filter_by(id=order_id).first().order_items_json
     products = []
     for item in order_items:
-        products.append(get_product_by_id(product_id=int(item)))
+        products.append(product_utils.get_product_by_id(product_id=int(item)))
     return products
 
 
