@@ -157,7 +157,7 @@ def get_parent_category_by_category_id(category_id):
 
 def get_number_of_products_in_cart(consumer_id):
     cart = Cart.query.filter_by(consumer_id=consumer_id).first()
-    return sum(int(v) for k, v in items.items()) if cart else 0
+    return sum(int(v) for k, v in cart.items.items()) if cart else 0
 
 
 def get_products_from_cart(items):
