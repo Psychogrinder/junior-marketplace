@@ -13,7 +13,7 @@ else
   source ./.env.local
 fi
 cd marketplace.db
-docker-compose up -d --build && cd ../marketplace.app
+docker-compose -f stage/docker-compose.yml up --build -d  && cd ../marketplace.app
 
 source .venv/bin/activate
 

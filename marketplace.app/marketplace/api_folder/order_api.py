@@ -51,3 +51,15 @@ class Orders(Resource):
 class UnprocessedOrdersByProducerId(Resource):
     def get(self, producer_id):
         return {"quantity": utils.get_number_of_unprocessed_orders_by_producer_id(producer_id)}, 200
+
+
+filtered_orders_args = ['producer_id', 'order_status']
+filtered_orders_parser = reqparse.RequestParser()
+for arg in filtered_orders_args:
+    filtered_orders_parser.add_argument(arg)
+
+
+class FilteredOrdersByProducerId(Resource):
+    def post(self):
+        args = filtered_orders_parser.parse_args()
+        return utils.get_filtered_orders(args), 200
