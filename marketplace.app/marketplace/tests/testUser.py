@@ -3,7 +3,7 @@ from path_file import *
 import requests, json
 import unittest
 from mock import Mock
-from smoke_tests import parseApiRoutes, replaceUserId, getResponseCode
+from smoke_tests import parseApiRoutes, replaceUserId, replaceProductId, getResponseCode
 from urllib.request import Request, urlopen
 
 def get_cookie(login_url, email, password):
@@ -17,31 +17,40 @@ def get_cookie(login_url, email, password):
     return response.cookies.get_dict(), response
 
 
-
 class TestCase(unittest.TestCase):
 
     def setUp(self):
 
         self.user = Mock()
+        self.producer = Mock()
+
+        #logging data
+        self.user.email = 'berenice.cavalcanti@example.com'
+        self.producer.email = 'annabelle.denys@example.com'
+        self.pw = '123123'
+
+        self.product_id = 3
+
+        #data for edit profile
         self.user.first_name = 'Abra'
         self.user.last_name = 'Cadabra'
-        self.user.email = 'annabelle.denys@example.com'
-        self.user.pw = '123123'
         self.user.phone_number = '81212121'
 
         self.base_url = 'http://127.0.0.1:8000'
-        self.login_url = 'http://127.0.0.1:8000/api/v1/login'
+        self.login_url = self.base_url + '/api/v1/login'
 
 
     def testLogin(self):
-        cookie, response = get_cookie(self.login_url, self.user.email, self.user.pw)
+
+        cookie, response = get_cookie(self.login_url, self.user.email, self.pw)
 
         self.assertEqual(201, response.status_code)
         self.assertIn('remember_token', cookie)
+        self.assertIn('session', cookie)
 
 
     def testLogout(self):
-        logout_url = 'http://127.0.0.1:8000/api/v1/logout'
+        logout_url = self.base_url + '/api/v1/logout'
         response = requests.Session().get(logout_url)
 
         self.assertEqual(201, response.status_code)
@@ -49,25 +58,30 @@ class TestCase(unittest.TestCase):
 
 
     def testGetAuthPages(self):
-        s = requests.Session()
-        cookie, response = get_cookie(self.login_url, self.user.email, self.user.pw)
+
+        #(remember_token and session in cookie) and response status_code
+        cookie, response = get_cookie(self.login_url, self.user.email, self.pw)
 
         user = json.loads(response.content)
         user_id, user_entity = user['id'], user['entity']
 
-        #r = s.post(url, cookie)
         routes = parseApiRoutes()
         for route in routes['auth']:
 
-            if user_entity == 'producer' and '<producer_id>' in route:
-                """TODO: get method with session data"""
+            test_url = self.base_url + route
 
-                test_url = replaceUserId(self.base_url + route, user_id)
-                print(test_url)
-                #self.assertEqual(200, getResponseCode(test_url))
-                print(getResponseCode(test_url))
+            if user_entity == 'producer' and '<producer_id>' in route:
+                test_url = replaceUserId(test_url, user_id)
+                test_url = replaceProductId(test_url, self.product_id)
+                req = requests.session().get(test_url, cookies=cookie)
+                self.assertEqual(200, req.status_code)
+
             elif user_entity == 'consumer' and '<user_id>' in route:
-                pass
+                test_url = replaceUserId(self.base_url + route, user_id)
+                req = requests.session().get(test_url, cookies=cookie)
+                self.assertEqual(200, req.status_code)
+
+            """TODO: add test /email_confirm/<token>"""
 
 
 if __name__ == '__main__':

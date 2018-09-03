@@ -65,7 +65,6 @@ def replaceUserId(url, user_id):
 
 def getProductIds():
     product_ids = []
-
     for product_id in Product.query.all():
         product_ids.append(product_id.id)
 
@@ -75,14 +74,15 @@ def getProductIds():
 def replaceProductId(url, product_id):
     if '<product_id>' in url:
         return url.replace('<product_id>', str(product_id))
-
+    else:
+        return url
 
 def getResponseCode(url):
     request = Request(url=url)
     try:
         response = urlopen(request).getcode()
-    except HTTPError as e:
-        response = e.read()
+    except HTTPError:
+        response = None
 
     return response
 
