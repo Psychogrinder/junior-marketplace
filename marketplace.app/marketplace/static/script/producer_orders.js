@@ -132,8 +132,7 @@ if ($('main.producer-orders').length > 0) {
                 '<option value="Завершён">Завершён</option>' +
                 '</select>' +
                 '<button class="btn btn-warning common-view-btn" id="changeOrderStatusBtn' + i + '">Изменить</button>' +
-                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtn' + i + '" onclick="changeOrderStatus(' + orders[i].id + ')">Сохранить' +
-                '</button>' +
+                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtn' + i + '">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
@@ -241,8 +240,7 @@ if ($('main.producer-orders').length > 0) {
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<button class="btn btn-warning" id="changeOrderStatusBtnTable' + i + '">Изменить</button>' +
-                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable' + i + '" ' +
-                'onclick="changeOrderStatusTable(' + orders[i].id + ')">Сохранить</button>' +
+                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable' + i + '">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>'
@@ -283,24 +281,37 @@ if ($('main.producer-orders').length > 0) {
     // TODO add save status functionality
     function add_event_listeners_to_buttons(i) {
         $('body').on('click', '#changeOrderStatusBtn' + i, function () {
+            console.log('Hello change');
             this.style.display = 'none';
             $('#changeOrderStatusSelect' + i).removeAttr('disabled');
             $('#saveStatusOrderBtn' + i).css('display', 'block');
         });
 
-         $('body').on('click', '#saveOrderStatusBtn' + i, function () {
+        $('body').on('click', '#saveOrderStatusBtn' + i, function () {
+            console.log('Hello save');
             this.style.display = 'none';
-            $('#changeOrderStatusSelect' + i).addAttr('disabled');
-            $('#saveStatusOrderBtn' + i).css('display', 'block');
+            $('#changeOrderStatusSelect' + i).prop('disabled', true);
+            // $('#changeOrderStatusSelect' + i).prop('disabled', true);
+            $('#changeStatusOrderBtn' + i).css('display', 'block');
         });
 
         $('#saveStatusOrderBtn' + i).css('display', 'none');
+
         $('body').on('click', '#changeOrderStatusBtnTable' + i, function () {
             this.style.display = 'none';
-            $('#changeOrderStatusSelectTable' + i).removeAttr('disabled');
-            $('#saveStatusOrderBtnTable' + i).css('display', 'block');
+            console.log('hello');
+            var sel = document.getElementById('changeOrderStatusSelect' + i);
+            sel.setAttribute('disabled', false);
+            $('#changeStatusOrderBtnTable' + i).css('display', 'block');
         });
+
         $('#saveStatusOrderBtnTable' + i).css('display', 'none');
+
+        $('body').on('click', '#saveOrderStatusBtnTable' + i, function () {
+            this.style.display = 'none';
+            $('#changeOrderStatusSelect' + i).prop('disabled', true);
+            $('#saveStatusOrderBtn' + i).css('display', 'block');
+        });
 
     }
 
