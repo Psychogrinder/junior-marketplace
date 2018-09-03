@@ -13,7 +13,7 @@
         <section class="product-filter">
             <form action="#">
                 <div class="filter-block col-6 col-sm-4">
-                    <select class="form-control" name="sort_by">
+                    <select class="form-control" name="sort_by" id="sortProducerProducts">
                         <option>По цене ↑</option>
                         <option>По цене ↓</option>
                         <option>По популярности</option>
@@ -34,7 +34,7 @@
             <a class="btn btn-secondary add-product" href={{ url_for( 'create_product', producer_id =
             products[0].producer_id ) }} > Добавить товар</a>
         </section>
-        <section class="product-card row">
+        <section class="product-card row" id="producerProducts">
             {% for product in products %}
             <div class="col-6 col-sm-3 card-item">
                 <a href={{ url_for('product_card', product_id = product.id )}} >
@@ -49,6 +49,7 @@
                         <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
                         Редактировать
                         </a>
+                    </p>
                     </p>
                     {% if product.quantity == 0 %}
                     <p class="goods-ended">
