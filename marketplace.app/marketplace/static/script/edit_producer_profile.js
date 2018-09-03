@@ -24,6 +24,7 @@ $(document).ready(function () {
                 success: function (data, status) {
                     var hulla = new hullabaloo();
                     hulla.send("Профиль успешно изменен", "secondary");
+                    location.replace('/producer/' + producer_id);
                 }
             });
         };

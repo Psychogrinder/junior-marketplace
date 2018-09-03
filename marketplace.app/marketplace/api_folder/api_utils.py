@@ -1,5 +1,4 @@
-from operator import itemgetter
-from marketplace import email_tools
+from marketplace import email_tools, cache, REDIS_STORAGE_TIME
 import os
 import re
 import json
@@ -622,6 +621,29 @@ def check_producer_name_uniqueness(name):
         failed_producer_name_uniqueness_check(name)
 
 
+# Orders
+
+def get_number_of_unprocessed_orders_by_producer_id(producer_id):
+    return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
+
+
+def decrease_products_quantity_and_increase_times_ordered(consumer_id):
+    items = get_cart_by_consumer_id(consumer_id).items
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity -= int(quantity)
+        get_product_by_id(int(item)).times_ordered += 1
+        db.session.commit()
+
+
+def increase_products_quantity_and_decrease_times_ordered(order_id):
+    order = get_order_by_id(order_id)
+    items = order.order_items_json
+    for item, quantity in items.items():
+        get_product_by_id(int(item)).quantity += int(quantity)
+        get_product_by_id(int(item)).times_ordered -= 1
+        db.session.commit()
+
+
 # Uploaders
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -661,24 +683,15 @@ def upload_product_image(product_id, files):
     return upload_image(product, files)
 
 
-# other
+# Caching
 
-def get_number_of_unprocessed_orders_by_producer_id(producer_id):
-    return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Не обработан').all())
+def cache_json_and_get(path, response):
+    cache.execute_command('JSON.SET', path, '.', json.dumps(response))
+    cache.expire(path, REDIS_STORAGE_TIME)
+    return response
 
-
-def decrease_products_quantity_and_increase_times_ordered(consumer_id):
-    items = get_cart_by_consumer_id(consumer_id).items
-    for item, quantity in items.items():
-        get_product_by_id(int(item)).quantity -= int(quantity)
-        get_product_by_id(int(item)).times_ordered += 1
-        db.session.commit()
+def get_cached_json(path):
+    res = cache.execute_command('JSON.GET', path, 'NOESCAPE')
+    return json.loads(res) if res is not None else None
 
 
-def increase_products_quantity_and_decrease_times_ordered(order_id):
-    order = get_order_by_id(order_id)
-    items = order.order_items_json
-    for item, quantity in items.items():
-        get_product_by_id(int(item)).quantity += int(quantity)
-        get_product_by_id(int(item)).times_ordered -= 1
-        db.session.commit()

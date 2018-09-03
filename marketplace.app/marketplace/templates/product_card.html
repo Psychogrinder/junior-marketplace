@@ -59,8 +59,9 @@
                 </div>
                 <div class="col-3">
                     {% if product.quantity == 0 %}
-                        <p class="out-of-stock"><img
-                                src={{ url_for('static', filename ="img/exclamation-circle-solid.svg") }}>Нет в наличии
+                        <p class="goods-ended">
+                            <img src={{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}>
+                            Нет в наличии
                         </p>
                     {% endif %}
                     {% if current_user.id == product.producer_id %}
