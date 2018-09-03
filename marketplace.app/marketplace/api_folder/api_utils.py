@@ -150,7 +150,7 @@ def get_cart_by_consumer_id(consumer_id):
 
 
 def get_producer_name_by_id(producer_id):
-    return db.session.query(Producer.name).filter(Producer.id == producer_id).first()
+    return db.session.query(Producer.name).filter(Producer.id == producer_id).first()[0]
 
 
 # Get by other params
@@ -240,7 +240,7 @@ def get_filtered_orders(args):
 # Get sorted
 def get_sorted_and_filtered_products(args):
     query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
-                             Producer.name.label('producer_name')).filter(
+                             Producer.name.label('producer_name'), Product.quantity).filter(
         Product.producer_id == Producer.id)
 
     if args['popularity']:
@@ -250,7 +250,7 @@ def get_sorted_and_filtered_products(args):
     if args['producer_name']:
         query = query.filter(Producer.name == args['producer_name'])
 
-    if args['in_stock'] == 1:
+    if int(args['in_stock']) == 1:
         query = query.filter(Product.quantity > 0)
 
     if args['category_name']:
@@ -271,7 +271,7 @@ def get_sorted_and_filtered_products(args):
         elif args['price'] == 'up':
             query = query.order_by(Product.price.asc())
 
-    product_schema = ("id", "name", "price", "photo_url", "producer_name")
+    product_schema = ("id", "name", "price", "photo_url", "producer_name", "quantity")
     products_data = query.all()
     products = []
     for product_data in products_data:
