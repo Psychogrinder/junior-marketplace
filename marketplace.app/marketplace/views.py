@@ -78,9 +78,12 @@ def create_product(producer_id):
 @app.route('/cart/<user_id>')
 def cart(user_id):
     # user = Consumer.query.filter_by(id=user_id).first()
-    items = Cart.query.filter_by(consumer_id=current_user.id).first().items
-    items = {int(k): (v) for k, v in items.items()}
-    products = utils.get_products_from_cart(items)
+    items = {}
+    products = {}
+    cart = Cart.query.filter_by(consumer_id=current_user.id).first()
+    if cart is not None: 
+        items = {int(k): (v) for k, v in cart.items.items()}
+        products = utils.get_products_from_cart(items)
     # producer_ids = set(product.producer_id for product in products)
     # producers = [utils.get_producer_by_id(id) for id in producer_ids]
     if current_user.id == int(user_id):
