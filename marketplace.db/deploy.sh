@@ -7,4 +7,4 @@ docker volume create marketplace.app
 
 docker network create marketplace
 
-docker-compose up --build
+docker-compose -f stage/docker-compose.yml up --build
