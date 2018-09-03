@@ -276,6 +276,12 @@ if ($('main.producer-orders').length > 0) {
                     currentSelect.options[o].selected = 'selected'
                 }
             }
+            let currentSelectTable = document.getElementById('changeOrderStatusSelectTable' + i);
+            for (var o = 0; o < currentSelectTable.options.length; o++) {
+                if (currentSelectTable.options[o].value === currentOrders[i].status) {
+                    currentSelectTable.options[o].selected = 'selected'
+                }
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 var currentOrdersView;
 
 function showTable() {
-    console.log("I am called show Table");
     currentOrdersView = 'table';
     var commonView = document.getElementsByClassName("item_order");
     var tableView = document.getElementsByClassName("table_container");
