@@ -1,8 +1,9 @@
 .vagrant/
 .idea/
 .webassets-cache
-
+.vscode/
 __pycache__/
+.env/
 
 *.log
 *.egg-info
@@ -18,6 +19,6 @@ bundle.min.css
 app.min.js
 
 .env.prod
-.env.stage
+
 
 3.6/

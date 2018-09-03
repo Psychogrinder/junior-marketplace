@@ -1,0 +1,50 @@
+version: "3"
+
+networks:
+  marketplace:
+    external: true
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - CELERY_BROKER_URL
+        - FLASK_DEBUG
+        - SQLALCHEMY_DATABASE_URI
+    environment:
+      - FLASK_DEBUG=${FLASK_DEBUG}
+      - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    ports:
+      - "8000:8000"
+    command:
+      "flask run --port=8000 --host=0.0.0.0"
+    networks:
+      - marketplace
+    volumes:
+      - "./marketplace/:/app/marketplace"
+
+
+  redis:
+    image: redis:5.0-rc
+    networks:
+      - marketplace
+
+
+  celery:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - CELERY_BROKER_URL
+    command:
+      "celery -A marketplace.celery --loglevel=info worker"
+    networks:
+      - marketplace
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    depends_on:
+      - redis
+      - app
