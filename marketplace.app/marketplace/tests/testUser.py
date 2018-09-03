@@ -48,6 +48,7 @@ class TestCase(unittest.TestCase):
         self.assertIn('remember_token', cookie)
         self.assertIn('session', cookie)
 
+        print('Test Login is OK.\n')
 
     def testLogout(self):
         logout_url = self.base_url + '/api/v1/logout'
@@ -56,8 +57,9 @@ class TestCase(unittest.TestCase):
         self.assertEqual(201, response.status_code)
         self.assertNotIn('session', response.cookies)
 
+        print('Test Logout is OK.\n')
 
-    def testGetAuthPages(self):
+    def testResponseAuthPages(self):
 
         #(remember_token and session in cookie) and response status_code
         cookie, response = get_cookie(self.login_url, self.user.email, self.pw)
@@ -68,10 +70,8 @@ class TestCase(unittest.TestCase):
         routes = parseApiRoutes()
         for route in routes['auth']:
 
-            test_url = self.base_url + route
-
             if user_entity == 'producer' and '<producer_id>' in route:
-                test_url = replaceUserId(test_url, user_id)
+                test_url = replaceUserId(self.base_url + route, user_id)
                 test_url = replaceProductId(test_url, self.product_id)
                 req = requests.session().get(test_url, cookies=cookie)
                 self.assertEqual(200, req.status_code)
@@ -82,7 +82,8 @@ class TestCase(unittest.TestCase):
                 self.assertEqual(200, req.status_code)
 
             """TODO: add test /email_confirm/<token>"""
-
+        print('Test Auth user pages is OK.\n')
 
 if __name__ == '__main__':
+    unittest.TestLoader.sortTestMethodsUsing = None
     unittest.main()
