@@ -7,7 +7,7 @@ load_dotenv()
 class Base(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
-    UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/user_images'
+    UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/static/img/user_images'
    
     MAIL_SERVER = 'smtp.mail.ru'
     MAIL_PORT = 2525

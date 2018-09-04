@@ -14,14 +14,19 @@ def allowed_extension(filename):
 
 
 def upload_image(uploader, files):
+    print('In upload_image')
     if 'image' not in files:
         no_file_part_in_request()
+    print("past first if")
     image = files['image']
     if image.filename == '':
         no_image_presented()
     if image and allowed_extension(image.filename):
         image_url = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(image.filename))
         image.save(image_url)
+        # test start
+        image_url = '/'.join(image_url.split('/')[-4:])
+        # test end
         uploader.set_photo_url(image_url)
         db.session.commit()
     return True

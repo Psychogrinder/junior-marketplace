@@ -3,6 +3,7 @@ import os
 from sqlalchemy import JSON
 from sqlalchemy.ext.mutable import MutableDict
 from flask_sqlalchemy import BaseQuery
+
 try:
     from marketplace import db, login
 except:
@@ -13,7 +14,6 @@ from sqlalchemy.dialects.postgresql import MONEY
 from flask_login import UserMixin
 from sqlalchemy_searchable import SearchQueryMixin, make_searchable
 from sqlalchemy_utils.types.ts_vector import TSVectorType
-
 
 make_searchable(db.metadata)
 
@@ -30,7 +30,15 @@ class SetPhotoUrlMixin():
         if self.photo_url is None:
             self.photo_url = photo_url
         elif self.photo_url is not None and self.photo_url != photo_url:
-            os.remove(self.photo_url)
+            print('____________________________')
+            print('____________________________')
+            print(os.path.dirname(os.path.realpath(__file__)) + self.photo_url)
+            print(os.path.dirname(os.path.realpath(__file__)))
+            print(self.photo_url)
+            print('____________________________')
+            print('____________________________')
+            if not self.photo_url == 'static/img/standard.png':
+                os.remove(os.path.join(os.path.dirname(os.path.realpath(__file__)), self.photo_url))
             self.photo_url = photo_url
 
 
@@ -220,10 +228,10 @@ class Product(SetPhotoUrlMixin, db.Model):
         'description',
         weights={'name': 'A', 'description': 'B'},
         regconfig='pg_catalog.russian'
-        ))
+    ))
 
-
-    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight='', description=''):
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight='', description='',
+                 photo_url='static/img/standard.png'):
         self.price = float(price)
         self.name = name
         self.quantity = quantity
@@ -233,6 +241,7 @@ class Product(SetPhotoUrlMixin, db.Model):
         self.times_ordered = 0
         self.weight = weight
         self.description = get_string_or_default(description)
+        self.photo_url = photo_url
 
     def set_description(self, description):
         self.description = description
@@ -260,7 +269,6 @@ class Category(db.Model):
 
     def get_subcategories(self):
         return Category.query.filter_by(parent_id=self.id).all()
-
 
 
 @login.user_loader

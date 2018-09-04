@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
     if ($('main .edit-product-card').length > 0) {
 
         var category_id;
@@ -88,6 +90,22 @@ $(document).ready(function () {
                             $(subcategory_option[i]).val(subcategories[i].slug);
                         }
                     });
+            });
+        });
+
+
+        $('#upload-file-btn').click(function () {
+            var form_data = new FormData($('#upload-file')[0]);
+            $.ajax({
+                type: 'POST',
+                url: "/api/v1/products/" + product_id + "/upload",
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    console.log('Success!');
+                },
             });
         });
     }

@@ -195,3 +195,4 @@ def delete_product_by_id(product_id):
 def upload_product_image(product_id, files):
     product = get_product_by_id(product_id)
     return upload_image(product, files)
+
