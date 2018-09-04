@@ -22,3 +22,6 @@ app.min.js
 user_image_dump/
 
 3.6/
+
+*.sql
+*.sql.gz
