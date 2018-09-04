@@ -78,9 +78,12 @@ def create_product(producer_id):
 @app.route('/cart/<user_id>')
 def cart(user_id):
     # user = Consumer.query.filter_by(id=user_id).first()
-    items = Cart.query.filter_by(consumer_id=current_user.id).first().items
-    items = {int(k): (v) for k, v in items.items()}
-    products = cart_utils.get_products_from_cart(items)
+    items = {}
+    products = {}
+    cart = Cart.query.filter_by(consumer_id=current_user.id).first()
+    if cart is not None:
+        items = {int(k): (v) for k, v in cart.items.items()}
+        products = cart_utils.get_products_from_cart(items)
     # producer_ids = set(product.producer_id for product in products)
     # producers = [utils.get_producer_by_id(id) for id in producer_ids]
     if current_user.id == int(user_id):
@@ -191,13 +194,11 @@ def version():
 
 @app.route('/email_confirm/<token>')
 def email_confirm(token):
-    user_email = email.confirm_token(token)
+    user_email = email_tools.confirm_token(token)
     if user_email is None:
-        # TODO перенаправить на красивую страничку для ошибок
         return abort(404)
     user = User.query.filter_by(email=user_email).first()
     if user is None:
-        # TODO перенаправить на красивую страничку для ошибок
         return abort(404)
     user.verify_email()
     db.session.add(user)
@@ -209,6 +210,11 @@ def email_confirm(token):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 503
 
 
 if __name__ == '__main__':

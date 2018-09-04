@@ -84,3 +84,8 @@ class ProducerNamesByCategoryName(Resource):
             return caching_utils.cache_json_and_get(path, names), 200
         else:
             return cache, 200
+
+
+class ProducerNameById(Resource):
+    def get(self, producer_id):
+        return {"producer_name": utils.get_producer_name_by_id(producer_id)}

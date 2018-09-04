@@ -3,13 +3,14 @@ version: "3"
 networks:
   marketplace:
     external: true
-  
+
 volumes:
   marketplace_user_image:
     external: true
 
 services:
   app:
+    container_name: marketplace.app
     build:
       dockerfile: Dockerfile
       context: .
@@ -17,12 +18,16 @@ services:
         - CELERY_BROKER_URL
         - FLASK_ENV
         - SQLALCHEMY_DATABASE_URI
+        - SECRET_KEY
+        - SECURITY_PASSWORD_SALT
     environment:
       - FLASK_ENV=production
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - SECRET_KEY=#{SECRET_KEY}
+      - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
     ports:
-      - "8000:8000"
+      - "10.100.1.39:8000:8000"
     command:
       "flask run --port=8000 --host=0.0.0.0"
     networks:
@@ -32,12 +37,14 @@ services:
 
 
   redis:
+    container_name: marketplace.redis
     image: redis:5.0-rc
     networks:
       - marketplace
 
 
   celery:
+    container_name: marketplace.celery
     build:
       dockerfile: Dockerfile
       context: .

@@ -26,7 +26,7 @@ class GlobalOrders(Resource):
     def post(self):
         args = parser.parse_args()
         cart_utils.decrease_products_quantity_and_increase_times_ordered(args['consumer_id'])
-        order_utils.post_orders(args)
+        cart_utils.post_orders(args)
         return "Заказ был успешно оформлен", 201
 
 
@@ -52,3 +52,15 @@ class Orders(Resource):
 class UnprocessedOrdersByProducerId(Resource):
     def get(self, producer_id):
         return {"quantity": order_utils.get_number_of_unprocessed_orders_by_producer_id(producer_id)}, 200
+
+
+filtered_orders_args = ['producer_id', 'order_status']
+filtered_orders_parser = reqparse.RequestParser()
+for arg in filtered_orders_args:
+    filtered_orders_parser.add_argument(arg)
+
+
+class FilteredOrdersByProducerId(Resource):
+    def post(self):
+        args = filtered_orders_parser.parse_args()
+        return order_utils.get_filtered_orders(args), 200
