@@ -1,7 +1,15 @@
 from path_file import *
 
+
 from testMethods import getCookie, getUserIdAndEntity, getResponseCode, parseApiRoutes, \
     replaceUserId, replaceProductId, getResponseCode
+
+#from marketplace.api_folder.utils.user_utils import get_user_by_email
+
+from marketplace.api_folder.utils.consumer_utils import get_consumer_by_id, get_all_consumers, \
+    post_consumer, put_consumer, delete_consumer_by_id, upload_consumer_image
+
+
 
 import requests
 import unittest
@@ -15,7 +23,7 @@ class TestCase(unittest.TestCase):
 
         self.user = Mock()
         self.producer = Mock()
-
+        
         #login data
         self.user.email = 'berenice.cavalcanti@example.com'
         self.producer.email = 'annabelle.denys@example.com'
@@ -75,15 +83,31 @@ class TestCase(unittest.TestCase):
 
         """TODO: add test /email_confirm/<token>"""
 
+
+    def testUserAdd(self):
+        consumer = post_consumer(args)
+
+    def testUserDelete(self):
+        msg = delete_consumer_by_id(id)
+
     def testUserEdit(self):
-        pass
-        #cookie, response = get_cookie(self.login_url, self.user.email, self.pw)
+        cookie, response = getCookie(self.login_url, self.user.email, self.pw)
+        user_id, user_entity = getUserIdAndEntity(response)
+        url = self.base_url + '/user/edit/' + str(user_id)
 
-        #user = json.loads(response.content)
-        #user_id, user_entity = getUserIdFromCookie(user)
+        print(url)
 
+        consumer = get_consumer_by_id(user_id)
+        print(consumer.email)
 
+        args = {'email': 'a@ma.ru'}
+
+        consumer = put_consumer(args, user_id)
+        print(consumer.email)
+
+        args = {'email': 'berenice.cavalcanti@example.com'}
+        consumer = put_consumer(args, user_id)
+        print(consumer.email)
 
 if __name__ == '__main__':
-
     unittest.main()

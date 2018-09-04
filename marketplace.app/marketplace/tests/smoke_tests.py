@@ -1,6 +1,7 @@
 from path_file import *
 from testMethods import parseApiRoutes, getCategorySlugs,  getProductIds,  getResponseCode, getUserIds, \
     replaceCategoryName, replaceUserId, replaceProductId
+
 import unittest
 from urllib.request import urlopen
 
