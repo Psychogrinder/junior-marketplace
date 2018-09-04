@@ -15,6 +15,10 @@ def get_producer_by_name(name):
     return Producer.query.filter_by(name=name).first()
 
 
+def get_producer_name_by_id(producer_id):
+    return db.session.query(Producer.name).filter(Producer.id == producer_id).first()[0]
+
+
 def get_all_producers():
     return Producer.query.filter_by(entity='producer').all()
 
@@ -56,6 +60,3 @@ def get_producer_names_by_category_name(category_name):
     category = Category.query.filter_by(name=category_name).first()
     producers = get_all_producers()
     return [producer.name for producer in producers if category in producer.categories]
-
-
-
