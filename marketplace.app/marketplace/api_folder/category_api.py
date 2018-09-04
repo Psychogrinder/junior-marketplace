@@ -1,9 +1,9 @@
 from marketplace.api_folder.utils import category_utils
 from marketplace.api_folder.utils import product_utils
 from flask_restful import Resource
-from marketplace.api_folder.decorators import get_cache
 from marketplace.api_folder.schemas import category_schema_list, product_schema_list, category_schema
 from marketplace.api_folder.utils import caching_utils
+from marketplace.api_folder.utils.caching_utils import get_cache
 
 
 class CategoryRest(Resource):
@@ -12,7 +12,7 @@ class CategoryRest(Resource):
     def get(self, path, cache, **kwargs):
         if cache is None:
             category = category_schema.dump(category_utils.get_category_by_name(kwargs['slug'])).data
-            return caching_utils.cache_json_and_get(path, category), 200
+            return caching_utils.cache_json_and_get(path=path, response=category), 200
         else:
             return cache, 200
 
@@ -23,7 +23,7 @@ class BaseCategories(Resource):
     def get(self, path, cache):
         if cache is None:
             categories = category_schema_list.dump(category_utils.get_all_base_categories()).data
-            return caching_utils.cache_json_and_get(path, categories), 200
+            return caching_utils.cache_json_and_get(path=path, response=categories), 200
         else:
             return cache, 200
 
@@ -35,7 +35,7 @@ class Subcategories(Resource):
         if cache is None:
             subcategories = category_schema_list.dump(
                 category_utils.get_subcategories_by_category_id(kwargs['category_id'])).data
-            return caching_utils.cache_json_and_get(path, subcategories), 200
+            return caching_utils.cache_json_and_get(path=path, response=subcategories), 200
         else:
             return cache, 200
 
@@ -47,7 +47,7 @@ class SubcategoriesBySlug(Resource):
         if cache is None:
             subcategories = category_schema_list.dump(
                 category_utils.get_subcategories_by_category_slug(kwargs['category_slug'])).data
-            return caching_utils.cache_json_and_get(path, subcategories), 200
+            return caching_utils.cache_json_and_get(path=path, response=subcategories), 200
         else:
             return cache, 200
 
@@ -58,7 +58,7 @@ class ProductsByCategory(Resource):
     def get(self, path, cache, **kwargs):
         if cache is None:
             products = product_schema_list.dump(product_utils.get_products_by_category_id(kwargs['category_id'])).data
-            return caching_utils.cache_json_and_get(path, products), 200
+            return caching_utils.cache_json_and_get(path=path, response=products), 200
         else:
             return cache, 200
 
@@ -70,7 +70,7 @@ class PopularProductsByCategory(Resource):
         if cache is None:
             products = product_schema_list.dump(
                 product_utils.get_popular_products_by_category_id(kwargs['category_id'], kwargs['direction'])).data
-            return caching_utils.cache_json_and_get(path, products), 200
+            return caching_utils.cache_json_and_get(path=path, response=products), 200
         else:
             return cache, 200
 
@@ -82,7 +82,7 @@ class ParentCategoryBySubcategoryId(Resource):
         if cache is None:
             category = category_schema.dump(
                 category_utils.get_parent_category_by_category_id(kwargs['category_id'])).data
-            return caching_utils.cache_json_and_get(path, category), 200
+            return caching_utils.cache_json_and_get(path=path, response=category), 200
         else:
             return cache, 200
 

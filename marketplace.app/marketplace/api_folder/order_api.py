@@ -1,9 +1,9 @@
 from flask_restful import Resource, reqparse
 from marketplace.api_folder.utils import order_utils
-from marketplace.api_folder.decorators import get_cache
 from marketplace.api_folder.schemas import order_schema_list, order_schema
 from marketplace.api_folder.utils import caching_utils
 import marketplace.api_folder.utils.cart_utils as cart_utils
+from marketplace.api_folder.utils.caching_utils import get_cache
 
 order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost', 'first_name',
               'last_name']
@@ -19,7 +19,7 @@ class GlobalOrders(Resource):
     def get(self, path, cache):
         if cache is None:
             orders = order_schema_list.dump(order_utils.get_all_orders()).data
-            return caching_utils.cache_json_and_get(path, orders), 200
+            return caching_utils.cache_json_and_get(path=path, response=orders), 200
         else:
             return cache, 200
 
@@ -36,7 +36,7 @@ class Orders(Resource):
     def get(self, path, cache, **kwargs):
         if cache is None:
             order = order_schema.dump(order_utils.get_order_by_id(kwargs['order_id'])).data
-            return caching_utils.cache_json_and_get(path, order), 200
+            return caching_utils.cache_json_and_get(path=path, response=order), 200
         else:
             return cache, 200
 
