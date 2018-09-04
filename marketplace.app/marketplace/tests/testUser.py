@@ -1,39 +1,32 @@
 from path_file import *
 
-import requests, json
+from testMethods import getCookie, getUserIdAndEntity, getResponseCode, parseApiRoutes, \
+    replaceUserId, replaceProductId, getResponseCode
+
+import requests
 import unittest
 from mock import Mock
-from smoke_tests import parseApiRoutes, replaceUserId, replaceProductId, getResponseCode
-from urllib.request import Request, urlopen
 
-def get_cookie(login_url, email, password):
-    payload = {
-        'email': email,
-        'password': password
-    }
-    s = requests.Session()
-    response = s.post(login_url, data=payload, allow_redirects=False)
-
-    return response.cookies.get_dict(), response
 
 
 class TestCase(unittest.TestCase):
-
+    unittest.TestLoader.sortTestMethodsUsing = None
     def setUp(self):
 
         self.user = Mock()
         self.producer = Mock()
 
-        #logging data
+        #login data
         self.user.email = 'berenice.cavalcanti@example.com'
         self.producer.email = 'annabelle.denys@example.com'
         self.pw = '123123'
 
         self.product_id = 3
 
-        #data for edit profile
+        #edit profile
         self.user.first_name = 'Abra'
         self.user.last_name = 'Cadabra'
+        self.user.patronymic = 'Redisovic'
         self.user.phone_number = '81212121'
 
         self.base_url = 'http://127.0.0.1:8000'
@@ -42,7 +35,7 @@ class TestCase(unittest.TestCase):
 
     def testLogin(self):
 
-        cookie, response = get_cookie(self.login_url, self.user.email, self.pw)
+        cookie, response = getCookie(self.login_url, self.user.email, self.pw)
 
         self.assertEqual(201, response.status_code)
         self.assertIn('remember_token', cookie)
@@ -62,10 +55,8 @@ class TestCase(unittest.TestCase):
     def testResponseAuthPages(self):
 
         #(remember_token and session in cookie) and response status_code
-        cookie, response = get_cookie(self.login_url, self.user.email, self.pw)
-
-        user = json.loads(response.content)
-        user_id, user_entity = user['id'], user['entity']
+        cookie, response = getCookie(self.login_url, self.user.email, self.pw)
+        user_id, user_entity = getUserIdAndEntity(response)
 
         routes = parseApiRoutes()
         for route in routes['auth']:
@@ -80,10 +71,19 @@ class TestCase(unittest.TestCase):
                 test_url = replaceUserId(self.base_url + route, user_id)
                 req = requests.session().get(test_url, cookies=cookie)
                 self.assertEqual(200, req.status_code)
-
-            """TODO: add test /email_confirm/<token>"""
         print('Test Auth user pages is OK.\n')
 
+        """TODO: add test /email_confirm/<token>"""
+
+    def testUserEdit(self):
+        pass
+        #cookie, response = get_cookie(self.login_url, self.user.email, self.pw)
+
+        #user = json.loads(response.content)
+        #user_id, user_entity = getUserIdFromCookie(user)
+
+
+
 if __name__ == '__main__':
-    unittest.TestLoader.sortTestMethodsUsing = None
+
     unittest.main()
