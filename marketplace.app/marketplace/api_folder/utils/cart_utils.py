@@ -5,7 +5,7 @@ from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exis
     abort_if_product_doesnt_exist_or_get
 from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.product_utils import get_product_by_id
-from marketplace.models import Cart
+from marketplace.models import Cart, Order
 
 
 def get_cart_by_consumer_id(consumer_id):

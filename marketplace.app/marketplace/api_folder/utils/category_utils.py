@@ -1,7 +1,7 @@
 from marketplace.api_folder.utils.abortions import abort_if_category_doesnt_exist_or_get, \
     abort_if_category_doesnt_exist_slug_or_get
 from marketplace.api_folder.utils.producer_utils import get_producer_by_id
-from marketplace.models import Category, Producer
+from marketplace.models import Category, Producer, Product
 
 
 def get_category_by_id(category_id):
