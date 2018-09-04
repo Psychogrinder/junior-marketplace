@@ -1,3 +1,5 @@
+import json
+
 from marketplace import db
 from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exist_or_get, \
     abort_if_product_doesnt_exist_or_get
@@ -73,3 +75,37 @@ def increase_products_quantity_and_decrease_times_ordered(order_id):
         get_product_by_id(int(item)).quantity += int(quantity)
         get_product_by_id(int(item)).times_ordered -= 1
         db.session.commit()
+
+
+def post_orders(args):
+    """
+    Сначала обявляем переменные, которые содержат общую информацию. Затем работаем с каждым заказом отдельно.
+    Для каждого заказа расчитываем итоговую стоимость, добавляем в заказ товары, у которых id производителя
+    совпадает с id производителя заказа.
+    :param args:
+    :return:
+    """
+    abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
+    # new_order = order_schema.load(args).data
+    consumer_id = args['consumer_id']
+    first_name = args['first_name']
+    last_name = args['last_name']
+    delivery_address = args['delivery_address']
+    phone = args['phone']
+    email = args['email']
+    orders = args['orders']
+    items = get_cart_by_consumer_id(consumer_id).items
+    orders = json.loads(orders)
+    for order in orders:
+        total_cost = 0
+        current_items = {}
+        for product_id, quantity in items.items():
+            product = get_product_by_id(int(product_id))
+            if product.producer_id == int(order['producer_id']):
+                current_items[product_id] = quantity
+                total_cost += float(product.price.strip('₽').strip(' ')) * int(quantity)
+        new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
+                          phone, email, consumer_id, order['producer_id'], first_name=first_name, last_name=last_name)
+        db.session.add(new_order)
+    clear_cart_by_consumer_id(consumer_id)
+    db.session.commit()

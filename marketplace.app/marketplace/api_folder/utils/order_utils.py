@@ -1,10 +1,9 @@
-import json
-
 from marketplace import db
+from marketplace.api_folder.schemas import order_schema_list
 from marketplace.api_folder.utils import product_utils
 from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exist_or_get, \
     abort_if_consumer_doesnt_exist_or_get, abort_if_order_doesnt_exist_or_get
-from marketplace.models import Order
+from marketplace.models import Order, Product
 
 
 def get_orders_by_producer_id(producer_id):
@@ -33,38 +32,7 @@ def get_all_orders():
     return Order.query.all()
 
 
-def post_orders(args):
-    """
-    Сначала обявляем переменные, которые содержат общую информацию. Затем работаем с каждым заказом отдельно.
-    Для каждого заказа расчитываем итоговую стоимость, добавляем в заказ товары, у которых id производителя
-    совпадает с id производителя заказа.
-    :param args:
-    :return:
-    """
-    abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
-    # new_order = order_schema.load(args).data
-    consumer_id = args['consumer_id']
-    first_name = args['first_name']
-    last_name = args['last_name']
-    delivery_address = args['delivery_address']
-    phone = args['phone']
-    email = args['email']
-    orders = args['orders']
-    items = get_cart_by_consumer_id(consumer_id).items
-    orders = json.loads(orders)
-    for order in orders:
-        total_cost = 0
-        current_items = {}
-        for product_id, quantity in items.items():
-            product = get_product_by_id(int(product_id))
-            if product.producer_id == int(order['producer_id']):
-                current_items[product_id] = quantity
-                total_cost += float(product.price.strip('₽').strip(' ')) * int(quantity)
-        new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
-                          phone, email, consumer_id, order['producer_id'], first_name=first_name, last_name=last_name)
-        db.session.add(new_order)
-    clear_cart_by_consumer_id(consumer_id)
-    db.session.commit()
+
 
 
 def put_order(args, order_id):
@@ -84,3 +52,28 @@ def delete_order_by_id(order_id):
 
 def get_number_of_unprocessed_orders_by_producer_id(producer_id):
     return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
+
+
+def get_filtered_orders(args):
+    order_status = args['order_status']
+    if order_status == 'Все':
+        orders = order_schema_list.dump(Order.query.filter_by(producer_id=int(args['producer_id'])).all()).data
+    else:
+        orders = order_schema_list.dump(
+            Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).all()).data
+    for order in orders:
+        order['items'] = []
+        order['order_timestamp'] = order['order_timestamp'].split('T')[0]
+        for product_id, quantity in order['order_items_json'].items():
+            product_data = db.session.query(Product.id, Product.name, Product.price, Product.weight,
+                                            Product.photo_url, Product.measurement_unit).filter_by(
+                id=int(product_id)).first()
+            order_product_schema = ("id", "name", "price", "weight", "photo_url", "measurement_unit")
+            product = dict(zip(order_product_schema, product_data))
+            product['quantity'] = quantity
+            if product['weight'].is_integer():
+                product['weight'] = int(product['weight'])
+            order['items'].append(product)
+            del order['order_items_json']
+
+    return orders

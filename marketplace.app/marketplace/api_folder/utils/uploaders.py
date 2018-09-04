@@ -1,6 +1,8 @@
 import os
 
-from marketplace import db
+from werkzeug.utils import secure_filename
+
+from marketplace import db, app
 from marketplace.api_folder.utils.abortions import no_file_part_in_request, no_image_presented
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])

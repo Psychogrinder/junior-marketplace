@@ -88,10 +88,10 @@ class ParentCategoryBySubcategoryId(Resource):
 
 
 # Не было такое функции get_subcategory_names_by_producer_name
-# class SubcategoryNamesByProducerName(Resource):
-#     def get(self, producer_name):
-#         return {'producer_name': producer_name,
-#                 "category_names": category_utils.get_subcategory_names_by_producer_name(producer_name)}
+class SubcategoryNamesByProducerName(Resource):
+    def get(self, producer_name):
+        return {'producer_name': producer_name,
+                "category_names": category_utils.get_subcategory_names_by_producer_name(producer_name)}
 
 
 class SubcategoryNamesByParentSlugAndProducerName(Resource):
