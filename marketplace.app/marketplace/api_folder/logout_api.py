@@ -1,7 +1,7 @@
 from flask_restful import Resource
-import marketplace.api_folder.api_utils as utils
+from marketplace.api_folder.utils import login_utils
 
 
 class Logout(Resource):
     def get(self):
-        return utils.logout(), 201
+        return login_utils.logout(), 201
