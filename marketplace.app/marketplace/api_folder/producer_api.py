@@ -88,4 +88,4 @@ class ProducerNamesByCategoryName(Resource):
 
 class ProducerNameById(Resource):
     def get(self, producer_id):
-        return {"producer_name": utils.get_producer_name_by_id(producer_id)}
+        return {"producer_name": producer_utils.get_producer_name_by_id(producer_id)}
