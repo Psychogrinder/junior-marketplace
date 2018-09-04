@@ -37,7 +37,7 @@ def category(category_name):
 @app.route('/products/<product_id>')
 def product_card(product_id):
     product = utils.get_product_by_id(product_id)
-    category = utils.get_category_by_id(product.category_id)
+    category = utils.get_parent_category_by_category_id(product.category_id)
     producer = utils.get_producer_by_id(product.producer_id)
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user)
