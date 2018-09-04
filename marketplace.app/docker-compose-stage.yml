@@ -13,10 +13,14 @@ services:
         - CELERY_BROKER_URL
         - FLASK_DEBUG
         - SQLALCHEMY_DATABASE_URI
+        - CACHE_STORAGE_HOST
+        - FLASK_ENV
     environment:
       - FLASK_DEBUG=${FLASK_DEBUG}
+      - FLASK_ENV=${FLASK_ENV}
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
     ports:
       - "8000:8000"
     command:
