@@ -19,6 +19,6 @@ bundle.min.css
 app.min.js
 
 .env.prod
-
+user_image_dump/
 
 3.6/
