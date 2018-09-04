@@ -47,7 +47,7 @@ def product_card(product_id):
 @app.route('/producer/<producer_id>/products')
 def producer_products(producer_id):
     products = utils.get_products_by_producer_id(producer_id)
-    if current_user.id == int(producer_id):
+    if current_user.is_authenticated and current_user.id == int(producer_id):
         return render_template('producer_products.html', products=products, current_user=current_user)
     else:
         return redirect(url_for('index'))
