@@ -2,12 +2,12 @@ from flask import request
 from flask_restful import Resource, reqparse
 from marketplace.api_folder.utils import consumer_utils
 from marketplace.api_folder.utils import order_utils
-from marketplace.api_folder.decorators import get_cache
 from marketplace.api_folder.schemas import (
     consumer_schema_list,
     consumer_schema,
     order_schema_list)
 from marketplace.api_folder.utils import caching_utils
+from marketplace.api_folder.utils.caching_utils import get_cache
 
 consumer_args = ['first_name', 'last_name', 'email', 'password', 'phone_number', 'category_id', 'address', 'photo_url',
                  'patronymic']
@@ -23,7 +23,7 @@ class GlobalConsumers(Resource):
     def get(self, path, cache):
         if cache is None:
             consumers = consumer_schema_list.dump(consumer_utils.get_all_consumers()).data
-            return caching_utils.cache_json_and_get(path, consumers), 200
+            return caching_utils.cache_json_and_get(path=path, response=consumers), 200
         else:
             return cache, 200
 
@@ -38,7 +38,7 @@ class ConsumerRest(Resource):
     def get(self, path, cache, **kwargs):
         if cache is None:
             consumer = consumer_schema.dump(consumer_utils.get_consumer_by_id(kwargs['consumer_id'])).data
-            return caching_utils.cache_json_and_get(path, consumer), 200
+            return caching_utils.cache_json_and_get(path=path, response=consumer), 200
         else:
             return cache, 200
 
@@ -56,7 +56,7 @@ class ConsumerOrders(Resource):
     def get(self, path, cache, **kwargs):
         if cache is None:
             orders = order_schema_list.dump(order_utils.get_orders_by_consumer_id(kwargs['consumer_id'])).data
-            return caching_utils.cache_json_and_get(path, orders), 200
+            return caching_utils.cache_json_and_get(path=path, response=orders), 200
         else:
             return cache, 200
 
