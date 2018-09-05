@@ -7,7 +7,10 @@ load_dotenv()
 class Base(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/user_images'
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)),
+        'static', 'img', 'user_images'
+    )
 
     MAIL_SERVER = 'smtp.mail.ru'
     MAIL_PORT = 2525
@@ -40,6 +43,8 @@ class Development(Base):
 
 
 class Production(Base):
+    UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
+    
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
