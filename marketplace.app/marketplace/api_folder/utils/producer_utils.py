@@ -57,7 +57,7 @@ def delete_producer_by_id(producer_id):
 
 def upload_producer_image(producer_id, files):
     producer = get_producer_by_id(producer_id)
-    return upload_image(producer, files)
+    return upload_image(producer, files, producer_id)
 
 
 def get_producer_names_by_category_name(category_name):
