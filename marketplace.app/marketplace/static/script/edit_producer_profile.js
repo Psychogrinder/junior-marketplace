@@ -15,8 +15,6 @@ $(document).ready(function () {
             description: $('#producer_description').val()
         };
 
-        console.log(producerObject);
-
         function submitEditProfileForm() {
             $.ajax({
                 url: '/api/v1/producers/' + producer_id,
