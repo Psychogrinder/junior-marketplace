@@ -12,6 +12,15 @@ $(document).ready(function () {
             success: handleChildCategory
         });
 
+        $('#editPrice').inputmask("numeric", {
+            radixPoint: ".",
+            groupSeparator: " ",
+            digits: 2,
+            autoGroup: true,
+            prefix: '',
+            rightAlign: false
+        });
+
         function handleChildCategory(product_data) {
             var product = product_data;
             category_id = product.category_id;

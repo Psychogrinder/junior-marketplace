@@ -22,7 +22,6 @@ $(document).ready(function () {
             return productObject;
         }
 
-
         $.ajax({
             url: '/api/v1/products/' + product_id,
             type: 'PUT',

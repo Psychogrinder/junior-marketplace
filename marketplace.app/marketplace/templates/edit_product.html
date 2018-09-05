@@ -21,7 +21,7 @@
             </div>
             <div class="row edit-product-item">
                 <label for="editPrice" class="col-5 col-sm-3">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" required value={{ product.price}}>
+                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" pattern="^\d+\.?(\d{1,2})?$" required value={{ product.price}}>
             </div>
             <div class="row edit-product-item">
                 <label for="editArticle" class="col-5 col-sm-3">Артикул</label>
@@ -48,7 +48,7 @@
             </div>
             <div class="row edit-product-item">
                 <label for="editWeigth" class="col-5 col-sm-3">Вес/Единицы измерения</label>
-                <input type="text" class="form-control col-5 col-sm-3" pattern="^[ 0-9]+$" name="weigth"
+                <input type="text" class="form-control col-5 col-sm-3" name="weigth"
                        id="editWeigth" value={{ product.weight }}>
                 <select class="form-control col-4 col-sm-1" name="weigth_init" required>
                     {% for unit in measurement_units %}
