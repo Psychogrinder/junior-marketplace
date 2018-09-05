@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    if ($('main .edit-product-card').length > 0) {
+    if ($('#editProductPage').length > 0) {
 
         var category_id;
         var parent_category_id;

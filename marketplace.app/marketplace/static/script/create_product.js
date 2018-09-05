@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    if ($('main .edit-product-card').length > 0) {
+    if ($('#createProductPage').length > 0) {
 
         var categoryId;
         var default_category_id = 1;
