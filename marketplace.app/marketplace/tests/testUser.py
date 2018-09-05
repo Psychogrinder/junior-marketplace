@@ -7,6 +7,7 @@ from marketplace.api_folder.utils.user_utils import get_user_by_email
 
 from marketplace.api_folder.utils.consumer_utils import get_consumer_by_id, get_all_consumers, \
     post_consumer, put_consumer, delete_consumer_by_id, upload_consumer_image, get_all_consumers
+
 from marketplace.models import Consumer, User
 import requests
 import unittest
