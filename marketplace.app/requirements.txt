@@ -20,3 +20,4 @@ python-dotenv
 celery
 redis
 SQLAlchemy-Searchable
+YaDiskClient
