@@ -20,12 +20,14 @@ services:
         - SQLALCHEMY_DATABASE_URI
         - SECRET_KEY
         - SECURITY_PASSWORD_SALT
+        - UPLOAD_FOLDER
     environment:
       - FLASK_ENV=production
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - SECRET_KEY=#{SECRET_KEY}
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
+      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
     ports:
       - "10.100.1.39:8000:8000"
     command:
@@ -33,7 +35,7 @@ services:
     networks:
       - marketplace
     volumes:
-      - "marketplace_user_image:/app/marketplace/user_images"
+      - "marketplace_user_image:${UPLOAD_FOLDER}"
 
 
   redis:
@@ -50,12 +52,14 @@ services:
       context: .
       args:
         - CELERY_BROKER_URL
+        - UPLOAD_FOLDER
     command:
       "celery -A marketplace.celery --loglevel=info worker"
     networks:
       - marketplace
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
     depends_on:
       - redis
       - app
