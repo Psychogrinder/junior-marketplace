@@ -145,6 +145,9 @@ for i, cat in enumerate(Category.query.all()):
 
 marketplace_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 for i in range(1, 10):
-    os.mkdir(os.path.join(marketplace_dir, f'static/img/user_images/{i}/'))
-    
+    try:
+        os.mkdir(os.path.join(marketplace_dir, f'static/img/user_images/{i}/'))
+    except FileExistsError:
+        pass
+        
 db.session.commit()
