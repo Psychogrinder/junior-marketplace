@@ -67,3 +67,7 @@ def no_file_part_in_request():
 
 def no_image_presented():
     abort(406, message='No image presented')
+
+
+def invalid_email_or_password():
+    abort(406, message='Invalid email or password')
