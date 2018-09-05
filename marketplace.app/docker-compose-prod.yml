@@ -38,7 +38,7 @@ services:
 
   redis:
     container_name: marketplace.redis
-    image: redis:5.0-rc
+    image: redislabs/rejson:latest
     networks:
       - marketplace
 
