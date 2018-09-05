@@ -143,5 +143,8 @@ for cat, subcats in product_names.items():
 for i, cat in enumerate(Category.query.all()):
     cat.name = cat.name.title()
 
+marketplace_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+for i in range(1, 10):
+    os.mkdir(os.path.join(marketplace_dir, f'static/img/user_images/{i}/'))
     
 db.session.commit()
