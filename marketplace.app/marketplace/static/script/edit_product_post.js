@@ -10,13 +10,23 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             processData: false,
-            success: function (data) {
-                console.log('Success!');
+            success: function (photo_url) {
+                if (photo_url) {
+                    document.getElementById("upload-product-image").reset();
+                    var imageDiv = document.getElementById("editProductImage");
+                    while (imageDiv.firstChild) {
+                        imageDiv.removeChild(imageDiv.firstChild);
+                    }
+                    $("#editProductImage").append(
+                        '<img src="' + photo_url + '" alt="" width="100%" height="auto">'
+                    );
+                }
             },
         });
     }
 
-    $('#save_product_data').click(function () {
+    $('#save_product_data').click(function (event) {
+        event.preventDefault()
         var addr = window.location + '';
         addr = addr.split('/');
         var product_id = addr[addr.length - 2];
@@ -30,9 +40,9 @@ $(document).ready(function () {
                 price: $('#editPrice').val(),
                 category_id: categoryId,
                 quantity: $('#editCount').val(),
-                weight: $('#editWeigth').val(),
+                weight: $('#editWeight').val(),
                 measurement_unit: $('#editUnits option:selected').val(),
-                description: $('#editDescription').html()
+                description: $('#editDescription').val()
             };
             return productObject;
         }

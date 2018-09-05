@@ -30,13 +30,6 @@ class SetPhotoUrlMixin():
         if self.photo_url is None:
             self.photo_url = photo_url
         elif self.photo_url is not None and self.photo_url != photo_url:
-            print('____________________________')
-            print('____________________________')
-            print(os.path.dirname(os.path.realpath(__file__)) + self.photo_url)
-            print(os.path.dirname(os.path.realpath(__file__)))
-            print(self.photo_url)
-            print('____________________________')
-            print('____________________________')
             if not self.photo_url == 'static/img/standard.png':
                 os.remove(os.path.join(os.path.dirname(os.path.realpath(__file__)), self.photo_url))
             self.photo_url = photo_url

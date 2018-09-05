@@ -6,7 +6,7 @@
 <main>
     <div class="container edit-product-card">
         <section class="breadcrumbs">
-            <span><a href={{ url_for('producer_products', producer_id = product.producer_id)}}>Товары</a></span>
+            <span><a href="{{ url_for('producer_products', producer_id = product.producer_id)}}">Товары</a></span>
             <span><a class="active">{{ product.name }}</a></span>
         </section>
 
@@ -17,8 +17,8 @@
             </div>
         </form>
         <div class="row edit-product-item">
-            <label for="file" class="col-5 col-sm-3">Текущее изображение</label>
-            <div class="card_image">
+            <label class="col-5 col-sm-3">Текущее изображение</label>
+            <div class="card_image" id = "editProductImage">
                 <img src="/{{ product.photo_url }}" alt="" width="100%" height="auto">
             </div>
         </div>
@@ -37,7 +37,8 @@
             <div class="row edit-product-item">
                 <label for="editPrice" class="col-5 col-sm-3">Цена</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100"
-                       pattern="^[ 0-9]+$"
+                       pattern="^[0-9]+(\.[0-9][0-9]?)?$"
+                       pattern="^[0-9]+(\.[0-9][0-9]?)?$"
                        required value={{ product.price}}>
             </div>
             <div class="row edit-product-item">
@@ -64,9 +65,9 @@
                        pattern="^[ 0-9]+$" value={{ product.quantity }}>
             </div>
             <div class="row edit-product-item">
-                <label for="editWeigth" class="col-5 col-sm-3">Вес/Единицы измерения</label>
-                <input type="text" class="form-control col-5 col-sm-3" pattern="^[ 0-9]+$" name="weigth"
-                       id="editWeigth" value={{ product.weight }}>
+                <label for="editWeight" class="col-5 col-sm-3">Вес/Единицы измерения</label>
+                <input type="text" class="form-control col-5 col-sm-3" pattern="^[0-9]+(\.[0-9][0-9]?)?$" name="weigth"
+                       id="editWeight" value={{ product.weight }}>
                 <select class="form-control col-4 col-sm-1" name="weigth_init" required>
                     {% for unit in measurement_units %}
                     {% if unit == product.measurement_unit %}

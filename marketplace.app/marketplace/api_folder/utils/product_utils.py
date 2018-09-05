@@ -174,7 +174,6 @@ def put_product(args, product_id):
 
     if args['category_id']:
         check_producer_categories(args['category_id'], product)
-
     args['id'] = None
     args['producer_id'] = None
     for k, v in args.items():
@@ -194,5 +193,6 @@ def delete_product_by_id(product_id):
 
 def upload_product_image(product_id, files):
     product = get_product_by_id(product_id)
-    return upload_image(product, files)
+    producer_id = product.producer_id
+    return upload_image(product, files, producer_id, product_id=product_id)
 

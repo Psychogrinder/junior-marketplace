@@ -79,14 +79,7 @@ class ProductsByPrice(Resource):
 
 class UploadImageProduct(Resource):
     def post(self, product_id):
-        print('______________________')
-        print('___________________')
-        print(request.files)
-        print('______________________')
-        print('______________________')
-        product_utils.upload_product_image(product_id, request.files)
-        return redirect(url_for('edit_product', producer_id=3, product_id=product_id))
-
+        return product_utils.upload_product_image(product_id, request.files)
 
 
 class ProductsInCart(Resource):
