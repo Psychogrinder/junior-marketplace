@@ -14,7 +14,6 @@ import unittest
 from mock import Mock
 
 
-
 class TestCase(unittest.TestCase):
     unittest.TestLoader.sortTestMethodsUsing = None
     posted_user_id = None
@@ -22,6 +21,7 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         self.user = Mock()
         self.producer = Mock()
+        self.edit = Mock()
 
         #login data
         self.user.email = 'berenice.cavalcanti@example.com'
@@ -49,6 +49,7 @@ class TestCase(unittest.TestCase):
         self.assertIn('session', cookie)
         #print('Test Login is OK.')
 
+
     def test_02_Logout(self):
         logout_url = self.base_url + '/api/v1/logout'
         response = requests.Session().get(logout_url)
@@ -57,6 +58,7 @@ class TestCase(unittest.TestCase):
         self.assertNotIn('session', response.cookies)
 
         #print('Test Logout is OK.')
+
 
     def test_03_ResponseAuthPages(self):
         #(remember_token and session in cookie) and response status_code
@@ -92,11 +94,11 @@ class TestCase(unittest.TestCase):
 
         user = get_user_by_email(args['email'])
         if user:
-            delete_consumer_by_id(user.id)
-            print('Delete existing user')
+            print('Consumer already exists')
+        else:
+            self.assertIn(post_consumer(args), get_all_consumers())
+            print('Posted user')
 
-        self.assertIn(post_consumer(args), get_all_consumers())
-        print('Posted user')
 
     def test_05_get_user_by_email(self):
         user = get_user_by_email(self.user_email)
@@ -112,7 +114,19 @@ class TestCase(unittest.TestCase):
 
     @unittest.skip
     def test_07_put_consumer(self):
-        pass
+        user = get_user_by_email(self.user_email)
+        consumer = get_consumer_by_id(user.id)
+
+        print(consumer.email)
+
+        args = {'email': 'a@ma.ru'}
+
+        consumer = put_consumer(args, user.id)
+        print(consumer.email)
+
+        args = {'email': 'berenice.cavalcanti@example.com'}
+        consumer = put_consumer(args, user.id)
+        print(consumer.email)
 
 
     def test_08_delete_consumer_by_id(self):
@@ -122,25 +136,10 @@ class TestCase(unittest.TestCase):
 
         delete_consumer_by_id(user.id)
         self.assertNotIn(consumer, get_all_consumers())
-        print('Deleted consumer', user.id)
-
-    @unittest.skip
-    def test_07_UserEdit(self):
-        user_id = 10
-        consumer = get_consumer_by_id(user_id)
-        print(consumer.email)
-
-        args = {'email': 'a@ma.ru'}
-
-        consumer = put_consumer(args, user_id)
-        print(consumer.email)
-
-        args = {'email': 'berenice.cavalcanti@example.com'}
-        consumer = put_consumer(args, user_id)
-        print(consumer.email)
+        print('Deleted consumer with id', user.id)
 
 
-    def test_get_all_consumers(self):
+    def test_09_get_all_consumers(self):
         all_users = len(User.query.all())
         producers = len(User.query.filter_by(entity='producer').all())
         consumers = len(get_all_consumers())
