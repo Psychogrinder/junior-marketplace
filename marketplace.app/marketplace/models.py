@@ -141,11 +141,13 @@ class Producer(User):
         lazy='subquery',
         backref=db.backref('producers', lazy=True))
 
-    def __init__(self, password, email, name, phone_number, address, person_to_contact, description=''):
+    def __init__(self, password, email, name, phone_number, address, person_to_contact, description='',
+                 photo_url='static/img/standard-profile.jpg'):
         super().__init__(email, password, 'producer', phone_number, address)
         self.name = name
         self.person_to_contact = person_to_contact
         self.description = get_string_or_default(description)
+        self.photo_url=photo_url
 
     def get_products(self):
         return Product.query.filter_by(producer_id=self.id).all()
