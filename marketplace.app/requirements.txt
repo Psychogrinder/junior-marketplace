@@ -21,3 +21,4 @@ celery
 redis
 SQLAlchemy-Searchable
 YaDiskClient
+Pillow
