@@ -22,6 +22,10 @@ $(document).ready(function () {
                     );
                 }
             },
+            complete: function (data) {
+                var hulla = new hullabaloo();
+                hulla.send("Информация о товаре сохранена", "secondary");
+            }
         });
     }
 
@@ -54,6 +58,7 @@ $(document).ready(function () {
             data: JSON.stringify(createProductObject(categoryId)),
             success: function (data, status) {
                 uploadProductImage(product_id);
+
             }
         });
     });
