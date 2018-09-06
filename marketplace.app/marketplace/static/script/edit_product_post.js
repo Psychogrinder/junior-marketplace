@@ -26,7 +26,7 @@ $(document).ready(function () {
     }
 
     $('#save_product_data').click(function (event) {
-        event.preventDefault()
+        event.preventDefault();
         var addr = window.location + '';
         addr = addr.split('/');
         var product_id = addr[addr.length - 2];
