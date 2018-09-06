@@ -38,11 +38,15 @@
 }
 
 .card-item .product-item-photo {
-    max-height: 150px;
+    height: 150px;
 }
 
 .card-item .product-item-photo img {
-    width: 100%;
+    max-width: 100%;
+    width: auto;
+    height: 100%;
+    margin-left: auto;
+    display: block;
 }
 
 .product-item-description {

@@ -100,3 +100,15 @@
 .description-product .col-12 p {
     text-align: justify;
 }
+
+.product-card-image {
+    max-height: 350px;
+    display: block;
+}
+
+.product-card-image img {
+    display: block;
+    max-height: inherit;
+    width: auto;
+    max-width: 100%;
+}

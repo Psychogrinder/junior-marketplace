@@ -18,12 +18,12 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-5">
-                    <div class="card_image">
+                <div class="col-12 col-md-5">
+                    <div class="product-card-image">
                         <img src="/{{ product.photo_url }}" alt="" width="100%" height="auto">
                     </div>
                 </div>
-                <div class="col-4 product_info">
+                <div class="col-12 col-md-5 product_info">
                     <span class="producer_title">ПРОДАВЕЦ</span>
                     <span class="producer_title_name"><a
                             href={{ url_for('producer_profile', producer_id = product.producer_id ) }}>{{ producer_name }}</a></span>
@@ -41,7 +41,7 @@
                         {{ product.measurement_unit }}
                      </span>
                     {% if current_user.entity == 'consumer' %}
-                        <div class="row">
+                        <div>
                             <form class="product_quantity">
                                 <div class="value-button" id="decrease" onclick="decreaseQuantity('number')"
                                      value="Decrease Value">-
@@ -57,7 +57,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     {% if product.quantity == 0 %}
                         <p class="goods-ended">
                             <img src={{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}>
