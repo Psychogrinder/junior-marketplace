@@ -1,5 +1,5 @@
 // Start upload preview image
-$(".gambar").attr("src", "https://user.gadjian.com/static/images/personnel_boy.png");
+$(".gambar").attr("src", "/static/img/standard-profile.jpg");
 var $uploadCrop,
     tempFilename,
     rawImg,
@@ -12,7 +12,7 @@ function readFile(input) {
             $('.upload-demo').addClass('ready');
             $('#cropImagePop').modal('show');
             rawImg = e.target.result;
-        };
+        }
         reader.readAsDataURL(input.files[0]);
     }
     else {
@@ -22,7 +22,7 @@ function readFile(input) {
 
 $uploadCrop = $('#upload-demo').croppie({
     viewport: {
-        width: 300,
+        width: 200,
         height: 150,
     },
     enforceBoundary: false,
@@ -47,11 +47,11 @@ $('#cropImageBtn').on('click', function (ev) {
     $uploadCrop.croppie('result', {
         type: 'base64',
         format: 'jpeg',
-        size: {width: 250, height: 150}
+        size: {width: 200, height: 150}
     }).then(function (resp) {
         $('#item-img-output').attr('src', resp);
         $('#cropImagePop').modal('hide');
-        console.log($uploadCrop);
+        console.log($('#item-img-output'));
     });
 });
 // End upload preview image
