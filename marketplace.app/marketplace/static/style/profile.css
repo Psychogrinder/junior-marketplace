@@ -10,6 +10,7 @@
 
 .userpic_container img {
     max-width: 255px;
+    max-height: 300px;
 }
 
 .profile_title {
@@ -36,13 +37,13 @@
 }
 
 .name_container .edit-profile a {
-	color: grey;
+    color: grey;
     display: flex;
 }
 
 .name_container .edit-profile a:hover,
 .name_container .edit-profile a:active {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 .name_container .edit-profile a img {
