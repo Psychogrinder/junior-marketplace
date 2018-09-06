@@ -1,7 +1,5 @@
-
-
 function deleteProducer() {
-    producer_id = localStorage.getItem("globalUserId");
+    var producer_id = localStorage.getItem("globalUserId");
     $.ajax({
         url: '/api/v1/producers/' + producer_id,
         type: 'DELETE',
