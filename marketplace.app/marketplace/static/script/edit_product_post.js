@@ -17,9 +17,12 @@ $(document).ready(function () {
                     while (imageDiv.firstChild) {
                         imageDiv.removeChild(imageDiv.firstChild);
                     }
+                    setTimeout(()=>{
+
                     $("#editProductImage").append(
                         '<img src="' + photo_url + '" alt="" width="100%" height="auto">'
                     );
+                  }, 1000)
                 }
             },
             complete: function (data) {
