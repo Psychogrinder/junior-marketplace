@@ -173,6 +173,7 @@ def put_product(args, product_id):
     product = get_product_by_id(product_id)
 
     if args['category_id']:
+        args['category_id'] = Category.query.filter_by(slug=args['category_id']).first().id
         check_producer_categories(args['category_id'], product)
     args['id'] = None
     args['producer_id'] = None

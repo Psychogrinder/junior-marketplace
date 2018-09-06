@@ -1,7 +1,7 @@
 poultry
 chicken, goose, turkey
 eggs
-chicken, goose, quail
+chicken_eggs, goose_eggs, quail_eggs
 fish
 salmon, perch, cod
 fruits
