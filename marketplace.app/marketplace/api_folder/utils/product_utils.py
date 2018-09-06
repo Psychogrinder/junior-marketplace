@@ -170,9 +170,6 @@ def post_product(args):
 
 
 def put_product(args, product_id):
-    print('________________________')
-    print(args)
-    print('________________________')
     product = get_product_by_id(product_id)
 
     if args['category_id']:
