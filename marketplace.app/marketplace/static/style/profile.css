@@ -22,14 +22,15 @@
     display: block;
 }
 
+.name_container {
+    display:  flex;
+    justify-content: space-between;
+}
+
 .profile-keys span,
 .profile-values span {
     display: block;
     margin-bottom: 10px;
-}
-
-.profile-keys span {
-    text-align: right;
 }
 
 .main-text {
