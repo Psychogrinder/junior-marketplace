@@ -81,10 +81,9 @@ $(document).ready(function () {
                 for (var i = 0; i < products.length; i++) {
                     $("#productsByCategory").append(
                         '<div class="col-6 col-sm-3 card-item" >' +
-                        "<a href='/products/" + products[i].id + "'>" +
+                        '<a href="/products/' + products[i].id + '">' +
                         '<div class="product-item-photo">' +
-                        '<img src="\\' + products[i].photo_url + '"' +
-                        "</div>" +
+                        '<img src="/' + products[i].photo_url + '"></div>' +
                         '<div class="product-item-description" id="categoryItemDescription' + i + '">' +
                         "<p>" + products[i].price + "</p>" +
                         "<b>" + products[i].name + "</b>" +
