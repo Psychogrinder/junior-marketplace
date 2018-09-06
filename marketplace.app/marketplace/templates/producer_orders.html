@@ -10,6 +10,7 @@
         <section class="breadcrumbs">
             <span><a class="active">Мои заказы</a></span>
         </section>
+        {% if orders %}
         <div class="row">
             <div class="col-2">Статус</div>
             <div class="col-4">
@@ -40,10 +41,12 @@
                 </div>
             </div>
         </div>
+        {% else %}
+            <h2>У Вас нет заказов</h2>
+        {% endif %}
     </div>
 
     <!-- Common view -->
-
     <div class="common_global_container" id="producerOrderSection">
         {% for order in orders %}
         <div class="container item_order">
