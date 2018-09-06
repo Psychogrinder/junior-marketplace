@@ -6,9 +6,22 @@
 <main>
     <div class="container edit-product-card" id="editProductPage">
         <section class="breadcrumbs">
-            <span><a href={{ url_for('producer_products', producer_id = product.producer_id)}}>Товары</a></span>
+            <span><a href="{{ url_for('producer_products', producer_id = product.producer_id)}}">Товары</a></span>
             <span><a class="active">{{ product.name }}</a></span>
         </section>
+
+        <form id="upload-product-image" method="post" enctype="multipart/form-data">
+            <div class="row edit-product-item">
+                <label class="col-5 col-sm-3">Выберите изображение</label>
+                <input name="image" type="file" class="form-control-file col-8 col-sm-4">
+            </div>
+        </form>
+        <div class="row edit-product-item">
+            <label class="col-5 col-sm-3">Текущее изображение</label>
+            <div class="card_image" id = "editProductImage">
+                <img src="/{{ product.photo_url }}" alt="" width="100%" height="auto">
+            </div>
+        </div>
         <form action="#">
             <div class="row edit-product-item">
                 <label for="editName" class="col-5 col-sm-3">Название</label>
@@ -16,17 +29,13 @@
                        value='{{ product.name }}'>
             </div>
             <div class="row edit-product-item">
-                <label for="editPhoto" class="col-5 col-sm-3">Фотография</label>
-                <input type="file" class="form-control-file col-8 col-sm-4" id="editPhoto" aria-describedby="fileHelp">
-            </div>
-            <div class="row edit-product-item">
                 <label for="editPrice" class="col-5 col-sm-3">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" pattern="^\d+\.?(\d{1,2})?$" required value={{ product.price}}>
+                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" pattern="^\d+\.?(\d{1,2})?$" required value="{{ product.price}}">
             </div>
             <div class="row edit-product-item">
                 <label for="editArticle" class="col-5 col-sm-3">Артикул</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editArticle" value="564895" disabled value={{
-                       product.id }}>
+                <input type="text" class="form-control col-8 col-sm-4" id="editArticle" disabled value="{{
+                       product.id }}">
             </div>
             <div class="row edit-product-item">
                 <label for="editCategory" class="col-5 col-sm-3">Категория</label>
@@ -49,7 +58,7 @@
             <div class="row edit-product-item">
                 <label for="editWeigth" class="col-5 col-sm-3">Вес/Единицы измерения</label>
                 <input type="text" class="form-control col-5 col-sm-3" name="weigth"
-                       id="editWeigth" value={{ product.weight }}>
+                       id="editWeigth" value="{{ product.weight }}">
                 <select class="form-control col-4 col-sm-1" name="weigth_init" required>
                     {% for unit in measurement_units %}
                     {% if unit == product.measurement_unit %}
@@ -70,6 +79,7 @@
                 <button type="submit" class="btn btn-success" id="save_product_data">СОХРАНИТЬ</button>
             </div>
         </form>
+
     </div>
 </main>
 {% endblock %}

@@ -20,6 +20,7 @@ class Base(object):
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
     MAIL_DEFAULT_SENDER = 'xtramarket@rambler.ru'
 
+
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL') or 'redis://localhost:6379/0',
 
     CACHE_STORAGE_HOST = 'localhost'
@@ -44,7 +45,7 @@ class Development(Base):
 
 class Production(Base):
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
-    
+
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
