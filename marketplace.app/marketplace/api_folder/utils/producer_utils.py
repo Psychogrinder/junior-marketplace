@@ -1,6 +1,6 @@
 import os
 
-from marketplace import db, email_tools
+from marketplace import db, email_tools, app
 from marketplace.api_folder.schemas import producer_sign_up_schema
 from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exist_or_get
 from marketplace.api_folder.utils.checkers import check_email_uniqueness, check_producer_name_uniqueness
@@ -57,7 +57,8 @@ def delete_producer_by_id(producer_id):
 
 def upload_producer_image(producer_id, files):
     producer = get_producer_by_id(producer_id)
-    return upload_image(producer, files, producer_id)
+    image_size = app.config['USER_IMAGE_PRODUCER_LOGO_SIZE']
+    return upload_image(producer, files, producer_id, image_size)
 
 
 def get_producer_names_by_category_name(category_name):

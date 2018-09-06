@@ -3,7 +3,7 @@ import string
 from sqlalchemy import desc, func, exc
 from sqlalchemy_searchable import inspect_search_vectors
 
-from marketplace import db
+from marketplace import db, app
 from marketplace.api_folder.schemas import product_schema
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
     abort_if_producer_doesnt_exist_or_get, abort_if_category_doesnt_exist_or_get
@@ -195,5 +195,5 @@ def delete_product_by_id(product_id):
 def upload_product_image(product_id, files):
     product = get_product_by_id(product_id)
     producer_id = product.producer_id
-    return upload_image(product, files, producer_id, product_id=product_id)
-
+    image_size = app.config['USER_IMAGE_PRODUCTS_SIZE']
+    return upload_image(product, files, producer_id, image_size, product_id=product_id)
