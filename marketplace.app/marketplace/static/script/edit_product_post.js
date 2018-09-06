@@ -38,7 +38,7 @@ $(document).ready(function () {
             var productObject = {
                 name: $('#editName').val(),
                 price: $('#editPrice').val(),
-                category_id: categoryId,
+                category_id: $('#editSubcategory').val(),
                 quantity: $('#editCount').val(),
                 weight: $('#editWeight').val(),
                 measurement_unit: $('#editUnits option:selected').val(),

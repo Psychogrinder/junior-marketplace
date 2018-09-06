@@ -250,8 +250,8 @@ class Product(SetPhotoUrlMixin, db.Model):
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128))
-    slug = db.Column(db.String(128))
+    name = db.Column(db.String(128), unique=True)
+    slug = db.Column(db.String(128), unique=True)
     parent_id = db.Column(db.Integer)
 
     def __init__(self, name, slug=None, parent_id=0):
