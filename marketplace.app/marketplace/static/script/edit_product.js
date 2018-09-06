@@ -3,7 +3,6 @@ $(document).ready(function () {
 
         var category_id;
         var parent_category_id;
-
         var addr = window.location + '';
         addr = addr.split('/');
         var product_id = addr[addr.length - 2];
@@ -20,6 +19,16 @@ $(document).ready(function () {
             prefix: '',
             rightAlign: false
         });
+
+        var productPrice = $('#editPrice').val();
+
+        function formatPrice(x) {
+            var strX = x.toString();
+            var arr = strX.split(".");
+            $('#editPrice').val(arr[0].split(" ").join(""));
+        }
+
+        formatPrice(productPrice);
 
         function handleChildCategory(product_data) {
             var product = product_data;

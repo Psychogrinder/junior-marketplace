@@ -21,7 +21,7 @@
             </div>
             <div class="row edit-product-item">
                 <label for="editPrice" class="col-5 col-sm-3">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" pattern="^\d+\.?(\d{1,2})?$" required value={{ product.price}}>
+                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="1 000"  required value={{ product.price }}>
             </div>
             <div class="row edit-product-item">
                 <label for="editArticle" class="col-5 col-sm-3">Артикул</label>
@@ -62,9 +62,7 @@
             </div>
             <div class="row edit-product-item">
                 <label for="editDescription" class="col-5 col-sm-3">Описание</label>
-                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription"
-                          name="description">{{ product.description }}
-                </textarea>
+                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription" name="description">{{ product.description }} </textarea>
             </div>
             <div class="col-12 col-sm-10 edit-product-save">
                 <button type="submit" class="btn btn-success" id="save_product_data">СОХРАНИТЬ</button>

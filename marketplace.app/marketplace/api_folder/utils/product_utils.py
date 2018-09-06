@@ -177,6 +177,7 @@ def put_product(args, product_id):
 
     args['id'] = None
     args['producer_id'] = None
+    args['price'] = float("".join(args['price'].split()))
     for k, v in args.items():
         if v:
             setattr(product, k, v)
