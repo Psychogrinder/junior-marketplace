@@ -52,11 +52,6 @@
     margin-right: 10px;
 }
 
-main.profile + .modal + footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
 
 @media (max-width: 800px) {
     main.profile + .modal + footer {
@@ -64,3 +59,20 @@ main.profile + .modal + footer {
     }
 }
 
+.producer-banner {
+    max-height: 320px;
+}
+
+.producer-banner img{
+    max-height: 320px;
+    max-height: -webkit-fill-available;
+    width: 100%;
+}
+
+.producer-profile-main {
+    margin-top: 0;
+}
+
+.producer-profile-main .profile_title {
+    margin-top: 30px;
+}
