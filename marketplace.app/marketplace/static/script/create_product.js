@@ -7,7 +7,22 @@ $(document).ready(function () {
         addr = addr.split('/');
         var producerId = addr[addr.length - 2];
 
-        function createNewProductObject(){
+        function uploadNewProductImage(product_id) {
+            var form_data = new FormData($('#upload-new-product-image')[0]);
+            $.ajax({
+                type: 'POST',
+                url: "/api/v1/products/" + product_id + "/upload",
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    location.replace('/products/' + product_id);
+                },
+            });
+        }
+
+        function createNewProductObject() {
             categoryId = parseInt($('#createSubcategory option:selected').data('id'));
             var obj = {
                 name: $('#createName').val(),
@@ -58,7 +73,7 @@ $(document).ready(function () {
                 });
         }
 
-        function createProduct () {
+        function createProduct() {
             var newProductObject = createNewProductObject();
 
             $.ajax({
@@ -66,8 +81,8 @@ $(document).ready(function () {
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(newProductObject),
-                success: function(data, status) {
-                    location.replace('/products/' + data.id);
+                success: function (product, status) {
+                    uploadNewProductImage(product.id);
                 }
             });
         }
@@ -91,7 +106,7 @@ $(document).ready(function () {
                 });
         });
 
-        $('#createProductForm').submit(function(e) {
+        $('#createProductForm').submit(function (e) {
             e.preventDefault();
             createProduct();
         });
