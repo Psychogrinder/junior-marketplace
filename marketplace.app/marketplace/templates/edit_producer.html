@@ -14,12 +14,11 @@
         <div class="delete-profile">
             <p class="out-of-stock">
                 <a href="#" data-toggle="modal" data-target="#deleteProfileProducer">
-                    <img src={{ url_for('static', filename='img/exclamation-circle-solid.svg' ) }}>
+                    <img src="{{ url_for('static', filename='img/exclamation-circle-solid.svg' ) }}">
                     Удалить профиль
                 </a>
             </p>
         </div>
-        <!-- test start-->
         <form id="upload-producer-image" method="post" enctype="multipart/form-data">
             <div class="row edit-profile-item">
                 <label class="col-12 col-sm-2">Выберите изображение</label>
@@ -32,7 +31,6 @@
                 <img src="/{{ producer.photo_url }}" alt="" width="100%" height="auto">
             </div>
         </div>
-        <!-- test end -->
         <form action="#" id="editProducerForm" data-parsley-validate>
             <div class="row edit-profile-item">
                 <label for="producer_name" class="col-12 col-sm-2">Название фермы</label>

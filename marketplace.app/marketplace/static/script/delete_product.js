@@ -12,3 +12,4 @@ function deleteProducerProduct(product_id) {
         }
     });
 }
+

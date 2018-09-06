@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from marketplace import db, email_tools
 from marketplace.api_folder.schemas import producer_sign_up_schema
@@ -6,7 +7,7 @@ from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exis
 from marketplace.api_folder.utils.checkers import check_email_uniqueness, check_producer_name_uniqueness
 from marketplace.api_folder.utils.uploaders import upload_image
 from marketplace.api_folder.utils.validators import validate_registration_data
-from marketplace.models import Producer, Category
+from marketplace.models import Producer, Category, Product
 
 
 def get_producer_by_id(producer_id):
@@ -50,6 +51,13 @@ def put_producer(args, producer_id):
 
 def delete_producer_by_id(producer_id):
     producer = get_producer_by_id(producer_id)
+    # TODO перенести функцию get_products_by_producer_id из product_utils в producer_utils
+    # producer_products = get_products_by_producer_id(producer_id)
+    producer_products = Product.query.filter_by(producer_id=producer_id).all()
+    for product in producer_products:
+        db.session.delete(product)
+    image_directory_path = os.path.join(os.getcwd(), 'marketplace/static/img/user_images/' + str(producer_id) + '/')
+    shutil.rmtree(image_directory_path)
     db.session.delete(producer)
     db.session.commit()
     return {"message": "Producer with id {} has been deleted successfully".format(producer_id)}
