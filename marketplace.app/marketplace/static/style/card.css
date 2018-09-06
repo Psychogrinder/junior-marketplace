@@ -5,8 +5,7 @@
 }
 
 .card_image {
-    max-width: 400px;
-    outline: 1px solid gray;
+    max-width: 200px;
 }
 
 .product_info span {
