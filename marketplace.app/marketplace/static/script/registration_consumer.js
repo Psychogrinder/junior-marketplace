@@ -74,7 +74,6 @@ $(document).ready(function () {
 
                     }
                 }).fail(function (data, textStatus, xhr) {
-                console.log(data.responseJSON.message, textStatus, xhr);
                 if (data.status == 406) {
                     $('#errorRegistrationConsumer').css('display', 'block');
                     $('#errorRegistrationConsumer').text(data.responseJSON.message);
