@@ -71,3 +71,7 @@ def no_image_presented():
 
 def invalid_email_or_password():
     abort(406, message='Invalid email or password')
+
+
+def admin_root_required():
+    abort(403, message='Reject access')
