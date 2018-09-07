@@ -25,7 +25,7 @@
         <form action="#" id="editProducerForm" data-parsley-validate>
             <div class="row edit-profile-item">
                 <label for="producer_name" class="col-12 col-sm-2">Название фермы</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="producer_name" placeholder="Сельхоз Ивана"
+                <input type="text" class="form-control col-12 col-sm-4" id="producer_name" pattern="^\d*[a-zA-Z-Яа-яЁё]{1,}\s\d*" placeholder="Сельхоз Ивана"
                        value="{{ producer.name }}" required>
             </div>
             <div class="row edit-profile-item">
