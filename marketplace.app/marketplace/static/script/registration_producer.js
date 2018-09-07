@@ -109,14 +109,14 @@ $(document).ready(function () {
                                     localStorage.setItem("globalUserId", globalUserId);
                                     var globalUserEntity = data.entity;
                                     localStorage.setItem("globalUserEntity", globalUserEntity);
+                                    $('#regProducer').removeClass('show');
+                                    $('#regProducer').css("display", "none");
+                                    $('.modal-backdrop').css("display", "none");
+                                    location.reload()
                                 }
                             });
-                        $('#regProducer').removeClass('show');
-                        $('#regProducer').css("display", "none");
-                        $('.modal-backdrop').css("display", "none");
                     }
                 });
         }
-        setTimeout(function() { location.reload() }, 500);
     });
 });

@@ -64,14 +64,15 @@ $(document).ready(function () {
                                     localStorage.setItem("globalUserId", globalUserId);
                                     var globalUserEntity = data.entity;
                                     localStorage.setItem("globalUserEntity", globalUserEntity);
+                                    $('#singUpUser').removeClass('show');
+                                    $('#singUpUser').css("display", "none");
+                                    $('.modal-backdrop').css("display", "none");
+                                    location.reload();
                                 }
                             });
-                        $('#singUpUser').removeClass('show');
-                        $('#singUpUser').css("display", "none");
-                        $('.modal-backdrop').css("display", "none");
+
                     }
                 });
-            setTimeout(function() { location.reload() }, 500);
         }
     });
 });
