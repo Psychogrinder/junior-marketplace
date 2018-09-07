@@ -5,7 +5,6 @@ $(document).ready(function () {
     function uploadProducerImage(producer_id) {
         var image_data = $('#item-img-output').attr('src');
         image_data = image_data.split(',')[1];
-        // var form_data = new FormData($('#upload-producer-image')[0]);
         $.ajax({
             type: 'POST',
             url: "/api/v1/producers/" + producer_id + "/upload",
@@ -23,8 +22,7 @@ $(document).ready(function () {
         var producerObject = {
             name: $('#producer_name').val(),
             person_to_contact: $('#producer_contact_person').val(),
-            // email: $('#producer_email').val(),
-            // fileHelp: $('#producer_logo').val(),
+            email: $('#producer_email').val(),
             phone_number: $('#producer_phone').val(),
             address: $('#producer_address').val(),
             description: $('#producer_description').val()
