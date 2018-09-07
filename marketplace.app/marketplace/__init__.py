@@ -13,8 +13,6 @@ import jsmin
 from flask_mail import Mail
 from marketplace import _celery
 
-
-
 app = Flask(__name__)
 assets = Environment(app)
 app.config.from_object(
@@ -32,8 +30,17 @@ celery = _celery.make_celery(app)
 cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACHE_STORAGE_PORT'],
                     db=app.config['CACHE_STORAGE_DB'])
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
+ITEMS_PER_PAGE = app.config['ITEMS_PER_PAGE']
 
 from marketplace import models, views, api_routes
+from marketplace.models import Admin
+
+
+if Admin.query.filter_by(email='admin@mail.ru').first() is None:
+    admin = Admin('admin@mail.ru', 'admin')
+    db.session.add(admin)
+    db.session.commit()
+
 
 css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css',
              'style/category.css',
@@ -56,7 +63,6 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)
-
 
 if __name__ == '__main__':
     app.run(port=8000)
