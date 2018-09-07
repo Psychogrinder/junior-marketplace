@@ -9,39 +9,48 @@
             </div>
             <div class="modal-body">
                 <form action="#">
+                    <p id="errorRegistrationProducer"></p>
                     <p>
                         <label for="emailRegProducer">Email</label>
-                        <input type="email" autofocus class="form-control" id="emailRegProducer" placeholder="email@email.ru" required>
+                        <input type="email" autofocus class="form-control" id="emailRegProducer"
+                               placeholder="email@email.ru" required>
                     </p>
                     <p>
                         <label for="passwordRegProducer">Пароль</label>
-                        <input type="password" class="form-control" placeholder="*******" id="passwordRegProducer" name="passwordProducer" required>
+                        <input type="password" class="form-control" placeholder="*******" id="passwordRegProducer"
+                               name="passwordProducer" required>
                         <span id="sixSymbolsRegProd">Минимум 6 символов</span>
                     </p>
                     <p>
                         <label for="rePasswordRegProducer">Повторите пароль</label>
-                        <input type="password" class="form-control" placeholder="*******" id="rePasswordRegProducer" name="repassword" required>
+                        <input type="password" class="form-control" placeholder="*******" id="rePasswordRegProducer"
+                               name="repassword" required>
                         <span id="NonEqualPassword">Пароли не совпадают!</span>
                     </p>
                     <p>
                         <label for="nameRegProducer">Название магазина</label>
-                        <input type="text" class="form-control" placeholder="У Иваныча" id="nameRegProducer" name="name" required>
+                        <input type="text" class="form-control" placeholder="У Иваныча" id="nameRegProducer" name="name"
+                               required>
                     </p>
                     <p>
                         <label for="contactPersonRegProducer">Контактное лицо</label>
-                        <input type="text" class="form-control" placeholder="Иван Иванович Иванов" id="contactPersonRegProducer" name="contact_person" required>
+                        <input type="text" class="form-control" placeholder="Иван Иванович Иванов"
+                               id="contactPersonRegProducer" name="contact_person" required>
                     </p>
                     <p>
                         <label for="phoneRegProducer">Номер телефона</label>
-                        <input type="text" class="form-control" placeholder="+7991199555" id="phoneRegProducer" name="phoneRegProducer" required>
+                        <input type="text" class="form-control phone_mask" placeholder="+7991199555"
+                               id="phoneRegProducer" name="phoneRegProducer" required>
                     </p>
                     <p>
                         <label for="addressRegProducer">Адрес</label>
-                        <input type="text" class="form-control" placeholder="Улица Пушкина д. 14 парадная 1" id="addressRegProducer" name="address" required>
+                        <input type="text" class="form-control" placeholder="Улица Пушкина д. 14 парадная 1"
+                               id="addressRegProducer" name="address" required>
                     </p>
                     <p>
                         <label for="descriptionRegProducer">Описание (необязательное поле)</label>
-                        <textarea type="text" class="form-control" rows="3" id="descriptionRegProducer" name="description"></textarea>
+                        <textarea type="text" class="form-control" rows="3" id="descriptionRegProducer"
+                                  name="description"></textarea>
                     </p>
                     <input type="button" class="btn btn-success" value="Зарегистрироваться" id="registrationProducer">
                 </form>

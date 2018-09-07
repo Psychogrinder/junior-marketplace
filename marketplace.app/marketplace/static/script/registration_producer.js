@@ -8,6 +8,7 @@ $(document).ready(function () {
         else {
             $('#emailRegProducer').css("border-color", "#ced4da");
         }
+        $('#errorRegistrationProducer').css('display', 'none');
     });
 
 
@@ -35,6 +36,7 @@ $(document).ready(function () {
 
     $('#nameRegProducer').change(function () {
         $('#nameRegProducer').css("border-color", "#ced4da");
+        $('#errorRegistrationProducer').css('display', 'none');
     });
 
 
@@ -98,10 +100,28 @@ $(document).ready(function () {
                 },
                 function (data, status) {
                     if (status == 'success') {
-                        $('#regProducer').removeClass('show');
-                        $('#regProducer').css("display", "none");
-                        $('.modal-backdrop').css("display", "none");
-                        location.reload();
+                        $.post("/api/v1/login",
+                            {
+                                email: email_producer,
+                                password: password_producer,
+                            },
+                            function (data, status) {
+                                if (status) {
+                                    var globalUserId = data.id;
+                                    localStorage.setItem("globalUserId", globalUserId);
+                                    var globalUserEntity = data.entity;
+                                    localStorage.setItem("globalUserEntity", globalUserEntity);
+                                    $('#regProducer').removeClass('show');
+                                    $('#regProducer').css("display", "none");
+                                    $('.modal-backdrop').css("display", "none");
+                                    location.reload()
+                                }
+                            });
+                    }
+                }).fail(function (data, textStatus, xhr) {
+                    if (data.status == 406) {
+                        $('#errorRegistrationProducer').css('display', 'block');
+                        $('#errorRegistrationProducer').text(data.responseJSON.message);
                     }
                 });
         }

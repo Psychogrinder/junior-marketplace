@@ -8,6 +8,7 @@ $(document).ready(function () {
         else {
             $('#emailRegistration').css("border-color", "#ced4da");
         }
+        $('#errorRegistrationConsumer').css('display', 'none');
     });
 
     $("#passwordRegistration").change(function () {
@@ -52,13 +53,32 @@ $(document).ready(function () {
                     password: password_registration,
                 },
                 function (data, status) {
-                    if (status == 'success') {
-                        $('#singUpUser').removeClass('show');
-                        $('#singUpUser').css("display", "none");
-                        $('.modal-backdrop').css("display", "none");
-                    }
-                });
+                    if (status) {
+                        $.post("/api/v1/login",
+                            {
+                                email: email_registration,
+                                password: password_registration,
+                            },
+                            function (data, status) {
+                                if (status) {
+                                    var globalUserId = data.id;
+                                    localStorage.setItem("globalUserId", globalUserId);
+                                    var globalUserEntity = data.entity;
+                                    localStorage.setItem("globalUserEntity", globalUserEntity);
+                                    $('#singUpUser').removeClass('show');
+                                    $('#singUpUser').css("display", "none");
+                                    $('.modal-backdrop').css("display", "none");
+                                    location.reload();
+                                }
+                            });
 
+                    }
+                }).fail(function (data, textStatus, xhr) {
+                if (data.status == 406) {
+                    $('#errorRegistrationConsumer').css('display', 'block');
+                    $('#errorRegistrationConsumer').text(data.responseJSON.message);
+                }
+            });
         }
     });
 });

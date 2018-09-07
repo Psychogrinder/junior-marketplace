@@ -23,7 +23,7 @@ $(document).ready(function () {
         var producerObject = {
             name: $('#producer_name').val(),
             person_to_contact: $('#producer_contact_person').val(),
-            email: $('#producer_email').val(),
+            // email: $('#producer_email').val(),
             // fileHelp: $('#producer_logo').val(),
             phone_number: $('#producer_phone').val(),
             address: $('#producer_address').val(),

@@ -1,23 +1,25 @@
 var number_of_products_in_cart = 0;
 var putToCart = function (consumer_id, product_id) {
-    $.post("/api/v1/consumers/" + consumer_id + "/cart",
-        {
-            product_id: product_id,
-            quantity: $(".product_quantity_input").val(),
-            mode: 'inc'
-        },
-        function (data, status) {
-            number_of_products_in_cart = 0;
-            for (var k in data.items) {
-                if (data.items.hasOwnProperty(k)) {
-                    number_of_products_in_cart += parseInt(data.items[k]);
+    if ($(".product_quantity_input").val() > 0) {
+        $.post("/api/v1/consumers/" + consumer_id + "/cart",
+            {
+                product_id: product_id,
+                quantity: $(".product_quantity_input").val(),
+                mode: 'inc'
+            },
+            function (data, status) {
+                number_of_products_in_cart = 0;
+                for (var k in data.items) {
+                    if (data.items.hasOwnProperty(k)) {
+                        number_of_products_in_cart += parseInt(data.items[k]);
+                    }
                 }
-            }
-            document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
-            var hulla = new hullabaloo();
-            hulla.send("Товар успешно добавлен в корзину", "secondary");
+                document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
+                var hulla = new hullabaloo();
+                hulla.send("Товар успешно добавлен в корзину", "secondary");
 
-        });
+            });
+    }
 };
 
 var getNumberOfProductsInCart;
@@ -133,4 +135,3 @@ function changeQuantityOfProduct(product_id) {
         });
     countTotalCost();
 }
-
