@@ -17,9 +17,9 @@ from marketplace import _celery
 
 app = Flask(__name__)
 assets = Environment(app)
-app.config.from_object( Development )
-    # Development if os.getenv('FLASK_ENV') == 'development' else Production
-# )
+app.config.from_object(
+    Development if os.getenv('FLASK_ENV') == 'development' else Production
+)
 mail = Mail(app)
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
