@@ -28,11 +28,8 @@ def get_all_producers():
 
 def post_producer(args):
     validate_registration_data(args['email'], args['password'])
-    print(1)
     check_email_uniqueness(args['email'])
-    print(2)
     check_producer_name_uniqueness(args['name'])
-    print(3)
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
