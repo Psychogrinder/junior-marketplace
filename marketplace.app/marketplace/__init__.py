@@ -30,7 +30,6 @@ celery = _celery.make_celery(app)
 cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACHE_STORAGE_PORT'],
                     db=app.config['CACHE_STORAGE_DB'])
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
-ITEMS_PER_PAGE = app.config['ITEMS_PER_PAGE']
 
 from marketplace import models, views, api_routes
 from marketplace.models import Admin
