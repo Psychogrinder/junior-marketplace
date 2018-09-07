@@ -51,7 +51,7 @@
             <div class="col-6 col-sm-3 card-item">
                 <a href={{ url_for( 'product_card', product_id = product.id )}}>
                 <div class="product-item-photo">
-                    <img src={{ url_for('static', filename ="img/apple.jpg") }} alt="">
+                    <img src="/{{ product.photo_url }}" alt="">
                 </div>
                 <div class="product-item-description">
                     <p>{{ product.price }}</p>

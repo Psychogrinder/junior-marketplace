@@ -5,8 +5,7 @@
 }
 
 .card_image {
-    max-width: 400px;
-    outline: 1px solid gray;
+    max-width: 200px;
 }
 
 .product_info span {
@@ -100,4 +99,16 @@
 
 .description-product .col-12 p {
     text-align: justify;
+}
+
+.product-card-image {
+    max-height: 350px;
+    display: block;
+}
+
+.product-card-image img {
+    display: block;
+    max-height: inherit;
+    width: auto;
+    max-width: 100%;
 }

@@ -3,46 +3,45 @@
 {% block meta_title %}Садовое хозяйство{% endblock %}
 
 {% block body %}
-<main class="profile">
-    <div class="container profile_title">
-        <div class="row">
-            <div class="col-3 userpic_container">
-                <img src={{ url_for( 'static', filename = 'img/userpic.svg') }} alt="">
-            </div>
-            <div class="col-9">
-                <div class="name_container">
-                    <h1>{{ producer.name }}</h1>
-                    {% if current_user.id == producer.id %}
+    <main class="profile producer-profile-main">
+        <div class="container producer-banner">
+            <img src="/{{ producer.photo_url }}" alt="">
+        </div>
+        <div class="container profile_title">
+            <div class="name_container">
+                <h1>{{ producer.name }}</h1>
+                {% if current_user.id == producer.id %}
                     <p class="edit-profile">
-                        <a href={{ url_for( 'edit_producer', producer_id = producer.id) }}>
-                            <img src={{ url_for( 'static', filename = 'img/edit-regular.svg') }}>
+                        <a href="{{ url_for( 'edit_producer', producer_id = producer.id) }}">
+                            <img src="{{ url_for( 'static', filename = 'img/edit-regular.svg') }}">
                             Редактировать
                         </a>
                     </p>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-3 profile-keys">
+                    <p>Название фермы:</p>
+                    <p>Контактное лицо:</p>
+                    <p>E-mail:</p>
+                    <p>Телефон:</p>
+                    <p>Адрес:</p>
+                    {% if producer.description %}
+                    <p>Описание:</p>
                     {% endif %}
+                </div>
+                <div class="col-9 profile-values">
+                    <p class="main-text">{{ producer.name }}</p>
+                    <p class="main-text">{{ producer.person_to_contact }}</p>
+                    <p class="main-text">{{ producer.email }}</p>
+                    <p class="main-text">{{ producer.phone_number }}</p>
+                    <p class="main-text">{{ producer.address }}</p>
+                    <p class="main-text">{{ producer.description }}</p>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-3 profile-keys">
-                <span>Название фермы:</span>
-                <span>Контактное лицо:</span>
-                <span>E-mail:</span>
-                <span>Телефон:</span>
-                <span>Адрес:</span>
-                <span>Описание:</span>
-            </div>
-            <div class="col-9 profile-values">
-                <span class="main-text">{{ producer.name }}</span>
-                <span class="main-text">{{ producer.person_to_contact}}</span>
-                <span class="main-text">{{ producer.email }}</span>
-                <span class="main-text">{{ producer.phone_number }}</span>
-                <span class="main-text">{{ producer.address }}</span>
-                <span class="main-text">{{ producer.description }}</span>
-            </div>
-        </div>
-    </div>
-</main>
+    </main>
 {% endblock %}

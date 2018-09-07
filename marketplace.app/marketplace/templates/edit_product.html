@@ -3,73 +3,89 @@
 {% block meta_title %}Редактирование товара {{ product.name }} {% endblock %}
 
 {% block body %}
-<main>
-    <div class="container edit-product-card" id="editProductPage">
-        <section class="breadcrumbs">
-            <span><a href={{ url_for('producer_products', producer_id = product.producer_id)}}>Товары</a></span>
-            <span><a class="active">{{ product.name }}</a></span>
-        </section>
-        <form action="#">
+    <main>
+        <div class="container edit-product-card" id="editProductPage">
+            <section class="breadcrumbs">
+                <span><a href="{{ url_for('producer_products', producer_id = product.producer_id) }}">Товары</a></span>
+                <span><a class="active">{{ product.name }}</a></span>
+            </section>
+            <div class="delete-profile">
+                <p class="out-of-stock">
+                    <a href="#" data-toggle="modal" data-target="#deleteProductProducer">
+                        <img src="{{ url_for('static', filename='img/exclamation-circle-solid.svg' ) }}">
+                        Удалить продукт
+                    </a>
+                </p>
+            </div>
+            {% include 'inc/modal_delete_product.html' %}
+            <form id="upload-product-image" method="post" enctype="multipart/form-data">
+                <div class="row edit-product-item">
+                    <label class="col-5 col-sm-3">Выберите изображение</label>
+                    <input name="image" type="file" class="form-control-file col-8 col-sm-4">
+                </div>
+            </form>
             <div class="row edit-product-item">
-                <label for="editName" class="col-5 col-sm-3">Название</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editName" placeholder="Иван" required
-                       value='{{ product.name }}'>
+                <label class="col-5 col-sm-3">Текущее изображение</label>
+                <div class="card_image" id="editProductImage">
+                    <img src="/{{ product.photo_url }}" alt="" width="100%" height="auto">
+                </div>
             </div>
-            <div class="row edit-product-item">
-                <label for="editPhoto" class="col-5 col-sm-3">Фотография</label>
-                <input type="file" class="form-control-file col-8 col-sm-4" id="editPhoto" aria-describedby="fileHelp">
-            </div>
-            <div class="row edit-product-item">
-                <label for="editPrice" class="col-5 col-sm-3">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100" required value={{ product.price}}>
-            </div>
-            <div class="row edit-product-item">
-                <label for="editArticle" class="col-5 col-sm-3">Артикул</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editArticle" value="564895" disabled value={{
-                       product.id }}>
-            </div>
-            <div class="row edit-product-item">
-                <label for="editCategory" class="col-5 col-sm-3">Категория</label>
-                <select class="form-control col-8 col-sm-4" name="category" id="editCategory" required>
-                    <option value="" disabled>Категория</option>
-                </select>
-            </div>
-            <div class="row edit-product-item">
-                <label for="editSubcategory" class="col-5 col-sm-3">Подкатегория</label>
-                <select class="form-control col-8 col-sm-4" name="subcategory" id="editSubcategory" required>
-                    <option value="" disabled selected>Подкатегория</option>
-
-                </select>
-            </div>
-            <div class="row edit-product-item">
-                <label for="editCount" class="col-5 col-sm-3">Количество товара</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editCount" placeholder="10"
-                       pattern="^[ 0-9]+$" value={{ product.quantity }}>
-            </div>
-            <div class="row edit-product-item">
-                <label for="editWeigth" class="col-5 col-sm-3">Вес/Единицы измерения</label>
-                <input type="text" class="form-control col-5 col-sm-3" pattern="^[ 0-9]+$" name="weigth"
-                       id="editWeigth" value={{ product.weight }}>
-                <select class="form-control col-4 col-sm-1" name="weigth_init" required>
-                    {% for unit in measurement_units %}
-                    {% if unit == product.measurement_unit %}
-                    <option selected value={{ unit }}>{{ unit }}</option>
-                    {% else %}
-                    <option value={{ unit }}>{{ unit }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="row edit-product-item">
-                <label for="editDescription" class="col-5 col-sm-3">Описание</label>
-                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription"
-                          name="description">{{ product.description }}
-                </textarea>
-            </div>
-            <div class="col-12 col-sm-10 edit-product-save">
-                <button type="submit" class="btn btn-success" id="save_product_data">СОХРАНИТЬ</button>
-            </div>
-        </form>
-    </div>
-</main>
+            <form action="#">
+                <div class="row edit-product-item">
+                    <label for="editName" class="col-5 col-sm-3">Название</label>
+                    <input type="text" class="form-control col-8 col-sm-4" id="editName" placeholder="Иван" required
+                           value='{{ product.name }}'>
+                </div>
+                <div class="row edit-product-item">
+                    <label for="editPrice" class="col-5 col-sm-3">Цена</label>
+                    <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100"
+                           pattern="^\d+\.?(\d{1,2})?$" required value="{{ product.price }}">
+                </div>
+                <div class="row edit-product-item">
+                    <label for="editArticle" class="col-5 col-sm-3">Артикул</label>
+                    <input type="text" class="form-control col-8 col-sm-4" id="editArticle" disabled
+                           value="{{ product.id }}">
+                </div>
+                <div class="row edit-product-item">
+                    <label for="editCategory" class="col-5 col-sm-3">Категория</label>
+                    <select class="form-control col-8 col-sm-4" name="category" id="editCategory" required>
+                        <option value="" disabled>Категория</option>
+                    </select>
+                </div>
+                <div class="row edit-product-item">
+                    <label for="editSubcategory" class="col-5 col-sm-3">Подкатегория</label>
+                    <select class="form-control col-8 col-sm-4" name="subcategory" id="editSubcategory" required>
+                        <option value="" disabled selected>Подкатегория</option>
+                    </select>
+                </div>
+                <div class="row edit-product-item">
+                    <label for="editCount" class="col-5 col-sm-3">Количество товара</label>
+                    <input type="text" class="form-control col-8 col-sm-4" id="editCount" placeholder="10"
+                           pattern="^[ 0-9]+$" value={{ product.quantity }}>
+                </div>
+                <div class="row edit-product-item">
+                    <label for="editWeight" class="col-5 col-sm-3">Вес/Единицы измерения</label>
+                    <input type="text" class="form-control col-5 col-sm-3" name="weight"
+                           id="editWeight" value="{{ product.weight }}">
+                    <select class="form-control col-4 col-sm-1" name="weight_init" required>
+                        {% for unit in measurement_units %}
+                            {% if unit == product.measurement_unit %}
+                                <option selected value={{ unit }}>{{ unit }}</option>
+                            {% else %}
+                                <option value={{ unit }}>{{ unit }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="row edit-product-item">
+                    <label for="editDescription" class="col-5 col-sm-3">Описание</label>
+                    <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription" name="description">{{ product.description }}</textarea>
+                </div>
+                <div class="col-12 col-sm-10 edit-product-save">
+                    <button type="submit" class="btn btn-success" id="save_product_data">СОХРАНИТЬ</button>
+                </div>
+            </form>
+        </div>
+    </main>
 {% endblock %}
+

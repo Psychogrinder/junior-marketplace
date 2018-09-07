@@ -143,5 +143,11 @@ for cat, subcats in product_names.items():
 for i, cat in enumerate(Category.query.all()):
     cat.name = cat.name.title()
 
-    
+marketplace_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+for i in range(1, 10):
+    try:
+        os.mkdir(os.path.join(marketplace_dir, f'static/img/user_images/{i}/'))
+    except FileExistsError:
+        pass
+        
 db.session.commit()

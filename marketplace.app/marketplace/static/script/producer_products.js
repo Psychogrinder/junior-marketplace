@@ -53,7 +53,7 @@ if ($('#producerProducts').length > 0) {
                 '<div class="col-6 col-sm-3 card-item">' +
                 '<a href="/products' + products[i].id + '">' +
                 '<div class="product-item-photo">' +
-                "<img src='/static/img/apple.jpg'></div>" +
+                '<img src="/' + products[i].photo_url + '"></div>' +
                 '<div class="product-item-description" id="producerItemDescription' + i + '">' +
                 "<p>" + products[i].price + "</p>" +
                 "<b>" + products[i].name + "</b>" +

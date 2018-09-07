@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, redirect, url_for
 from flask_restful import Resource, reqparse
 from marketplace.api_folder.utils import product_utils
 from marketplace.api_folder.utils import cart_utils
@@ -79,7 +79,7 @@ class ProductsByPrice(Resource):
 
 class UploadImageProduct(Resource):
     def post(self, product_id):
-        return product_utils.upload_product_image(product_id, request.files), 201
+        return product_utils.upload_product_image(product_id, request.files)
 
 
 class ProductsInCart(Resource):

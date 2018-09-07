@@ -21,7 +21,8 @@ def post_consumer(args):
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
-    #email_tools.send_confirmation_email(new_consumer.email)
+    # временно закоменчено, потому-что иначе ломает
+    # email_tools.send_confirmation_email(new_consumer.email)
     return new_consumer
 
 

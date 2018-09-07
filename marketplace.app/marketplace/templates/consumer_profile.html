@@ -6,10 +6,7 @@
 <main class="profile">
     <div class="container profile_title">
         <div class="row">
-            <div class="col-3 col-sm-2 userpic_container">
-                <img src={{ url_for( 'static', filename = 'img/userpic.svg') }} alt="">
-            </div>
-            <div class="col-9">
+            <div class="col-12">
                 <div class="name_container">
                     <h1>{{ user.first_name }} {{user.last_name}}</h1>
                     <p class="edit-profile">
@@ -24,22 +21,22 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-3 col-sm-2 profile-keys">
-                <span>E-mail:</span>
+            <div class="col-4 col-md-2 col-sm-3 col-lg-1 profile-keys">
+                <p>E-mail:</p>
                 {% if user.phone_number %}
-                <span>Телефон:</span>
+                <p>Телефон:</p>
                 {% endif %}
                 {% if user.address %}
-                <span>Адрес:</span>
+                <p>Адрес:</p>
                 {% endif %}
             </div>
-            <div class="col-9 col-sm-10 profile-values">
-                <span class="main-text">{{ user.email }}</span>
+            <div class="col-8 col-md-10 col-sm-9 profile-values">
+                <p class="main-text">{{ user.email }}</p>
                 {% if user.phone_number %}
-                <span class="main-text">{{ user.phone_number }}</span>
+                <p class="main-text">{{ user.phone_number }}</p>
                 {% endif %}
                 {% if user.address %}
-                <span class="main-text">{{ user.address }}</span>
+                <p class="main-text">{{ user.address }}</p>
                 {% endif %}
             </div>
         </div>
