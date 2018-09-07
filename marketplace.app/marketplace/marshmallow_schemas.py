@@ -37,7 +37,7 @@ class ConsumerSignUpSchema(ma.ModelSchema):
     class Meta:
         model = Consumer
         fields = (
-            'id', 'email', 'password', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address', 'photo_url')
+            'id', 'email', 'password', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address')
 
 
 class ProducerSignUpSchema(ma.ModelSchema):
