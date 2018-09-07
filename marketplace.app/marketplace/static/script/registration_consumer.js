@@ -8,6 +8,7 @@ $(document).ready(function () {
         else {
             $('#emailRegistration').css("border-color", "#ced4da");
         }
+        $('#errorRegistrationConsumer').css('display', 'none');
     });
 
     $("#passwordRegistration").change(function () {
@@ -72,7 +73,12 @@ $(document).ready(function () {
                             });
 
                     }
-                });
+                }).fail(function (data, textStatus, xhr) {
+                if (data.status == 406) {
+                    $('#errorRegistrationConsumer').css('display', 'block');
+                    $('#errorRegistrationConsumer').text(data.responseJSON.message);
+                }
+            });
         }
     });
 });

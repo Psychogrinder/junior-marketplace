@@ -3,3 +3,12 @@
     list-style: none;
     color: rgb(255, 120, 81);
 }
+
+#errorRegistrationProducer,
+#errorRegistrationConsumer {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: #F44336;
+    margin-top: -15px;
+    display: none;
+}

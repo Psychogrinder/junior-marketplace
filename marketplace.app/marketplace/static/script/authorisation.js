@@ -15,8 +15,8 @@ $(document).ready(function () {
                     email: email_authorisation,
                     password: password_authorisation,
                 },
-                function (data, status) {
-                    if (status) {
+                function (data, status, jqXHR) {
+                    if (status == "success") {
                         $('#singInUser').removeClass('show');
                         $('#singInUser').css("display", "none");
                         $('.modal-backdrop').css("display", "none");
@@ -26,11 +26,11 @@ $(document).ready(function () {
                         localStorage.setItem("globalUserEntity", globalUserEntity);
                         location.reload();
                     }
-                    else {
+                }).fail(function (data, textStatus, xhr) {
+                    if (data.status == 406) {
                         $('#authUserAlert').css("display", "block");
                     }
                 });
-
         }
     });
     $("#logoutButton").click(function () {
