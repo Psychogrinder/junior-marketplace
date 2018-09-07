@@ -9,7 +9,7 @@ $(document).ready(function () {
         // var form_data = new FormData($('#upload-producer-image')[0]);
         $.ajax({
             type: 'POST',
-            url: "/api/v1/producers/" + product_id + "/upload",
+            url: "/api/v1/products/" + product_id + "/upload",
             data: {
                 image_data: image_data,
             },
