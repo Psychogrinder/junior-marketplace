@@ -70,9 +70,19 @@ class ProductsByProducer(Resource):
             return cache, 200
 
 
+
+
+
 class UploadImageProducer(Resource):
+
+    image_parser = reqparse.RequestParser()
+    image_parser.add_argument('image_data', required=True, location='form')
+
     def post(self, producer_id):
-        return producer_utils.upload_producer_image(producer_id, request.files), 201
+        args = self.image_parser.parse_args()
+        print(args['image_data'])
+        print('-------------------------')
+        return producer_utils.upload_producer_image(producer_id, args['image_data']), 201
 
 
 class ProducerNamesByCategoryName(Resource):
