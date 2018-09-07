@@ -28,16 +28,14 @@ def get_all_producers():
 
 def post_producer(args):
     validate_registration_data(args['email'], args['password'])
-    print(1)
     check_email_uniqueness(args['email'])
-    print(2)
     check_producer_name_uniqueness(args['name'])
-    print(3)
     new_producer = producer_sign_up_schema.load(args).data
     db.session.add(new_producer)
     db.session.commit()
     # make directory to store this producer's images
     os.mkdir(os.path.join(os.getcwd(), 'marketplace/static/img/user_images/' + str(new_producer.id) + '/'))
+    # временно закоменчено, потому-что иначе ломает
     # email_tools.send_confirmation_email(new_producer.email)
     return new_producer
 
