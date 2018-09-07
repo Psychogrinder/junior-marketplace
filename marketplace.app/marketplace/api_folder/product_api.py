@@ -5,6 +5,7 @@ from marketplace.api_folder.utils import cart_utils
 from marketplace.api_folder.schemas import product_schema_list, product_schema
 from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
+from marketplace.api_folder.utils.login_utils import account_access_required
 
 product_args = ['price', 'name', 'quantity', 'producer_id', 'category_id', 'measurement_unit', 'weight', 'description']
 parser = reqparse.RequestParser()
@@ -93,6 +94,7 @@ class UploadImageProduct(Resource):
 
 class ProductsInCart(Resource):
 
+    @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:

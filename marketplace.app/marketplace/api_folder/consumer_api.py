@@ -10,7 +10,7 @@ from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
 from flask_httpauth import HTTPBasicAuth
 
-from marketplace.api_folder.utils.login_utils import login_as_admin_required
+from marketplace.api_folder.utils.login_utils import login_as_admin_required, account_access_required
 
 auth = HTTPBasicAuth()
 
@@ -40,6 +40,7 @@ class GlobalConsumers(Resource):
 
 class ConsumerRest(Resource):
 
+    @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
@@ -48,16 +49,19 @@ class ConsumerRest(Resource):
         else:
             return cache, 200
 
-    def put(self, consumer_id):
+    @account_access_required
+    def put(self, **kwargs):
         args = parser.parse_args()
-        return consumer_schema.dump(consumer_utils.put_consumer(args, consumer_id)).data, 201
+        return consumer_schema.dump(consumer_utils.put_consumer(args, kwargs['consumer_id'])).data, 201
 
-    def delete(self, consumer_id):
-        return consumer_utils.delete_consumer_by_id(consumer_id), 201
+    @account_access_required
+    def delete(self, **kwargs):
+        return consumer_utils.delete_consumer_by_id(kwargs['consumer_id']), 201
 
 
 class ConsumerOrders(Resource):
 
+    @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
@@ -68,5 +72,6 @@ class ConsumerOrders(Resource):
 
 
 class UploadImageConsumer(Resource):
-    def post(self, consumer_id):
-        return consumer_utils.upload_consumer_image(consumer_id, request.files), 201
+    @account_access_required
+    def post(self, **kwargs):
+        return consumer_utils.upload_consumer_image(kwargs['consumer_id'], request.files), 201

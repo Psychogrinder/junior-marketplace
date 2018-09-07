@@ -4,6 +4,7 @@ from marketplace.api_folder.schemas import order_schema_list, order_schema
 from marketplace.api_folder.utils import caching_utils
 import marketplace.api_folder.utils.cart_utils as cart_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
+from marketplace.api_folder.utils.login_utils import account_access_required
 
 order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost', 'first_name',
               'last_name']
@@ -23,9 +24,10 @@ class GlobalOrders(Resource):
         else:
             return cache, 200
 
-    def post(self):
+    @account_access_required
+    def post(self, **kwargs):
         args = parser.parse_args()
-        cart_utils.decrease_products_quantity_and_increase_times_ordered(args['consumer_id'])
+        cart_utils.decrease_products_quantity_and_increase_times_ordered(args[kwargs['consumer_id']])
         cart_utils.post_orders(args)
         return "Заказ был успешно оформлен", 201
 
@@ -50,8 +52,9 @@ class Orders(Resource):
 
 
 class UnprocessedOrdersByProducerId(Resource):
-    def get(self, producer_id):
-        return {"quantity": order_utils.get_number_of_unprocessed_orders_by_producer_id(producer_id)}, 200
+    @account_access_required
+    def get(self, **kwargs):
+        return {"quantity": order_utils.get_number_of_unprocessed_orders_by_producer_id(kwargs['producer_id'])}, 200
 
 
 filtered_orders_args = ['producer_id', 'order_status']

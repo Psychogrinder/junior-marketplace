@@ -6,6 +6,7 @@ from marketplace.api_folder.utils import product_utils
 from marketplace.api_folder.schemas import producer_schema_list, producer_schema, order_schema_list, product_schema_list
 from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
+from marketplace.api_folder.utils.login_utils import account_access_required
 
 producer_args = ['email', 'name', 'password', 'person_to_contact', 'description', 'phone_number', 'address']
 
@@ -32,6 +33,7 @@ class GlobalProducers(Resource):
 
 class ProducerRest(Resource):
 
+    @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
@@ -40,16 +42,19 @@ class ProducerRest(Resource):
         else:
             return cache, 200
 
-    def put(self, producer_id):
+    @account_access_required
+    def put(self, **kwargs):
         args = parser.parse_args()
-        return producer_schema.dump(producer_utils.put_producer(args, producer_id)).data, 201
+        return producer_schema.dump(producer_utils.put_producer(args, kwargs['producer_id'])).data, 201
 
-    def delete(self, producer_id):
-        return producer_utils.delete_producer_by_id(producer_id), 201
+    @account_access_required
+    def delete(self, **kwargs):
+        return producer_utils.delete_producer_by_id(kwargs['producer_id']), 201
 
 
 class ProducerOrders(Resource):
 
+    @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
@@ -61,6 +66,7 @@ class ProducerOrders(Resource):
 
 class ProductsByProducer(Resource):
 
+    @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
