@@ -78,6 +78,13 @@ class User(SetPhotoUrlMixin, UserMixin, db.Model):
         self.phone_number = phone_number
 
 
+class Admin(User):
+    __mapper_args__ = {'polymorphic_identity': 'admin'}
+
+    def __init__(self, email, password):
+        super().__init__(email, password, 'admin')
+
+
 class Consumer(User):
     __mapper_args__ = {'polymorphic_identity': 'consumer'}
     last_name = db.Column(db.String(128))
@@ -147,7 +154,7 @@ class Producer(User):
         self.name = name
         self.person_to_contact = person_to_contact
         self.description = get_string_or_default(description)
-        self.photo_url=photo_url
+        self.photo_url = photo_url
 
     def get_products(self):
         return Product.query.filter_by(producer_id=self.id).all()

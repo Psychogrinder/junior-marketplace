@@ -8,6 +8,11 @@ from marketplace.api_folder.schemas import (
     order_schema_list)
 from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
+from flask_httpauth import HTTPBasicAuth
+
+from marketplace.api_folder.utils.login_utils import login_as_admin_required
+
+auth = HTTPBasicAuth()
 
 consumer_args = ['first_name', 'last_name', 'email', 'password', 'phone_number', 'category_id', 'address', 'photo_url',
                  'patronymic']
@@ -19,6 +24,7 @@ for arg in consumer_args:
 
 class GlobalConsumers(Resource):
 
+    @login_as_admin_required
     @get_cache
     def get(self, path, cache):
         if cache is None:
