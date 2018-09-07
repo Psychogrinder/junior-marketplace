@@ -3,25 +3,16 @@ $(document).ready(function () {
     $(".phone_mask").mask("+7(999)999-99-99");
 
     function uploadProducerImage(producer_id) {
-        var form_data = new FormData($('#upload-producer-image')[0]);
+        var image_data = $('#item-img-output').attr('src');
+        image_data = image_data.split(',')[1];
         $.ajax({
             type: 'POST',
             url: "/api/v1/producers/" + producer_id + "/upload",
-            data: form_data,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function (photo_url) {
-                if (photo_url) {
-                    document.getElementById("upload-producer-image").reset();
-                    var imageDiv = document.getElementById("editProducerImage");
-                    while (imageDiv.firstChild) {
-                        imageDiv.removeChild(imageDiv.firstChild);
-                    }
-                    $("#editProducerImage").append(
-                        '<img src="' + photo_url + '" alt="" width="100%" height="auto">'
-                    );
-                }
+            data: {
+                image_data: image_data,
+            },
+            success: function (data, status) {
+                console.log('successful upload');
             },
         });
     }
@@ -31,8 +22,7 @@ $(document).ready(function () {
         var producerObject = {
             name: $('#producer_name').val(),
             person_to_contact: $('#producer_contact_person').val(),
-            // email: $('#producer_email').val(),
-            // fileHelp: $('#producer_logo').val(),
+            email: $('#producer_email').val(),
             phone_number: $('#producer_phone').val(),
             address: $('#producer_address').val(),
             description: $('#producer_description').val()

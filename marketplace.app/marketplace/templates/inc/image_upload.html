@@ -1,0 +1,39 @@
+<div class="row edit-profile-item">
+    <label class="col-12 col-sm-2">Выберите изображение</label>
+    <div class="container col-12 col-sm-5 upload-image-block">
+        <div class="row">
+            <div class="col-xs-12">
+                <label class="cabinet center-block">
+                    <figure>
+                        <img src="" class="gambar img-responsive img-thumbnail" id="item-img-output"/>
+                        <figcaption><i class="fa fa-camera"></i></figcaption>
+                    </figure>
+                    <input type="file" class="item-img file center-block" name="file_photo" id="file"/>
+                    </label>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="cropImagePop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <?=multiLanguage( "Edit Foto" , "Edit Photo" )?></h4>
+            </div>
+            <div class="modal-body">
+                <div id="upload-demo" class="center-block"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="cropImageBtn" class="btn btn-primary">Crop</button>
+            </div>
+        </div>
+    </div>
+</div>

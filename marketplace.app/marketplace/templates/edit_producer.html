@@ -8,7 +8,7 @@
 <main>
     <div class="container edit-profile">
         <section class="breadcrumbs">
-            <span><a href="{{ url_for('producer_profile', producer_id = producer.id ) }}">Профиль</a></span>
+            <span><a href="{{ url_for('producer_profile', producer_id=producer.id ) }}">Профиль</a></span>
             <span><a class="active">Редактирование профиля</a></span>
         </section>
         <div class="delete-profile">
@@ -19,18 +19,9 @@
                 </a>
             </p>
         </div>
-        <form id="upload-producer-image" method="post" enctype="multipart/form-data">
-            <div class="row edit-profile-item">
-                <label class="col-12 col-sm-2">Выберите изображение</label>
-                <input name="image" type="file" class="form-control-file col-12 col-sm-4">
-            </div>
-        </form>
-        <div class="row edit-profile-item">
-            <label class="col-12 col-sm-2">Текущее изображение</label>
-            <div class="card_image col-12 col-sm-4" id="editProducerImage">
-                <img src="/{{ producer.photo_url }}" alt="" width="100%" height="auto">
-            </div>
-        </div>
+
+        {% include 'inc/image_upload.html' %}
+
         <form action="#" id="editProducerForm" data-parsley-validate>
             <div class="row edit-profile-item">
                 <label for="producer_name" class="col-12 col-sm-2">Название фермы</label>

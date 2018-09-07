@@ -1,3 +1,4 @@
+import base64
 import os
 import time
 
@@ -14,20 +15,27 @@ def allowed_extension(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def upload_image(uploader, files, producer_id, product_id=None):
-    if files:
-        if 'image' not in files:
-            no_file_part_in_request()
-        image = files['image']
-        if image.filename == '':
-            no_image_presented()
-        if image and allowed_extension(image.filename):
-            image_url = os.path.join(app.config['UPLOAD_FOLDER'], str(producer_id),
-                                     f'{hash(str(time.time()))}_' + secure_filename(image.filename))
-            image.save(image_url)
-            image_url = '/'.join(image_url.split('/')[-5:])
-            uploader.set_photo_url(image_url)
-            db.session.commit()
-        return '/' + image_url
-    else:
-        return False
+def upload_image(uploader, producer_id, image_data):
+    """
+    :param uploader: instance of an object, either Producer or Product
+    :param producer_id: is used to find the necessary directory
+    :param image_data: image bytes in string format, base64
+    """
+
+    # turn string to bytes
+    image_data = bytes(image_data, encoding='utf-8')
+    # make a unique name for the image
+    filename = f'{hash(str(time.time()))}' + '.jpeg'
+    # attach the producer image directory to the filename
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], str(producer_id), filename)
+    print()
+    # write bytes to a file
+    with open(file_path, "wb") as fh:
+        fh.write(base64.decodebytes(image_data))
+    # -5 because we go as far as the static folder: static/img/user_images/producer_id/filename.jpg
+    photo_url = '/'.join(file_path.split('/')[-5:])
+    # set photo_url attribute of the object
+    uploader.set_photo_url(photo_url)
+    db.session.commit()
+    return True
+
