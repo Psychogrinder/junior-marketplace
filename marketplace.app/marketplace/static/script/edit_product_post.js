@@ -6,7 +6,6 @@ $(document).ready(function () {
         console.log("IN UPLOAD");
         var image_data = $('#item-img-output').attr('src');
         image_data = image_data.split(',')[1];
-        // var form_data = new FormData($('#upload-producer-image')[0]);
         $.ajax({
             type: 'POST',
             url: "/api/v1/products/" + product_id + "/upload",
