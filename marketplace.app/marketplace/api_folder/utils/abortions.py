@@ -53,12 +53,12 @@ def failed_password_len_check():
     abort(406, message='Given password is too short')
 
 
-def failed_email_uniqueness_check(email):
-    abort(406, message='User with given email = {} already exists'.format(email))
+def failed_email_uniqueness_check():
+    abort(406, message='Пользователь с таким email уже существует')
 
 
-def failed_producer_name_uniqueness_check(name):
-    abort(406, message='Producer with given name = {} already exists'.format(name))
+def failed_producer_name_uniqueness_check():
+    abort(406, message='Магазин с таким названием уже существует')
 
 
 def no_file_part_in_request():

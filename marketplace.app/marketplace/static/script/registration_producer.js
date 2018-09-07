@@ -8,6 +8,7 @@ $(document).ready(function () {
         else {
             $('#emailRegProducer').css("border-color", "#ced4da");
         }
+        $('#errorRegistrationProducer').css('display', 'none');
     });
 
 
@@ -35,6 +36,7 @@ $(document).ready(function () {
 
     $('#nameRegProducer').change(function () {
         $('#nameRegProducer').css("border-color", "#ced4da");
+        $('#errorRegistrationProducer').css('display', 'none');
     });
 
 
@@ -115,6 +117,12 @@ $(document).ready(function () {
                                     location.reload()
                                 }
                             });
+                    }
+                }).fail(function (data, textStatus, xhr) {
+                    console.log(data.responseJSON.message, textStatus, xhr);
+                    if (data.status == 406) {
+                        $('#errorRegistrationProducer').css('display', 'block');
+                        $('#errorRegistrationProducer').text(data.responseJSON.message);
                     }
                 });
         }
