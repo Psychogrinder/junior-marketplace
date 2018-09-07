@@ -80,8 +80,6 @@ class UploadImageProducer(Resource):
 
     def post(self, producer_id):
         args = self.image_parser.parse_args()
-        print(args['image_data'])
-        print('-------------------------')
         return producer_utils.upload_producer_image(producer_id, args['image_data']), 201
 
 

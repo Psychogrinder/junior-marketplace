@@ -1,14 +1,10 @@
 import os
 import time
+import base64
 
-from werkzeug.utils import secure_filename
 from marketplace import models
 from marketplace import image_tools
 from marketplace import db, app, celery
-from marketplace.api_folder.utils.abortions import (
-    no_file_part_in_request,
-    no_image_presented
-)
 
 
 def allowed_extension(filename):
@@ -31,21 +27,21 @@ def save_upload_image(image_url, uploader, size):
     )
 
 
-def upload_image(uploader, files, producer_id, size, product_id=None):
-    if files:
-        if 'image' not in files:
-            no_file_part_in_request()
-        image = files['image']
-        if image.filename == '':
-            no_image_presented()
-        if image and allowed_extension(image.filename):
-            image_url = os.path.join(
-                app.config['UPLOAD_FOLDER'],
-                str(producer_id),
-                f'{hash(time.time())}_' + secure_filename(image.filename)
-            )
-            image.save(image_url)
-            save_upload_image(image_url, uploader, size)
-        return '/'+image_tools.get_file_path_from_static(image_url)
-    else:
-        return False
+def upload_image(uploader, image_data, producer_id, size, product_id=None):
+    """
+    :param uploader: instance of an object, either Producer or Product
+    :param producer_id: is used to find the necessary directory
+    :param image_data: image bytes in string format, base64
+    """
+    # turn string to bytes
+    image_data = bytes(image_data, encoding='utf-8')
+    # make a unique name for the image
+    filename = f'{hash(str(time.time()))}' + '.jpeg'
+    # attach the producer image directory to the filename
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], str(producer_id), filename)
+    print()
+    # write bytes to a file
+    with open(file_path, "wb") as fh:
+        fh.write(base64.decodebytes(image_data))
+    save_upload_image(file_path, uploader, size)
+    return '/'+image_tools.get_file_path_from_static(file_path)
