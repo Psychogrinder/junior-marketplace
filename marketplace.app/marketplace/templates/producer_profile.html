@@ -29,7 +29,9 @@
                     <p>E-mail:</p>
                     <p>Телефон:</p>
                     <p>Адрес:</p>
+                    {% if producer.description %}
                     <p>Описание:</p>
+                    {% endif %}
                 </div>
                 <div class="col-9 profile-values">
                     <p class="main-text">{{ producer.name }}</p>

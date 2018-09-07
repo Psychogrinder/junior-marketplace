@@ -98,10 +98,23 @@ $(document).ready(function () {
                 },
                 function (data, status) {
                     if (status == 'success') {
-                        $('#regProducer').removeClass('show');
-                        $('#regProducer').css("display", "none");
-                        $('.modal-backdrop').css("display", "none");
-                        location.reload();
+                        $.post("/api/v1/login",
+                            {
+                                email: email_producer,
+                                password: password_producer,
+                            },
+                            function (data, status) {
+                                if (status) {
+                                    var globalUserId = data.id;
+                                    localStorage.setItem("globalUserId", globalUserId);
+                                    var globalUserEntity = data.entity;
+                                    localStorage.setItem("globalUserEntity", globalUserEntity);
+                                    $('#regProducer').removeClass('show');
+                                    $('#regProducer').css("display", "none");
+                                    $('.modal-backdrop').css("display", "none");
+                                    location.reload()
+                                }
+                            });
                     }
                 });
         }
