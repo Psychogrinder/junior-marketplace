@@ -73,5 +73,9 @@ def invalid_email_or_password():
     abort(406, message='Invalid email or password')
 
 
-def admin_root_required():
+def admin_rights_required():
     abort(403, message='Reject access')
+
+
+def account_access_denied():
+    abort(403, message='Reject access to this page')
