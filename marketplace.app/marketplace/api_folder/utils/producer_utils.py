@@ -63,9 +63,9 @@ def delete_producer_by_id(producer_id):
     return {"message": "Producer with id {} has been deleted successfully".format(producer_id)}
 
 
-def upload_producer_image(producer_id, files):
+def upload_producer_image(producer_id, image_data):
     producer = get_producer_by_id(producer_id)
-    return upload_image(producer, files, producer_id)
+    return upload_image(producer, producer_id, image_data)
 
 
 def get_producer_names_by_category_name(category_name):

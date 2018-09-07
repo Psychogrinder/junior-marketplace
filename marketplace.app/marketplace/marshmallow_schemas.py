@@ -36,7 +36,8 @@ class ProductSchema(ma.ModelSchema):
 class ConsumerSignUpSchema(ma.ModelSchema):
     class Meta:
         model = Consumer
-        fields = ('id', 'email', 'password', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address')
+        fields = (
+            'id', 'email', 'password', 'first_name', 'patronymic', 'last_name', 'phone_number', 'address', 'photo_url')
 
 
 class ProducerSignUpSchema(ma.ModelSchema):
@@ -54,7 +55,7 @@ class ConsumerSchema(ma.ModelSchema):
 class ProducerSchema(ma.ModelSchema):
     class Meta:
         model = Producer
-        fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address')
+        fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address', 'photo_url')
 
 
 class CategorySchema(ma.ModelSchema):

@@ -3,30 +3,17 @@ $(document).ready(function () {
     $(".phone_mask").mask("+7(999)999-99-99");
 
     function uploadProducerImage(producer_id) {
-        console.log(' IN UPLOAD IMAGE');
         var image_data = $('#item-img-output').attr('src');
         image_data = image_data.split(',')[1];
-        console.log(image_data);
-        console.log(producer_id);
         // var form_data = new FormData($('#upload-producer-image')[0]);
         $.ajax({
             type: 'POST',
             url: "/api/v1/producers/" + producer_id + "/upload",
             data: {
                 image_data: image_data,
-                filename: 'image.jpeg',
             },
-            success: function (photo_url) {
-                if (photo_url) {
-                    document.getElementById("upload-producer-image").reset();
-                    var imageDiv = document.getElementById("editProducerImage");
-                    while (imageDiv.firstChild) {
-                        imageDiv.removeChild(imageDiv.firstChild);
-                    }
-                    $("#editProducerImage").append(
-                        '<img src="' + photo_url + '" alt="" width="100%" height="auto">'
-                    );
-                }
+            success: function (data, status) {
+                console.log('successful upload');
             },
         });
     }

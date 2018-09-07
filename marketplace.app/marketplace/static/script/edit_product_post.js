@@ -1,31 +1,21 @@
 $(document).ready(function () {
     var categoryId = null;
 
+
     function uploadProductImage(product_id) {
-        var form_data = new FormData($('#upload-product-image')[0]);
+        console.log("IN UPLOAD");
+        var image_data = $('#item-img-output').attr('src');
+        image_data = image_data.split(',')[1];
+        // var form_data = new FormData($('#upload-producer-image')[0]);
         $.ajax({
             type: 'POST',
-            url: "/api/v1/products/" + product_id + "/upload",
-            data: form_data,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function (photo_url) {
-                if (photo_url) {
-                    document.getElementById("upload-product-image").reset();
-                    var imageDiv = document.getElementById("editProductImage");
-                    while (imageDiv.firstChild) {
-                        imageDiv.removeChild(imageDiv.firstChild);
-                    }
-                    $("#editProductImage").append(
-                        '<img src="' + photo_url + '" alt="" width="100%" height="auto">'
-                    );
-                }
+            url: "/api/v1/producers/" + product_id + "/upload",
+            data: {
+                image_data: image_data,
             },
-            complete: function (data) {
-                var hulla = new hullabaloo();
-                hulla.send("Информация о товаре сохранена", "secondary");
-            }
+            success: function (data, status) {
+                console.log('successful upload');
+            },
         });
     }
 
@@ -61,5 +51,7 @@ $(document).ready(function () {
 
             }
         });
+        var hulla = new hullabaloo();
+        hulla.send("Информация о товаре сохранена", "secondary");
     });
 });

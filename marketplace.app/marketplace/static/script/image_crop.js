@@ -1,5 +1,36 @@
-// Start upload preview image
-$(".gambar").attr("src", "/static/img/standard-profile.jpg");
+// ===== Get photo_url =====
+var photo_url,
+    type,
+    viewportHeight,
+    imageWidth,
+    imageHeight;
+// see if a product or producer is being edited
+var addr = window.location + '';
+addr = addr.split('/');
+
+function setSrcAttr(type) {
+    $.get('/api/v1/' + type + '/' + id, function (data) {
+        $(".gambar").attr("src", '/' + data.photo_url);
+    })
+}
+
+if ((addr[3] === 'producer') && (addr[5] === 'edit')) {
+    var id = addr[4];
+    var type = 'producers';
+    viewportHeight = 85;
+    imageWidth = 1000;
+    imageHeight = 424;
+    setSrcAttr(type);
+}
+else if ((addr[3] === 'producer') && (addr[5] === 'products')) {
+    var id = addr[6];
+    var type = 'products';
+    viewportHeight = 117;
+    imageWidth = 255;
+    imageHeight = 150;
+    setSrcAttr(type);
+}
+
 var $uploadCrop,
     tempFilename,
     rawImg,
@@ -12,7 +43,7 @@ function readFile(input) {
             $('.upload-demo').addClass('ready');
             $('#cropImagePop').modal('show');
             rawImg = e.target.result;
-        }
+        };
         reader.readAsDataURL(input.files[0]);
     }
     else {
@@ -23,11 +54,13 @@ function readFile(input) {
 $uploadCrop = $('#upload-demo').croppie({
     viewport: {
         width: 200,
-        height: 150,
+        height: viewportHeight,
     },
     enforceBoundary: false,
     enableExif: true
 });
+
+
 $('#cropImagePop').on('shown.bs.modal', function () {
     // alert('Shown pop');
     $uploadCrop.croppie('bind', {
@@ -47,11 +80,10 @@ $('#cropImageBtn').on('click', function (ev) {
     $uploadCrop.croppie('result', {
         type: 'base64',
         format: 'jpeg',
-        size: {width: 200, height: 150}
+        size: {width: imageWidth, height: imageHeight}
     }).then(function (resp) {
         $('#item-img-output').attr('src', resp);
         $('#cropImagePop').modal('hide');
-        console.log($('#item-img-output'));
     });
 });
 // End upload preview image

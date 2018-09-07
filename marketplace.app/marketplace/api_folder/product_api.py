@@ -77,9 +77,18 @@ class ProductsByPrice(Resource):
             return cache, 200
 
 
+product_image_args = ['image_data']
+
+product_image_parser = reqparse.RequestParser()
+
+for arg in product_image_args:
+    product_image_parser.add_argument(arg)
+
+
 class UploadImageProduct(Resource):
     def post(self, product_id):
-        return product_utils.upload_product_image(product_id, request.files)
+        args = product_image_parser.parse_args()
+        return product_utils.upload_product_image(product_id, args['image_data'])
 
 
 class ProductsInCart(Resource):
