@@ -119,7 +119,7 @@ $(document).ready(function () {
                             });
                     }
                 }).fail(function (data, textStatus, xhr) {
-                    console.log(data.responseJSON.message, textStatus, xhr);
+                    // console.log(data.responseJSON.message, textStatus, xhr);
                     if (data.status == 406) {
                         $('#errorRegistrationProducer').css('display', 'block');
                         $('#errorRegistrationProducer').text(data.responseJSON.message);
