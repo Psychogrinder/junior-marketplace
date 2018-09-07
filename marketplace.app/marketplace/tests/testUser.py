@@ -1,6 +1,7 @@
 from path_file import *
 
-from testMethods import getCookie, getUserIdAndEntity, getResponseCode, parseApiRoutes, \
+import json
+from testMethods import getResponse, getCookiesFromResponse, getUserIdAndEntity, getResponseCode, parseApiRoutes, \
     replaceUserId, replaceProductId, getResponseCode
 
 from marketplace.api_folder.utils.user_utils import get_user_by_email
@@ -23,32 +24,30 @@ class TestCase(unittest.TestCase):
         self.producer = Mock()
         self.edit = Mock()
 
-        #login data
+        # login data
         self.user.email = 'berenice.cavalcanti@example.com'
         self.producer.email = 'annabelle.denys@example.com'
         self.pw = '123123'
 
         self.product_id = 3
 
-        #edit profile
-        self.user_email = 'ramadanm@ra.ru'
-        self.user.first_name = 'Abra'
-        self.user.last_name = 'Cadabra'
-        self.user.patronymic = 'Redisovic'
-        self.user.phone_number = '81212121'
+        # edit profile
+        self.user_email = 'sd@kn.ru'
 
         self.base_url = 'http://127.0.0.1:8000'
         self.login_url = self.base_url + '/api/v1/login'
 
-
     def test_01_Login(self):
-        cookie, response = getCookie(self.login_url, self.user.email, self.pw)
 
-        self.assertEqual(201, response.status_code)
-        self.assertIn('remember_token', cookie)
-        self.assertIn('session', cookie)
-        #print('Test Login is OK.')
+        for email in self.producer.email, self.user.email:
+            response = getResponse(self.login_url, email, self.pw)
+            cookie = getCookiesFromResponse(response)
 
+            self.assertEqual(201, response.status_code)
+            self.assertIn('remember_token', cookie)
+            self.assertIn('session', cookie)
+
+        # print('Test Login is OK.')
 
     def test_02_Logout(self):
         logout_url = self.base_url + '/api/v1/logout'
@@ -57,12 +56,13 @@ class TestCase(unittest.TestCase):
         self.assertEqual(201, response.status_code)
         self.assertNotIn('session', response.cookies)
 
-        #print('Test Logout is OK.')
-
+        # print('Test Logout is OK.')
 
     def test_03_ResponseAuthPages(self):
-        #(remember_token and session in cookie) and response status_code
-        cookie, response = getCookie(self.login_url, self.user.email, self.pw)
+        # (remember_token and session in cookie) and response status_code
+        response = getResponse(self.login_url, self.user.email, self.pw)
+        cookie = getCookiesFromResponse(response)
+
         user_id, user_entity = getUserIdAndEntity(response)
 
         routes = parseApiRoutes()
@@ -78,11 +78,11 @@ class TestCase(unittest.TestCase):
                 test_url = replaceUserId(self.base_url + route, user_id)
                 req = requests.session().get(test_url, cookies=cookie)
                 self.assertEqual(200, req.status_code)
-        #print('Test Auth user pages is OK.')
+        # print('Test Auth user pages is OK.')
 
         """TODO: add test /email_confirm/<token>"""
 
-
+    @unittest.skip
     def test_04_post_consumer(self):
         args = {'email': self.user_email,
                 'password': self.pw,
@@ -95,15 +95,16 @@ class TestCase(unittest.TestCase):
         user = get_user_by_email(args['email'])
         if user:
             print('Consumer already exists')
-        else:
-            self.assertIn(post_consumer(args), get_all_consumers())
-            print('Posted user')
+            delete_consumer_by_id(user.id)
+            print('Delete consumer')
 
+        self.assertIn(post_consumer(args), get_all_consumers())
+
+        print('Posted consumer')
 
     def test_05_get_user_by_email(self):
         user = get_user_by_email(self.user_email)
         self.assertEqual(user.email, self.user_email)
-
 
     def test_06_get_consumer_by_id(self):
         user = get_user_by_email(self.user_email)
@@ -111,24 +112,26 @@ class TestCase(unittest.TestCase):
         consumer = get_consumer_by_id(user.id)
         self.assertEqual(consumer.id, user.id)
 
+    def test_07_put_consumer(self):
+        url = 'http://127.0.0.1:8000/api/v1/consumers/'
+        user = get_user_by_email(self.user_email)
+
+        load_args = {
+            'last_name': 'Bawbara',
+            'first_name': 'JNf',
+            'patronymic': 'Львоer',
+            'phone_number': '32222222',
+            'address': 'Мойя1 Улиця 17@1#1',
+        }
+
+        response = requests.Session().put(url + str(user.id), data=load_args)
+        data = json.loads(response.content)
+
+        for i in load_args:
+            self.assertEqual(load_args[i], data[i])
+
 
     @unittest.skip
-    def test_07_put_consumer(self):
-        user = get_user_by_email(self.user_email)
-        consumer = get_consumer_by_id(user.id)
-
-        print(consumer.email)
-
-        args = {'email': 'a@ma.ru'}
-
-        consumer = put_consumer(args, user.id)
-        print(consumer.email)
-
-        args = {'email': 'berenice.cavalcanti@example.com'}
-        consumer = put_consumer(args, user.id)
-        print(consumer.email)
-
-
     def test_08_delete_consumer_by_id(self):
         user = get_user_by_email(self.user_email)
         consumer = get_consumer_by_id(user.id)
@@ -136,8 +139,6 @@ class TestCase(unittest.TestCase):
 
         delete_consumer_by_id(user.id)
         self.assertNotIn(consumer, get_all_consumers())
-        print('Deleted consumer with id', user.id)
-
 
     def test_09_get_all_consumers(self):
         all_users = len(User.query.all())
@@ -145,6 +146,9 @@ class TestCase(unittest.TestCase):
         consumers = len(get_all_consumers())
 
         self.assertEqual(all_users - producers, consumers)
+
+    # def test_10_upload_consumer_image(self):
+
 
 
 if __name__ == '__main__':
