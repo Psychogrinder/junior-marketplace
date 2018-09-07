@@ -109,7 +109,6 @@ $(document).ready(function () {
                                     localStorage.setItem("globalUserId", globalUserId);
                                     var globalUserEntity = data.entity;
                                     localStorage.setItem("globalUserEntity", globalUserEntity);
-                                    console.log(globalUserEntity, globalUserId);
                                 }
                             });
                         $('#regProducer').removeClass('show');
