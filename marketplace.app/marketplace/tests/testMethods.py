@@ -85,15 +85,16 @@ def getResponseCode(url):
     return response
 
 
-def getCookie(login_url, email, password):
+def getResponse(login_url, email, password):
     payload = {
         'email': email,
         'password': password
     }
-    s = requests.Session()
-    response = s.post(login_url, data=payload, allow_redirects=False)
+    return requests.Session().post(login_url, data=payload, allow_redirects=False)
 
-    return response.cookies.get_dict(), response
+
+def getCookiesFromResponse(response):
+    return response.cookies.get_dict()
 
 
 def getUserIdAndEntity(response):
