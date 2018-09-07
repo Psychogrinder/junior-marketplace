@@ -46,6 +46,6 @@ def upload_image(uploader, files, producer_id, size, product_id=None):
             )
             image.save(image_url)
             save_upload_image(image_url, uploader, size)
-        return '/'+image_tools.get_static_name(image_url)
+        return '/'+image_tools.get_file_path_from_static(image_url)
     else:
         return False
