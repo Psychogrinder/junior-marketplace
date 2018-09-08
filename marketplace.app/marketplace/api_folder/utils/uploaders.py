@@ -37,12 +37,11 @@ def upload_image(uploader, image_data, producer_id, size, product_id=None):
     # turn string to bytes
     image_data = bytes(image_data, encoding='utf-8')
     # make a unique name for the image
-    filename = f'{hash(str(time.time()))}' + '.jpeg'
+    filename = f'{hash(time.time())}' + '.jpeg'
     # attach the producer image directory to the filename
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], str(producer_id), filename)
-    print()
     # write bytes to a file
     with open(file_path, "wb") as fh:
         fh.write(base64.decodebytes(image_data))
     save_upload_image(file_path, uploader, size)
-    return '/'+image_tools.get_file_path_from_static(file_path)
+    return '/'+image_tools.get_filepath_from_static_path(file_path)
