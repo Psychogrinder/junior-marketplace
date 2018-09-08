@@ -19,7 +19,7 @@ def change_filename(image, new_format=None, new_path=None):
     return name, format
 
 
-def get_file_path_from_static(path):
+def get_filepath_from_static_path(path):
     path_after_static = path.split('static/')[1]
     return f'static/{path_after_static}'
 
@@ -43,4 +43,4 @@ def change_image(
     else:
         if remove_original and (new_path or new_format):
             os.remove(image_path)
-    return get_file_path_from_static(name)
+    return get_filepath_from_static_path(name)
