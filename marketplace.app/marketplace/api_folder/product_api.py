@@ -85,7 +85,7 @@ class UploadImageProduct(Resource):
     parser.add_argument('image_data', required=True, location='form')
 
     def post(self, product_id):
-        args = parser.parse_args()
+        args = self.parser.parse_args()
         return product_utils.upload_product_image(product_id, args['image_data'])
 
 
