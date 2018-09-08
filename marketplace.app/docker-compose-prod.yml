@@ -7,6 +7,9 @@ networks:
 volumes:
   marketplace_user_image:
     external: true
+  marketplace_tasts:
+    external: true
+
 
 services:
   app:
@@ -45,6 +48,8 @@ services:
     image: redislabs/rejson:latest
     networks:
       - marketplace
+    volumes:
+      - "marketplace_tasts: /data"
 
 
   celery:
