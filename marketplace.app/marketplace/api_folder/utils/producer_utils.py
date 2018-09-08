@@ -67,7 +67,7 @@ def delete_producer_by_id(producer_id):
 def upload_producer_image(producer_id, image_data):
     producer = get_producer_by_id(producer_id)
     image_size = app.config['USER_IMAGE_PRODUCER_LOGO_SIZE']
-    return upload_image(producer, files, producer_id, image_size)
+    return upload_image(producer, image_data, producer_id, image_size)
 
 
 def get_producer_names_by_category_name(category_name):

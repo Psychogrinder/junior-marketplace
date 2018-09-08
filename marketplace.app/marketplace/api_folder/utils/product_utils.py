@@ -197,4 +197,4 @@ def upload_product_image(product_id, image_data):
     product = get_product_by_id(product_id)
     producer_id = product.producer_id
     image_size = app.config['USER_IMAGE_PRODUCTS_SIZE']
-    return upload_image(product, files, producer_id, image_size, product_id=product_id)
+    return upload_image(product, image_data, producer_id, image_size, product_id=product_id)
