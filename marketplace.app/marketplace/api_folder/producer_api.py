@@ -78,11 +78,11 @@ class ProductsByProducer(Resource):
 
 class UploadImageProducer(Resource):
 
-    image_parser = reqparse.RequestParser()
-    image_parser.add_argument('image_data', required=True, location='form')
+    parser = reqparse.RequestParser()
+    parser.add_argument('image_data', required=True, location='form')
 
     def post(self, producer_id):
-        args = self.image_parser.parse_args()
+        args = self.parser.parse_args()
         return producer_utils.upload_producer_image(producer_id, args['image_data']), 201
 
 
