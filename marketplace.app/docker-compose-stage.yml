@@ -11,16 +11,22 @@ services:
       context: .
       args:
         - CELERY_BROKER_URL
-        - FLASK_DEBUG
-        - SQLALCHEMY_DATABASE_URI
-        - CACHE_STORAGE_HOST
+        - CELERY_BACKEND_URL
         - FLASK_ENV
+        - SQLALCHEMY_DATABASE_URI
+        - SECRET_KEY
+        - SECURITY_PASSWORD_SALT
+        - FLASK_DEBUG
+        - UPLOAD_FOLDER
     environment:
       - FLASK_DEBUG=${FLASK_DEBUG}
       - FLASK_ENV=${FLASK_ENV}
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
+      - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
+      - SECRET_KEY=#{SECRET_KEY}
+      - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
+      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
     ports:
       - "8000:8000"
     command:
@@ -32,23 +38,39 @@ services:
 
 
   redis:
-    image: redis:5.0-rc
+    image: redislabs/rejson:latest
     networks:
       - marketplace
 
 
   celery:
+    container_name: marketplace.celery
     build:
       dockerfile: Dockerfile
       context: .
       args:
+        - FLASK_DEBUG
+        - FLASK_ENV
         - CELERY_BROKER_URL
+        - CELERY_BACKEND_URL
+        - SQLALCHEMY_DATABASE_URI
+        - SECRET_KEY
+        - SECURITY_PASSWORD_SALT
+        - UPLOAD_FOLDER
     command:
       "celery -A marketplace.celery --loglevel=info worker"
     networks:
       - marketplace
     environment:
+      - FLASK_DEBUG=${FLASK_DEBUG}
+      - FLASK_ENV=${FLASK_ENV}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
+      - SECRET_KEY=#{SECRET_KEY}
+      - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
+      - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+    volumes:
+      - "./marketplace/:/app/marketplace"
     depends_on:
       - redis
-      - app
