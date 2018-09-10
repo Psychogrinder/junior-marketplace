@@ -25,6 +25,7 @@ class Base(object):
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
     MAIL_DEFAULT_SENDER = 'xtramarket@rambler.ru'
 
+    RECOVERY_PASSWORD_URL_EXPIRES = 300 # 5 minutes
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL') or 'redis://localhost:6379/0'
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL') or 'redis://localhost:6379/9'
@@ -33,6 +34,8 @@ class Base(object):
     CACHE_STORAGE_PORT = 6379
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
+
+    CSRF_ENABLED = True
 
 
 class Development(Base):
