@@ -13,7 +13,7 @@ class Base(object):
     )
 
     USER_IMAGE_PRODUCTS_SIZE = 255, 150
-    USER_IMAGE_PRODUCER_LOGO_SIZE = 250, 300
+    USER_IMAGE_PRODUCER_LOGO_SIZE = 1000, 424
     ALLOWED_UPLOAD_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'webp'])
     USER_IMAGE_DEFAULT_FORMAT = 'webp'
 
