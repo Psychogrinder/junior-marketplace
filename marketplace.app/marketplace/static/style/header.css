@@ -69,6 +69,6 @@
 @media (max-width: 990px) {
     .navbar-collapse .header-card,
     .navbar-collapse .header-login {
-        display: inline;
+        display: inline-block;
     }
 }
