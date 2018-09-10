@@ -1,12 +1,12 @@
 from flask import render_template, jsonify, redirect, url_for, flash, abort
 import os
+from marketplace.forms import ResetPasswordForm
+import time
 from flask_restful import reqparse
 from marketplace import app, email_tools, db
 from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
 from flask_login import current_user, login_user, logout_user, login_required
-
-
 
 
 # каталог
@@ -205,6 +205,27 @@ def email_confirm(token):
     db.session.commit()
     flash('Адрес электронной почты подтвержден', category='info')
     return redirect(url_for('index'))
+
+
+@app.route('/password/recovery/<token>', methods=['GET', 'POST'])
+def password_recovery(token):
+    payload = email_tools.confirm_token(token)
+    if payload is None:
+        return redirect(url_for('index'))
+    user = User.query.filter_by(email=payload['email']).first()
+    if user is None:
+        return redirect(url_for('index'))
+    expires_on = payload['expires']
+    if expires_on - time.time() < 0:
+        flash('Время действия ссылки закончилось', category='info')
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Пароль успешно изменен', category='info')
+        return redirect(url_for('index'))
+    return render_template('reset_password.html', form=form)
 
 
 @app.errorhandler(404)
