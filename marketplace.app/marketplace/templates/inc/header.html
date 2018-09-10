@@ -50,7 +50,7 @@
                     </div>
                 {% endif %}
                 {% if current_user.entity=='producer' or current_user.entity=='consumer' %}
-                    <div class="btn-group px-3 header-dropdown-toggle">
+                    <div class="btn-group px-0 header-dropdown-toggle">
                         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                             <img src={{ url_for('static', filename ='img/user-regular.svg') }} alt="">
