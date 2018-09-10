@@ -1,9 +1,9 @@
 from path_file import *
 
-from testMethods import getCategorySlugs, getResponse, getResponseCode, parseApiRoutes
+
+from testMethods import getCategorySlugs, is_price_sorted, check_price
 
 from marketplace.api_folder.utils.product_utils import get_sorted_and_filtered_products
-
 from marketplace.api_folder.utils.producer_utils import get_all_producers
 
 import unittest
@@ -19,6 +19,7 @@ class TestCase(unittest.TestCase):
                      'category_name': None, # slugs
                      'producer_name': None,
                      'in_stock': None,      # 1
+                     'search': None
         }
 
 
