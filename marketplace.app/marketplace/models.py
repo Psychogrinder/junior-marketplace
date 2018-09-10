@@ -277,13 +277,15 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer)
     consumer_id = db.Column(db.Integer)
+    consumer_name = db.Column(db.String(128))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     body = db.Column(db.String(512))
 
-    def __init__(self, product_id, consumer_id, body):
+    def __init__(self, product_id, consumer_id, body, consumer_name='Покупатель'):
         self.product_id = product_id
         self.consumer_id = consumer_id
         self.body = body
+        self.consumer_name = consumer_name
 
 
 @login.user_loader

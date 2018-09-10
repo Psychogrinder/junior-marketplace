@@ -9,7 +9,7 @@ def get_comment_by_id(comment_id):
     return abort_if_comment_doesnt_exist_or_get(comment_id)
 
 
-def get_comments_by_product_id(product_id, page):
+def get_comments_by_product_id(product_id, page=1):
     abort_if_product_doesnt_exist_or_get(product_id)
     return Comment.query.filter_by(product_id=product_id).order_by(Comment.timestamp.desc()).paginate(page,
                                                                                                       COMMENTS_PER_PAGE,
