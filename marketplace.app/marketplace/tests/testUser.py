@@ -17,8 +17,7 @@ from mock import Mock
 
 class TestCase(unittest.TestCase):
     unittest.TestLoader.sortTestMethodsUsing = None
-    posted_user_id = None
-
+    
     def setUp(self):
         self.user = Mock()
         self.producer = Mock()
