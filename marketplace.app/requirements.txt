@@ -21,3 +21,5 @@ celery
 redis
 SQLAlchemy-Searchable
 YaDiskClient
+Pillow
+Flask-HTTPAuth
