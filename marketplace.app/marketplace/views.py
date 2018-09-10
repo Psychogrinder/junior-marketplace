@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, redirect, url_for, flash, abort
+from flask import render_template, jsonify, redirect, url_for, flash, abort, request
 import os
 from flask_restful import reqparse
 from marketplace import app, email_tools, db
@@ -6,7 +6,8 @@ from marketplace.api_folder.utils import product_utils, category_utils, producer
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
 from flask_login import current_user, login_user, logout_user, login_required
 
-
+from marketplace.api_folder.product_api import search_parser
+from marketplace.api_folder.schemas import product_schema_list
 
 
 # каталог
@@ -166,7 +167,7 @@ def producer_orders(producer_id):
         products = {}
         for order in orders:
             products[order.id] = order_utils.get_all_products_from_order(order.id)
-        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products )
+        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products)
     else:
         return redirect(url_for('index'))
 
@@ -205,6 +206,12 @@ def email_confirm(token):
     db.session.commit()
     flash('Адрес электронной почты подтвержден', category='info')
     return redirect(url_for('index'))
+
+
+@app.route('/search')
+def global_search():
+    products = product_utils.search_by_keyword(request.args.get('find'))
+    return render_template('global_search_results.html', products=products)
 
 
 @app.errorhandler(404)
