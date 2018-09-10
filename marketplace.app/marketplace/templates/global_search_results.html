@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Результаты поиска{% endblock %}
+
+{% block body %}
+<main class="container">
+    <section class="product-card row">
+        {% for product in products %}
+        {% include 'inc/small_product_card.html' %}
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

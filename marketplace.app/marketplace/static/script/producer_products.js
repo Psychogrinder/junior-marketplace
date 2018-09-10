@@ -6,6 +6,7 @@ if ($('#producerProducts').length > 0) {
         category_name: null,
         producer_name: null,
         quantity: null,
+        search: null,
         in_stock: 0
     };
 
@@ -23,7 +24,7 @@ if ($('#producerProducts').length > 0) {
 
     getAndSetProducerName(producer_id);
 
-    // check what sorting option is selected
+    // check what sorting, filtering and search options are selected
     function producer_fill_sorts_and_filters(producer_sorts_and_filters) {
         let selected_option_1 = $('#sortProducerProducts option:selected');
         if (selected_option_1.val() === 'По цене ↑') {
@@ -37,6 +38,10 @@ if ($('#producerProducts').length > 0) {
         if (selected_option_1.val() === 'По популярности') {
             producer_sorts_and_filters['popularity'] = 'down';
             producer_sorts_and_filters['price'] = null;
+        }
+        let searchKeyWord = $("#producerProductsSearch").val();
+        if (searchKeyWord) {
+            producer_sorts_and_filters['search'] = searchKeyWord;
         }
     }
 
@@ -102,5 +107,11 @@ if ($('#producerProducts').length > 0) {
             producer_sorts_and_filters['in_stock'] = 0;
         }
         updateProducerProductsPage(producer_sorts_and_filters);
+    });
+
+    $("#producerProductsSearch").on('keypress', function (e) {
+        if (e.key === 'Enter') {
+            updateProducerProductsPage(producer_sorts_and_filters);
+        }
     });
 }
