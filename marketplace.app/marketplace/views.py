@@ -40,10 +40,9 @@ def product_card(product_id):
     producer = producer_utils.get_producer_by_id(product.producer_id)
     comments = comment_utils.get_comments_by_product_id(product_id)
     next_page = comments.next_num
-    prev_page = comments.prev_num
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
-                           comments=comments.items, next_page=next_page, prev_page=prev_page)
+                           comments=comments.items, next_page=next_page)
 
 
 # товары производителя
