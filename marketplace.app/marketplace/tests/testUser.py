@@ -19,11 +19,11 @@ class TestCase(unittest.TestCase):
     unittest.TestLoader.sortTestMethodsUsing = None
     
     def setUp(self):
-        self.user = Mock()
+        self.consumer = Mock()
         self.producer = Mock()
 
         # login data
-        self.user.email = 'berenice.cavalcanti@example.com'
+        self.consumer.email = 'berenice.cavalcanti@example.com'
         self.producer.email = 'annabelle.denys@example.com'
         self.pw = '123123'
 
@@ -37,7 +37,7 @@ class TestCase(unittest.TestCase):
 
     def test_01_Login(self):
 
-        for email in self.producer.email, self.user.email:
+        for email in self.producer.email, self.consumer.email:
             response = getResponse(self.login_url, email, self.pw)
             cookie = getCookiesFromResponse(response)
 
@@ -58,7 +58,7 @@ class TestCase(unittest.TestCase):
 
     def test_03_ResponseAuthPages(self):
         # (remember_token and session in cookie) and response status_code
-        response = getResponse(self.login_url, self.user.email, self.pw)
+        response = getResponse(self.login_url, self.consumer.email, self.pw)
         cookie = getCookiesFromResponse(response)
 
         user_id, user_entity = getUserIdAndEntity(response)
