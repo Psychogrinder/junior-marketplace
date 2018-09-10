@@ -82,7 +82,7 @@ class TestCase(unittest.TestCase):
 
         """TODO: add test /email_confirm/<token>"""
 
-    @unittest.skip
+
     def test_04_post_consumer(self):
         args = {'email': self.user_email,
                 'password': self.pw,
@@ -131,7 +131,6 @@ class TestCase(unittest.TestCase):
             self.assertEqual(load_args[i], data[i])
 
 
-    @unittest.skip
     def test_08_delete_consumer_by_id(self):
         user = get_user_by_email(self.user_email)
         consumer = get_consumer_by_id(user.id)
@@ -147,7 +146,7 @@ class TestCase(unittest.TestCase):
 
         self.assertEqual(all_users - producers, consumers)
 
-    # def test_10_upload_consumer_image(self):
+    # test_10_upload_consumer_image
 
 
 
