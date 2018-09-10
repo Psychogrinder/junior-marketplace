@@ -100,3 +100,26 @@ def getCookiesFromResponse(response):
 def getUserIdAndEntity(response):
     user = json.loads(response.content)
     return user['id'], user['entity']
+
+
+def is_price_sorted(list, price_sort):
+    if price_sort == 'up':
+        return all(a <= b for a, b in zip(list, list[1:]))
+    elif price_sort == 'down':
+        return all(a >= b for a, b in zip(list, list[1:]))
+
+
+def check_price(sorted, args_price):
+    price_in_slug = []
+
+    for product in sorted:
+        if ' ₽' in product['price']:
+            price = product['price'][:-2]
+        else:
+            price = product['price']
+        price_in_slug.append(float(price))
+
+    if price_in_slug:
+        return is_price_sorted(price_in_slug, args_price)
+    else:
+        return True
