@@ -54,12 +54,12 @@
                 <div class="btn-group px-3 header-dropdown-toggle">
                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                        <img src={{ url_for('static', filename ='img/user-regular.svg') }} alt="">
+                        <img src="{{ url_for('static', filename ='img/user-regular.svg') }}" alt="">
                     </button>
                     <div class="dropdown-menu">
                         {% if current_user.entity=='consumer' %}
                         <a class="dropdown-item"
-                           href={{ url_for( 'consumer_profile', user_id = current_user.id ) }}>Профиль</a>
+                           href="{{ url_for( 'consumer_profile', user_id = current_user.id ) }}">Профиль</a>
                         {% endif %}
                         {% if current_user.entity=='producer' %}
                         <a class="dropdown-item"
