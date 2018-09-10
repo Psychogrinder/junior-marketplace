@@ -143,15 +143,19 @@ def producer_has_product_with_such_name(args):
         return True
 
 
-def search_products_by_param(search_query):
+def search_products_by_param(search_query, product_id, category_id):
     vector = inspect_search_vectors(Product)[0]
     try:
         result = db.session.query(Product).filter(
             Product.search_vector.match(search_query)
-        ).order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query)))).all()
+        )
     except exc.ProgrammingError:
         return None
-    return result
+    if product_id:
+        result = result.filter_by(producer_id=product_id)
+    if category_id:
+        result = result.filter_by(category_id=category_id)
+    return result.order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query))))
 
 
 def post_product(args):
