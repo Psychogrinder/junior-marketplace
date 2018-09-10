@@ -53,13 +53,13 @@ def replaceCategoryName(url, category_slug):
 
 
 def getUserIds():
-    user_ids = {'producer_ids': [], 'user_ids': [], 'count': 0}
+    user_ids = {'producer_ids': [], 'consumer_ids': [], 'count': 0}
 
     for user in User.query.all():
         if user.entity == 'producer':
             user_ids['producer_ids'].append(user.id)
         else:
-            user_ids['user_ids'].append(user.id)
+            user_ids['consumer_ids'].append(user.id)
         user_ids['count'] += 1
 
     return user_ids #return dict with user ids
@@ -68,8 +68,8 @@ def getUserIds():
 def replaceUserId(url, user_id):
     if '<producer_id>' in url:
         return url.replace('<producer_id>', str(user_id))
-    elif '<user_id>' in url:
-        return url.replace('<user_id>', str(user_id))
+    elif '<consumer_id>' in url:
+        return url.replace('<consumer_id>', str(user_id))
 
 
 def getProductIds():
