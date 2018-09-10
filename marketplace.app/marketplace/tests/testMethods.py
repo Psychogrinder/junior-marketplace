@@ -66,10 +66,15 @@ def getUserIds():
 
 
 def replaceUserId(url, user_id):
-    if '<producer_id>' in url:
-        return url.replace('<producer_id>', str(user_id))
-    elif '<consumer_id>' in url:
-        return url.replace('<consumer_id>', str(user_id))
+
+    if '<' and '>' in url:
+        first_symbol, last_symblol = url.find('<'), url.rfind('>')
+
+        if 'producer_id' in url:
+            return url.replace(url[first_symbol:last_symblol + 1], str(user_id))
+
+        elif 'consumer_id' in url:
+            return url.replace(url[first_symbol:last_symblol + 1], str(user_id))
 
 
 def getProductIds():
