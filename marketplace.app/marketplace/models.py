@@ -173,7 +173,7 @@ class Order(db.Model):
     status = db.Column(db.String(128))
     delivery_method = db.Column(db.String(128))
     delivery_address = db.Column(db.String(128))
-    order_timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+    order_timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     shipping_timestamp = db.Column(db.DateTime)
     consumer_phone = db.Column(db.String(128))
     consumer_email = db.Column(db.String(128))
@@ -204,7 +204,7 @@ class Order(db.Model):
 
     def change_status(self, status):
         if status == 'shipped':
-            self.shipping_timestamp = datetime.utcnow()
+            self.shipping_timestamp = datetime.utcnow
         self.status = status
 
 
@@ -277,7 +277,7 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer)
     consumer_id = db.Column(db.Integer)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     body = db.Column(db.String(512))
 
     def __init__(self, product_id, consumer_id, body):
