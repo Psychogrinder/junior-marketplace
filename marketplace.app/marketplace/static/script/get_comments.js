@@ -1,10 +1,3 @@
-// function clearCommentSection() {
-//     let myNode = document.getElementById("commentSection");
-//     while (myNode.firstChild) {
-//         myNode.removeChild(myNode.firstChild);
-//     }
-// }
-
 function getComments(page_number) {
 
     let addr = window.location + '';
@@ -33,7 +26,6 @@ function getComments(page_number) {
                     '</div>')
             }
 
-            // display previous page and next page buttons
             let currentPageNumber = response.meta.page;
             if (response.meta.has_next) {
                 $("#commentsNextPage").prop("value", currentPageNumber + 1);
@@ -50,14 +42,9 @@ function getComments(page_number) {
 }
 
 function updateCommentSection(page_number) {
-    // clearCommentSection();
     getComments(page_number)
 }
 
 $("#commentsNextPage").click(function () {
-    updateCommentSection($(this).val())
-});
-
-$("#commentsPrevPage").click(function () {
     updateCommentSection($(this).val())
 });
