@@ -35,6 +35,8 @@ from marketplace.api_folder.product_api import (
     ProductsSortedAndFiltered,
     ProductSearchByParams,
 )
+from marketplace.api_folder.password_api import PasswordRecovery
+
 
 # Orders
 api.add_resource(GlobalOrders, '/orders')
@@ -89,3 +91,6 @@ api.add_resource(ProductsByPrice, '/categories/<int:category_id>/price/<string:d
 api.add_resource(ProductsByProducer, '/producers/<int:producer_id>/products')
 api.add_resource(PopularProducts, '/products/popular')
 api.add_resource(ProductsSortedAndFiltered, '/products/filter')
+
+# Password
+api.add_resource(PasswordRecovery, '/password/recovery')
