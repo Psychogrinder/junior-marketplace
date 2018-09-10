@@ -34,6 +34,8 @@ def upload_image(uploader, image_data, producer_id, size, product_id=None):
     :param producer_id: is used to find the necessary directory
     :param image_data: image bytes in string format, base64
     """
+    if not image_data:
+        return False
     # turn string to bytes
     image_data = bytes(image_data, encoding='utf-8')
     # make a unique name for the image
@@ -44,4 +46,4 @@ def upload_image(uploader, image_data, producer_id, size, product_id=None):
     with open(file_path, "wb") as fh:
         fh.write(base64.decodebytes(image_data))
     save_upload_image(file_path, uploader, size)
-    return '/'+image_tools.get_filepath_from_static_path(file_path)
+    return True
