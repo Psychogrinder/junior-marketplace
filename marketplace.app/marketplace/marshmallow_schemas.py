@@ -61,7 +61,7 @@ class ProducerSchema(ma.ModelSchema):
 class CommentSchema(ma.ModelSchema):
     class Meta:
         model = Comment
-        fields = ('id', 'product_id', 'consumer_id', 'timestamp', 'body')
+        fields = ('id', 'product_id', 'consumer_id', 'timestamp', 'body', 'consumer_name')
 
 
 class CategorySchema(ma.ModelSchema):
