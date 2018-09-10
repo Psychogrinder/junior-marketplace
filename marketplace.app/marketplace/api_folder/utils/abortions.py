@@ -1,6 +1,6 @@
 from flask_restful import abort
 
-from marketplace.models import Order, Consumer, Producer, Category, Product
+from marketplace.models import Order, Consumer, Producer, Category, Product, Comment
 
 
 def abort_if_order_doesnt_exist_or_get(order_id):
@@ -43,6 +43,13 @@ def abort_if_product_doesnt_exist_or_get(product):
     if product is None:
         abort(404, message='Product with id = {} doesn\'t exists'.format(product))
     return product
+
+
+def abort_if_comment_doesnt_exist_or_get(comment_id):
+    comment = Comment.query.get(comment_id)
+    if comment is None:
+        abort(404, message='Comment with id = {} doesn\'t exists'.format(comment_id))
+    return comment
 
 
 def failed_email_check(email):
