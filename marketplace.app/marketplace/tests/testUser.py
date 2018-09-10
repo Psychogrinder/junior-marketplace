@@ -21,7 +21,6 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         self.user = Mock()
         self.producer = Mock()
-        self.edit = Mock()
 
         # login data
         self.user.email = 'berenice.cavalcanti@example.com'
