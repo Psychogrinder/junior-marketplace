@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource, reqparse
-from marketplace.api_folder.utils import consumer_utils, comment_utils
+from marketplace.api_folder.utils import consumer_utils, comment_utils, pagination_utils
 from marketplace.api_folder.utils import order_utils
 from marketplace.api_folder.schemas import (
     consumer_schema_list,
@@ -73,11 +73,19 @@ class ConsumerComments(Resource):
     @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
-        if cache is None:
-            comments = comment_schema_list.dump(comment_utils.get_comments_by_consumer_id(kwargs['consumer_id'])).data
-            return caching_utils.cache_json_and_get(path=path, response=comments), 200
+        response = dict()
+        page_number = pagination_utils.get_page_number()
+        if cache is None or 'meta' not in kwargs:
+            comments_page = comment_utils.get_comments_by_consumer_id(kwargs['consumer_id'], page_number)
+            response['meta'] = caching_utils.cache_json_and_get(path='{}/meta'.format(path),
+                                                                response=pagination_utils.get_meta_from_page(
+                                                                    page_number, comments_page))
+            response['body'] = caching_utils.cache_json_and_get(path=path, response=comment_schema_list.dump(
+                comments_page.items).data)
         else:
-            return cache, 200
+            response['meta'] = kwargs['meta']
+            response['body'] = cache
+        return response, 200
 
 
 class UploadImageConsumer(Resource):
