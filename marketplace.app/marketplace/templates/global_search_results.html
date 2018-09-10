@@ -4,9 +4,10 @@
 
 {% block body %}
 <main class="container">
-    <div class="row">
-        <div class="col-12 error_container" id="foundProducts">
-        </div>
-    </div>
+    <section class="product-card row">
+        {% for product in products %}
+        {% include 'inc/small_product_card.html' %}
+        {% endfor %}
+    </section>
 </main>
 {% endblock %}

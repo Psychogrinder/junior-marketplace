@@ -29,7 +29,7 @@
                     </select>
                 </div>
                 <div class="filter-block col-6 col-sm-4">
-                    <select class="form-control" name="producer" id="sortByProducer" >
+                    <select class="form-control" name="producer" id="sortByProducer">
                         <option value="" selected>Производитель</option>
                         {% for producer in category.producers %}
                         <option>{{ producer.name }}</option>
@@ -46,30 +46,9 @@
                 </div>
             </form>
         </section>
-        <section class="product-card row", id="productsByCategory">
+        <section class="product-card row" id="productsByCategory">
             {% for product in products %}
-            <div class="col-6 col-sm-3 card-item">
-                <a href={{ url_for( 'product_card', product_id = product.id )}}>
-                <div class="product-item-photo">
-                    <img src="/{{ product.photo_url }}" alt="">
-                </div>
-                <div class="product-item-description">
-                    <p>{{ product.price }}</p>
-                    <b>{{ product.name }}</b>
-                    {% for producer in producers %}
-                    {% if product.producer_id == producer.id %}
-                    <p>{{ producer.name }}</p>
-                    {% endif %}
-                    {% endfor %}
-                    {% if product.quantity == 0 %}
-                    <p class="goods-ended">
-                        <img src={{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}>
-                        Нет в наличии
-                    </p>
-                    {% endif %}
-                </div>
-                </a>
-            </div>
+            {% include 'inc/small_product_card.html' %}
             {% endfor %}
         </section>
     </div>

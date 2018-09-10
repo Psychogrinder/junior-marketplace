@@ -20,7 +20,7 @@
                     {% if current_user.entity == 'consumer' %}
                     <li class="nav-item backlighting_nav_item">
                         <a class="nav-link" href="{{ url_for( 'order_history', user_id = current_user.id ) }}">МОИ
-                        ЗАКАЗЫ</a>
+                            ЗАКАЗЫ</a>
                     </li>
                     {% endif %}
                     {% if current_user.entity == 'producer' %}
@@ -28,7 +28,7 @@
                         <a class="nav-link nav-link-producer_orders" id="producerOrders" href="{{ url_for(
                         'producer_orders', producer_id =
                         current_user.id ) }}">
-                        ЗАКАЗЫ
+                            ЗАКАЗЫ
                         </a>
                     </li>
                     <li class="nav-item backlighting_nav_item">
@@ -37,16 +37,16 @@
                     </li>
                     {% endif %}
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Поиск" id="globalSearch">
+                <form action="{{ url_for( 'global_search' ) }}"  class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" name='find' type="text" placeholder="Поиск" id="globalSearch">
                 </form>
                 {% if current_user.entity=='consumer' %}
                 <div class="backlighting_nav_item cart_nav_container">
                     <a href="{{ url_for('cart', user_id = current_user.id) }}" class="header-card px-2 header_card_badge
                     cart_nav_link_container">
-                    <img src="{{ url_for('static', filename ='img/shopping-cart-solid.svg') }}" class="header-logo"
-                    alt="Корзина">
-                    <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
+                        <img src="{{ url_for('static', filename ='img/shopping-cart-solid.svg') }}" class="header-logo"
+                             alt="Корзина">
+                        <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
                     </a>
                 </div>
                 {% endif %}
