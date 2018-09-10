@@ -17,6 +17,12 @@ search_parser = reqparse.RequestParser()
 search_parser.add_argument(
     'find', type=str, location='args', required=True
 )
+search_parser.add_argument(
+    'producer_id', type=int, location='args'
+)
+search_parser.add_argument(
+    'category_id', type=int, location='args'
+)
 
 
 class GlobalProducts(Resource):
@@ -109,7 +115,9 @@ class ProductSearchByParams(Resource):
         if cache is None:
             args = search_parser.parse_args()
             search_query = '&'.join(args['find'].split(' '))
-            result = product_utils.search_products_by_param(search_query)
+            producer_id = args['producer_id']
+            category_id = args['category_id']
+            result = product_utils.search_products_by_param(search_query, producer_id, category_id)
             if result is None:
                 return {}, 400
             return caching_utils.cache_json_and_get(path=path, response=product_schema_list.dump(result).data), 200
