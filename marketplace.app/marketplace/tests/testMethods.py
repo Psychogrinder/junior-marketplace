@@ -86,7 +86,8 @@ def getProductIds():
 
 
 def replaceProductId(url, product_id):
-    if '<product_id>' in url:
+    if 'product_id' in url:
+        url = url.replace('<int:product_id>', str(product_id))
         return url.replace('<product_id>', str(product_id))
     else:
         return url
