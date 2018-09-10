@@ -25,7 +25,6 @@ class Base(object):
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
     MAIL_DEFAULT_SENDER = 'xtramarket@rambler.ru'
 
-
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL') or 'redis://localhost:6379/0'
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL') or 'redis://localhost:6379/9'
 
@@ -34,11 +33,13 @@ class Base(object):
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
 
+    COMMENTS_PER_PAGE = 10
+
 
 class Development(Base):
     SQLALCHEMY_DATABASE_URI = (
-        os.getenv('SQLALCHEMY_DATABASE_URI')
-        or 'postgresql://postgres:1234@localhost/marketplace.db'
+            os.getenv('SQLALCHEMY_DATABASE_URI')
+            or 'postgresql://postgres:1234@localhost/marketplace.db'
     )
 
     SECRET_KEY = 'secret-key'

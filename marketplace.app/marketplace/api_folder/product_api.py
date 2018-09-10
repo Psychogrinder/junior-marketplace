@@ -1,8 +1,9 @@
 from flask import request, redirect, url_for
+from flask_login import login_required, current_user
 from flask_restful import Resource, reqparse
-from marketplace.api_folder.utils import product_utils
+from marketplace.api_folder.utils import product_utils, comment_utils, pagination_utils
 from marketplace.api_folder.utils import cart_utils
-from marketplace.api_folder.schemas import product_schema_list, product_schema
+from marketplace.api_folder.schemas import product_schema_list, product_schema, comment_schema_list, comment_schema
 from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
 from marketplace.api_folder.utils.login_utils import account_access_required
@@ -12,6 +13,12 @@ parser = reqparse.RequestParser()
 
 for arg in product_args:
     parser.add_argument(arg)
+
+comment_args = ['body']
+comment_parser = reqparse.RequestParser()
+
+for arg in comment_args:
+    comment_parser.add_argument(arg)
 
 search_parser = reqparse.RequestParser()
 search_parser.add_argument(
@@ -104,6 +111,32 @@ class ProductsInCart(Resource):
             return caching_utils.cache_json_and_get(path=path, response=products), 200
         else:
             return cache, 200
+
+
+class ProductComments(Resource):
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        response = dict()
+        page_number = pagination_utils.get_page_number()
+        if cache is None or 'meta' not in kwargs:
+            comments_page = comment_utils.get_comments_by_product_id(kwargs['product_id'], page_number)
+            response['meta'] = caching_utils.cache_json_and_get(path='{}/meta'.format(path),
+                                                                response=pagination_utils.get_meta_from_page(
+                                                                    page_number, comments_page))
+            response['body'] = caching_utils.cache_json_and_get(path=path, response=comment_schema_list.dump(
+                comments_page.items).data)
+        else:
+            response['meta'] = kwargs['meta']
+            response['body'] = cache
+        return response, 200
+
+    @login_required
+    def post(self, **kwargs):
+        args = comment_parser.parse_args()
+        args['product_id'] = kwargs['product_id']
+        args['consumer_id'] = current_user.id
+        return comment_schema.dump(comment_utils.post_comment(args)).data, 201
 
 
 class ProductSearchByParams(Resource):
