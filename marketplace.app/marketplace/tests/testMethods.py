@@ -3,19 +3,21 @@ from marketplace.models import Category, User, Product, Producer
 from urllib.request import Request, urlopen
 import requests, json
 
-def parseApiRoutes():
-    file = '../views.py'
+def parseApiRoutes(file='../views.py'):
+
     routes = {'auth': [],
               'not_auth': ['/category/<category_name>',
                            '/products/<product_id>',
                            '/producer/<producer_id>'
-                           ]
+                           ],
+              'comments': [],
               }
 
     with open(file) as f:
         for s in f:
             """ parsing classes of routes (keys) and routes:
                                 seek first, last symbols in strings"""
+            #for views.py
             if '@app.route' in s:
                 first_symbol, last_symblol = s.find('/'), s.rfind('\'')
                 route = s[first_symbol:last_symblol]
@@ -25,6 +27,15 @@ def parseApiRoutes():
                         routes['not_auth'].append(route)
                     else:
                         routes['auth'].append(route)
+
+            #for api_routes.py
+            elif 'api.add_resource' in s:
+                first_symbol, last_symblol = s.find('/'), s.rfind('\'')
+                route = s[first_symbol:last_symblol]
+
+                if route not in (routes['comments']):
+                    if 'comment' in route:
+                        routes['comments'].append(route)
     return routes
 
 
