@@ -6,9 +6,6 @@ from marketplace.api_folder.utils import product_utils, category_utils, producer
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
 from flask_login import current_user, login_user, logout_user, login_required
 
-from marketplace.api_folder.product_api import search_parser
-from marketplace.api_folder.schemas import product_schema_list
-
 
 # каталог
 @app.route('/')
