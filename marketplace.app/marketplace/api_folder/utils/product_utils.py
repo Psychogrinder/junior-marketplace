@@ -61,6 +61,9 @@ def get_sorted_and_filtered_products(args):
     if args['in_stock'] == 1:
         query = query.filter(Product.quantity > 0)
 
+    if args['search']:
+        query = query.filter(Product.name.ilike('%' + args['search'] + '%'))
+
     if args['category_name']:
         # check if the category_name is in English. Then it means it's a parent category
         if args['category_name'][0] in string.ascii_lowercase:

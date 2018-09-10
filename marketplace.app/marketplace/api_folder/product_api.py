@@ -78,9 +78,7 @@ class ProductsByPrice(Resource):
             return cache, 200
 
 
-
 class UploadImageProduct(Resource):
-
     parser = reqparse.RequestParser()
     parser.add_argument('image_data', location='form')
 
@@ -117,7 +115,7 @@ class ProductSearchByParams(Resource):
             return cache
 
 
-product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock']
+product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock', 'search']
 filter_parser = reqparse.RequestParser()
 
 for arg in product_args:
@@ -127,5 +125,4 @@ for arg in product_args:
 class ProductsSortedAndFiltered(Resource):
     def post(self):
         args = filter_parser.parse_args()
-        # return product_schema_list.dump(utils.get_sorted_and_filtered_products(args)).data
         return product_utils.get_sorted_and_filtered_products(args)

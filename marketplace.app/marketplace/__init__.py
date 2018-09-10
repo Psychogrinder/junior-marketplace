@@ -35,10 +35,10 @@ from marketplace import models, views, api_routes
 from marketplace.models import Admin
 
 
-if Admin.query.filter_by(email='admin@mail.ru').first() is None:
-    admin = Admin('admin@mail.ru', 'admin')
-    db.session.add(admin)
-    db.session.commit()
+# if Admin.query.filter_by(email='admin@mail.ru').first() is None:
+#     admin = Admin('admin@mail.ru', 'admin')
+#     db.session.add(admin)
+#     db.session.commit()
 
 
 css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css',
@@ -58,7 +58,7 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             'script/i18n/ru.js', 'script/edit_product_post.js', 'script/producer_orders.js', 'script/phone_mask.js',
             'script/category.js', 'script/orders_badge.js', 'script/hullabaloo.js', 'script/producer_products.js',
             'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js', 'script/croppie.js',
-            'script/image_crop.js',
+            'script/image_crop.js', 'script/product_search.js',
 
             filters=['jsmin'], output='app.min.js')
 
