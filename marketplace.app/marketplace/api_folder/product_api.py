@@ -1,8 +1,9 @@
 from flask import request, redirect, url_for
+from flask_login import login_required, current_user
 from flask_restful import Resource, reqparse
-from marketplace.api_folder.utils import product_utils
+from marketplace.api_folder.utils import product_utils, comment_utils
 from marketplace.api_folder.utils import cart_utils
-from marketplace.api_folder.schemas import product_schema_list, product_schema
+from marketplace.api_folder.schemas import product_schema_list, product_schema, comment_schema_list, comment_schema
 from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
 from marketplace.api_folder.utils.login_utils import account_access_required
@@ -12,6 +13,12 @@ parser = reqparse.RequestParser()
 
 for arg in product_args:
     parser.add_argument(arg)
+
+comment_args = ['body']
+comment_parser = reqparse.RequestParser()
+
+for arg in comment_args:
+    comment_parser.add_argument(arg)
 
 search_parser = reqparse.RequestParser()
 search_parser.add_argument(
@@ -78,9 +85,7 @@ class ProductsByPrice(Resource):
             return cache, 200
 
 
-
 class UploadImageProduct(Resource):
-
     parser = reqparse.RequestParser()
     parser.add_argument('image_data', location='form')
 
@@ -100,6 +105,24 @@ class ProductsInCart(Resource):
             return caching_utils.cache_json_and_get(path=path, response=products), 200
         else:
             return cache, 200
+
+
+class ProductComments(Resource):
+
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            comments = comment_schema_list.dump(comment_utils.get_comments_by_product_id(kwargs['product_id'])).data
+            return caching_utils.cache_json_and_get(path=path, response=comments), 200
+        else:
+            return cache, 200
+
+    @login_required
+    def post(self, **kwargs):
+        args = comment_parser.parse_args()
+        args['product_id'] = kwargs['product_id']
+        args['consumer_id'] = current_user.id
+        return comment_schema.dump(comment_utils.post_comment(args)).data, 201
 
 
 class ProductSearchByParams(Resource):

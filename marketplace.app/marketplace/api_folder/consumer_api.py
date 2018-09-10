@@ -1,18 +1,16 @@
 from flask import request
 from flask_restful import Resource, reqparse
-from marketplace.api_folder.utils import consumer_utils
+from marketplace.api_folder.utils import consumer_utils, comment_utils
 from marketplace.api_folder.utils import order_utils
 from marketplace.api_folder.schemas import (
     consumer_schema_list,
     consumer_schema,
-    order_schema_list)
+    order_schema_list, comment_schema_list)
 from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
 from flask_httpauth import HTTPBasicAuth
 
 from marketplace.api_folder.utils.login_utils import login_as_admin_required, account_access_required
-
-auth = HTTPBasicAuth()
 
 consumer_args = ['first_name', 'last_name', 'email', 'password', 'phone_number', 'category_id', 'address', 'photo_url',
                  'patronymic']
@@ -67,6 +65,17 @@ class ConsumerOrders(Resource):
         if cache is None:
             orders = order_schema_list.dump(order_utils.get_orders_by_consumer_id(kwargs['consumer_id'])).data
             return caching_utils.cache_json_and_get(path=path, response=orders), 200
+        else:
+            return cache, 200
+
+
+class ConsumerComments(Resource):
+    @account_access_required
+    @get_cache
+    def get(self, path, cache, **kwargs):
+        if cache is None:
+            comments = comment_schema_list.dump(comment_utils.get_comments_by_consumer_id(kwargs['consumer_id'])).data
+            return caching_utils.cache_json_and_get(path=path, response=comments), 200
         else:
             return cache, 200
 
