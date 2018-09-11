@@ -3,7 +3,6 @@ $(document).ready(function () {
 
 
     function uploadProductImage(product_id) {
-        console.log("IN UPLOAD");
         var image_data = $('#item-img-output').attr('src');
         image_data = image_data.split(',')[1];
         $.ajax({
@@ -13,7 +12,7 @@ $(document).ready(function () {
                 image_data: image_data,
             },
             success: function (data, status) {
-                console.log('successful upload');
+
             },
         });
     }
@@ -34,7 +33,7 @@ $(document).ready(function () {
                 category_id: $('#editSubcategory').val(),
                 quantity: $('#editCount').val(),
                 weight: $('#editWeight').val(),
-                measurement_unit: $('#editUnits option:selected').val(),
+                measurement_unit: $('#measurmentSelect option:selected').val(),
                 description: $('#editDescription').val()
             };
             return productObject;
@@ -47,7 +46,7 @@ $(document).ready(function () {
             data: JSON.stringify(createProductObject(categoryId)),
             success: function (data, status) {
                 uploadProductImage(product_id);
-
+                location.replace('/products/' + product_id);
             }
         });
         var hulla = new hullabaloo();

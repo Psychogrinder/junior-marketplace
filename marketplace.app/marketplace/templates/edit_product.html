@@ -56,7 +56,7 @@
                 <label for="editWeight" class="col-5 col-sm-3">Вес/Единицы измерения</label>
                 <input type="text" class="form-control col-5 col-sm-3" name="weight"
                        id="editWeight" value="{{ product.weight }}">
-                <select class="form-control col-4 col-sm-1" name="weight_init" required>
+                <select class="form-control col-4 col-sm-1" name="weight_init" id="measurmentSelect" required>
                     {% for unit in measurement_units %}
                     {% if unit == product.measurement_unit %}
                     <option selected value={{ unit }}>{{ unit }}</option>
@@ -78,4 +78,3 @@
     </div>
 </main>
 {% endblock %}
-
