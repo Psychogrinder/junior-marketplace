@@ -23,34 +23,36 @@ class TestCase(unittest.TestCase):
     def test_get_comment(self):
         base_url = 'http://127.0.0.1:8000/api/v1'
         s = requests.Session()
+
+        "TODO: сделать для всех продуктов"
         product_id = 1
 
         url = '{}/{}/{}/{}'.format(base_url, 'products', product_id, 'comments')
-
         response = s.get(url)
         data = json.loads(response.content)
 
-        page = 0
-        while data['meta']['has_next'] == True: # просматриваем все страницы с комментариями
-            page += 1
-            url = '{}/{}/{}/{}?{}{}'.format(base_url, 'products', product_id, 'comments', 'page=', page)
-            response = s.get(url)
-            data = json.loads(response.content)
+        for comment in data['body']:
+            self.assertEqual(product_id, comment['product_id'],
+                             'id товара с комментарием  не соотвествует id карточки товара')
+            self.assertFalse(comment['body'].isspace(),
+                             'пустое тело комментария (пробелы/tab/new line)')
+            self.assertFalse(comment['consumer_name'].isspace(),
+                             'пустое имя пользователя, оставившего комментарий (пробелы/tab/new line)')
 
-            for comment in data['body']:
-                print(comment)
-                self.assertEqual(product_id, comment['product_id'],
-                                 'id товара с комментарием  не соотвествует id карточки товара')
-                self.assertFalse(comment['body'].isspace(),
-                                 'пустое тело комментария (пробелы/tab/new line)')
-                self.assertFalse(comment['consumer_name'].isspace(),
-                                 'пустое имя пользователя, оставившего комментарий (пробелы/tab/new line)')
+    def test_post_comment(self):
+        login_url = 'http://127.0.0.1:8000/api/v1/login?email=10mail.ru&password=123123'
 
-            if not data['meta']['has_next']:
-                break
+        s = requests.Session()
+        s.get(login_url)
+
+        product_id = 2
+        url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
+        response = s.post(url, {})
+        data = json.loads(response.content)
+
+        print(data)
 
 
-    #def test_post_comment(self):
 
 
 if __name__ == '__main__':
