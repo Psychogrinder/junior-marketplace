@@ -83,9 +83,19 @@
                     {% if order.status=='Не обработан' %}
                         <div class="row order-history-btn-block">
                             <div class="col-4">
-                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#showOrderCancelModal">
+                                <button class="btn btn-primary" type="button" data-toggle="modal"
+                                        data-target="#showOrderCancelModal">
                                     ОТМЕНИТЬ ЗАКАЗ
                                 </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if order.status=='Завершён' %}
+                        <div class="row order-history-btn-block">
+                            <div class="col-4">
+                                <a href="#" class="btn btn-secondary">
+                                    ОСТАВИТЬ ОТЗЫВ
+                                </a>
                             </div>
                         </div>
                     {% endif %}

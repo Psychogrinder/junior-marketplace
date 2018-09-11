@@ -108,8 +108,8 @@
       // Покажем алерт пользователю
       hullabaloo.elem.fadeIn();
 
-      // Запустим функцию по завершения
-      if (typeof this.options.fnEnd == "function")
+      // Запустим функцию по Завершёния
+      if (typeof this.options.fnEnd == "function") {
         this.options.fnEnd();
     }
 
