@@ -56,7 +56,20 @@ class TestCase(unittest.TestCase):
                          'id авторизованного покупателя и id покупателя, опубликовавшего комментарий, различны.')
         self.assertIsNotNone(data['body'], 'posted comment body is None.')
 
+    def test_get_comment_by_id(self):
+        import werkzeug.exceptions as we
 
+        ids = [1, 2, 5, 0, 10, 15, 40, 60, -1, 100, 10000, -11.0]
+        for comment_id in ids:
+            try:
+                comment = get_comment_by_id(comment_id)
+                self.assertEqual(comment_id, comment.id)
+            except we.NotFound:
+                print('comment with {} Not Found'.format(comment_id))
+
+
+    def test_get_comments_by_product_id(self):
+        pass
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestStringMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
