@@ -3,19 +3,21 @@ from marketplace.models import Category, User, Product, Producer
 from urllib.request import Request, urlopen
 import requests, json
 
-def parseApiRoutes():
-    file = '../views.py'
+def parseApiRoutes(file='../views.py'):
+
     routes = {'auth': [],
               'not_auth': ['/category/<category_name>',
                            '/products/<product_id>',
                            '/producer/<producer_id>'
-                           ]
+                           ],
+              'comments': [],
               }
 
     with open(file) as f:
         for s in f:
             """ parsing classes of routes (keys) and routes:
                                 seek first, last symbols in strings"""
+            #for views.py
             if '@app.route' in s:
                 first_symbol, last_symblol = s.find('/'), s.rfind('\'')
                 route = s[first_symbol:last_symblol]
@@ -25,6 +27,15 @@ def parseApiRoutes():
                         routes['not_auth'].append(route)
                     else:
                         routes['auth'].append(route)
+
+            #for api_routes.py
+            elif 'api.add_resource' in s:
+                first_symbol, last_symblol = s.find('/'), s.rfind('\'')
+                route = s[first_symbol:last_symblol]
+
+                if route not in (routes['comments']):
+                    if 'comment' in route:
+                        routes['comments'].append(route)
     return routes
 
 
@@ -42,23 +53,28 @@ def replaceCategoryName(url, category_slug):
 
 
 def getUserIds():
-    user_ids = {'producer_ids': [], 'user_ids': [], 'count': 0}
+    user_ids = {'producer_ids': [], 'consumer_ids': [], 'count': 0}
 
     for user in User.query.all():
         if user.entity == 'producer':
             user_ids['producer_ids'].append(user.id)
         else:
-            user_ids['user_ids'].append(user.id)
+            user_ids['consumer_ids'].append(user.id)
         user_ids['count'] += 1
 
     return user_ids #return dict with user ids
 
 
 def replaceUserId(url, user_id):
-    if '<producer_id>' in url:
-        return url.replace('<producer_id>', str(user_id))
-    elif '<user_id>' in url:
-        return url.replace('<user_id>', str(user_id))
+
+    if '<' and '>' in url:
+        first_symbol, last_symblol = url.find('<'), url.rfind('>')
+
+        if 'producer_id' in url:
+            return url.replace(url[first_symbol:last_symblol + 1], str(user_id))
+
+        elif 'consumer_id' in url:
+            return url.replace(url[first_symbol:last_symblol + 1], str(user_id))
 
 
 def getProductIds():
@@ -70,7 +86,8 @@ def getProductIds():
 
 
 def replaceProductId(url, product_id):
-    if '<product_id>' in url:
+    if 'product_id' in url:
+        url = url.replace('<int:product_id>', str(product_id))
         return url.replace('<product_id>', str(product_id))
     else:
         return url
@@ -100,3 +117,26 @@ def getCookiesFromResponse(response):
 def getUserIdAndEntity(response):
     user = json.loads(response.content)
     return user['id'], user['entity']
+
+
+def is_price_sorted(list, price_sort):
+    if price_sort == 'up':
+        return all(a <= b for a, b in zip(list, list[1:]))
+    elif price_sort == 'down':
+        return all(a >= b for a, b in zip(list, list[1:]))
+
+
+def check_price(sorted, args_price):
+    price_in_slug = []
+
+    for product in sorted:
+        if ' ₽' in product['price']:
+            price = product['price'][:-2]
+        else:
+            price = product['price']
+        price_in_slug.append(float(price))
+
+    if price_in_slug:
+        return is_price_sorted(price_in_slug, args_price)
+    else:
+        return True
