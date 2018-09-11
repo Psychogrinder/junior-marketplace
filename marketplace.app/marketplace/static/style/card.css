@@ -112,3 +112,19 @@
     width: auto;
     max-width: 100%;
 }
+
+.review-product-block {
+    margin-top: 1rem;
+}
+
+.review-product-block h2 {
+    margin-bottom: 1.5rem;
+}
+
+.review-product-item {
+    border-bottom: 1px solid #9e9e9e;
+}
+
+.review-product-block button {
+    margin-top: 2rem;
+}
