@@ -90,7 +90,7 @@
                             </div>
                         </div>
                     {% endif %}
-                    {% if order.status=='Завершён' %}
+                    {% if order.status=='Завершён' and not order.reviewed %}
                         <div class="row order-history-btn-block">
                             <div class="col-4">
                                 <a href="{{ url_for('review', order_id = order.id)}}" class="btn btn-secondary">

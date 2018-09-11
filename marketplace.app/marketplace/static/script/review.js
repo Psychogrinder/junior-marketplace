@@ -9,8 +9,8 @@ function makeReviewObject(consumer_name, consumer_id, product_id, body, order_id
 }
 
 function postReview(data) {
-    $.post('/api/v1/comments', data, function () {
-        console.log('goodie good')
+    $.post('/api/v1/comments', data, function (response) {
+        location.replace(window.location.origin + '/order_history/' + data.consumer_id);
     })
 }
 
