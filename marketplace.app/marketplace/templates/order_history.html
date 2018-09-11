@@ -34,7 +34,7 @@
                                 <div class="row">
                                     <div class="col-2">
                                         <img class="order-product-photo"
-                                             src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
+                                             src='/{{ product.photo_url }}' alt=""
                                              width="150px">
                                     </div>
                                     <div class="col-1 cart_product_stock_title">
@@ -83,9 +83,19 @@
                     {% if order.status=='Не обработан' %}
                         <div class="row order-history-btn-block">
                             <div class="col-4">
-                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#showOrderCancelModal">
+                                <button class="btn btn-primary" type="button" data-toggle="modal"
+                                        data-target="#showOrderCancelModal">
                                     ОТМЕНИТЬ ЗАКАЗ
                                 </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if order.status=='Завершён' and not order.reviewed %}
+                        <div class="row order-history-btn-block">
+                            <div class="col-4">
+                                <a href="{{ url_for('review', order_id = order.id)}}" class="btn btn-secondary">
+                                    ОСТАВИТЬ ОТЗЫВ
+                                </a>
                             </div>
                         </div>
                     {% endif %}

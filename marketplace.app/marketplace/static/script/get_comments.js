@@ -17,12 +17,16 @@ function getComments(page_number) {
                 comment = response.body[comment];
 
                 $("#commentSection").append(
-                    '<div>' +
-                    '<hr>' +
-                    '<p>' + comment.consumer_name + '</p>' +
-                    '<p>' + comment.timestamp.split('T')[0] + '</p>' +
-                    '<p>' + comment.body + '</p>' +
-                    '<hr>' +
+                    '<div class="review-product-item col-12 col-lg-9">' +
+                    '<div class="row">' +
+                    '<div class="col-12 col-sm-6">' +
+                    '<p class="review-consumer">' + comment.consumer_name + '</p>' +
+                    '</div>' +
+                    '<div class="col-12 col-sm-6">' +
+                    '<p class="review-data">' + comment.timestamp.split('T')[0] + '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '<p class="review-comment">' + comment.body + '</p>' +
                     '</div>')
             }
 

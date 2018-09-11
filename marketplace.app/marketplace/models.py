@@ -181,6 +181,7 @@ class Order(db.Model):
     producer_id = db.Column(db.Integer)
     first_name = db.Column(db.String(128))
     last_name = db.Column(db.String(128))
+    reviewed = db.Column(db.Boolean, default=False)
 
     def __init__(self, total_cost, order_items_json, delivery_method, delivery_address, consumer_phone, consumer_email,
                  consumer_id, producer_id, status='Не обработан', first_name='', last_name=''):
