@@ -46,6 +46,7 @@ $(document).ready(function () {
             data: JSON.stringify(createProductObject(categoryId)),
             success: function (data, status) {
                 uploadProductImage(product_id);
+                location.replace('/products/' + product_id);
             }
         });
         var hulla = new hullabaloo();
