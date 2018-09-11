@@ -19,8 +19,8 @@ app.config.from_object(
     Development if os.getenv('FLASK_ENV') == 'development' else Production
 )
 mail = Mail(app)
-# if not os.path.exists(app.config['UPLOAD_FOLDER']):
-#     os.makedirs(app.config['UPLOAD_FOLDER'])
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 ma = Marshmallow(app)
 api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
@@ -36,10 +36,10 @@ from marketplace import models, views, api_routes
 from marketplace.models import Admin
 
 
-# if Admin.query.filter_by(email='admin@mail.ru').first() is None:
-#     admin = Admin('admin@mail.ru', 'admin')
-#     db.session.add(admin)
-#     db.session.commit()
+if Admin.query.filter_by(email='admin@mail.ru').first() is None:
+    admin = Admin('admin@mail.ru', 'admin')
+    db.session.add(admin)
+    db.session.commit()
 
 
 css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css',
