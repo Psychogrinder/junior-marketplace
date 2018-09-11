@@ -89,16 +89,24 @@
                 <h2>Отзывы</h2>
                 <section id="commentSection">
                     {% for comment in comments %}
-                        <div class="review-product-item">
-                            <p> {{ comment.consumer_name }}</p>
-                            <p> {{ comment.timestamp.date() }}</p>
-                            <p> {{ comment.body }}</p>
+                        <div class="review-product-item col-12 col-lg-9">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <p class="review-consumer">{{ comment.consumer_name }}</p>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <p class="review-data">{{ comment.timestamp.date() }}</p>
+                                </div>
+                            </div>
+                            <p class="review-comment">{{ comment.body }}</p>
                         </div>
                     {% endfor %}
                 </section>
                 <div>
                     {% if next_page %}
-                        <button value="{{ next_page }}" id="commentsNextPage" class="btn btn-secondary">Показать предыдущие</button>
+                        <button value="{{ next_page }}" id="commentsNextPage" class="btn btn-secondary">Показать
+                            предыдущие
+                        </button>
                     {% endif %}
                 </div>
             {% endif %}
