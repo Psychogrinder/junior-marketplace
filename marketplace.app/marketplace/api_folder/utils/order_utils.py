@@ -20,7 +20,7 @@ def get_order_by_id(order_id):
     return abort_if_order_doesnt_exist_or_get(order_id)
 
 
-def get_all_products_from_order(order_id):
+def get_products_by_order_id(order_id):
     order_items = Order.query.filter_by(id=order_id).first().order_items_json
     products = []
     for item in order_items:

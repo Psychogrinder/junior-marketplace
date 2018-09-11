@@ -2,7 +2,7 @@ from marketplace import db, COMMENTS_PER_PAGE
 from marketplace.api_folder.schemas import comment_schema
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
     abort_if_consumer_doesnt_exist_or_get, abort_if_comment_doesnt_exist_or_get
-from marketplace.models import Comment
+from marketplace.models import Comment, Order
 
 
 def get_comment_by_id(comment_id):
@@ -28,6 +28,11 @@ def post_comment(args):
     abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
     new_comment = comment_schema.load(args).data
     db.session.add(new_comment)
+    print('_______________________')
+    print(args)
+    print('_______________________')
+    order = Order.query.filter_by(id=args['order_id']).first()
+    order.reviewed = True
     db.session.commit()
     return new_comment
 

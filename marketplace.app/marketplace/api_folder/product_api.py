@@ -14,7 +14,7 @@ parser = reqparse.RequestParser()
 for arg in product_args:
     parser.add_argument(arg)
 
-comment_args = ['body']
+comment_args = ['body', 'consumer_id', 'consumer_name', 'product_id', 'order_id']
 comment_parser = reqparse.RequestParser()
 
 for arg in comment_args:
@@ -132,10 +132,8 @@ class ProductComments(Resource):
         return response, 200
 
     @login_required
-    def post(self, **kwargs):
+    def post(self):
         args = comment_parser.parse_args()
-        args['product_id'] = kwargs['product_id']
-        args['consumer_id'] = current_user.id
         return comment_schema.dump(comment_utils.post_comment(args)).data, 201
 
 
