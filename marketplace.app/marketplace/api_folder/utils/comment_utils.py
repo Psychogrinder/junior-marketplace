@@ -28,9 +28,6 @@ def post_comment(args):
     abort_if_consumer_doesnt_exist_or_get(args['consumer_id'])
     new_comment = comment_schema.load(args).data
     db.session.add(new_comment)
-    print('_______________________')
-    print(args)
-    print('_______________________')
     order = Order.query.filter_by(id=args['order_id']).first()
     order.reviewed = True
     db.session.commit()
