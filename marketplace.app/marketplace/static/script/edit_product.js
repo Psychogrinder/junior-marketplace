@@ -30,6 +30,17 @@ $(document).ready(function () {
 
         formatPrice(productPrice);
 
+        function fillMeasurements() {
+            if (product.measurement_unit == 'кг') {
+                $('#measurmentSelect').val('кг').attr('selected');
+            } else if (product.measurement_unit == "шт") {
+                $('#measurmentSelect').val('шт').attr('selected');
+            } else {
+                $('#measurmentSelect').val('л').attr('selected');
+            }
+            
+        }
+
         function handleChildCategory(product_data) {
             var product = product_data;
             category_id = product.category_id;
