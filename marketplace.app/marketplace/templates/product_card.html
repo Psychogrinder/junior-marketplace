@@ -22,17 +22,24 @@
                 <div class="product-card-image">
                     <img src="/{{ product.photo_url }}" alt="" width="100%" height="auto">
                 </div>
-            </div>
-            <div class="col-12 col-md-5 product_info">
-                <span class="producer_title">ПРОДАВЕЦ</span>
-                <span class="producer_title_name"><a
-                        href="{{ url_for('producer_profile', producer_id = product.producer_id ) }}">{{ producer_name }}</a></span>
-                <span class="product_title_id">АРТИКУЛ</span>
-                <span class="product_id">#{{ product.id }}</span>
-                <span class="product_price_title">ЦЕНА</span>
-                <span class="product_price_value">{{ product.price }}</span>
-                <span class="product_price_title">Вес</span>
-                <span class="product_price_value">
+                <div class="col-12 col-md-5 product_info">
+                    <span class="producer_title">ПРОДАВЕЦ</span>
+                    <span class="producer_title_name"><a
+                            href="{{ url_for('producer_profile', producer_id = product.producer_id ) }}">{{ producer_name }}</a></span>
+                    <span class="product_title_id">АРТИКУЛ</span>
+                    <span class="product_id">#{{ product.id }}</span>
+                    <span class="product_price_title">ЦЕНА</span>
+                    <span class="product_price_value">{{ product.price }}</span>
+                    <span class="product_price_title">
+                        {% if product.measurement_unit == 'кг' %}
+                            {{ "ВЕС" }}
+                        {% elif (product.measurement_unit == 'шт') %}
+                            {{ "КОЛИЧЕСТВО" }}
+                        {% else %}
+                            {{ "ОБЪЁМ" }}
+                        {% endif %}
+                    </span>
+                    <span class="product_price_value">
                     {% if (product.weight | string).split('.')[1] == '0' %}
                         {{ (product.weight | string).split('.')[0] }}
                     {% else %}
