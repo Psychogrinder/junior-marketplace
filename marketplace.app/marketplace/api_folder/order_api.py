@@ -1,3 +1,4 @@
+from flask_login import login_required, current_user
 from flask_restful import Resource, reqparse
 from marketplace.api_folder.utils import order_utils
 from marketplace.api_folder.schemas import order_schema_list, order_schema
@@ -24,10 +25,10 @@ class GlobalOrders(Resource):
         else:
             return cache, 200
 
-    @account_access_required
+    @login_required
     def post(self, **kwargs):
         args = parser.parse_args()
-        cart_utils.decrease_products_quantity_and_increase_times_ordered(args[kwargs['consumer_id']])
+        cart_utils.decrease_products_quantity_and_increase_times_ordered(current_user.id)
         cart_utils.post_orders(args)
         return "Заказ был успешно оформлен", 201
 
