@@ -27,7 +27,7 @@ class TestCase(unittest.TestCase):
         response = requests.Session().get(url)
         data = json.loads(response.content)
 
-        "TODO: for all pages"
+        "TODO: for all pages (for two last comments now)"
         for comment in data['body']:
             self.assertEqual(product_id, comment['product_id'],
                              'id товара с комментарием  не соотвествует id карточки товара.')
@@ -81,6 +81,7 @@ class TestCase(unittest.TestCase):
             except we.NotFound:
                 pass
 
+
     def test_05_delete_comment_by_id(self):
 
         for product_id in [1, 99, -26]:
@@ -92,10 +93,8 @@ class TestCase(unittest.TestCase):
                 delete_comment_by_id(last_id)
                 self.assertIsNone(get_comment_by_id(last_id),
                                   'комментарий не был удален (delete_comment_by_id)')
-
             except we.NotFound:
                 pass
-
 
 
 if __name__ == '__main__':
