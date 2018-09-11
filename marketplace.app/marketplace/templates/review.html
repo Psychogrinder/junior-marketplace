@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Отзывы{% endblock %}
+
+{% block body %}
+    <main class="container">
+        <div class="column" id="newReviewSection" data-order-id="{{ order.id }}"
+             data-consumer-id="{{ order.consumer_id }}"
+             data-consumer-name="{{ order.first_name }} {{ order.last_name }}">
+            {% for product in products %}
+                <div class="row consumer-review-block">
+                    <div class="col-12 col-sm-4 col-md-3">
+                        <p>{{ product.name }}</p>
+                        <img class="order-product-photo" src='/{{ product.photo_url }}' alt="" height="120px"
+                             width="150px">
+                    </div>
+                    <div class="col-12 col-md-6 col-sm-8">
+                        <form>
+                            <label for="review{{ loop.index }}">Отзыв</label>
+                            <textarea data-product-id="{{ product.id }}" id="review{{ loop.index }}" type="text"
+                                      placeholder="" class="form-control"></textarea>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    <div class="col-md-9 col-sm-12 consumer-review-send">
+        <button data-number-of-products="{{ number_of_products }}" class="btn btn-secondary" type="button"
+                id="sendReviews">Отправить
+        </button>
+    </div>
+    </main>
+{% endblock %}

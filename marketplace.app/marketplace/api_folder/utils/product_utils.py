@@ -129,7 +129,7 @@ def get_products_by_category_id_sorted_by_price(category_id, direction):
         return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
 
 
-def get_all_products_from_order(order_id):
+def get_products_by_order_id(order_id):
     order_items = get_order_by_id(order_id).order_items_json
     products = []
     for item in order_items:

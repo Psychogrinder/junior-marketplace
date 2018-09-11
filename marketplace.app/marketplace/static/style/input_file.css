@@ -1,0 +1,26 @@
+.upload-image-block input[type="file"] {
+    display: none;
+}
+
+.upload-image-button {
+    background-color: #ececec;
+    height: 38px;
+    color: #84bda7;
+    -webkit-border-radius: 6.4px;
+    -moz-border-radius: 6.4px;
+    border-radius: 6.4px;
+    display: block;
+    text-align: center;
+    width: fit-content;
+    padding: 0 30px;
+    padding-top: 8px;
+}
+
+.cabinet.center-block {
+    width: 100%;
+}
+
+.upload-image-block .col-12 {
+    width: 100%;
+    padding: 0;
+}

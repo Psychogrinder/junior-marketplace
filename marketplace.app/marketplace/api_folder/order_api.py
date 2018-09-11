@@ -18,7 +18,7 @@ for arg in order_args:
 class GlobalOrders(Resource):
 
     @get_cache
-    def get(self, path, cache):
+    def get(self, path, cache, **kwargs):
         if cache is None:
             orders = order_schema_list.dump(order_utils.get_all_orders()).data
             return caching_utils.cache_json_and_get(path=path, response=orders), 200

@@ -99,6 +99,7 @@
 
 .description-product .col-12 p {
     text-align: justify;
+    color: #5a5a5a;
 }
 
 .product-card-image {
@@ -111,4 +112,39 @@
     max-height: inherit;
     width: auto;
     max-width: 100%;
+}
+
+.review-product-block {
+    margin-top: 1rem;
+}
+
+.review-product-block h2 {
+    margin-bottom: 1.5rem;
+}
+
+.review-product-item {
+    border-bottom: 1px solid #dadadafa;
+    margin-bottom: 1rem;
+    padding: 0;
+}
+
+.review-product-block button {
+    margin-top: 1rem;
+}
+
+.review-product-item .review-data {
+    text-align: right;
+}
+
+.review-product-item .review-consumer {
+    font-size: 1.2rem;
+    color: #5a5a5a;
+}
+
+.review-product-item .review-comment {
+    color: #5a5a5a;
+}
+
+.review-product-item:last-child {
+    border: none;
 }

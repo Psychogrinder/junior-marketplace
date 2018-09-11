@@ -63,3 +63,9 @@ form .filter-block:first-child {
     margin-right: 18px;
     height: 20px;
 }
+
+.NothingFound {
+    display: block;
+    margin: auto;
+    margin-top: 2%;
+}

@@ -135,7 +135,7 @@ def order_history(user_id):
     all_products = []
     producer_names = {}
     for order in orders:
-        all_products += (product_utils.get_all_products_from_order(order.id))
+        all_products += (product_utils.get_products_by_order_id(order.id))
         producer_names[order.producer_id] = producer_utils.get_producer_by_id(int(order.producer_id)).name
     if current_user.id == int(user_id):
         return render_template('order_history.html', orders=orders, current_user=current_user, products=all_products,
@@ -167,7 +167,7 @@ def producer_orders(producer_id):
         orders = Order.query.filter_by(producer_id=int(producer_id)).all()
         products = {}
         for order in orders:
-            products[order.id] = order_utils.get_all_products_from_order(order.id)
+            products[order.id] = order_utils.get_products_by_order_id(order.id)
         return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products)
     else:
         return redirect(url_for('index'))
@@ -213,6 +213,28 @@ def email_confirm(token):
 def global_search():
     products = product_utils.search_by_keyword(request.args.get('find'))
     return render_template('global_search_results.html', products=products)
+
+
+@app.route('/review')
+def review():
+    # Если неавторизованный пользователь пытается открыть эту страницу
+    if not hasattr(current_user, 'id'):
+        return abort(404)
+
+    order_id = request.args.get('order_id')
+    order = order_utils.get_order_by_id(order_id)
+    current_user_id = current_user.id
+    # Если пользователь пытается оставить отзыв на чужой заказ
+    if current_user_id != order.consumer_id:
+        return abort(404)
+
+    # Если пользователь вновь пытается оставить отзыв на тот же заказ
+    if order.reviewed:
+        return abort(404)
+
+    products = product_utils.get_products_by_order_id(order_id)
+    number_of_products = len(products)
+    return render_template('review.html', order=order, products=products, number_of_products=number_of_products)
 
 
 @app.errorhandler(404)
