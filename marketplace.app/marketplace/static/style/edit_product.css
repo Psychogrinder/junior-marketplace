@@ -39,3 +39,7 @@ input::-webkit-input-placeholder { font-weight: 100; }
 input::-ms-input-placeholder { font-weight: 100; }
 input::-ms-input-placeholder { font-weight: 100; }
 input::placeholder { font-weight: 100; }
+
+.edit-product-item #editWeight {
+    height: 38px;
+}
