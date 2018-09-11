@@ -10,7 +10,6 @@ def parseApiRoutes(file='../views.py'):
                            '/products/<product_id>',
                            '/producer/<producer_id>'
                            ],
-              'comments': [],
               }
 
     with open(file) as f:
@@ -22,20 +21,11 @@ def parseApiRoutes(file='../views.py'):
                 first_symbol, last_symblol = s.find('/'), s.rfind('\'')
                 route = s[first_symbol:last_symblol]
 
-                if route not in (routes['not_auth'] and routes['not_auth']):
+                if route not in (routes['not_auth']):
                     if ('<' or '>' or 'products') not in route:
                         routes['not_auth'].append(route)
                     else:
                         routes['auth'].append(route)
-
-            #for api_routes.py
-            elif 'api.add_resource' in s:
-                first_symbol, last_symblol = s.find('/'), s.rfind('\'')
-                route = s[first_symbol:last_symblol]
-
-                if route not in (routes['comments']):
-                    if 'comment' in route:
-                        routes['comments'].append(route)
     return routes
 
 
@@ -53,13 +43,13 @@ def replaceCategoryName(url, category_slug):
 
 
 def getUserIds():
-    user_ids = {'producer_ids': [], 'consumer_ids': [], 'count': 0}
+    user_ids = {'producer_ids': [], 'user_ids': [], 'count': 0}
 
     for user in User.query.all():
         if user.entity == 'producer':
             user_ids['producer_ids'].append(user.id)
         else:
-            user_ids['consumer_ids'].append(user.id)
+            user_ids['user_ids'].append(user.id)
         user_ids['count'] += 1
 
     return user_ids #return dict with user ids
@@ -73,7 +63,7 @@ def replaceUserId(url, user_id):
         if 'producer_id' in url:
             return url.replace(url[first_symbol:last_symblol + 1], str(user_id))
 
-        elif 'consumer_id' in url:
+        elif 'user_id' in url:
             return url.replace(url[first_symbol:last_symblol + 1], str(user_id))
 
 
@@ -114,9 +104,8 @@ def getCookiesFromResponse(response):
     return response.cookies.get_dict()
 
 
-def getUserIdAndEntity(response):
-    user = json.loads(response.content)
-    return user['id'], user['entity']
+def getUserIdFromResponse(response):
+    return json.loads(response.content)['id']
 
 
 def is_price_sorted(list, price_sort):
