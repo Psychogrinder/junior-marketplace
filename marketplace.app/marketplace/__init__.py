@@ -36,10 +36,10 @@ from marketplace import models, views, api_routes
 from marketplace.models import Admin
 
 
-# if Admin.query.filter_by(email='admin@mail.ru').first() is None:
-#     admin = Admin('admin@mail.ru', 'admin')
-#     db.session.add(admin)
-#     db.session.commit()
+if Admin.query.filter_by(email='admin@mail.ru').first() is None:
+    admin = Admin('admin@mail.ru', 'admin')
+    db.session.add(admin)
+    db.session.commit()
 
 
 css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css',
