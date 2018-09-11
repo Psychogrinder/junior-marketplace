@@ -17,42 +17,44 @@ class TestCase(unittest.TestCase):
 
     def setUp(self):
         pass
-        #self.routes = parseApiRoutes('../api_routes.py')
 
 
     def test_get_comment(self):
-        base_url = 'http://127.0.0.1:8000/api/v1'
-        s = requests.Session()
 
         "TODO: сделать для всех продуктов"
         product_id = 1
+        url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
 
-        url = '{}/{}/{}/{}'.format(base_url, 'products', product_id, 'comments')
-        response = s.get(url)
+        response = requests.Session().get(url)
         data = json.loads(response.content)
 
+        "TODO: для всех страниц"
         for comment in data['body']:
             self.assertEqual(product_id, comment['product_id'],
-                             'id товара с комментарием  не соотвествует id карточки товара')
+                             'id товара с комментарием  не соотвествует id карточки товара.')
             self.assertFalse(comment['body'].isspace(),
-                             'пустое тело комментария (пробелы/tab/new line)')
+                             'пустое тело комментария (пробелы/tab/new line).')
             self.assertFalse(comment['consumer_name'].isspace(),
                              'пустое имя пользователя, оставившего комментарий (пробелы/tab/new line)')
+            self.assertIsNotNone(comment['body'], 'комментарий is None.')
+
 
     def test_post_comment(self):
         login_url = 'http://127.0.0.1:8000/api/v1/login?email=10mail.ru&password=123123'
-
         s = requests.Session()
-        s.get(login_url)
 
-        product_id = 2
+        user_id = json.loads(s.post(login_url).content)['id']
+        product_id = 3
         url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
-        response = s.post(url, {})
+
+        response = s.post(url, data={'body': 'Raise of naa'})
         data = json.loads(response.content)
 
-        print(data)
-
-
+        self.assertEqual(product_id, data['product_id'],
+                         'id товара в опубликованном комментарии и id карточки товара различны.')
+        self.assertEqual(user_id, data['consumer_id'],
+                         'id авторизованного покупателя и id покупателя, опубликовавшего комментарий, различны.')
+        self.assertIsNotNone(data['body'], 'posted comment body is None.')
 
 
 if __name__ == '__main__':
