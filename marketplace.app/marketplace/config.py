@@ -33,7 +33,7 @@ class Base(object):
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
 
-    COMMENTS_PER_PAGE = 10
+    COMMENTS_PER_PAGE = 2
 
 
 class Development(Base):

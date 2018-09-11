@@ -2,7 +2,8 @@ from flask import render_template, jsonify, redirect, url_for, flash, abort, req
 import os
 from flask_restful import reqparse
 from marketplace import app, email_tools, db
-from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils
+from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils, \
+    comment_utils
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -37,8 +38,11 @@ def product_card(product_id):
     product = product_utils.get_product_by_id(product_id)
     category = category_utils.get_category_by_id(product.category_id)
     producer = producer_utils.get_producer_by_id(product.producer_id)
+    comments = comment_utils.get_comments_by_product_id(product_id)
+    next_page = comments.next_num
     return render_template('product_card.html', category_name=category.name.title(), product=product,
-                           producer_name=producer.name.title(), category=category, current_user=current_user)
+                           producer_name=producer.name.title(), category=category, current_user=current_user,
+                           comments=comments.items, next_page=next_page)
 
 
 # товары производителя
