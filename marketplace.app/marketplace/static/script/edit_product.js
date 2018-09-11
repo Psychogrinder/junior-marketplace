@@ -38,6 +38,7 @@ $(document).ready(function () {
             } else {
                 $('#measurmentSelect').val('л').attr('selected');
             }
+            
         }
 
         function handleChildCategory(product_data) {

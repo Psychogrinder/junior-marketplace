@@ -37,10 +37,7 @@ $(document).ready(function () {
                 description: $('#editDescription').val()
             };
             return productObject;
-
         }
-
-        // console.log(productObject);
 
         $.ajax({
             url: '/api/v1/products/' + product_id,

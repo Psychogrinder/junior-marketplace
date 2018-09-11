@@ -33,11 +33,11 @@
                     <span class="product_price_value">{{ product.price }}</span>
                     <span class="product_price_title">
                         {% if product.measurement_unit == 'кг' %}
-                            {{ "Вес" }}
+                            {{ "ВЕС" }}
                         {% elif (product.measurement_unit == 'шт') %}
-                            {{ "Количество" }}
+                            {{ "КОЛИЧЕСТВО" }}
                         {% else %}
-                            {{ "Объём" }}
+                            {{ "ОБЪЁМ" }}
                         {% endif %}
                     </span>
                     <span class="product_price_value">
