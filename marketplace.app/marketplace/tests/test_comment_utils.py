@@ -1,6 +1,5 @@
 from path_file import *
 
-
 from testMethods import parseApiRoutes, replaceUserId, replaceProductId, getResponse, getCookiesFromResponse, getUserIdAndEntity
 
 from marketplace.api_folder.utils.comment_utils import get_comment_by_id, get_comments_by_product_id, \
@@ -10,25 +9,25 @@ import requests
 import json
 
 import unittest
-from mock import Mock
+import werkzeug.exceptions as we
 
 class TestCase(unittest.TestCase):
     unittest.TestLoader.sortTestMethodsUsing = None
 
     def setUp(self):
-        pass
+        self.ids = [1, 2, 3, 5, 0, 10, 15, 40, 60, -1, 100, 10000, -11.0]
 
 
     def test_get_comment(self):
 
-        "TODO: сделать для всех продуктов"
+        "TODO: for all products"
         product_id = 1
         url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
 
         response = requests.Session().get(url)
         data = json.loads(response.content)
 
-        "TODO: для всех страниц"
+        "TODO: for all pages"
         for comment in data['body']:
             self.assertEqual(product_id, comment['product_id'],
                              'id товара с комментарием  не соотвествует id карточки товара.')
@@ -40,6 +39,7 @@ class TestCase(unittest.TestCase):
 
 
     def test_post_comment(self):
+
         login_url = 'http://127.0.0.1:8000/api/v1/login?email=10mail.ru&password=123123'
         s = requests.Session()
 
@@ -56,20 +56,34 @@ class TestCase(unittest.TestCase):
                          'id авторизованного покупателя и id покупателя, опубликовавшего комментарий, различны.')
         self.assertIsNotNone(data['body'], 'posted comment body is None.')
 
-    def test_get_comment_by_id(self):
-        import werkzeug.exceptions as we
 
-        ids = [1, 2, 5, 0, 10, 15, 40, 60, -1, 100, 10000, -11.0]
-        for comment_id in ids:
+    def test_get_comment_by_id(self):
+
+        for comment_id in self.ids:
             try:
                 comment = get_comment_by_id(comment_id)
                 self.assertEqual(comment_id, comment.id)
             except we.NotFound:
-                print('comment with {} Not Found'.format(comment_id))
+                pass
 
 
     def test_get_comments_by_product_id(self):
-        pass
+
+        for product_id in self.ids:
+            try:
+                comments = get_comments_by_product_id(product_id)
+                total, items = False, False
+
+                if comments.total and comments.items:
+                    total, items = True, True
+
+                self.assertEqual(total, items)
+            except we.NotFound:
+                pass
+
+
+
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestStringMethods)
     unittest.TextTestRunner(verbosity=2).run(suite)
