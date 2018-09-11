@@ -18,7 +18,7 @@ class TestCase(unittest.TestCase):
         self.ids = [1, 2, 3, 5, 0, 10, 15, 40, 60, -1, 100, 10000, -11.0]
 
 
-    def test_get_comment(self):
+    def test_01_get_comment(self):
 
         "TODO: for all products"
         product_id = 1
@@ -38,13 +38,13 @@ class TestCase(unittest.TestCase):
             self.assertIsNotNone(comment['body'], 'комментарий is None.')
 
 
-    def test_post_comment(self):
+    def test_02_post_comment(self):
 
         login_url = 'http://127.0.0.1:8000/api/v1/login?email=10mail.ru&password=123123'
         s = requests.Session()
 
         user_id = json.loads(s.post(login_url).content)['id']
-        product_id = 3
+        product_id = 1
         url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
 
         response = s.post(url, data={'body': 'Raise of naa'})
@@ -57,7 +57,7 @@ class TestCase(unittest.TestCase):
         self.assertIsNotNone(data['body'], 'posted comment body is None.')
 
 
-    def test_get_comment_by_id(self):
+    def test_03_get_comment_by_id(self):
 
         for comment_id in self.ids:
             try:
@@ -67,7 +67,7 @@ class TestCase(unittest.TestCase):
                 pass
 
 
-    def test_get_comments_by_product_id(self):
+    def test_04_get_comments_by_product_id(self):
 
         for product_id in self.ids:
             try:
@@ -81,6 +81,20 @@ class TestCase(unittest.TestCase):
             except we.NotFound:
                 pass
 
+    def test_05_delete_comment_by_id(self):
+
+        for product_id in [1, 99, -26]:
+
+            try:
+                comments = get_comments_by_product_id(product_id)
+                last_id = comments.items[-1].id
+                self.assertIsNotNone(get_comment_by_id(last_id))
+                delete_comment_by_id(last_id)
+                self.assertIsNone(get_comment_by_id(last_id),
+                                  'комментарий не был удален (delete_comment_by_id)')
+
+            except we.NotFound:
+                pass
 
 
 
