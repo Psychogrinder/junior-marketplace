@@ -6,6 +6,9 @@ from testMethods import parseApiRoutes, replaceUserId, replaceProductId, getResp
 from marketplace.api_folder.utils.comment_utils import get_comment_by_id, get_comments_by_product_id, \
     get_comments_by_consumer_id, post_comment, delete_comment_by_id
 
+import requests
+import json
+
 import unittest
 from mock import Mock
 
@@ -13,45 +16,41 @@ class TestCase(unittest.TestCase):
     unittest.TestLoader.sortTestMethodsUsing = None
 
     def setUp(self):
-
-        self.routes = parseApiRoutes('../api_routes.py')
-        self.consumer = Mock()
-        self.producer = Mock()
-
-        self.consumer.email = '2mail.ru'
-        self.producer.email = 'fabiola.thomas@example.com'
-        self.pw = '123123'
+        pass
+        #self.routes = parseApiRoutes('../api_routes.py')
 
 
+    def test_get_comment(self):
+        base_url = 'http://127.0.0.1:8000/api/v1'
+        s = requests.Session()
+        product_id = 1
 
-    def test_post_comment(self):
-        import requests
-        url = 'http://127.0.0.1:8000/api/v1/'
+        url = '{}/{}/{}/{}'.format(base_url, 'products', product_id, 'comments')
+
+        response = s.get(url)
+        data = json.loads(response.content)
+
+        page = 0
+        while data['meta']['has_next'] == True: # просматриваем все страницы с комментариями
+            page += 1
+            url = '{}/{}/{}/{}?{}{}'.format(base_url, 'products', product_id, 'comments', 'page=', page)
+            response = s.get(url)
+            data = json.loads(response.content)
+
+            for comment in data['body']:
+                print(comment)
+                self.assertEqual(product_id, comment['product_id'],
+                                 'id товара с комментарием  не соотвествует id карточки товара')
+                self.assertFalse(comment['body'].isspace(),
+                                 'пустое тело комментария (пробелы/tab/new line)')
+                self.assertFalse(comment['consumer_name'].isspace(),
+                                 'пустое имя пользователя, оставившего комментарий (пробелы/tab/new line)')
+
+            if not data['meta']['has_next']:
+                break
 
 
-        s = '{}/{}/{}'
-        s.format('consumers', id, 'comments')
-
-        #user_id, user_entity = getUserIdAndEntity(response)
-
-        #response = requests.Session().post(url)
-        #data = json.loads(response.content)
-
-        routes = self.routes['comments']
-
-        test_url = url + routes[1]
-        test_url.replace()
-        print(test_url)
-
-
-
-        # response = requests.Session().put(url + str(user.id), data=load_args)
-        # data = json.loads(response.content)
-
-
-
-
-
+    #def test_post_comment(self):
 
 
 if __name__ == '__main__':
