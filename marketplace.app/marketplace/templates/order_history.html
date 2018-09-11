@@ -6,9 +6,6 @@
 
 {% block body %}
     <main class="order-history">
-        <section class="breadcrumbs container">
-            <span><a class="active">Мои заказы</a></span>
-        </section>
         {% for order in orders %}
             <div class="orders-block{{ order.id }} order-block-separator container">
                 <div class="container">
@@ -30,7 +27,7 @@
                 {% for item, quantity in order.order_items_json.items() %}
                     {% for product in products %}
                         {% if product.id == item | int %}
-                            <div class="container">
+                            <div class="container order-history-product">
                                 <div class="row">
                                     <div class="col-2">
                                         <img class="order-product-photo"

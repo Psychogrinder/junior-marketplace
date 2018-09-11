@@ -6,8 +6,12 @@ h2 {
     font-size: 1.5rem;
 }
 
+h3 {
+    font-size: 1.3rem;
+}
+
 main {
-    margin-top: 40px;
+    margin-top: 50px;
     margin-bottom: 40px;
     min-height: calc(100vh - 400px);
 }
@@ -37,14 +41,19 @@ form .filter-block:first-child {
 }
 
 .backlighting_nav_item.active .header-card {
-    background: #FF5722;
+    background: #ee686e;
     border-radius: 5px;
+}
+
+.backlighting_nav_item.active .header-card span {
+    background: #ee686e;
 }
 
 .hullabaloo.alert.alert-dismissible {
     width: fit-content !important;
     max-width: 500px !important;
     top: 70px !important;
+    background-color: rgba(122, 193, 173, 0.71) !important;
 }
 
 @media (max-width: 350px) {

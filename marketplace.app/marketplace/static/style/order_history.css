@@ -1,5 +1,7 @@
+
 .order_history_info {
     margin: 30px 0;
+    font-size: 1.2rem;
     color: #242525e0;
 }
 
@@ -95,6 +97,9 @@
 }
 
 .consumer-review-block label {
-    /*font-size: 1.2rem;*/
     color: #5a5a5a;
+}
+
+.order-history-product {
+    margin-bottom: 1rem;
 }
