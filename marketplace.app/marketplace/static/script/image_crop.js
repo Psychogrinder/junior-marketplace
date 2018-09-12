@@ -14,6 +14,8 @@ function setSrcAttr(type) {
     })
 }
 
+console.log('addr[5]' + addr[5]);
+
 if ((addr[3] === 'producer') && (addr[5] === 'edit')) {
     var id = addr[4];
     var type = 'producers';
@@ -29,6 +31,14 @@ else if ((addr[3] === 'producer') && (addr[5] === 'products')) {
     imageWidth = 255;
     imageHeight = 150;
     setSrcAttr(type);
+}
+
+else if ((addr[3] === 'producer') && (addr[5] === 'create_product')) {
+    var type = 'products';
+    viewportHeight = 117;
+    imageWidth = 255;
+    imageHeight = 150;
+    $(".gambar").attr("src", '/static/img/standard.png');
 }
 
 var $uploadCrop,
