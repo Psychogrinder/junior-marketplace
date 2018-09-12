@@ -47,6 +47,9 @@ def get_products_from_a_parent_category(parent_category_id):
 
 
 def get_sorted_and_filtered_products(args):
+    print('--------------args--------------')
+    print(args)
+
     query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
                              Producer.name.label('producer_name')).filter(
         Product.producer_id == Producer.id)

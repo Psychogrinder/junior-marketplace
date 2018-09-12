@@ -42,6 +42,8 @@ if ($('#producerProducts').length > 0) {
         let searchKeyWord = $("#producerProductsSearch").val();
         if (searchKeyWord) {
             producer_sorts_and_filters['search'] = searchKeyWord;
+        } else {
+            producer_sorts_and_filters['search'] = null;
         }
     }
 
@@ -111,6 +113,7 @@ if ($('#producerProducts').length > 0) {
 
     $("#producerProductsSearch").on('keypress', function (e) {
         if (e.key === 'Enter') {
+            e.preventDefault();
             updateProducerProductsPage(producer_sorts_and_filters);
         }
     });
