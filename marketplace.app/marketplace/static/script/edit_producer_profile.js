@@ -12,7 +12,7 @@ $(document).ready(function () {
                 image_data: image_data,
             },
             success: function (data, status) {
-                console.log('successful upload');
+                
             },
         });
     }
@@ -38,10 +38,10 @@ $(document).ready(function () {
                 contentType: 'application/json',
                 data: JSON.stringify(producerObject),
                 success: function (data, status) {
-                    console.log(data);
                     var hulla = new hullabaloo();
                     hulla.send("Профиль успешно изменен", "secondary");
                     uploadProducerImage(producer_id);
+
                 }
             });
         };
@@ -49,7 +49,6 @@ $(document).ready(function () {
         $('#editProducerForm').submit(function (event) {
             event.preventDefault();
             submitEditProfileForm();
-
         });
     })
     ;
