@@ -6,6 +6,12 @@
 
 {% block body %}
 <main class="order-history">
+    {% if not orders %}
+        <div class="container">
+            <h3>У вас нет заказов.</h3>
+        </div>
+    {% endif %}
+
     {% for order in orders %}
     <div class="orders-block{{ order.id }} order-block-separator container">
         <div class="container">
