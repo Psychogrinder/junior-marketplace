@@ -35,6 +35,9 @@ class Base(object):
 
     COMMENTS_PER_PAGE = 2
 
+    INFLUXDB_HOST = 'marketplace'
+    INFLUXDB_DATABASE = 'marketplace'
+
 
 class Development(Base):
     SQLALCHEMY_DATABASE_URI = (
