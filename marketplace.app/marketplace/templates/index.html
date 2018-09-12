@@ -29,7 +29,7 @@
                                 <b>{{ product.name }}</b>
                                 {% for producer in producers %}
                                     {% if product.producer_id == producer.id %}
-                                        <p>{{ producer.name }}</p>
+                                        <p class="producer_name">{{ producer.name }}</p>
                                     {% endif %}
                                 {% endfor %}
                             </div>
