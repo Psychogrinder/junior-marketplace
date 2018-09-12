@@ -47,47 +47,52 @@ def get_products_from_a_parent_category(parent_category_id):
 
 
 def get_sorted_and_filtered_products(args):
-    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
-                             Producer.name.label('producer_name')).filter(
-        Product.producer_id == Producer.id)
-
-    if args['popularity']:
-        if args['popularity'] == 'down':
-            query = query.order_by(Product.times_ordered.desc())
-
-    if args['producer_name']:
-        query = query.filter(Producer.name == args['producer_name'])
-
-    if args['in_stock'] == 1:
-        query = query.filter(Product.quantity > 0)
-
-    if args['search']:
-        query = query.filter(Product.name.ilike('%' + args['search'] + '%'))
-
-    if args['category_name']:
-        # check if the category_name is in English. Then it means it's a parent category
-        if args['category_name'][0] in string.ascii_lowercase:
-            parent_category_id = db.session.query(Category.id).filter(Category.slug == args['category_name']).first()
-            subcategory_ids = [el[0] for el in
-                               db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
-            query = query.filter(Product.category_id.in_(subcategory_ids))
-        # else it's a subcategory and the name is in Russian
-        else:
-            category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
-            query = query.filter(Product.category_id == category_id)
-
-    if args['price']:
-        if args['price'] == 'down':
-            query = query.order_by(Product.price.desc())
-        elif args['price'] == 'up':
-            query = query.order_by(Product.price.asc())
-
-    product_schema = ("id", "name", "price", "photo_url", "producer_name")
-    products_data = query.all()
     products = []
-    for product_data in products_data:
-        products.append(dict(zip(product_schema, product_data)))
-    return products
+    PRODUCTS_PER_PAGE = 12
+    args['page'] = int(args['page'])
+    if args['page'] == 0:
+        query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
+                                 Producer.name.label('producer_name')).filter(
+            Product.producer_id == Producer.id)
+
+        if args['popularity']:
+            if args['popularity'] == 'down':
+                query = query.order_by(Product.times_ordered.desc())
+
+        if args['producer_name']:
+            query = query.filter(Producer.name == args['producer_name'])
+
+        if args['in_stock'] == 1:
+            query = query.filter(Product.quantity > 0)
+
+        if args['search']:
+            query = query.filter(Product.name.ilike('%' + args['search'] + '%'))
+
+        if args['category_name']:
+            # check if the category_name is in English. Then it means it's a parent category
+            if args['category_name'][0] in string.ascii_lowercase:
+                parent_category_id = db.session.query(Category.id).filter(Category.slug == args['category_name']).first()
+                subcategory_ids = [el[0] for el in
+                                   db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
+                query = query.filter(Product.category_id.in_(subcategory_ids))
+            # else it's a subcategory and the name is in Russian
+            else:
+                category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
+                query = query.filter(Product.category_id == category_id)
+
+        if args['price']:
+            if args['price'] == 'down':
+                query = query.order_by(Product.price.desc())
+            elif args['price'] == 'up':
+                query = query.order_by(Product.price.asc())
+
+        product_schema = ("id", "name", "price", "photo_url", "producer_name")
+        products_data = query.all()
+        for product_data in products_data:
+            products.append(dict(zip(product_schema, product_data)))
+        return products[:PRODUCTS_PER_PAGE]
+    else:
+        return products[args['page']*PRODUCTS_PER_PAGE:(args['page']+1)*PRODUCTS_PER_PAGE]
 
 
 def get_popular_products():

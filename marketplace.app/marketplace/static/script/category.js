@@ -7,28 +7,14 @@ $(document).ready(function () {
                 category_name: null,
                 producer_name: null,
                 quantity: null,
-                in_stock: 0
+                in_stock: 0,
+                page: 0
             };
 
             // get base category name
             var addr = window.location + '';
             addr = addr.split('/');
             var base_category = addr[addr.length - 1];
-
-
-            $('.filter-block select').change(function () {
-                update_page(sorts_and_filters, base_category);
-            });
-
-            $('#in_stock_catalog_products').click(function () {
-                if ($(this).is(":checked")) {
-                    sorts_and_filters['in_stock'] = 1;
-                } else {
-                    sorts_and_filters['in_stock'] = 0;
-                }
-                update_page(sorts_and_filters, base_category);
-            });
-
 
             function fill_sorts_and_filters(sorts_and_filters, base_category) {
                 let selected_option_1 = $('#sortByPriceOrPopularity option:selected');
@@ -99,7 +85,11 @@ $(document).ready(function () {
                             'Нет в наличии' +
                             '</p>');
                     }
+                    $("#productsByCategory").append(
+                    '<div id=page></div>'
+                    );
                 }
+
             }
 
             function display_producers_that_have_the_selected_category(sorts_and_filters, base_category) {
@@ -161,6 +151,22 @@ $(document).ready(function () {
                 display_filtered_and_sorted_products(sorts_and_filters, base_category);
             }
 
-        }
+            $('.filter-block select').change(function () {
+                sorts_and_filters['page'] = 0
+                update_page(sorts_and_filters, base_category);
+            });
+
+            $('#in_stock_catalog_products').click(function () {
+                sorts_and_filters['page'] = 0
+                if ($(this).is(":checked")) {
+                    sorts_and_filters['in_stock'] = 1;
+                } else {
+                    sorts_and_filters['in_stock'] = 0;
+                }
+                update_page(sorts_and_filters, base_category);
+            });
+
+        // добавляем товары на страницу при первой её загрзке
+        }   update_page(sorts_and_filters, base_category);
     }
 );
