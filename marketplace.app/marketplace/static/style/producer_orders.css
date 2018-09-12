@@ -140,3 +140,7 @@
     width: fit-content;
     margin-top: auto;
 }
+
+.save-status-order-btn {
+    margin-top: 1rem;
+}

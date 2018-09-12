@@ -1,5 +1,7 @@
 from flask import render_template, jsonify, redirect, url_for, flash, abort, request
 import os
+from marketplace.forms import ResetPasswordForm
+import time
 from flask_restful import reqparse
 from marketplace import app, email_tools, db
 from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils, \
@@ -209,6 +211,29 @@ def email_confirm(token):
     return redirect(url_for('index'))
 
 
+@app.route('/password/recovery/<token>', methods=['GET', 'POST'])
+def password_recovery(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    payload = email_tools.confirm_token(token)
+    if payload is None:
+        return redirect(url_for('index'))
+    user = User.query.filter_by(email=payload['email']).first()
+    if user is None:
+        return redirect(url_for('index'))
+    expires_on = payload['expires']
+    if expires_on - time.time() < 0:
+        flash('Время действия ссылки закончилось', category='info')
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Пароль успешно изменен', category='info')
+        return redirect(url_for('index'))
+    return render_template('reset_password.html', form=form)
+
+  
 @app.route('/search')
 def global_search():
     products = product_utils.search_by_keyword(request.args.get('find'))
@@ -235,6 +260,7 @@ def review():
     products = product_utils.get_products_by_order_id(order_id)
     number_of_products = len(products)
     return render_template('review.html', order=order, products=products, number_of_products=number_of_products)
+
 
 
 @app.errorhandler(404)
