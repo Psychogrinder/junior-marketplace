@@ -5,6 +5,7 @@ from testing_utils import parseApiRoutes, replaceUserId, replaceProductId, getRe
 from marketplace.api_folder.utils.comment_utils import get_comment_by_id, get_comments_by_product_id, \
     get_comments_by_consumer_id, post_comment, delete_comment_by_id
 
+from marketplace.api_folder.utils.order_utils import get_orders_by_consumer_id, get_filtered_orders
 import requests
 import json
 
@@ -17,18 +18,17 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         self.ids = [1, 2, 3, 5, 0, 10, 15, 40, 60, -1, 100, 10000, -11.0]
 
-    @unittest.skip
+    @unittest.skip # FIXME add more args
     def test_01_get_comment(self):
 
         "TODO: for all products"
         product_id = 1
-        url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
+        url = 'http://127.0.0.1:8000/api/v1/comments'
 
         response = requests.Session().get(url)
-
         data = json.loads(response.content)
 
-        "TODO: for all pages (for two last comments now)"
+        #TODO: for all pages (for two last comments now)
         for comment in data['body']:
             self.assertEqual(product_id, comment['product_id'],
                              'id товара с комментарием  не соотвествует id карточки товара.')
@@ -39,26 +39,29 @@ class TestCase(unittest.TestCase):
             self.assertIsNotNone(comment['body'], 'комментарий is None.')
 
 
-    @unittest.skip  #Статус заказа д.б. подтвержден, чтобы оставить отзыв
     def test_02_post_comment(self):
         login_url = 'http://127.0.0.1:8000/api/v1/login?email=42mail.ru&password=123123'
         s = requests.Session()
         response = s.post(login_url)
-
         user_id = json.loads(response.content)['id']
+        orders = get_orders_by_consumer_id(user_id)
 
-        product_id = 12
+        product_id, order_id = False, False
+        for order in orders:
+            if order.status == 'Завершён':
+                for key in order.order_items_json:
+                    product_id = key
+                    order_id = order.id
 
-        url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
-        response = s.post(url, data={'body': 'Raise of naafss'})
-        print(response)
-        data = (json.loads(response.content))
-
-        self.assertEqual(product_id, data['product_id'],
-                         'id товара в опубликованном комментарии и id карточки товара различны.')
-        self.assertEqual(user_id, data['consumer_id'],
-                         'id авторизованного покупателя и id покупателя, опубликовавшего комментарий, различны.')
-        self.assertIsNotNone(data['body'], 'posted comment body is None.')
+        if product_id and order_id:
+            url = 'http://127.0.0.1:8000/api/v1/comments'
+            response = s.post(url, data={'consumer_id': user_id,
+                                         'product_id': product_id,
+                                         'order_id': order_id,
+                                         'body': 'Raise of NASA'}
+            )
+            data = json.loads(response.content)
+            print(data)
 
 
     def test_03_get_comment_by_id(self):
@@ -85,11 +88,10 @@ class TestCase(unittest.TestCase):
             except we.NotFound:
                 pass
 
-    @unittest.skip
+
     def test_05_delete_comment_by_id(self):
 
         for product_id in [1, 99, -26]:
-
             try:
                 comments = get_comments_by_product_id(product_id)
 
@@ -98,6 +100,7 @@ class TestCase(unittest.TestCase):
                     self.assertIsNotNone(get_comment_by_id(last_id))
 
                     delete_comment_by_id(last_id)
+                    print('deleted comment')
                     self.assertIsNone(get_comment_by_id(last_id),
                                       'комментарий не был удален (delete_comment_by_id)')
             except we.NotFound:
