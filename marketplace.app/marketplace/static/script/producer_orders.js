@@ -91,6 +91,7 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="container item_order">' +
                 '<div class="row order_history_info">' +
                 '<div class="col-6">' +
+                '<span>№ </span>' +
                 '<span id="orderId' + i + '">' + orders[i].id + '</span>' +
                 '</div>' +
                 '<div class="col-2">' + orders[i].order_timestamp + '</div>' +
@@ -133,7 +134,7 @@ if ($('main.producer-orders').length > 0) {
                 '<option value="Готов к самовывозу">Готов к самовывозу</option>' +
                 '<option value="Завершён">Завершён</option>' +
                 '</select>' +
-                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtn' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
+                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtn' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
@@ -145,7 +146,7 @@ if ($('main.producer-orders').length > 0) {
                 $("#orderProducts" + i).append(
                     '<div class="row">' +
                     '<div class="col-2">' +
-                    '<img class="order-product-photo" src="/static/img/apple-ant.jpg" alt="" width="150px">' +
+                    '<img class="order-product-photo" src="/' + items[p].photo_url + '" alt="" width="150px">' +
                     '</div>' +
                     '<div class="col-4">' +
                     '<div class="row">' +
@@ -240,7 +241,7 @@ if ($('main.producer-orders').length > 0) {
                 '</select>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
-                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
+                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtnTable' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>'
@@ -362,4 +363,5 @@ if ($('main.producer-orders').length > 0) {
     $('#statuses').change(function () {
         update_orders_page(orderFilter);
     });
+    update_orders_page(orderFilter);
 }

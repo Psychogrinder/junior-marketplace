@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="product-item-description">
                                     <p>{{ product.price }}</p>
-                                    <b class="producer_name">{{ product.name }}</b>
+                                    <b>{{ product.name }}</b>
                                     <p class="edit-product">
                                         <a href="{{ url_for('edit_product', producer_id = product.producer_id, product_id = product.id ) }}">
                                             <img src="{{ url_for( 'static', filename = 'img/edit-regular.svg') }}">
