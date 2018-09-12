@@ -71,7 +71,7 @@ def get_filtered_orders(args):
             if product['weight'].is_integer():
                 product['weight'] = int(product['weight'])
             order['items'].append(product)
-            del order['order_items_json']
+        del order['order_items_json']
 
     return orders
 
