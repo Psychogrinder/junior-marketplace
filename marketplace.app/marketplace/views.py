@@ -209,6 +209,8 @@ def email_confirm(token):
 
 @app.route('/password/recovery/<token>', methods=['GET', 'POST'])
 def password_recovery(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     payload = email_tools.confirm_token(token)
     if payload is None:
         return redirect(url_for('index'))
