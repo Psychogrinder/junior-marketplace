@@ -7,12 +7,6 @@ from marketplace import models
 from marketplace import image_tools
 from marketplace import db, app, celery
 
-
-def allowed_extension(filename):
-    extension = os.path.splitext(filename)[1].lower().replace('.', '')
-    return extension in app.config['ALLOWED_UPLOAD_EXTENSIONS']
-
-
 @celery.task()
 def commit_change(image_url, cls, uploader_id):
     model = getattr(models, cls)
@@ -45,5 +39,9 @@ def upload_image(uploader, image_data, producer_id, size, product_id=None):
     # write bytes to a file
     with open(file_path, "wb") as fh:
         fh.write(base64.decodebytes(image_data))
-    save_upload_image(file_path, uploader, size)
+    # -5 because we go as far as the static folder
+    file_path = '/'.join(file_path.split('/')[-5:])
+    uploader.set_photo_url(file_path)
+    db.session.commit()
+    # save_upload_image(file_path, uploader, size)
     return True
