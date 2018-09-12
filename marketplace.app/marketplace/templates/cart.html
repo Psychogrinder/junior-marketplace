@@ -12,11 +12,11 @@
         {% if products %}
             <section class="notEmptyCart">
                 {% for product in products %}
-                    <section class={{ product.id }}>
+                    <section class="{{ product.id }}">
                         <div class="container">
                             <div class="row">
                                 <div class="col-2">
-                                    <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
+                                    <img src="/{{ product.photo_url }}" alt=""
                                          width="150px"
                                          height="auto">
                                 </div>

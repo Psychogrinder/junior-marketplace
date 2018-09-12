@@ -1,5 +1,6 @@
 import os
 import shutil
+from sqlalchemy import update
 
 from marketplace import db, email_tools, app
 from marketplace.api_folder.schemas import producer_sign_up_schema

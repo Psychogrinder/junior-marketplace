@@ -131,15 +131,9 @@ def edit_consumer(user_id):
 
 @app.route('/order_history/<user_id>')
 def order_history(user_id):
-    orders = Order.query.filter_by(consumer_id=user_id).all()
-    all_products = []
-    producer_names = {}
-    for order in orders:
-        all_products += (product_utils.get_products_by_order_id(order.id))
-        producer_names[order.producer_id] = producer_utils.get_producer_by_id(int(order.producer_id)).name
+    orders = order_utils.get_formatted_orders_by_consumer_id(user_id)
     if current_user.id == int(user_id):
-        return render_template('order_history.html', orders=orders, current_user=current_user, products=all_products,
-                               producer_names=producer_names)
+        return render_template('order_history.html', orders=orders, current_user=current_user)
     else:
         return redirect(url_for('index'))
 
