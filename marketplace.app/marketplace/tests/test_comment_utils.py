@@ -19,12 +19,12 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         self.ids = [1, 2, 3, 5, 0, 10, 15, 40, 60, -1, 100, 10000, -11.0]
 
-    @unittest.skip # FIXME add more args
+
     def test_01_get_comments(self):
 
-        "TODO: for all products"
-        product_id = 1
-        url = 'http://127.0.0.1:8000/api/v1/comments'
+        "TODO: for all products with comments"
+        product_id = 24
+        url = 'http://127.0.0.1:8000/api/v1/products/{}/comments'.format(product_id)
 
         response = requests.Session().get(url)
         data = json.loads(response.content)
@@ -85,6 +85,9 @@ class TestCase(unittest.TestCase):
             try:
                 comment = get_comment_by_id(comment_id)
                 self.assertEqual(comment_id, comment.id)
+
+                # TODO : compare consumer names (from comment and real) by his id
+
             except we.NotFound:
                 pass
 
