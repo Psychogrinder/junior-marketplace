@@ -14,7 +14,6 @@ def commit_change(image_url, cls, uploader_id):
     instance.set_photo_url(image_url)
     db.session.commit()
 
-
 def save_upload_image(image_url, uploader, size):
     image_tools.change_image.apply_async(
         (image_url, size),
@@ -39,9 +38,5 @@ def upload_image(uploader, image_data, producer_id, size, product_id=None):
     # write bytes to a file
     with open(file_path, "wb") as fh:
         fh.write(base64.decodebytes(image_data))
-    # -5 because we go as far as the static folder
-    file_path = '/'.join(file_path.split('/')[-5:])
-    uploader.set_photo_url(file_path)
-    db.session.commit()
-    # save_upload_image(file_path, uploader, size)
+    save_upload_image(file_path, uploader, size)
     return True
