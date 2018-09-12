@@ -1,8 +1,7 @@
 from path_file import *
 
 import json
-from testing_utils import getResponse, getCookiesFromResponse, getUserIdFromResponse, getResponseCode, parseApiRoutes, \
-    replaceUserId, replaceProductId, getResponseCode
+from testing_utils import getResponse, getCookiesFromResponse, parseApiRoutes, replaceUserId
 
 from marketplace.api_folder.utils.user_utils import get_user_by_email
 
@@ -100,6 +99,7 @@ class TestCase(unittest.TestCase):
 
         if user:
             delete_consumer_by_id(user.id)
+            print('Re-posted consumer')
 
         self.assertIn(post_consumer(args), get_all_consumers())
 
@@ -115,23 +115,26 @@ class TestCase(unittest.TestCase):
         consumer = get_consumer_by_id(user.id)
         self.assertEqual(consumer.id, user.id)
 
-    @unittest.skip
+
     def test_07_put_consumer(self):
         url = 'http://127.0.0.1:8000/api/v1/consumers/'
+
         user = get_user_by_email(self.user_email)
 
         load_args = {
             'last_name': 'Bawbara',
             'first_name': 'JNf',
             'patronymic': 'Львоer',
-            'phone_number': '32222222',
+            'phone_number': '71111111111',
             'address': 'Мойя1 Улиця 17@1#1',
+            #'email': 'asadnj@rer.ru'
         }
 
         response = requests.Session().put(url + str(user.id), data=load_args)
         data = json.loads(response.content)
 
         for i in load_args:
+            print(data)
             self.assertEqual(load_args[i], data[i])
 
 
@@ -145,11 +148,10 @@ class TestCase(unittest.TestCase):
 
 
     def test_09_get_all_consumers(self):
-        all_users = len(User.query.all())
-        producers = len(User.query.filter_by(entity='producer').all())
-        consumers = len(get_all_consumers())
 
-        self.assertEqual(all_users - producers, consumers)
+        self.assertEqual(len(User.query.filter_by(entity='consumer').all()),
+                         len(get_all_consumers()))
+
 
     # test_10_upload_consumer_image
     #   pass
