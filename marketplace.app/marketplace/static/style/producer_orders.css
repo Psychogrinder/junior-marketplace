@@ -144,3 +144,7 @@
 .save-status-order-btn {
     margin-top: 1rem;
 }
+
+.item_order a {
+    color: #5a5a5a;
+}

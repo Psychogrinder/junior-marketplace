@@ -112,3 +112,7 @@
 .notEmptyCart {
     margin-top: 2rem;
 }
+
+.cart_product_stock_info a {
+    color: #5a5a5a;
+}

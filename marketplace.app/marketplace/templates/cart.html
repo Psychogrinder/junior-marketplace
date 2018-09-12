@@ -6,17 +6,17 @@
 
 {% block body %}
     <main id="cartMain">
-    <div class="container">
-        <h2>КОРЗИНА</h2>
-    </div>
+        <div class="container">
+            <h2>КОРЗИНА</h2>
+        </div>
         {% if products %}
             <section class="notEmptyCart">
                 {% for product in products %}
-                    <section class={{ product.id }}>
+                    <section class="{{ product.id }}">
                         <div class="container">
                             <div class="row">
                                 <div class="col-2">
-                                    <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
+                                    <img src="/{{ product.photo_url }}" alt=""
                                          width="150px"
                                          height="auto">
                                 </div>
@@ -27,11 +27,18 @@
                                     <p>Вес</p>
                                 </div>
                                 <div class="col-3 cart_product_stock_info">
-                                    <p>{{ product.name }}</p>
+                                    <a href="{{ url_for('product_card', product_id=product.id ) }}">
+                                        <p>{{ product.name }}</p>
+                                    </a>
                                     <p>{{ product.price }}</p>
                                     <p id="productIdCart">#{{ product.id }}</p>
                                     <p>
-                                        {{ product.weight }} {{ product.measurement_unit }}
+                                        {% if (product.weight | string).split('.')[1] == '0' %}
+                                            {{ (product.weight | string).split('.')[0] }}
+                                        {% else %}
+                                            {{ product.weight }}
+                                        {% endif %}
+                                        {{ product.measurement_unit }}
                                     </p>
                                 </div>
                                 <div class="col-3 quantity_container">
@@ -71,7 +78,8 @@
                             <span class="total_value" id="totalCost"></span><span class="total_value"> ₽</span>
                         </div>
                         <div class="col-4 order_box">
-                            <a href={{ url_for('order_registration', user_id = current_user.id) }} class="btn btn-primary
+                            <a href="{{ url_for('order_registration', user_id = current_user.id) }}" class="btn
+                               btn-primary
                                btn_order" id="placeOrderButton">
                                 ОФОРМИТЬ ЗАКАЗ
                             </a>

@@ -104,3 +104,7 @@
 .order-history-product {
     margin-bottom: 1rem;
 }
+
+.order-block-separator a {
+    color: #5a5a5a;
+}

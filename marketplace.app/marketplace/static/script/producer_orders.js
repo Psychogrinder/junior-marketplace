@@ -91,7 +91,7 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="container item_order">' +
                 '<div class="row order_history_info">' +
                 '<div class="col-6">' +
-                '<span>#</span>' +
+                '<span>№ </span>' +
                 '<span id="orderId' + i + '">' + orders[i].id + '</span>' +
                 '</div>' +
                 '<div class="col-2">' + orders[i].order_timestamp + '</div>' +
@@ -151,7 +151,9 @@ if ($('main.producer-orders').length > 0) {
                     '<div class="col-4">' +
                     '<div class="row">' +
                     '<p class="col-6">Название</p>' +
-                    '<p class="col-6 main-text">' + items[p].name + '</p>' +
+                    '<a href="/products/' + items[p].id + '">' +
+                    '<p class="col-12 main-text">' + items[p].name + '</p>' +
+                    '</a>' +
                     '</div>' +
                     '<div class="row">' +
                     '<p class="col-6">Цена</p>' +
