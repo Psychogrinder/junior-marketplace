@@ -87,7 +87,7 @@ $(document).ready(function () {
                         '<div class="product-item-description" id="categoryItemDescription' + i + '">' +
                         "<p>" + products[i].price + "</p>" +
                         "<b>" + products[i].name + "</b>" +
-                        "<p>" + products[i].producer_name + "</p>" +
+                        '<p class="producer_name">' + products[i].producer_name + "</p>" +
                         "</div>" +
                         "</a>" +
                         '</div>');

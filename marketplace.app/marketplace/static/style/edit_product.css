@@ -40,6 +40,11 @@ input::-ms-input-placeholder { font-weight: 100; }
 input::-ms-input-placeholder { font-weight: 100; }
 input::placeholder { font-weight: 100; }
 
-.edit-product-item #editWeight {
+.edit-product-item #editWeight,
+.edit-product-item #createWeigth {
     height: 38px;
+}
+
+#createProductPage .breadcrumbs {
+    margin-bottom: 30px;
 }
