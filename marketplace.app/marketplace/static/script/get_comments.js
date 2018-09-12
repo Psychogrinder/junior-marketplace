@@ -1,5 +1,4 @@
 function getComments(page_number) {
-
     let addr = window.location + '';
     addr = addr.split('/');
     let product_id = addr[addr.length - 1];
