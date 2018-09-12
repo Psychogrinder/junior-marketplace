@@ -21,42 +21,42 @@
         {% include 'inc/image_upload.html' %}
         <form action="#">
             <div class="row edit-product-item">
-                <label for="editName" class="col-5 col-sm-3">Название</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editName" placeholder="Иван" required
+                <label for="editName" class="col-12 col-sm-2">Название</label>
+                <input type="text" class="form-control col-12 col-sm-4" id="editName" placeholder="Иван" required
                        value='{{ product.name }}'>
             </div>
             <div class="row edit-product-item">
-                <label for="editPrice" class="col-5 col-sm-3">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editPrice" placeholder="100"
+                <label for="editPrice" class="col-12 col-sm-2">Цена</label>
+                <input type="text" class="form-control col-12 col-sm-4" id="editPrice" placeholder="100"
                        pattern="^\d+\.?(\d{1,2})?$" required value="{{ product.price }}">
             </div>
             <div class="row edit-product-item">
-                <label for="editArticle" class="col-5 col-sm-3">Артикул</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editArticle" disabled
+                <label for="editArticle" class="col-12 col-sm-2">Артикул</label>
+                <input type="text" class="form-control col-12 col-sm-4" id="editArticle" disabled
                        value="{{ product.id }}">
             </div>
             <div class="row edit-product-item">
-                <label for="editCategory" class="col-5 col-sm-3">Категория</label>
-                <select class="form-control col-8 col-sm-4" name="category" id="editCategory" required>
+                <label for="editCategory" class="col-12 col-sm-2">Категория</label>
+                <select class="form-control col-12 col-sm-4" name="category" id="editCategory" required>
                     <option value="" disabled>Категория</option>
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="editSubcategory" class="col-5 col-sm-3">Подкатегория</label>
-                <select class="form-control col-8 col-sm-4" name="subcategory" id="editSubcategory" required>
+                <label for="editSubcategory" class="col-12 col-sm-2">Подкатегория</label>
+                <select class="form-control col-12 col-sm-4" name="subcategory" id="editSubcategory" required>
                     <option value="" disabled selected>Подкатегория</option>
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="editCount" class="col-5 col-sm-3">Количество товара</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="editCount" placeholder="10"
+                <label for="editCount" class="col-12 col-sm-2">Количество товара</label>
+                <input type="text" class="form-control col-12 col-sm-4" id="editCount" placeholder="10"
                        pattern="^[ 0-9]+$" value={{ product.quantity }}>
             </div>
             <div class="row edit-product-item">
-                <label for="editWeight" class="col-5 col-sm-3">Вес/Единицы измерения</label>
-                <input type="text" class="form-control col-5 col-sm-3" name="weight"
+                <label for="editWeight" class="col-12 col-sm-2">Вес/Единицы измерения</label>
+                <input type="text" class="form-control col-8 col-sm-3" name="weight"
                        id="editWeight" value="{{ product.weight }}">
-                <select class="form-control col-4 col-sm-1" name="weight_init" required>
+                <select class="form-control col-4 col-sm-1" name="weight_init" id="measurmentSelect" required>
                     {% for unit in measurement_units %}
                     {% if unit == product.measurement_unit %}
                     <option selected value={{ unit }}>{{ unit }}</option>
@@ -67,7 +67,7 @@
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="editDescription" class="col-5 col-sm-3">Описание</label>
+                <label for="editDescription" class="col-12 col-sm-2">Описание</label>
                 <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription"
                           name="description">{{ product.description }}</textarea>
             </div>
@@ -78,4 +78,3 @@
     </div>
 </main>
 {% endblock %}
-

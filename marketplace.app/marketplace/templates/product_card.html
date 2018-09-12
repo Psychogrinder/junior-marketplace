@@ -31,7 +31,15 @@
                     <span class="product_id">#{{ product.id }}</span>
                     <span class="product_price_title">ЦЕНА</span>
                     <span class="product_price_value">{{ product.price }}</span>
-                    <span class="product_price_title">Вес</span>
+                    <span class="product_price_title">
+                        {% if product.measurement_unit == 'кг' %}
+                            {{ "ВЕС" }}
+                        {% elif (product.measurement_unit == 'шт') %}
+                            {{ "КОЛИЧЕСТВО" }}
+                        {% else %}
+                            {{ "ОБЪЁМ" }}
+                        {% endif %}
+                    </span>
                     <span class="product_price_value">
                     {% if (product.weight | string).split('.')[1] == '0' %}
                         {{ (product.weight | string).split('.')[0] }}
@@ -84,6 +92,33 @@
                     </div>
                 </div>
             {% endif %}
+            {% if comments %}
+                <div class="review-product-block">
+                <h2>Отзывы</h2>
+                <section id="commentSection">
+                    {% for comment in comments %}
+                        <div class="review-product-item col-12 col-lg-9">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <p class="review-consumer">{{ comment.consumer_name }}</p>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <p class="review-data">{{ comment.timestamp.date() }}</p>
+                                </div>
+                            </div>
+                            <p class="review-comment">{{ comment.body }}</p>
+                        </div>
+                    {% endfor %}
+                </section>
+                <div>
+                    {% if next_page %}
+                        <button value="{{ next_page }}" id="commentsNextPage" class="btn btn-secondary">Показать
+                            предыдущие
+                        </button>
+                    {% endif %}
+                </div>
+            {% endif %}
+            </div>
         </div>
     </main>
 

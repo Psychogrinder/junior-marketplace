@@ -1,5 +1,5 @@
 from path_file import *
-from testMethods import parseApiRoutes, getCategorySlugs,  getProductIds,  getResponseCode, getUserIds, \
+from testing_utils import parseApiRoutes, getCategorySlugs,  getProductIds,  getResponseCode, getUserIds, \
     replaceCategoryName, replaceUserId, replaceProductId
 
 import unittest
@@ -26,6 +26,9 @@ class TestSmoke(unittest.TestCase):
         for route in self.routes['not_auth']:
             test_url = self.url + route
 
+            if 'search' or 'review' in route:
+                continue
+
             if '<category_name>' in route:
                 for category_slug in self.category_slugs:
                     test_url = replaceCategoryName(self.url + route, category_slug)
@@ -43,10 +46,11 @@ class TestSmoke(unittest.TestCase):
 
     def testRoutesAccessRights(self):
 
-        """TODO: Add for all ids and Check token links"""
         for route in self.routes['auth']:
 
             test_url = self.url + route
+            if 'token' in route:
+                continue
 
             if '<producer_id>' in route:
                 test_url = replaceUserId(test_url, self.user_ids['producer_ids'][0])
@@ -60,10 +64,6 @@ class TestSmoke(unittest.TestCase):
             print(test_url)
             self.assertNotEqual(200, getResponseCode(test_url))
         print('Auth routes are OK.\n')
-
-
-    def tearDown(self):
-        pass
 
 
 if __name__ == '__main__':

@@ -6,92 +6,105 @@
 
 {% block body %}
     <main class="order-history">
-        <section class="breadcrumbs container">
-            <span><a class="active">Мои заказы</a></span>
-        </section>
-        {% for order in orders %}
-            <div class="orders-block{{ order.id }} order-block-separator container">
-                <div class="container">
-                    <div class="row order_history_info">
-                        <div class="col-2">
-                            <span>№ {{ order.id }}</span>
-                        </div>
-                        <div class="col-4 order-history-producer-name">
-                            <span> {{ producer_names[order.producer_id] }}  </span>
-                        </div>
-                        <div class="col-2 order_history_date">
-                            <span class="orderTimeStamp">{{ (order.order_timestamp | string).split(' ')[0] }}</span>
-                        </div>
-                        <div class="col-4">
-                            <span>СУММА ЗАКАЗА: {{ order.total_cost }}</span>
+        {% if orders %}
+            {% for order in orders %}
+                <div class="orders-block{{ order.id }} order-block-separator container">
+                    <div class="container">
+                        <div class="row order_history_info">
+                            <div class="col-2">
+                                <span>№ {{ order.id }}</span>
+                            </div>
+                            <div class="col-4 order-history-producer-name">
+                                <span> {{ producer_names[order.producer_id] }}  </span>
+                            </div>
+                            <div class="col-2 order_history_date">
+                                <span class="orderTimeStamp">{{ (order.order_timestamp | string).split(' ')[0] }}</span>
+                            </div>
+                            <div class="col-4">
+                                <span>СУММА ЗАКАЗА: {{ order.total_cost }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                {% for item, quantity in order.order_items_json.items() %}
-                    {% for product in products %}
-                        {% if product.id == item | int %}
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <img class="order-product-photo"
-                                             src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
-                                             width="150px">
+                    {% for item, quantity in order.order_items_json.items() %}
+                        {% for product in products %}
+                            {% if product.id == item | int %}
+                                <div class="container order-history-product">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <img class="order-product-photo"
+                                                 src='/{{ product.photo_url }}' alt=""
+                                                 width="150px">
+                                        </div>
+                                        <div class="col-1 cart_product_stock_title">
+                                            <p>Название</p>
+                                            <p>Цена</p>
+                                            <p>Артикул</p>
+                                        </div>
+                                        <div class="col-3 cart_product_stock_info">
+                                            <p>{{ product.name }}</p>
+                                            <p>{{ product.price }}</p>
+                                            <p>#{{ item }}</p>
+                                        </div>
+                                        <div class="col-2">
+                                            <span>Вес:</span>
+                                            {% if (product.weight | string).split('.')[1] == '0' %}
+                                                <span class="main-text">{{ (product.weight | string).split('.')[0] }}</span>
+                                            {% else %}
+                                                <span class="main-text">{{ product.weight }}</span>
+                                            {% endif %}
+                                            <span class="main-text"> {{ product.measurement_unit }}</span>
+                                        </div>
+                                        <div class="col-4 quantity_container">
+                                            <span>Количество:</span>
+                                            <span class="main-text">{{ quantity }}</span>
+                                        </div>
                                     </div>
-                                    <div class="col-1 cart_product_stock_title">
-                                        <p>Название</p>
-                                        <p>Цена</p>
-                                        <p>Артикул</p>
-                                    </div>
-                                    <div class="col-3 cart_product_stock_info">
-                                        <p>{{ product.name }}</p>
-                                        <p>{{ product.price }}</p>
-                                        <p>#{{ item }}</p>
-                                    </div>
-                                    <div class="col-2">
-                                        <span>Вес:</span>
-                                        {% if (product.weight | string).split('.')[1] == '0' %}
-                                            <span class="main-text">{{ (product.weight | string).split('.')[0] }}</span>
-                                        {% else %}
-                                            <span class="main-text">{{ product.weight }}</span>
-                                        {% endif %}
-                                        <span class="main-text"> {{ product.measurement_unit }}</span>
-                                    </div>
-                                    <div class="col-4 quantity_container">
-                                        <span>Количество:</span>
-                                        <span class="main-text">{{ quantity }}</span>
-                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    <div class="container delivery_container">
+                        <div class="row">
+                            <div class="col-3 delivery_value-header delivery_value">
+                                <span>Доставка:</span>
+                            </div>
+                            <div class="col-3 delivery_value">
+                                <span class="main-text">{{ order.delivery_method }}</span>
+                            </div>
+                            <div class="col-2">
+                                <span>Статус заказа:</span>
+                            </div>
+                            <div class="col-2">
+                                <span class="main-text">{{ order.status }}</span>
+                            </div>
+                        </div>
+                        {% if order.status=='Не обработан' %}
+                            <div class="row order-history-btn-block">
+                                <div class="col-4">
+                                    <button class="btn btn-primary" type="button" data-toggle="modal"
+                                            data-target="#showOrderCancelModal">
+                                        ОТМЕНИТЬ ЗАКАЗ
+                                    </button>
                                 </div>
                             </div>
                         {% endif %}
-                    {% endfor %}
-                {% endfor %}
-                <div class="container delivery_container">
-                    <div class="row">
-                        <div class="col-3 delivery_value-header delivery_value">
-                            <span>Доставка:</span>
-                        </div>
-                        <div class="col-3 delivery_value">
-                            <span class="main-text">{{ order.delivery_method }}</span>
-                        </div>
-                        <div class="col-2">
-                            <span>Статус заказа:</span>
-                        </div>
-                        <div class="col-2">
-                            <span class="main-text">{{ order.status }}</span>
-                        </div>
-                    </div>
-                    {% if order.status=='Не обработан' %}
-                        <div class="row order-history-btn-block">
-                            <div class="col-4">
-                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#showOrderCancelModal">
-                                    ОТМЕНИТЬ ЗАКАЗ
-                                </button>
+                        {% if order.status=='Завершён' and not order.reviewed %}
+                            <div class="row order-history-btn-block">
+                                <div class="col-4">
+                                    <a href="{{ url_for('review', order_id = order.id) }}" class="btn btn-secondary">
+                                        ОСТАВИТЬ ОТЗЫВ
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
+                    {% include 'inc/cancel_order_modal.html' %}
                 </div>
-                {% include 'inc/cancel_order_modal.html' %}
+            {% endfor %}
+        {% else %}
+            <div class="container">
+                <h2>У Вас нет заказов</h2>
             </div>
-        {% endfor %}
+        {% endif %}
     </main>
 {% endblock %}

@@ -149,5 +149,11 @@ for i in range(1, 10):
         os.mkdir(os.path.join(marketplace_dir, f'static/img/user_images/{i}/'))
     except FileExistsError:
         pass
-        
+
+comments = ['GOOOOOOD', 'GREAAAT', 'Maaaah nigga, its fucking aaawesome', 'I want more', "Where do they do that at?"]
+
+for i, comment in enumerate(comments):
+    new_comment = Comment(1, i+10, comment, consumer_name='Покупатель')
+    db.session.add(new_comment)
+
 db.session.commit()

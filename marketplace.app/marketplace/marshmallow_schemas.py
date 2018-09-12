@@ -1,4 +1,4 @@
-from marketplace.models import Order, Product, Consumer, Producer, Category, Cart
+from marketplace.models import Order, Product, Consumer, Producer, Category, Cart, Comment
 from marketplace import ma
 from marshmallow import fields, post_load
 from marshmallow_sqlalchemy import ModelConverter
@@ -56,6 +56,12 @@ class ProducerSchema(ma.ModelSchema):
     class Meta:
         model = Producer
         fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address', 'photo_url')
+
+
+class CommentSchema(ma.ModelSchema):
+    class Meta:
+        model = Comment
+        fields = ('id', 'product_id', 'consumer_id', 'timestamp', 'body', 'consumer_name')
 
 
 class CategorySchema(ma.ModelSchema):

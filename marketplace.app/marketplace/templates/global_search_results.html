@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Результаты поиска{% endblock %}
+
+{% block body %}
+<main class="container">
+    <section class="product-card row">
+        {% if products %}
+            {% for product in products %}
+            {% include 'inc/small_product_card.html' %}
+            {% endfor %}
+        {% else %}
+            <h2 class="NothingFound">По вашему запросу ничего не найдено.</h2>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

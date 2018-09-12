@@ -4,7 +4,7 @@ from sqlalchemy import desc, func, exc
 from sqlalchemy_searchable import inspect_search_vectors
 
 from marketplace import db, app
-from marketplace.api_folder.schemas import product_schema
+from marketplace.api_folder.schemas import product_schema, product_schema_list
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
     abort_if_producer_doesnt_exist_or_get, abort_if_category_doesnt_exist_or_get
 from marketplace.api_folder.utils.category_utils import get_category_by_id, get_subcategories_by_category_id, \
@@ -60,6 +60,9 @@ def get_sorted_and_filtered_products(args):
 
     if args['in_stock'] == 1:
         query = query.filter(Product.quantity > 0)
+
+    if args['search']:
+        query = query.filter(Product.name.ilike('%' + args['search'] + '%'))
 
     if args['category_name']:
         # check if the category_name is in English. Then it means it's a parent category
@@ -126,7 +129,7 @@ def get_products_by_category_id_sorted_by_price(category_id, direction):
         return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
 
 
-def get_all_products_from_order(order_id):
+def get_products_by_order_id(order_id):
     order_items = get_order_by_id(order_id).order_items_json
     products = []
     for item in order_items:
@@ -143,7 +146,7 @@ def producer_has_product_with_such_name(args):
         return True
 
 
-def search_products_by_param(search_query, product_id, category_id):
+def search_products_by_param(search_query, product_id=None, category_id=None):
     vector = inspect_search_vectors(Product)[0]
     try:
         result = db.session.query(Product).filter(
@@ -157,6 +160,11 @@ def search_products_by_param(search_query, product_id, category_id):
         result = result.filter_by(category_id=category_id)
     return result.order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query))))
 
+
+def search_by_keyword(search_key_word):
+    search_query = '&'.join(search_key_word.split(' '))
+    result = search_products_by_param(search_query)
+    return product_schema_list.dump(result).data
 
 def post_product(args):
     abort_if_producer_doesnt_exist_or_get(args['producer_id'])

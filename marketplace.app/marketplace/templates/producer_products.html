@@ -6,9 +6,6 @@
 
     <main>
         <div class="container products">
-            <section class="breadcrumbs">
-                <span><a class="active">Товары</a></span>
-            </section>
             {% if products %}
                 <section class="product-filter">
                     <form action="#" class="row">
@@ -20,7 +17,7 @@
                             </select>
                         </div>
                         <div class="filter-block col-12 col-sm-4">
-                            <input class="form-control mr-sm-2" type="text" placeholder="Поиск">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Поиск" id="producerProductsSearch">
                         </div>
                         <div class="filter-block col-12 col-sm-4">
                             <div class="form-check">

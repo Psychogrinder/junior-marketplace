@@ -29,7 +29,7 @@
 
 .header-login,
 .header-card {
-    height: 40px;
+    height: 38px;
     display: flex;
     justify-content: center;
 }
@@ -38,9 +38,17 @@
 .header-login:active,
 .header-card:hover,
 .header-card:active {
-    background: #FF7851;
-    padding-right: 0;
+    background: #ee686e;;
     border-radius: 5px;
+}
+
+.header-card:hover {
+    text-decoration: none;
+}
+
+.header-card {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .nav-link-producer_orders{
@@ -48,9 +56,6 @@
 	align-items: center;
 }
 
-.cart_nav_container{
-	width: 80px;
-}
 
 .cart_nav_link_container{
 	display: flex;
@@ -60,6 +65,7 @@
 .header_card_badge{
 	display: flex;
 	align-items: center;
+    justify-content: center;
 }
 
 .nav-link .badge{
@@ -69,6 +75,21 @@
 @media (max-width: 990px) {
     .navbar-collapse .header-card,
     .navbar-collapse .header-login {
-        display: inline;
+        display: inline-block;
     }
+}
+
+.cart_nav_container .header-cart {
+    min-width: 35px;
+    height: auto;
+}
+
+.header-dropdown-toggle .dropdown-menu .btn-secondary:hover, .header-dropdown-toggle .dropdown-menu .btn-secondary:active {
+    background: #ee686e;
+}
+
+.dropdown-item.active,
+.dropdown-item:active,
+.dropdown-item:hover {
+    background-color: #ee686e;
 }

@@ -6,12 +6,9 @@
 
 {% block body %}
     <main id="cartMain">
-        <div class="container">
-            <section class="breadcrumbs">
-                <span><a class="active">Корзина</a></span>
-            </section>
-        </div>
-
+    <div class="container">
+        <h2>КОРЗИНА</h2>
+    </div>
         {% if products %}
             <section class="notEmptyCart">
                 {% for product in products %}
@@ -67,12 +64,11 @@
                         </div>
                     </section>
                 {% endfor %}
-
                 <div class="container total_container ">
                     <div class="row">
                         <div class="col-8 total_box">
-                            <span>ИТОГО:</span>
-                            <span class="total_value" id="totalCost"></span><span> ₽</span>
+                            <span>ИТОГО: &nbsp;</span>
+                            <span class="total_value" id="totalCost"></span><span class="total_value"> ₽</span>
                         </div>
                         <div class="col-4 order_box">
                             <a href={{ url_for('order_registration', user_id = current_user.id) }} class="btn btn-primary

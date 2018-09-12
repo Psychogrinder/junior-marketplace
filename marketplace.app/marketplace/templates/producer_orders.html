@@ -1,290 +1,286 @@
 {% extends 'base.html' %}
 
 {% block meta_title %}
-Мои заказы
+    Мои заказы
 {% endblock %}
 
 {% block body %}
-<main class="producer-orders">
-    <div class="container">
-        <section class="breadcrumbs">
-            <span><a class="active">Мои заказы</a></span>
-        </section>
-        {% if orders %}
-        <div class="row">
-            <div class="col-2">Статус</div>
-            <div class="col-4">
-                <select class="form-control select-order-status" name="subcategory" id="statuses">
-                    <option value="Все" selected>Все</option>
-                    <option value="Не обработан">Не обработан</option>
-                    <option value="Обрабатывается">Обрабатывается</option>
-                    <option value="Отправлен">Отправлен</option>
-                    <option value="Готов к самовывозу">Готов к самовывозу</option>
-                    <option value="Завершён">Завершён</option>
-                </select>
-            </div>
-            <div class="col-4">
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Найти...">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
-                </form>
-            </div>
-            <div class="col-1">
-                <div class="dropdown">
-                    <button class="btn btn-info dropdown-toggle" type="button" id="tableSelect"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Вид
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#" id="common_mode" onclick="showCommon()">Обычный</a>
-                        <a class="dropdown-item" href="#" id="table_mode" onclick="showTable()">Таблица</a>
+    <main class="producer-orders">
+        <div class="container">
+            {% if orders %}
+                <div class="row">
+                    <div class="col-lg-2 col-md-4">
+                        <select class="form-control select-order-status" name="subcategory" id="statuses">
+                            <option value="Все" selected>Все</option>
+                            <option value="Не обработан">Не обработан</option>
+                            <option value="Обрабатывается">Обрабатывается</option>
+                            <option value="Отправлен">Отправлен</option>
+                            <option value="Готов к самовывозу">Готов к самовывозу</option>
+                            <option value="Завершён">Завершён</option>
+                        </select>
                     </div>
-                </div>
-            </div>
-        </div>
-        {% else %}
-            <h2>У Вас нет заказов</h2>
-        {% endif %}
-    </div>
-
-    <!-- Common view -->
-    <div class="common_global_container" id="producerOrderSection">
-        {% for order in orders %}
-        <div class="container item_order">
-            <div class="row order_history_info">
-                <div class="col-6">
-                    <span>№ {{ order.id }}</span>
-                </div>
-                <div class="col-2">
-                    {{ (order.order_timestamp | string).split(' ')[0] }}
-                </div>
-                <div class="col-3">
-                    <span>СУММА ЗАКАЗА: {{ order.total_cost }}</span>
-                </div>
-            </div>
-            {% for product in products[order.id] %}
-            <div class="row">
-                <div class="col-2">
-                    <img class="order-product-photo"
-                         src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">
-                </div>
-                <div class="col-4">
-                    <div class="row">
-                        <p class="col-6">Название</p>
-                        <p class="col-6 main-text">{{ product.name }}</p>
+                    <div class="col-lg-4 col-md-6">
+                        <form class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Найти...">
+                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
+                        </form>
                     </div>
-                    <div class="row">
-                        <p class="col-6">Цена</p>
-                        <p class="col-6 main-text">{{ product.price }}</p>
-                    </div>
-                    <div class="row">
-                        <p class="col-6">Артикул</p>
-                        <p class="col-6 main-text">#{{ product.id }}</p>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="row">
-                                    <span class="col-6">
-                                        Вес:
-                                    </span>
-                        <span class="main-text col-6">
-                                       {% if (product.weight | string).split('.')[1] == '0' %}
-                                           {{ (product.weight | string).split('.')[0] }}
-                                       {% else %}
-                                           {{ product.weight }}
-                                       {% endif %}
-                                        {{ product.measurement_unit }}
-                                    </span>
-                    </div>
-                </div>
-                <div class="col-2">Количество:</div>
-                <div class="col-1 main-text">{{ order.order_items_json[product.id | string] }}</div>
-            </div>
-            {% endfor %}
-            <div class="row">
-                <div class="col-6">
-                    <div class="row producer-order-delivery">
-                        <div class="col-4">Доставка:</div>
-                        <div class="col-4 main-text">{{ order.delivery_method }}</div>
-                    </div>
-                    <div class="row producer-order-delivery">
-                        <div class="col-4">Адрес:</div>
-                        <div class="col-4 main-text">{{ order.delivery_address }}</div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="row">
-                        <div class="col-4">Покупатель:</div>
-                        <div class="col-8 main-text">{{ order.first_name }} {{ order.last_name }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">Телефон:</div>
-                        <div class="col-8 main-text">{{ order.consumer_phone }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">E-mail:</div>
-                        <div class="col-8 main-text">{{ order.consumer_email }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">Статус заказа:</div>
-                        <div class="col-8">
-                            <select class="form-control select-order-status" disabled name="subcategory"
-                                    id="changeOrderStatusSelect">
-                                {% if order.status == 'Обрабатывается' %}
-                                <option value="Обрабатывается" selected>Обрабатывается</option>
-                                {% else %}
-                                <option value="Обрабатывается">Обрабатывается</option>
-                                {% endif %}
-                                {% if order.status == 'Не обработан' %}
-                                <option value="Не обработан" selected>Не обработан</option>
-                                {% else %}
-                                <option value="Не обработан">Не обработан</option>
-                                {% endif %}
-                                {% if order.status == 'Отправлен' %}
-                                <option value="Отправлен" selected>Отправлен</option>
-                                {% else %}
-                                <option value="Отправлен">Отправлен</option>
-                                {% endif %}
-                                {% if order.status == 'Готов к самовывозу' %}
-                                <option value="Готов к самовывозу" selected>Готов к самовывозу</option>
-                                {% else %}
-                                <option value="Готов к самовывозу">Готов к самовывозу</option>
-                                {% endif %}
-                                {% if order.status == 'Завершен' %}
-                                <option value="Завершен" selected>Завершен</option>
-                                {% else %}
-                                <option value="Завершен">Завершен</option>
-                                {% endif %}
-                            </select>
-                            <button class="btn btn-warning common-view-btn" id="changeOrderStatusBtn">Изменить
+                    <div class="col-lg-1 col-md-2">
+                        <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="tableSelect"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Вид
                             </button>
-                            <button class="btn btn-success common-view-btn" id="saveStatusOrderBtn"
-                                    onclick="changeOrderStatus({{ order.id }})">Сохранить
-                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" id="common_mode" onclick="showCommon()">Обычный</a>
+                                <a class="dropdown-item" href="#" id="table_mode" onclick="showTable()">Таблица</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% else %}
+                <h2>У Вас нет заказов</h2>
+            {% endif %}
         </div>
-        {% endfor %}
-    </div>
 
-    <!-- Table view -->
-
-    <div class="table_global_container" id="producerOrderSectionTable">
-        {% for order in orders %}
-        <div class="container table_container hidden">
-            <div class="table_global_row">
-                <div class="table_global_cell">
-                    <div>Номер заказа</div>
-                    <div class="main-text">#{{ order.id }}</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Покупатель</div>
-                    <div class="main-text">{{ order.first_name }} {{ order.last_name }}</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Телефон</div>
-                    <div class="main-text">{{ order.consumer_phone }}</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>E-mail</div>
-                    <div class="main-text">{{ order.consumer_email }}</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Дата заказа</div>
-                    <div class="main-text">{{ (order.order_timestamp | string).split(' ')[0] }}</div>
-                </div>
-            </div>
-            <div class="table_global_row">
-                <div class="table_global_cell">
-                    <div>Товар</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Цена</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Артикул</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Количество</div>
-                </div>
-            </div>
-            {% for product in products[order.id] %}
-            <div class="table_global_row">
-                <div class="table_global_cell producer-orders-item">
-                    <div class="main-text">{{ product.name }}</div>
-                </div>
-                <div class="table_global_cell producer-orders-item">
-                    <div class="main-text">{{ product.price }}/
-                        {% if (product.weight | string).split('.')[1] == '0' %}
-                        {{ (product.weight | string).split('.')[0] }}
-                        {% else %}
-                        {{ product.weight }}
-                        {% endif %} {{ product.measurement_unit }}
-                    </div>
-                </div>
-                <div class="table_global_cell producer-orders-item">
-                    <div class="main-text">{{ product.id }}</div>
-                </div>
-                <div class="table_global_cell producer-orders-item">
-                    <div class="main-text">{{ order.order_items_json[product.id | string] }}</div>
-                </div>
-            </div>
-            {% endfor %}
-            <div class="table_global_row">
-                <div class="table_global_cell">
-                    <div>Способ доставки</div>
-                    <div class="main-text">{{ order.delivery_method }}</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Адрес</div>
-                    <div class="main-text">{{ order.delivery_address }}</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Сумма заказа</div>
-                    <div class="main-text">{{ order.total_cost }}</div>
-                </div>
-                <div class="table_global_cell">
-                    <div>Статус заказа</div>
-                    <select class="form-control select-order-status" id="changeOrderStatusSelectTable"
-                            name="subcategory"
-                            disabled>
-                        {% if order.status == 'Обрабатывается' %}
-                        <option value="Обрабатывается" selected>Обрабатывается</option>
-                        {% else %}
-                        <option value="Обрабатывается">Обрабатывается</option>
-                        {% endif %}
-                        {% if order.status == 'Не обработан' %}
-                        <option value="Не обработан" selected>Не обработан</option>
-                        {% else %}
-                        <option value="Не обработан">Не обработан</option>
-                        {% endif %}
-                        {% if order.status == 'Отправлен' %}
-                        <option value="Отправлен" selected>Отправлен</option>
-                        {% else %}
-                        <option value="Отправлен">Отправлен</option>
-                        {% endif %}
-                        {% if order.status == 'Готов к самовывозу' %}
-                        <option value="Готов к самовывозу" selected>Готов к самовывозу</option>
-                        {% else %}
-                        <option value="Готов к самовывозу">Готов к самовывозу</option>
-                        {% endif %}
-                        {% if order.status == 'Завершен' %}
-                        <option value="Завершен" selected>Завершен</option>
-                        {% else %}
-                        <option value="Завершен">Завершен</option>
-                        {% endif %}
-                    </select>
-                </div>
-                <div class="table_global_cell">
-                    <button class="btn btn-warning" id="changeOrderStatusBtnTable">Изменить</button>
-                    <button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable"
-                            onclick="changeOrderStatusTable({{ order.id }})">Сохранить
-                    </button>
-                </div>
-            </div>
+        <!-- Common view -->
+        <div class="common_global_container" id="producerOrderSection">
+{#            {% for order in orders %}#}
+{#                <div class="container item_order">#}
+{#                    <div class="row order_history_info">#}
+{#                        <div class="col-6">#}
+{#                            <span>#{{ order.id }}</span>#}
+{#                        </div>#}
+{#                        <div class="col-2">#}
+{#                            {{ (order.order_timestamp | string).split(' ')[0] }}#}
+{#                        </div>#}
+{#                        <div class="col-3">#}
+{#                            <span>СУММА ЗАКАЗА: {{ order.total_cost }}</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    {% for product in products[order.id] %}#}
+{#                        <div class="row">#}
+{#                            <div class="col-2">#}
+{#                                <img class="order-product-photo"#}
+{#                                     src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt="" width="150px">#}
+{#                            </div>#}
+{#                            <div class="col-4">#}
+{#                                <div class="row">#}
+{#                                    <p class="col-6">Название</p>#}
+{#                                    <p class="col-6 main-text">{{ product.name }}</p>#}
+{#                                </div>#}
+{#                                <div class="row">#}
+{#                                    <p class="col-6">Цена</p>#}
+{#                                    <p class="col-6 main-text">{{ product.price }}</p>#}
+{#                                </div>#}
+{#                                <div class="row">#}
+{#                                    <p class="col-6">Артикул</p>#}
+{#                                    <p class="col-6 main-text">#{{ product.id }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="col-2">#}
+{#                                <div class="row">#}
+{#                                    <span class="col-6">#}
+{#                                        Вес:#}
+{#                                    </span>#}
+{#                                    <span class="main-text col-6">#}
+{#                                       {% if (product.weight | string).split('.')[1] == '0' %}#}
+{#                                           {{ (product.weight | string).split('.')[0] }}#}
+{#                                       {% else %}#}
+{#                                           {{ product.weight }}#}
+{#                                       {% endif %}#}
+{#                                        {{ product.measurement_unit }}#}
+{#                                    </span>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="col-2">Количество:</div>#}
+{#                            <div class="col-1 main-text">{{ order.order_items_json[product.id | string] }}</div>#}
+{#                        </div>#}
+{#                    {% endfor %}#}
+{#                    <div class="row">#}
+{#                        <div class="col-6">#}
+{#                            <div class="row producer-order-delivery">#}
+{#                                <div class="col-4">Доставка:</div>#}
+{#                                <div class="col-4 main-text">{{ order.delivery_method }}</div>#}
+{#                            </div>#}
+{#                            <div class="row producer-order-delivery">#}
+{#                                <div class="col-4">Адрес:</div>#}
+{#                                <div class="col-4 main-text">{{ order.delivery_address }}</div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="col-6">#}
+{#                            <div class="row">#}
+{#                                <div class="col-4">Покупатель:</div>#}
+{#                                <div class="col-8 main-text">{{ order.first_name }} {{ order.last_name }}</div>#}
+{#                            </div>#}
+{#                            <div class="row">#}
+{#                                <div class="col-4">Телефон:</div>#}
+{#                                <div class="col-8 main-text">{{ order.consumer_phone }}</div>#}
+{#                            </div>#}
+{#                            <div class="row">#}
+{#                                <div class="col-4">E-mail:</div>#}
+{#                                <div class="col-8 main-text">{{ order.consumer_email }}</div>#}
+{#                            </div>#}
+{#                            <div class="row">#}
+{#                                <div class="col-4">Статус заказа:</div>#}
+{#                                <div class="col-8">#}
+{#                                    <select class="form-control select-order-status" disabled name="subcategory"#}
+{#                                            id="changeOrderStatusSelect">#}
+{#                                        {% if order.status == 'Обрабатывается' %}#}
+{#                                            <option value="Обрабатывается" selected>Обрабатывается</option>#}
+{#                                        {% else %}#}
+{#                                            <option value="Обрабатывается">Обрабатывается</option>#}
+{#                                        {% endif %}#}
+{#                                        {% if order.status == 'Не обработан' %}#}
+{#                                            <option value="Не обработан" selected>Не обработан</option>#}
+{#                                        {% else %}#}
+{#                                            <option value="Не обработан">Не обработан</option>#}
+{#                                        {% endif %}#}
+{#                                        {% if order.status == 'Отправлен' %}#}
+{#                                            <option value="Отправлен" selected>Отправлен</option>#}
+{#                                        {% else %}#}
+{#                                            <option value="Отправлен">Отправлен</option>#}
+{#                                        {% endif %}#}
+{#                                        {% if order.status == 'Готов к самовывозу' %}#}
+{#                                            <option value="Готов к самовывозу" selected>Готов к самовывозу</option>#}
+{#                                        {% else %}#}
+{#                                            <option value="Готов к самовывозу">Готов к самовывозу</option>#}
+{#                                        {% endif %}#}
+{#                                        {% if order.status == 'Завершён' %}#}
+{#                                            <option value="Завершён" selected>Завершён</option>#}
+{#                                        {% else %}#}
+{#                                            <option value="Завершён">Завершён</option>#}
+{#                                        {% endif %}#}
+{#                                    </select>#}
+{#                                    <button class="btn btn-warning common-view-btn" id="changeOrderStatusBtn">Изменить#}
+{#                                    </button>#}
+{#                                    <button class="btn btn-success common-view-btn" id="saveStatusOrderBtn"#}
+{#                                            onclick="changeOrderStatus({{ order.id }})">Сохранить#}
+{#                                    </button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
         </div>
-        {% endfor %}
-    </div>
-</main>
+
+        <!-- Table view -->
+
+        <div class="table_global_container" id="producerOrderSectionTable">
+{#            {% for order in orders %}#}
+{#                <div class="container table_container hidden">#}
+{#                    <div class="table_global_row">#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Номер заказа</div>#}
+{#                            <div class="main-text">#{{ order.id }}</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Покупатель</div>#}
+{#                            <div class="main-text">{{ order.first_name }} {{ order.last_name }}</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Телефон</div>#}
+{#                            <div class="main-text">{{ order.consumer_phone }}</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>E-mail</div>#}
+{#                            <div class="main-text">{{ order.consumer_email }}</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Дата заказа</div>#}
+{#                            <div class="main-text">{{ (order.order_timestamp | string).split(' ')[0] }}</div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="table_global_row">#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Товар</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Цена</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Артикул</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Количество</div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    {% for product in products[order.id] %}#}
+{#                        <div class="table_global_row">#}
+{#                            <div class="table_global_cell producer-orders-item">#}
+{#                                <div class="main-text">{{ product.name }}</div>#}
+{#                            </div>#}
+{#                            <div class="table_global_cell producer-orders-item">#}
+{#                                <div class="main-text">{{ product.price }}/#}
+{#                                    {% if (product.weight | string).split('.')[1] == '0' %}#}
+{#                                        {{ (product.weight | string).split('.')[0] }}#}
+{#                                    {% else %}#}
+{#                                        {{ product.weight }}#}
+{#                                    {% endif %} {{ product.measurement_unit }}#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="table_global_cell producer-orders-item">#}
+{#                                <div class="main-text">{{ product.id }}</div>#}
+{#                            </div>#}
+{#                            <div class="table_global_cell producer-orders-item">#}
+{#                                <div class="main-text">{{ order.order_items_json[product.id | string] }}</div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    {% endfor %}#}
+{#                    <div class="table_global_row">#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Способ доставки</div>#}
+{#                            <div class="main-text">{{ order.delivery_method }}</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Адрес</div>#}
+{#                            <div class="main-text">{{ order.delivery_address }}</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Сумма заказа</div>#}
+{#                            <div class="main-text">{{ order.total_cost }}</div>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <div>Статус заказа</div>#}
+{#                            <select class="form-control select-order-status" id="changeOrderStatusSelectTable"#}
+{#                                    name="subcategory"#}
+{#                                    disabled>#}
+{#                                {% if order.status == 'Обрабатывается' %}#}
+{#                                    <option value="Обрабатывается" selected>Обрабатывается</option>#}
+{#                                {% else %}#}
+{#                                    <option value="Обрабатывается">Обрабатывается</option>#}
+{#                                {% endif %}#}
+{#                                {% if order.status == 'Не обработан' %}#}
+{#                                    <option value="Не обработан" selected>Не обработан</option>#}
+{#                                {% else %}#}
+{#                                    <option value="Не обработан">Не обработан</option>#}
+{#                                {% endif %}#}
+{#                                {% if order.status == 'Отправлен' %}#}
+{#                                    <option value="Отправлен" selected>Отправлен</option>#}
+{#                                {% else %}#}
+{#                                    <option value="Отправлен">Отправлен</option>#}
+{#                                {% endif %}#}
+{#                                {% if order.status == 'Готов к самовывозу' %}#}
+{#                                    <option value="Готов к самовывозу" selected>Готов к самовывозу</option>#}
+{#                                {% else %}#}
+{#                                    <option value="Готов к самовывозу">Готов к самовывозу</option>#}
+{#                                {% endif %}#}
+{#                                {% if order.status == 'Завершён' %}#}
+{#                                    <option value="Завершён" selected>Завершён</option>#}
+{#                                {% else %}#}
+{#                                    <option value="Завершён">Завершён</option>#}
+{#                                {% endif %}#}
+{#                            </select>#}
+{#                        </div>#}
+{#                        <div class="table_global_cell">#}
+{#                            <button class="btn btn-warning" id="changeOrderStatusBtnTable">Изменить</button>#}
+{#                            <button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable"#}
+{#                                    onclick="changeOrderStatusTable({{ order.id }})">Сохранить#}
+{#                            </button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
+        </div>
+    </main>
 {% endblock %}

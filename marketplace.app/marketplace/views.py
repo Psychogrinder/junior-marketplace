@@ -1,10 +1,11 @@
-from flask import render_template, jsonify, redirect, url_for, flash, abort
+from flask import render_template, jsonify, redirect, url_for, flash, abort, request
 import os
 from marketplace.forms import ResetPasswordForm
 import time
 from flask_restful import reqparse
 from marketplace import app, email_tools, db
-from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils
+from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils, \
+    comment_utils
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -39,8 +40,11 @@ def product_card(product_id):
     product = product_utils.get_product_by_id(product_id)
     category = category_utils.get_category_by_id(product.category_id)
     producer = producer_utils.get_producer_by_id(product.producer_id)
+    comments = comment_utils.get_comments_by_product_id(product_id)
+    next_page = comments.next_num
     return render_template('product_card.html', category_name=category.name.title(), product=product,
-                           producer_name=producer.name.title(), category=category, current_user=current_user)
+                           producer_name=producer.name.title(), category=category, current_user=current_user,
+                           comments=comments.items, next_page=next_page)
 
 
 # товары производителя
@@ -133,7 +137,7 @@ def order_history(user_id):
     all_products = []
     producer_names = {}
     for order in orders:
-        all_products += (product_utils.get_all_products_from_order(order.id))
+        all_products += (product_utils.get_products_by_order_id(order.id))
         producer_names[order.producer_id] = producer_utils.get_producer_by_id(int(order.producer_id)).name
     if current_user.id == int(user_id):
         return render_template('order_history.html', orders=orders, current_user=current_user, products=all_products,
@@ -165,8 +169,8 @@ def producer_orders(producer_id):
         orders = Order.query.filter_by(producer_id=int(producer_id)).all()
         products = {}
         for order in orders:
-            products[order.id] = order_utils.get_all_products_from_order(order.id)
-        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products )
+            products[order.id] = order_utils.get_products_by_order_id(order.id)
+        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products)
     else:
         return redirect(url_for('index'))
 
@@ -228,6 +232,35 @@ def password_recovery(token):
         flash('Пароль успешно изменен', category='info')
         return redirect(url_for('index'))
     return render_template('reset_password.html', form=form)
+
+  
+@app.route('/search')
+def global_search():
+    products = product_utils.search_by_keyword(request.args.get('find'))
+    return render_template('global_search_results.html', products=products)
+
+
+@app.route('/review')
+def review():
+    # Если неавторизованный пользователь пытается открыть эту страницу
+    if not hasattr(current_user, 'id'):
+        return abort(404)
+
+    order_id = request.args.get('order_id')
+    order = order_utils.get_order_by_id(order_id)
+    current_user_id = current_user.id
+    # Если пользователь пытается оставить отзыв на чужой заказ
+    if current_user_id != order.consumer_id:
+        return abort(404)
+
+    # Если пользователь вновь пытается оставить отзыв на тот же заказ
+    if order.reviewed:
+        return abort(404)
+
+    products = product_utils.get_products_by_order_id(order_id)
+    number_of_products = len(products)
+    return render_template('review.html', order=order, products=products, number_of_products=number_of_products)
+
 
 
 @app.errorhandler(404)

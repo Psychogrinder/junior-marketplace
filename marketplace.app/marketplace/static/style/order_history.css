@@ -1,6 +1,9 @@
+
 .order_history_info {
     margin: 30px 0;
-    color: #242525e0;
+    color: #5a5a5a;
+    font-weight: 700;
+    font-size: 1rem;
 }
 
 .cart_product_stock_title span,
@@ -58,4 +61,46 @@
 
 .order-block-separator:last-child {
     border-bottom: none;
+}
+
+.consumer-review-block form {
+    display: flex;
+    flex-direction: column;
+}
+
+.consumer-review-block img {
+    height: auto;
+}
+
+.consumer-review-block {
+    margin-bottom: 2rem;
+}
+
+
+.consumer-review-block textarea {
+    height: 100%;
+    border-radius: 5px;
+    border-color: #cac8c8;
+}
+
+.consumer-review-block form {
+    height: 100%;
+}
+
+.consumer-review-send button {
+    display: block;
+    margin-left: auto;
+}
+
+.consumer-review-block p {
+    font-size: 1.2rem;
+    color: #5a5a5a;
+}
+
+.consumer-review-block label {
+    color: #5a5a5a;
+}
+
+.order-history-product {
+    margin-bottom: 1rem;
 }

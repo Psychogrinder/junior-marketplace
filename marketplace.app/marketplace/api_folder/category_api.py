@@ -20,7 +20,7 @@ class CategoryRest(Resource):
 class BaseCategories(Resource):
 
     @get_cache
-    def get(self, path, cache):
+    def get(self, path, cache, **kwargs):
         if cache is None:
             categories = category_schema_list.dump(category_utils.get_all_base_categories()).data
             return caching_utils.cache_json_and_get(path=path, response=categories), 200

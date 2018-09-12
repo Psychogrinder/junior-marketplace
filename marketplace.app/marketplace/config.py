@@ -37,11 +37,13 @@ class Base(object):
 
     CSRF_ENABLED = True
 
+    COMMENTS_PER_PAGE = 2
+
 
 class Development(Base):
     SQLALCHEMY_DATABASE_URI = (
-        os.getenv('SQLALCHEMY_DATABASE_URI')
-        or 'postgresql://postgres:1234@localhost/marketplace.db'
+            os.getenv('SQLALCHEMY_DATABASE_URI')
+            or 'postgresql://postgres:1234@localhost/marketplace.db'
     )
 
     SECRET_KEY = 'secret-key'

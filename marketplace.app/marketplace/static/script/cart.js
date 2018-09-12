@@ -16,7 +16,7 @@ var putToCart = function (consumer_id, product_id) {
                 }
                 document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
                 var hulla = new hullabaloo();
-                hulla.send("Товар успешно добавлен в корзину", "secondary");
+                hulla.send("Товар успешно добавлен в корзину", "default");
 
             });
     }

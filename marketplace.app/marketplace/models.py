@@ -173,7 +173,7 @@ class Order(db.Model):
     status = db.Column(db.String(128))
     delivery_method = db.Column(db.String(128))
     delivery_address = db.Column(db.String(128))
-    order_timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+    order_timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     shipping_timestamp = db.Column(db.DateTime)
     consumer_phone = db.Column(db.String(128))
     consumer_email = db.Column(db.String(128))
@@ -181,6 +181,7 @@ class Order(db.Model):
     producer_id = db.Column(db.Integer)
     first_name = db.Column(db.String(128))
     last_name = db.Column(db.String(128))
+    reviewed = db.Column(db.Boolean, default=False)
 
     def __init__(self, total_cost, order_items_json, delivery_method, delivery_address, consumer_phone, consumer_email,
                  consumer_id, producer_id, status='Не обработан', first_name='', last_name=''):
@@ -204,7 +205,7 @@ class Order(db.Model):
 
     def change_status(self, status):
         if status == 'shipped':
-            self.shipping_timestamp = datetime.utcnow()
+            self.shipping_timestamp = datetime.utcnow
         self.status = status
 
 
@@ -271,6 +272,21 @@ class Category(db.Model):
 
     def get_subcategories(self):
         return Category.query.filter_by(parent_id=self.id).all()
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer)
+    consumer_id = db.Column(db.Integer)
+    consumer_name = db.Column(db.String(128))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    body = db.Column(db.String(512))
+
+    def __init__(self, product_id, consumer_id, body, consumer_name='Покупатель'):
+        self.product_id = product_id
+        self.consumer_id = consumer_id
+        self.body = body
+        self.consumer_name = consumer_name
 
 
 @login.user_loader
