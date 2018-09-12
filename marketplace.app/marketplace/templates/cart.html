@@ -76,7 +76,7 @@
                             <span class="total_value" id="totalCost"></span><span class="total_value"> ₽</span>
                         </div>
                         <div class="col-4 order_box">
-                            <a href={{ url_for('order_registration', user_id = current_user.id) }} class="btn
+                            <a href="{{ url_for('order_registration', user_id = current_user.id) }}" class="btn
                                btn-primary
                                btn_order" id="placeOrderButton">
                             ОФОРМИТЬ ЗАКАЗ
