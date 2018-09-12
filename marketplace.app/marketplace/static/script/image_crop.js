@@ -14,8 +14,6 @@ function setSrcAttr(type) {
     })
 }
 
-console.log('addr[5]' + addr[5]);
-
 if ((addr[3] === 'producer') && (addr[5] === 'edit')) {
     var id = addr[4];
     var type = 'producers';
