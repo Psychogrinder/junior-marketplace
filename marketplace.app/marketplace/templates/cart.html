@@ -27,7 +27,9 @@
                                     <p>Вес</p>
                                 </div>
                                 <div class="col-3 cart_product_stock_info">
-                                    <p>{{ product.name }}</p>
+                                    <a href="{{ url_for('product_card', product_id=product.id ) }}">
+                                        <p>{{ product.name }}</p>
+                                    </a>
                                     <p>{{ product.price }}</p>
                                     <p id="productIdCart">#{{ product.id }}</p>
                                     <p>
@@ -79,7 +81,7 @@
                             <a href="{{ url_for('order_registration', user_id = current_user.id) }}" class="btn
                                btn-primary
                                btn_order" id="placeOrderButton">
-                            ОФОРМИТЬ ЗАКАЗ
+                                ОФОРМИТЬ ЗАКАЗ
                             </a>
                         </div>
                     </div>
