@@ -36,17 +36,12 @@ function getComments(page_number) {
             } else {
                 $("#commentsNextPage").hide();
             }
-
-
         },
-        error: function (xhr) {
-            console.log(xhr)
-        }
     });
 }
 
 function updateCommentSection(page_number) {
-    getComments(page_number)
+    getComments(page_number);
 }
 
 $("#commentsNextPage").click(function () {
