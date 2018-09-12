@@ -17,7 +17,6 @@ $('#passwordRecovery').click(function () {
                     hulla.send("Ссылка для восстановления пароля прислана вам на почту", "default");
                 }
             }).fail(function (data, textStatus, xhr) {
-                console.log(data, textStatus);
                 $('.error-recovery-password').css('display', 'block');
         });
     }
