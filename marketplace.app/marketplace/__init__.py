@@ -12,6 +12,8 @@ import cssmin
 import jsmin
 from flask_mail import Mail
 from marketplace import _celery
+from influxdb import InfluxDBClient
+
 
 app = Flask(__name__)
 assets = Environment(app)
@@ -31,6 +33,11 @@ cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACH
                     db=app.config['CACHE_STORAGE_DB'])
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
 COMMENTS_PER_PAGE = app.config['COMMENTS_PER_PAGE']
+
+influx_client = InfluxDBClient(
+    host=app.config['INFLUX_HOST'],
+    database=app.config['INFLUX_DATABASE']
+)
 
 from marketplace import models, views, api_routes
 from marketplace.models import Admin
