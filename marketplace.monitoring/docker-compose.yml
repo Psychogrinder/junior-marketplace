@@ -8,7 +8,7 @@ networks:
   marketplace:
     external: true
 
-services: 
+services:
 
   influx:
     container_name: marketplace.influxdb
@@ -20,10 +20,12 @@ services:
     env_file: influxdb.env
     ports:
       - "8086:8086"
-  
+
   diamond:
     container_name: marketplace.diamond
     image: lesaux/diamond-containercollector
-    networks: 
+    networks:
       - marketplace
-    env_file: diamond.env
+    # env_file: diamond.env
+    depends_on:
+      - influx
