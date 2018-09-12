@@ -70,7 +70,6 @@ $uploadCrop = $('#upload-demo').croppie({
 
 
 $('#cropImagePop').on('shown.bs.modal', function () {
-    // alert('Shown pop');
     $uploadCrop.croppie('bind', {
         url: rawImg
     }).then(function () {
