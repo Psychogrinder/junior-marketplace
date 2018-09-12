@@ -18,10 +18,10 @@
                 </a>
             </p>
         </div>
-        <form action="#">
+        <form action="#" data-parsley-validate>
             <div class="row edit-profile-item">
                 <label for="consumer_first_name" class="col-4 col-sm-2">Имя</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="consumer_first_name" placeholder="Иван" value={{user.first_name}}>
+                <input type="text" class="form-control col-8 col-sm-4" id="consumer_first_name" placeholder="Иван" value={{user.first_name}} data-parsley-pattern="(?!^\d+$)^.+$">
             </div>
             <div class="row edit-profile-item">
                 <label for="consumer_last_name" class="col-4 col-sm-2">Фамилия</label>
