@@ -81,9 +81,9 @@ def get_formatted_orders_by_consumer_id(consumer_id: int) -> list:
     Функция для отображения заказов на странице истории заказов потребителя.
     """
     query = db.session.query(Order.id, Order.status, Order.delivery_method, Order.order_timestamp, Order.total_cost,
-                             Order.order_items_json, Producer.name.label('producer_name')).filter(
+                             Order.order_items_json, Order.reviewed, Producer.name.label('producer_name')).filter(
         Order.producer_id == Producer.id).filter_by(consumer_id=consumer_id).all()
-    order_schema = ("id", "status", "delivery_method", "placement_date", "cost", "items", "producer_name")
+    order_schema = ("id", "status", "delivery_method", "placement_date", "cost", "items", "reviewed", "producer_name")
     item_schema = ('name', 'price', 'id', 'weight', 'measurement_unit', 'photo_url')
     orders = []
     for order in query:
