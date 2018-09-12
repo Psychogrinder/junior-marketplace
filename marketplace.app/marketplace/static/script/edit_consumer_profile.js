@@ -17,7 +17,9 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(consumerObject),
             success: function(data, status) {
-                location.replace('/user/' + consumer_id);
+                if ($('.parsley-error').length == 0) {
+                    location.replace('/user/' + consumer_id);
+                }
             }
         });
     });
