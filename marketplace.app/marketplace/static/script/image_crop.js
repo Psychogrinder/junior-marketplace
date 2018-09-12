@@ -31,6 +31,14 @@ else if ((addr[3] === 'producer') && (addr[5] === 'products')) {
     setSrcAttr(type);
 }
 
+else if ((addr[3] === 'producer') && (addr[5] === 'create_product')) {
+    var type = 'products';
+    viewportHeight = 117;
+    imageWidth = 255;
+    imageHeight = 150;
+    $(".gambar").attr("src", '/static/img/standard.png');
+}
+
 var $uploadCrop,
     tempFilename,
     rawImg,
@@ -62,7 +70,6 @@ $uploadCrop = $('#upload-demo').croppie({
 
 
 $('#cropImagePop').on('shown.bs.modal', function () {
-    // alert('Shown pop');
     $uploadCrop.croppie('bind', {
         url: rawImg
     }).then(function () {

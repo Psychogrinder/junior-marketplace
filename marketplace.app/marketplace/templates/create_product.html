@@ -9,12 +9,7 @@
             <span><a href="{{ url_for('producer_products', producer_id = current_user.id )}}">Товары</a></span>
             <span><a class="active">Создание товара</a></span>
         </section>
-        <form id="upload-new-product-image" method="post" enctype="multipart/form-data">
-            <div class="row edit-product-item">
-                <label class="col-5 col-sm-3">Выберите изображение</label>
-                <input name="image" type="file" class="form-control-file col-8 col-sm-4">
-            </div>
-        </form>
+        {% include 'inc/image_upload.html' %}
         <form id="createProductForm" action="#" data-parsley-validate>
             <div class="row edit-product-item">
                 <label for="createName" class="col-4 col-sm-2">Название</label>
