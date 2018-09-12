@@ -78,3 +78,8 @@ form .filter-block:first-child {
     margin: auto;
     margin-top: 2%;
 }
+
+.error-recovery-password {
+    color: #ee686e;
+    display: none;
+}

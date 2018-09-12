@@ -35,14 +35,12 @@ function getComments(page_number) {
             } else {
                 $("#commentsNextPage").hide();
             }
-
-
         },
     });
 }
 
 function updateCommentSection(page_number) {
-    getComments(page_number)
+    getComments(page_number);
 }
 
 $("#commentsNextPage").click(function () {
