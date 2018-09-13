@@ -21,13 +21,14 @@ class TestCase(unittest.TestCase):
                      'in_stock': None,      # 1
                      'search': None,
                      'page': 1,
-                     'next_page' : 2,
-                     'parent_id': 0
+                     'next_page': 2,
+
                      }
 
 
     def test_filtered_price(self):
         args = self.args
+        args['parent_id'] = 0
 
         self.slugs = getCategorySlugs(args)
 
@@ -42,10 +43,9 @@ class TestCase(unittest.TestCase):
             sorted = get_sorted_and_filtered_products(args)
             self.assertTrue(check_price(sorted, args['price']), 'Problem with UP sorting price')
 
-    @unittest.skip
+
     def test_filtered_by_producer(self):
         args = self.args
-
         producers = get_all_producers()
 
         for producer in producers:
@@ -53,8 +53,8 @@ class TestCase(unittest.TestCase):
             args['producer_name'] = producer.name
             sorted = get_sorted_and_filtered_products(args)
 
-            for prod in range(len(sorted)):
-                self.assertEqual(producer.name, sorted[prod]['producer_name'])
+            for product in range(len(sorted)):
+                self.assertEqual(producer.name, sorted['products'][product]['producer_name'])
 
 
     def test_filtered_popularity(self):
