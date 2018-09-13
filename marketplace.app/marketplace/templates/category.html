@@ -2,6 +2,10 @@
 
 {% block meta_title %}{{ category_name }}{% endblock %}
 
+{% block meta_description %}
+    <meta name="description" content='{{ category_name }} - {{ meta_description }}'>
+{% endblock %}
+
 {% block body %}
 
 <main>

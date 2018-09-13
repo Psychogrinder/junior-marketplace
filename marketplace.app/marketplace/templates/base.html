@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block meta_title %}{% endblock %} - Маркетплейс</title>
+    {% block meta_description %}{% endblock %}
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0">
+{#    <meta name="description" content="Маркетплейс фермерских товаров">#}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.2/minty/bootstrap.min.css">
     {% assets "css_all" %}
-    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
     {% endassets %}
-    <link rel="icon" type="image/svg" href={{ url_for(
-    'static', filename ="img/logo.svg") }}>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}">
 </head>
 <body>
 {% include 'inc/header.html' %}
@@ -29,7 +30,7 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.8.1/parsley.min.js" crossorigin="anonymous"></script>
 {% assets "js_all" %}
-<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
 </body>
 </html>
