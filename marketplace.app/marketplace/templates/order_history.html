@@ -20,7 +20,7 @@
                             <span>№ {{ order.id }}</span>
                         </div>
                         <div class="col-4 order-history-producer-name">
-                            <a href="{{ url_for('producer_profile', producer_id=order.producer_id ) }}">
+                            <a href="{{ url_for('producer_profile', producer_id=order.producer_id ) }}" class="order-history-producer-link">
                                 <span> {{ order.producer_name }}  </span>
                             </a>
                         </div>
