@@ -17,13 +17,11 @@ class Base(object):
     ALLOWED_UPLOAD_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'webp'])
     USER_IMAGE_DEFAULT_FORMAT = 'webp'
 
-    MAIL_SERVER = 'smtp.mail.ru'
-    MAIL_PORT = 2525
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_SERVER = 'smtp.yandex.ru'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME') or 'customers@xtramarket.ru'
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
-    MAIL_DEFAULT_SENDER = 'xtramarket@rambler.ru'
 
     RECOVERY_PASSWORD_URL_EXPIRES = 300 # 5 minutes
 
@@ -67,3 +65,5 @@ class Production(Base):
     CACHE_STORAGE_PORT = 6379
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
+
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
