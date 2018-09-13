@@ -12,7 +12,8 @@
 }
 
 .cart_product_stock_info {
-    color: #242525e0;
+    /* color: #242525e0; */
+    color: rgba(35,36,36,0.88);
 }
 
 .delivery_container {
