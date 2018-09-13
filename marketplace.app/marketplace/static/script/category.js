@@ -8,7 +8,7 @@ $(document).ready(function () {
                 producer_name: null,
                 quantity: null,
                 in_stock: 0,
-                page: 0
+                page: 1
             };
 
             // get base category name
@@ -50,8 +50,7 @@ $(document).ready(function () {
                 $.post('/api/v1/products/filter',
                     sorts_and_filters,
                     function (products, status) {
-                        delete_current_products();
-                        add_new_products(products);
+                        add_new_products(products.products, products.next_page);
                         display_valid_options(sorts_and_filters, base_category)
                     });
             }
@@ -63,7 +62,9 @@ $(document).ready(function () {
                 }
             }
 
-            function add_new_products(products) {
+            function add_new_products(products, next_page_number) {
+                console.log('========= products =========');
+                console.log(products);
                 for (var i = 0; i < products.length; i++) {
                     $("#productsByCategory").append(
                         '<div class="col-6 col-sm-3 card-item" >' +
@@ -85,11 +86,22 @@ $(document).ready(function () {
                             'Нет в наличии' +
                             '</p>');
                     }
-                    $("#productsByCategory").append(
-                    '<div id=page></div>'
-                    );
                 }
+                if (next_page_number) {
+                    $("#productsByCategory").append(
+                        '<div style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                    );
 
+                    let element = $('#page' + next_page_number);
+                    $(window).on('resize scroll', function () {
+                        if (isInViewport(element)) {
+                            element.remove();
+                            console.log(next_page_number);
+                            sorts_and_filters['page'] = next_page_number;
+                            update_page(sorts_and_filters, base_category);
+                        }
+                    });
+                }
             }
 
             function display_producers_that_have_the_selected_category(sorts_and_filters, base_category) {
@@ -152,12 +164,14 @@ $(document).ready(function () {
             }
 
             $('.filter-block select').change(function () {
-                sorts_and_filters['page'] = 0
+                delete_current_products();
+                sorts_and_filters['page'] = 1;
                 update_page(sorts_and_filters, base_category);
             });
 
             $('#in_stock_catalog_products').click(function () {
-                sorts_and_filters['page'] = 0
+                delete_current_products();
+                sorts_and_filters['page'] = 1;
                 if ($(this).is(":checked")) {
                     sorts_and_filters['in_stock'] = 1;
                 } else {
@@ -166,7 +180,19 @@ $(document).ready(function () {
                 update_page(sorts_and_filters, base_category);
             });
 
-        // добавляем товары на страницу при первой её загрзке
-        }   update_page(sorts_and_filters, base_category);
+            // добавляем товары на страницу при первой её загрзке
+            update_page(sorts_and_filters, base_category);
+        }
+
+        let isInViewport = function (element) {
+            var elementTop = element.offset().top;
+            var elementBottom = elementTop + element.outerHeight();
+
+            var viewportTop = $(window).scrollTop();
+            var viewportBottom = viewportTop + $(window).height();
+
+            return elementBottom > viewportTop && elementTop < viewportBottom;
+        };
     }
 );
+

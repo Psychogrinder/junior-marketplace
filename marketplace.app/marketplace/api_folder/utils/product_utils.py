@@ -3,7 +3,7 @@ import string
 from sqlalchemy import desc, func, exc
 from sqlalchemy_searchable import inspect_search_vectors
 
-from marketplace import db, app
+from marketplace import db, app, PRODUCTS_PER_PAGE
 from marketplace.api_folder.schemas import product_schema, product_schema_list
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
     abort_if_producer_doesnt_exist_or_get, abort_if_category_doesnt_exist_or_get
@@ -47,52 +47,51 @@ def get_products_from_a_parent_category(parent_category_id):
 
 
 def get_sorted_and_filtered_products(args):
+    print('in here')
     products = []
-    PRODUCTS_PER_PAGE = 12
+    # PRODUCTS_PER_PAGE = 16
     args['page'] = int(args['page'])
-    if args['page'] == 0:
-        query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
-                                 Producer.name.label('producer_name')).filter(
-            Product.producer_id == Producer.id)
+    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
+                             Producer.name.label('producer_name')).filter(
+        Product.producer_id == Producer.id)
 
-        if args['popularity']:
-            if args['popularity'] == 'down':
-                query = query.order_by(Product.times_ordered.desc())
+    if args['popularity']:
+        if args['popularity'] == 'down':
+            query = query.order_by(Product.times_ordered.desc())
 
-        if args['producer_name']:
-            query = query.filter(Producer.name == args['producer_name'])
+    if args['producer_name']:
+        query = query.filter(Producer.name == args['producer_name'])
 
-        if args['in_stock'] == 1:
-            query = query.filter(Product.quantity > 0)
+    if args['in_stock'] == 1:
+        query = query.filter(Product.quantity > 0)
 
-        if args['search']:
-            query = query.filter(Product.name.ilike('%' + args['search'] + '%'))
+    if args['search']:
+        query = query.filter(Product.name.ilike('%' + args['search'] + '%'))
 
-        if args['category_name']:
-            # check if the category_name is in English. Then it means it's a parent category
-            if args['category_name'][0] in string.ascii_lowercase:
-                parent_category_id = db.session.query(Category.id).filter(Category.slug == args['category_name']).first()
-                subcategory_ids = [el[0] for el in
-                                   db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
-                query = query.filter(Product.category_id.in_(subcategory_ids))
-            # else it's a subcategory and the name is in Russian
-            else:
-                category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
-                query = query.filter(Product.category_id == category_id)
+    if args['category_name']:
+        # check if the category_name is in English. Then it means it's a parent category
+        if args['category_name'][0] in string.ascii_lowercase:
+            parent_category_id = db.session.query(Category.id).filter(Category.slug == args['category_name']).first()
+            subcategory_ids = [el[0] for el in
+                               db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
+            query = query.filter(Product.category_id.in_(subcategory_ids))
+        # else it's a subcategory and the name is in Russian
+        else:
+            category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
+            query = query.filter(Product.category_id == category_id)
 
-        if args['price']:
-            if args['price'] == 'down':
-                query = query.order_by(Product.price.desc())
-            elif args['price'] == 'up':
-                query = query.order_by(Product.price.asc())
+    if args['price']:
+        if args['price'] == 'down':
+            query = query.order_by(Product.price.desc())
+        elif args['price'] == 'up':
+            query = query.order_by(Product.price.asc())
 
-        product_schema = ("id", "name", "price", "photo_url", "producer_name")
-        products_data = query.all()
-        for product_data in products_data:
-            products.append(dict(zip(product_schema, product_data)))
-        return products[:PRODUCTS_PER_PAGE]
-    else:
-        return products[args['page']*PRODUCTS_PER_PAGE:(args['page']+1)*PRODUCTS_PER_PAGE]
+    product_schema = ("id", "name", "price", "photo_url", "producer_name")
+    page_products = query.paginate(args['page'], PRODUCTS_PER_PAGE)
+    for product in page_products.items:
+        products.append(dict(zip(product_schema, product)))
+    return {"products": products,
+            "next_page": page_products.next_num}
 
 
 def get_popular_products():
@@ -170,6 +169,7 @@ def search_by_keyword(search_key_word):
     search_query = '&'.join(search_key_word.split(' '))
     result = search_products_by_param(search_query)
     return product_schema_list.dump(result).data
+
 
 def post_product(args):
     abort_if_producer_doesnt_exist_or_get(args['producer_id'])

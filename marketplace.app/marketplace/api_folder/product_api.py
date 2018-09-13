@@ -166,10 +166,4 @@ for arg in product_args:
 class ProductsSortedAndFiltered(Resource):
     def post(self):
         args = filter_parser.parse_args()
-        print('______________________________')
-        print('______________________________')
-        print('______________________________')
-        print(args)
-        print('______________________________')
-        print('______________________________')
         return product_utils.get_sorted_and_filtered_products(args)
