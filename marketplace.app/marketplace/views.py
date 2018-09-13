@@ -151,10 +151,10 @@ def edit_consumer(user_id):
 @app.route('/order_history/<user_id>')
 def order_history(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
-    orders = order_utils.get_formatted_orders_by_consumer_id(user_id)
+    # orders = order_utils.get_formatted_orders_by_consumer_id(user_id)
     meta_description = 'История заказов пользователя Маркетплейс'
     if current_user.id == int(user_id):
-        return render_template('order_history.html', orders=orders, current_user=current_user,
+        return render_template('order_history.html', current_user=current_user,
                                meta_description=meta_description, user=user)
     else:
         return redirect(url_for('index'))
