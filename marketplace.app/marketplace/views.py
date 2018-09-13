@@ -121,6 +121,7 @@ def order_registration(user_id):
         products = cart_utils.get_products_from_cart(items)
         producer_ids = set(product.producer_id for product in products)
         producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
+        meta_description = 'Оформление заказа Маркетплейс'
         return render_template('order_registration.html', current_user=current_user, producers=producers, items=items,
                                products=products, meta_description=meta_description)
     else:
