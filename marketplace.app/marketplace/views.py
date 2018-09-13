@@ -57,9 +57,6 @@ def product_card(product_id):
 def producer_products(producer_id):
     products = product_utils.get_products_by_producer_id(producer_id)
     producer_name = producer_utils.get_producer_by_id(producer_id).name
-    print('-------------')
-    print(producer_utils.get_producer_by_id(producer_id))
-    print('-------------')
     meta_description = 'все товары производителя Маркетплейс'
     if current_user.id == int(producer_id):
         return render_template('producer_products.html', products=products, current_user=current_user,
