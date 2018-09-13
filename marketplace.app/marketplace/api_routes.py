@@ -15,7 +15,7 @@ from marketplace.api_folder.consumer_api import (
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders, UnprocessedOrdersByProducerId, \
-    FilteredOrdersByProducerId
+    FilteredOrdersByProducerId, FormattedConsumerOrders
 from marketplace.api_folder.producer_api import (
     ProductsByProducer,
     GlobalProducers,
@@ -46,6 +46,7 @@ api.add_resource(ConsumerOrders, '/consumers/<int:consumer_id>/orders')
 api.add_resource(ProducerOrders, '/producers/<int:producer_id>/orders')
 api.add_resource(UnprocessedOrdersByProducerId, '/producers/<int:producer_id>/unprocessed_orders')
 api.add_resource(FilteredOrdersByProducerId, '/producers/filtered_orders')
+api.add_resource(FormattedConsumerOrders, '/consumers/formatted_orders')
 
 # Cart
 api.add_resource(GlobalCart, '/consumers/<int:consumer_id>/cart')

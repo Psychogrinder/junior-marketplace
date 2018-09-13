@@ -32,6 +32,7 @@ cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACH
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
 COMMENTS_PER_PAGE = app.config['COMMENTS_PER_PAGE']
 PRODUCTS_PER_PAGE = app.config['PRODUCTS_PER_PAGE']
+ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
 from marketplace import models, views, api_routes
 from marketplace.models import Admin
@@ -41,9 +42,9 @@ css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/ca
              'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/edit_profile.css', 'style/profile.css',
              'style/order_history.css', 'style/producer_products.css', 'style/edit_product.css',
              'style/producer_products.css', 'style/producer_orders.css', 'style/order_registration.css',
-             'style/sing.css', 'style/validation.css', 'style/404.css', 'style/croppie.css', 'style/image_crop.css',
+             'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/croppie.css', 'style/image_crop.css',
              'style/input_file.css', 'style/reset_password.css',
-             filters=['cssmin'], output='bundle.min.css')
+             filters=['pyscss','cssmin'], output='bundle.min.css')
 
 assets.register('css_all', css)
 

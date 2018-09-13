@@ -16,6 +16,9 @@ def index():
     categories = Category.query.filter_by(parent_id=0).all()
     popular_products = product_utils.get_popular_products()
     meta_description = 'Маркетплейс фермерских товаров'
+    # Временно. Без принта ломается: если entity == consumer, то на главной старнице
+    # user - Anonymous вместо Consumer.
+    print(current_user)
     return render_template(
         'index.html',
         categories=categories,

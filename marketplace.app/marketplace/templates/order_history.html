@@ -8,100 +8,120 @@
 
 
 {% block body %}
-    <main class="order-history">
-        {% if not orders %}
-            <div class="container">
-                <h3>У вас нет заказов.</h3>
-            </div>
-        {% endif %}
-
-        {% for order in orders %}
-            <div class="orders-block{{ order.id }} order-block-separator container">
-                <div class="container">
-                    <div class="row order_history_info">
-                        <div class="col-2">
-                            <span>№ {{ order.id }}</span>
-                        </div>
-                        <div class="col-4 order-history-producer-name">
-                            <a href="{{ url_for('producer_profile', producer_id=order.producer_id ) }}" class="order-history-producer-link">
-                                <span> {{ order.producer_name }}  </span>
-                            </a>
-                        </div>
-                        <div class="col-2 order_history_date">
-                            <span class="orderTimeStamp">{{ order.placement_date }}</span>
-                        </div>
-                        <div class="col-4">
-                            <span>СУММА ЗАКАЗА: {{ order.cost }}</span>
-                        </div>
-                    </div>
-                </div>
-                {% for item in order['items'] %}
-                    <div class="container order-history-product">
-                        <div class="row">
-                            <div class="col-2">
-                                <img class="order-product-photo" src="/{{ item.photo_url }}" alt="" width="150px">
-                            </div>
-                            <div class="col-1 cart_product_stock_title">
-                                <p>Название</p>
-                                <p>Цена</p>
-                                <p>Артикул</p>
-                            </div>
-                            <div class="col-3 cart_product_stock_info">
-                                <a href="{{ url_for('product_card', product_id=item.id ) }}">
-                                    <p>{{ item.name }}</p>
-                                </a>
-                                <p>{{ item.price }}</p>
-                                <p>#{{ item.id }}</p>
-                            </div>
-                            <div class="col-2">
-                                <span>Вес:</span>
-                                <span class="main-text">{{ item.weight }}</span>
-                                <span class="main-text"> {{ item.measurement_unit }}</span>
-                            </div>
-                            <div class="col-4 quantity_container">
-                                <span>Количество:</span>
-                                <span class="main-text">{{ item.quantity }}</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                <div class="container delivery_container">
-                    <div class="row">
-                        <div class="col-3 delivery_value-header delivery_value">
-                            <span>Доставка:</span>
-                        </div>
-                        <div class="col-3 delivery_value">
-                            <span class="main-text">{{ order.delivery_method }}</span>
-                        </div>
-                        <div class="col-2">
-                            <span>Статус заказа:</span>
-                        </div>
-                        <div class="col-2">
-                            <span class="main-text">{{ order.status }}</span>
-                        </div>
-                    </div>
-                    {% if order.status=='Не обработан' %}
-                        <div class="row order-history-btn-block">
-                            <div class="col-4">
-                                <button class="btn btn-primary" type="button" data-toggle="modal"
-                                        data-target="#showOrderCancelModal">
-                                    ОТМЕНИТЬ ЗАКАЗ
-                                </button>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if order.status=='Завершён' and not order.reviewed %}
-                        <div class="row order-history-btn-block">
-                            <div class="col-4">
-                                <a href="{{ url_for('review', order_id = order.id) }}" class="btn btn-secondary">
-                                    ОСТАВИТЬ ОТЗЫВ
-                                </a>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-                {% include 'inc/cancel_order_modal.html' %}
-            </div>
-        {% endfor %}
+    <main class="order-history" id="consumerOrderHistory">
+        {#        {% if not orders %}#}
+        {#            <div class="container">#}
+        {#                <h3>У вас нет заказов.</h3>#}
+        {#            </div>#}
+        {#        {% endif %}#}
+{#        <div class="orders-block{{ order.id }} order-block-separator container">#}
+{#            <div class="container">#}
+{#                <div class="row order_history_info">#}
+{#                    <div class="col-2">#}
+{#                        <span>№ {{ order.id }}</span>#}
+{#                    </div>#}
+{#                    <div class="col-4 order-history-producer-name">#}
+{#                        <a href="{{ url_for('producer_profile', producer_id=order.producer_id ) }}"#}
+{#                           class="order-history-producer-link">#}
+{#                            <span> {{ order.producer_name }}  </span>#}
+{#                        </a>#}
+{#                    </div>#}
+{#                    <div class="col-2 order_history_date">#}
+{#                        <span class="orderTimeStamp">{{ order.placement_date }}</span>#}
+{#                    </div>#}
+{#                    <div class="col-4">#}
+{#                        <span>СУММА ЗАКАЗА: {{ order.cost }}</span>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            {% for item in order['items'] %}#}
+{#                <div class="container order-history-product">#}
+{#                    <div class="row">#}
+{#                        <div class="col-2">#}
+{#                            <img class="order-product-photo" src="/{{ item.photo_url }}" alt="" width="150px">#}
+{#                        </div>#}
+{#                        <div class="col-1 cart_product_stock_title">#}
+{#                            <p>Название</p>#}
+{#                            <p>Цена</p>#}
+{#                            <p>Артикул</p>#}
+{#                        </div>#}
+{#                        <div class="col-3 cart_product_stock_info">#}
+{#                            <a href="{{ url_for('product_card', product_id=item.id ) }}">#}
+{#                                <p>{{ item.name }}</p>#}
+{#                            </a>#}
+{#                            <p>{{ item.price }}</p>#}
+{#                            <p>#{{ item.id }}</p>#}
+{#                        </div>#}
+{#                        <div class="col-2">#}
+{#                            <span>Вес:</span>#}
+{#                            <span class="main-text">{{ item.weight }}</span>#}
+{#                            <span class="main-text"> {{ item.measurement_unit }}</span>#}
+{#                        </div>#}
+{#                        <div class="col-4 quantity_container">#}
+{#                            <span>Количество:</span>#}
+{#                            <span class="main-text">{{ item.quantity }}</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#            <div class="container delivery_container">#}
+{#                <div class="row">#}
+{#                    <div class="col-3 delivery_value-header delivery_value">#}
+{#                        <span>Доставка:</span>#}
+{#                    </div>#}
+{#                    <div class="col-3 delivery_value">#}
+{#                        <span class="main-text">{{ order.delivery_method }}</span>#}
+{#                    </div>#}
+{#                    <div class="col-2">#}
+{#                        <span>Статус заказа:</span>#}
+{#                    </div>#}
+{#                    <div class="col-2">#}
+{#                        <span class="main-text">{{ order.status }}</span>#}
+{#                    </div>#}
+{#                </div>#}
+{#                {% if order.status=='Не обработан' %}#}
+{#                    <div class="row order-history-btn-block">#}
+{#                        <div class="col-4">#}
+{#                            <button class="btn btn-primary" type="button" data-toggle="modal"#}
+{#                                    data-target="#showOrderCancelModal">#}
+{#                                ОТМЕНИТЬ ЗАКАЗ#}
+{#                            </button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#                {% if order.status=='Завершён' and not order.reviewed %}#}
+{#                    <div class="row order-history-btn-block">#}
+{#                        <div class="col-4">#}
+{#                            <a href="{{ url_for('review', order_id = order.id) }}" class="btn btn-secondary">#}
+{#                                ОСТАВИТЬ ОТЗЫВ#}
+{#                            </a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#            <div class="modal fade" id="showOrderCancelModal" tabindex="-1" role="dialog"#}
+{#                 aria-labelledby="exampleModalLabel"#}
+{#                 aria-hidden="true">#}
+{#                <div class="modal-dialog modal-min-dialog" role="document">#}
+{#                    <div class="modal-content">#}
+{#                        <div class="modal-header">#}
+{#                            <h5 class="modal-title" id="exampleModalLabel">Отмена заказа</h5>#}
+{#                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#                                <span aria-hidden="true">&times;</span>#}
+{#                            </button>#}
+{#                        </div>#}
+{#                        <div class="modal-body">#}
+{#                            <p>Вы уверены, что хотите отменить заказ?</p>#}
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>#}
+{#                            <button type="button" class="btn btn-primary" onclick="cancelOrder({{ order.id }})">#}
+{#                                Отменить#}
+{#                            </button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
     </main>
 {% endblock %}
