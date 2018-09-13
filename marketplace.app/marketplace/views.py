@@ -39,7 +39,7 @@ def category(category_name):
                            meta_description=meta_description)
 
 
-@app.route('/products/<product_id>')
+@app.route('/products/<int:product_id>')
 def product_card(product_id):
     product = product_utils.get_product_by_id(product_id)
     category = category_utils.get_category_by_id(product.category_id)
@@ -53,26 +53,25 @@ def product_card(product_id):
 
 
 # товары производителя
-@app.route('/producer/<producer_id>/products')
+@app.route('/producer/<int:producer_id>/products')
 def producer_products(producer_id):
-    products = product_utils.get_products_by_producer_id(producer_id)
-    producer_name = producer_utils.get_producer_by_id(producer_id).name
-    meta_description = 'все товары производителя Маркетплейс'
-    if current_user.id == int(producer_id):
+    if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
+        products = product_utils.get_products_by_producer_id(producer_id)
+        meta_description = 'все товары производителя Маркетплейс'
         return render_template('producer_products.html', products=products, current_user=current_user,
-                               meta_description=meta_description, producer_name=producer_name)
+                               meta_description=meta_description, producer_name=current_user.name)
     else:
         return redirect(url_for('index'))
 
 
 # Продумать что делать с неиспользованными id в методах
-@app.route('/producer/<producer_id>/products/<product_id>/edit')
+@app.route('/producer/<int:producer_id>/products/<int:product_id>/edit')
 def edit_product(producer_id, product_id):
-    product = product_utils.get_product_by_id(product_id)
-    categories = Category.query.all()
-    measurement_units = ['кг', 'л', 'шт']
-    meta_description = 'редактирование товара Маркетплейс'
-    if current_user.id == int(producer_id):
+    if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
+        product = product_utils.get_product_by_id(product_id)
+        categories = Category.query.all()
+        measurement_units = ['кг', 'л', 'шт']
+        meta_description = 'редактирование товара Маркетплейс'
         return render_template('edit_product.html', product=product, categories=categories,
                                measurement_units=measurement_units, current_user=current_user,
                                meta_description=meta_description)
@@ -80,117 +79,142 @@ def edit_product(producer_id, product_id):
         return redirect(url_for('index'))
 
 
-@app.route('/producer/<producer_id>/create_product')
+@app.route('/producer/<int:producer_id>/create_product')
 def create_product(producer_id):
-    meta_description = 'Добавление товара Маркетплейс'
-    if current_user.id == int(producer_id):
+    if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
+        meta_description = 'Добавление товара Маркетплейс'
         return render_template('create_product.html', current_user=current_user, meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
 
 # корзина
-@app.route('/cart/<user_id>')
+@app.route('/cart/<int:user_id>')
 def cart(user_id):
-    # user = Consumer.query.filter_by(id=user_id).first()
-    items = {}
-    products = {}
-    cart = Cart.query.filter_by(consumer_id=current_user.id).first()
-    meta_description = 'Корзина Маркетплейс'
-    if cart is not None:
-        items = {int(k): (v) for k, v in cart.items.items()}
-        products = cart_utils.get_products_from_cart(items)
-    # producer_ids = set(product.producer_id for product in products)
-    # producers = [utils.get_producer_by_id(id) for id in producer_ids]
-    if current_user.id == int(user_id):
-        return render_template('cart.html', current_user=current_user, items=items,
-                               products=products, meta_description=meta_description)
+    if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
+        items = {}
+        products = {}
+        cart = Cart.query.filter_by(consumer_id=current_user.id).first()
+        meta_description = 'Корзина Маркетплейс'
+        if cart is not None:
+            items = {int(k): (v) for k, v in cart.items.items()}
+            products = cart_utils.get_products_from_cart(items)
+            return render_template('cart.html', current_user=current_user, items=items,
+                                   products=products, meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/cart/<int:user_id>/order_registration/')
+@app.route('/cart/<int:user_id>/order_registration')
 def order_registration(user_id):
-    if current_user.is_authenticated and current_user.id == user_id:
-        user = Consumer.query.filter_by(id=user_id).first()
-        items = Cart.query.filter_by(consumer_id=user.id).first().items
-        items = {int(k): (v) for k, v in items.items()}
-        products = cart_utils.get_products_from_cart(items)
+    if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
+        cart = Cart.query.filter_by(consumer_id=current_user.id).first()
+        if not cart or not cart.items:
+            return redirect(url_for('cart', user_id=user_id))
+        products = cart_utils.get_products_from_cart(cart.items)
         producer_ids = set(product.producer_id for product in products)
         producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
         meta_description = 'Оформление заказа Маркетплейс'
-        return render_template('order_registration.html', current_user=current_user, producers=producers, items=items,
-                               products=products, meta_description=meta_description)
+        return render_template(
+            'order_registration.html',
+            current_user=current_user,
+            producers=producers,
+            items=cart.items,
+            products=products,
+            meta_description=meta_description
+        )
     else:
         return redirect(url_for('index'))
 
 
 # покупатель
-@app.route('/user/<user_id>')
+@app.route('/user/<int:user_id>')
 def consumer_profile(user_id):
-    user = Consumer.query.filter_by(id=user_id).first()
-    meta_description = 'Профиль пользователя Маркетплейс'
-    if current_user.id == int(user_id):
-        return render_template('consumer_profile.html', user=user, current_user=current_user,
-                               meta_description=meta_description)
+    if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
+        meta_description = 'Профиль пользователя Маркетплейс'
+        return render_template(
+            'consumer_profile.html',
+            user=current_user,
+            current_user=current_user,
+            meta_description=meta_description
+        )
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/user/edit/<user_id>')
+@app.route('/user/edit/<int:user_id>')
 def edit_consumer(user_id):
-    user = Consumer.query.filter_by(id=user_id).first()
-    meta_description = 'Редактирование профиля пользователя Маркетплейс'
-    if current_user.id == int(user_id):
-        return render_template('edit_consumer.html', user=user, current_user=current_user,
-                               meta_description=meta_description)
+    if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
+        meta_description = 'Редактирование профиля пользователя Маркетплейс'
+        return render_template(
+            'edit_consumer.html',
+            user=current_user,
+            current_user=current_user,
+            meta_description=meta_description
+        )
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/order_history/<user_id>')
+@app.route('/order_history/<int:user_id>')
 def order_history(user_id):
-    user = Consumer.query.filter_by(id=user_id).first()
-    orders = order_utils.get_formatted_orders_by_consumer_id(user_id)
-    meta_description = 'История заказов пользователя Маркетплейс'
-    if current_user.id == int(user_id):
-        return render_template('order_history.html', orders=orders, current_user=current_user,
-                               meta_description=meta_description, user=user)
+    if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
+        meta_description = 'История заказов пользователя Маркетплейс'
+        return render_template(
+            'order_history.html',
+            current_user=current_user,
+            meta_description=meta_description,
+            user=current_user
+        )
     else:
         return redirect(url_for('index'))
 
 
 # производитель
-@app.route('/producer/<producer_id>')
+@app.route('/producer/<int:producer_id>')
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
     meta_description = 'Профиль производителя Маркетплейс'
-    if producer != None:
-        return render_template('producer_profile.html', producer=producer, current_user=current_user,
-                               meta_description=meta_description)
+    if producer is not None and producer.entity == 'producer':
+        return render_template(
+            'producer_profile.html',
+            producer=producer,
+            current_user=current_user,
+            meta_description=meta_description
+        )
+    else:
+        return abort(404)
 
 
-@app.route('/producer/<producer_id>/edit')
+@app.route('/producer/<int:producer_id>/edit')
 def edit_producer(producer_id):
-    producer = Producer.query.filter_by(id=producer_id).first()
-    meta_description = 'Редактирование профиля производителя Маркетплейс'
-    if current_user.id == int(producer_id):
-        return render_template('edit_producer.html', producer=producer, current_user=current_user,
-                               meta_description=meta_description)
+    if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
+        meta_description = 'Редактирование профиля производителя Маркетплейс'
+        return render_template(
+            'edit_producer.html',
+            producer=current_user,
+            current_user=current_user,
+            meta_description=meta_description
+        )
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/producer/<producer_id>/orders')
+@app.route('/producer/<int:producer_id>/orders')
 def producer_orders(producer_id):
-    if current_user.id == int(producer_id):
-        orders = Order.query.filter_by(producer_id=int(producer_id)).all()
+    if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
+        orders = Order.query.filter_by(producer_id=producer_id).all()
         meta_description = 'Заказы производителя Маркетплейс'
         products = {}
         for order in orders:
             products[order.id] = order_utils.get_products_by_order_id(order.id)
-        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products,
-                               meta_description=meta_description)
+        return render_template(
+            'producer_orders.html',
+            current_user=current_user,
+            orders=orders,
+            products=products,
+            meta_description=meta_description
+        )
     else:
         return redirect(url_for('index'))
 
@@ -255,24 +279,35 @@ def password_recovery(token):
         db.session.commit()
         flash('Пароль успешно изменен', category='info')
         return redirect(url_for('index'))
-    return render_template('reset_password.html', form=form, meta_description=meta_description)
+    return render_template(
+        'reset_password.html',
+        form=form,
+        meta_description=meta_description
+    )
 
 
 @app.route('/search')
 def global_search():
     meta_description = 'Поиск по каталогу - Маркетплейс фермерских товаров'
     products = product_utils.search_by_keyword(request.args.get('find'))
-    return render_template('global_search_results.html', products=products, meta_description=meta_description)
+    return render_template(
+        'global_search_results.html',
+        products=products,
+        meta_description=meta_description
+    )
 
 
 @app.route('/review')
 def review():
-    # Если неавторизованный пользователь пытается открыть эту страницу
-    if not hasattr(current_user, 'id'):
+    if not current_user.is_authenticated:
         return abort(404)
-
     order_id = request.args.get('order_id')
-    order = order_utils.get_order_by_id(order_id)
+    try:
+        order = order_utils.get_order_by_id(int(order_id))
+    except TypeError:
+        return abort(404)
+    if not order:
+        return abort(404)
     current_user_id = current_user.id
     # Если пользователь пытается оставить отзыв на чужой заказ
     if current_user_id != order.consumer_id:
@@ -285,7 +320,13 @@ def review():
     products = product_utils.get_products_by_order_id(order_id)
     number_of_products = len(products)
     meta_description = 'Оставить отзыв - Маркетплейс фермерских товаров'
-    return render_template('review.html', order=order, products=products, number_of_products=number_of_products, meta_description=meta_description)
+    return render_template(
+        'review.html',
+        order=order,
+        products=products,
+        number_of_products=number_of_products,
+        meta_description=meta_description
+    )
 
 
 @app.errorhandler(404)
