@@ -19,13 +19,17 @@ class TestCase(unittest.TestCase):
                      'category_name': None, # slugs
                      'producer_name': None,
                      'in_stock': None,      # 1
-                     'search': None
-        }
+                     'search': None,
+                     'page': 1,
+                     'next_page' : 2,
+                     'parent_id': 0
+                     }
 
 
     def test_filtered_price(self):
         args = self.args
-        self.slugs = getCategorySlugs()
+
+        self.slugs = getCategorySlugs(args)
 
         for slug in self.slugs:
             args['category_name'] = slug
@@ -38,7 +42,7 @@ class TestCase(unittest.TestCase):
             sorted = get_sorted_and_filtered_products(args)
             self.assertTrue(check_price(sorted, args['price']), 'Problem with UP sorting price')
 
-
+    @unittest.skip
     def test_filtered_by_producer(self):
         args = self.args
 

@@ -29,9 +29,14 @@ def parseApiRoutes(file='../views.py'):
     return routes
 
 
-def getCategorySlugs():
+def getCategorySlugs(args):
     category_slugs = []
-    for category in Category.query.all():
+    if args['parent_id'] == 0:
+        categories = Category.query.filter_by(parent_id=0)
+    else:
+        categories = Category.query.all()
+
+    for category in categories:
         category_slugs.append(category.slug)
 
     return category_slugs
@@ -118,7 +123,7 @@ def is_price_sorted(list, price_sort):
 def check_price(sorted, args_price):
     price_in_slug = []
 
-    for product in sorted:
+    for product in sorted['products']:
         if ' ₽' in product['price']:
             price = product['price'][:-2]
         else:
