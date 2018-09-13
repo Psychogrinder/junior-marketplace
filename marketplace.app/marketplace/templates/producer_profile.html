@@ -2,6 +2,10 @@
 
 {% block meta_title %}Садовое хозяйство{% endblock %}
 
+{% block meta_description %}
+    <meta name="description" content='{{ producer.name }} - {{ meta_description }}'>
+{% endblock %}
+
 {% block body %}
     <main class="profile producer-profile-main">
         <div class="container producer-banner">

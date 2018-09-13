@@ -2,6 +2,10 @@
 
 {% block meta_title %}Отзывы{% endblock %}
 
+{% block meta_description %}
+    <meta name="description" content='{{ meta_description }}'>
+{% endblock %}
+
 {% block body %}
     <main class="container">
         <div class="column" id="newReviewSection" data-order-id="{{ order.id }}"
