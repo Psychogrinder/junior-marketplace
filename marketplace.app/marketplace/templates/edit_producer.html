@@ -34,8 +34,7 @@
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_contact_person" class="col-12 col-sm-2">Контактное лицо</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="producer_contact_person" placeholder="Иван"
-                       value="{{ producer.person_to_contact }}" required>
+                <input type="text" class="form-control col-12 col-sm-4" id="producer_contact_person" placeholder="Иван" data-parsley-pattern="/^[a-zA-Zа-яёА-ЯЁ\s]*$/" value="{{ producer.person_to_contact }}" required>
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_email" class="col-12 col-sm-2">Email</label>
