@@ -36,6 +36,7 @@ class Base(object):
     CSRF_ENABLED = True
 
     COMMENTS_PER_PAGE = 2
+    PRODUCTS_PER_PAGE = 16
 
 
 class Development(Base):

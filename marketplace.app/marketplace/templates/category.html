@@ -11,7 +11,7 @@
 <main>
     <div class="container products">
         <section class="breadcrumbs">
-            <span><a href={{ url_for( 'index' ) }}>Каталог</a></span>
+            <span><a href="{{ url_for( 'index' ) }}">Каталог</a></span>
             <span><a class="active">{{ category_name }}</a></span>
         </section>
         <section class="product-filter">
@@ -51,10 +51,8 @@
             </form>
         </section>
         <section class="product-card row" id="productsByCategory">
-            {% for product in products %}
-            {% include 'inc/small_product_card.html' %}
-            {% endfor %}
         </section>
+        <div id="page2"></div>
     </div>
 </main>
 {% endblock %}
