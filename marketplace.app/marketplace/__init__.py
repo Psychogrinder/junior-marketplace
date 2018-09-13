@@ -32,6 +32,7 @@ cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACH
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
 COMMENTS_PER_PAGE = app.config['COMMENTS_PER_PAGE']
 PRODUCTS_PER_PAGE = app.config['PRODUCTS_PER_PAGE']
+ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
 from marketplace import models, views, api_routes
 from marketplace.models import Admin

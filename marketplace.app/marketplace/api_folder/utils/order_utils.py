@@ -1,4 +1,4 @@
-from marketplace import db
+from marketplace import db, ORDERS_PER_PAGE
 from marketplace.api_folder.schemas import order_schema_list
 from marketplace.api_folder.utils import product_utils
 from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exist_or_get, \
@@ -76,19 +76,20 @@ def get_filtered_orders(args):
     return orders
 
 
-def get_formatted_orders_by_consumer_id(consumer_id: int) -> list:
+def get_formatted_orders_by_consumer_id(consumer_id: int, page: int) -> dict:
     """
     Функция для отображения заказов на странице истории заказов потребителя.
     """
     query = db.session.query(Order.id, Order.status, Order.delivery_method, Order.order_timestamp, Order.total_cost,
                              Order.order_items_json, Order.reviewed, Order.producer_id,
                              Producer.name.label('producer_name')).filter(
-        Order.producer_id == Producer.id).filter_by(consumer_id=consumer_id).all()
+        Order.producer_id == Producer.id).filter_by(consumer_id=consumer_id).paginate(page, ORDERS_PER_PAGE)
+    next_num = query.next_num
     order_schema = ("id", "status", "delivery_method", "placement_date", "cost", "items", "reviewed", "producer_id",
                     "producer_name")
     item_schema = ('name', 'price', 'id', 'weight', 'measurement_unit', 'photo_url')
     orders = []
-    for order in query:
+    for order in query.items:
         order = dict(zip(order_schema, order))
         order['placement_date'] = order['placement_date'].strftime("%d.%m.%Y")
         new_items = []
@@ -104,4 +105,5 @@ def get_formatted_orders_by_consumer_id(consumer_id: int) -> list:
         order['items'] = new_items
         orders.append(order)
 
-    return orders
+    return {'orders': orders,
+            'page': next_num}

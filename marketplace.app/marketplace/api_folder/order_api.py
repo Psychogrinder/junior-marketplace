@@ -68,3 +68,14 @@ class FilteredOrdersByProducerId(Resource):
     def post(self):
         args = filtered_orders_parser.parse_args()
         return order_utils.get_filtered_orders(args), 200
+
+
+consumer_order_parser = reqparse.RequestParser()
+consumer_order_parser.add_argument('page')
+consumer_order_parser.add_argument('consumer_id')
+
+
+class FormattedConsumerOrders(Resource):
+    def post(self):
+        args = consumer_order_parser.parse_args()
+        return order_utils.get_formatted_orders_by_consumer_id(args['consumer_id'], int(args['page']))
