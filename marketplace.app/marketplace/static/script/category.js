@@ -63,8 +63,6 @@ $(document).ready(function () {
             }
 
             function add_new_products(products, next_page_number) {
-                console.log('========= products =========');
-                console.log(products);
                 for (var i = 0; i < products.length; i++) {
                     $("#productsByCategory").append(
                         '<div class="col-6 col-sm-3 card-item" >' +
