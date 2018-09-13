@@ -42,7 +42,7 @@ css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/ca
              'style/producer_products.css', 'style/producer_orders.css', 'style/order_registration.css',
              'style/sing.css', 'style/validation.css', 'style/404.css', 'style/croppie.css', 'style/image_crop.css',
              'style/input_file.css', 'style/reset_password.css',
-             filters=['cssmin'], output='bundle.min.css')
+             filters=['pyscss','cssmin'], output='bundle.min.css')
 
 assets.register('css_all', css)
 
