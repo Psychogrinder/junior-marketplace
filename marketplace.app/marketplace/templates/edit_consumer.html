@@ -11,13 +11,13 @@
     <main>
         <div class="container edit-profile">
             <section class="breadcrumbs">
-                <span><a href='{{ url_for('consumer_profile', user_id = user.id) }}'>Профиль</a></span>
+                <span><a href="{{ url_for('consumer_profile', user_id = user.id) }}">Профиль</a></span>
                 <span><a class="active">Редактирование профиля</a></span>
             </section>
             <div class="delete-profile">
                 <p class="out-of-stock">
                     <a href="#" data-toggle="modal" data-target="#agreeDeleteProfile">
-                        <img src='{{ url_for('static', filename='img/exclamation-circle-solid.svg' ) }}'>
+                        <img src="{{ url_for('static', filename='img/exclamation-circle-solid.svg' ) }}">
                         Удалить профиль
                     </a>
                 </p>
