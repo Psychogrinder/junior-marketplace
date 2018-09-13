@@ -2,7 +2,7 @@ import json
 
 from marketplace import db
 from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exist_or_get, \
-    abort_if_product_doesnt_exist_or_get
+    abort_if_product_doesnt_exist_or_get, abort_if_not_enough_products_or_get
 from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.product_utils import get_product_by_id
 from marketplace.models import Cart, Order
@@ -63,8 +63,9 @@ def clear_cart_by_consumer_id(consumer_id):
 def decrease_products_quantity_and_increase_times_ordered(consumer_id):
     items = get_cart_by_consumer_id(consumer_id).items
     for item, quantity in items.items():
-        get_product_by_id(int(item)).quantity -= int(quantity)
-        get_product_by_id(int(item)).times_ordered += 1
+        product = abort_if_not_enough_products_or_get(int(item), int(quantity))
+        product.quantity -= int(quantity)
+        product.times_ordered += 1
         db.session.commit()
 
 
