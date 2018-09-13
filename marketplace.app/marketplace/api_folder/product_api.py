@@ -156,7 +156,7 @@ class ProductSearchByParams(Resource):
             return cache
 
 
-product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock', 'search']
+product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock', 'search', 'page']
 filter_parser = reqparse.RequestParser()
 
 for arg in product_args:

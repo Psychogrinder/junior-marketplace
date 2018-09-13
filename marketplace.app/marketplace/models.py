@@ -30,7 +30,7 @@ class SetPhotoUrlMixin():
         if self.photo_url is None:
             self.photo_url = photo_url
         elif self.photo_url is not None and self.photo_url != photo_url:
-            if self.photo_url not in ['static/img/standard.png', 'standard-profile.jpg']:
+            if self.photo_url not in ['static/img/standard.png', 'static/img/standard-profile.jpg']:
                 os.remove(os.path.join(os.path.dirname(os.path.realpath(__file__)), self.photo_url))
             self.photo_url = photo_url
 
@@ -291,7 +291,13 @@ class Comment(db.Model):
 
 @login.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        if User.query.get(int(user_id)).entity == 'producer':
+            return Producer.query.get(int(user_id))
+        else:
+            return Consumer.query.get(int(user_id))
+    except AttributeError:
+        return None
 
 
 def get_string_or_default(item):

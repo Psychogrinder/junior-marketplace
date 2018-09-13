@@ -15,12 +15,14 @@ from flask_login import current_user, login_user, logout_user, login_required
 def index():
     categories = Category.query.filter_by(parent_id=0).all()
     popular_products = product_utils.get_popular_products()
+    meta_description = 'Маркетплейс фермерских товаров'
     return render_template(
         'index.html',
         categories=categories,
         popular_products=popular_products,
         producers=Producer.query.all(),
         current_user=current_user,
+        meta_description=meta_description,
     )
 
 
@@ -31,8 +33,10 @@ def category(category_name):
     category_name = category.name.title()
     producers = producer_utils.get_all_producers()
     products = product_utils.get_products_by_category_id(category.id)
+    meta_description = 'каталог фермерских товаров маркетплейс'
     return render_template('category.html', products=products, subcategories=subcategories, category=category,
-                           category_name=category_name, producers=producers, current_user=current_user)
+                           category_name=category_name, producers=producers, current_user=current_user,
+                           meta_description=meta_description)
 
 
 @app.route('/products/<product_id>')
@@ -42,17 +46,21 @@ def product_card(product_id):
     producer = producer_utils.get_producer_by_id(product.producer_id)
     comments = comment_utils.get_comments_by_product_id(product_id)
     next_page = comments.next_num
+    meta_description = 'каталог фермерских товаров Маркетплейс'
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
-                           comments=comments.items, next_page=next_page)
+                           comments=comments.items, next_page=next_page, meta_description=meta_description)
 
 
 # товары производителя
 @app.route('/producer/<producer_id>/products')
 def producer_products(producer_id):
     products = product_utils.get_products_by_producer_id(producer_id)
+    producer_name = producer_utils.get_producer_by_id(producer_id).name
+    meta_description = 'все товары производителя Маркетплейс'
     if current_user.id == int(producer_id):
-        return render_template('producer_products.html', products=products, current_user=current_user)
+        return render_template('producer_products.html', products=products, current_user=current_user,
+                               meta_description=meta_description, producer_name=producer_name)
     else:
         return redirect(url_for('index'))
 
@@ -63,17 +71,20 @@ def edit_product(producer_id, product_id):
     product = product_utils.get_product_by_id(product_id)
     categories = Category.query.all()
     measurement_units = ['кг', 'л', 'шт']
+    meta_description = 'редактирование товара Маркетплейс'
     if current_user.id == int(producer_id):
         return render_template('edit_product.html', product=product, categories=categories,
-                               measurement_units=measurement_units, current_user=current_user)
+                               measurement_units=measurement_units, current_user=current_user,
+                               meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
 
 @app.route('/producer/<producer_id>/create_product')
 def create_product(producer_id):
+    meta_description = 'Добавление товара Маркетплейс'
     if current_user.id == int(producer_id):
-        return render_template('create_product.html', current_user=current_user)
+        return render_template('create_product.html', current_user=current_user, meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
@@ -85,6 +96,7 @@ def cart(user_id):
     items = {}
     products = {}
     cart = Cart.query.filter_by(consumer_id=current_user.id).first()
+    meta_description = 'Корзина Маркетплейс'
     if cart is not None:
         items = {int(k): (v) for k, v in cart.items.items()}
         products = cart_utils.get_products_from_cart(items)
@@ -92,22 +104,23 @@ def cart(user_id):
     # producers = [utils.get_producer_by_id(id) for id in producer_ids]
     if current_user.id == int(user_id):
         return render_template('cart.html', current_user=current_user, items=items,
-                               products=products)
+                               products=products, meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
 
-@app.route('/cart/<user_id>/order_registration/')
+@app.route('/cart/<int:user_id>/order_registration/')
 def order_registration(user_id):
-    user = Consumer.query.filter_by(id=user_id).first()
-    items = Cart.query.filter_by(consumer_id=user.id).first().items
-    items = {int(k): (v) for k, v in items.items()}
-    products = cart_utils.get_products_from_cart(items)
-    producer_ids = set(product.producer_id for product in products)
-    producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
-    if current_user.id == int(user_id):
+    if current_user.is_authenticated and current_user.id == user_id:
+        user = Consumer.query.filter_by(id=user_id).first()
+        items = Cart.query.filter_by(consumer_id=user.id).first().items
+        items = {int(k): (v) for k, v in items.items()}
+        products = cart_utils.get_products_from_cart(items)
+        producer_ids = set(product.producer_id for product in products)
+        producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
+        meta_description = 'Оформление заказа Маркетплейс'
         return render_template('order_registration.html', current_user=current_user, producers=producers, items=items,
-                               products=products)
+                               products=products, meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
@@ -116,8 +129,10 @@ def order_registration(user_id):
 @app.route('/user/<user_id>')
 def consumer_profile(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
+    meta_description = 'Профиль пользователя Маркетплейс'
     if current_user.id == int(user_id):
-        return render_template('consumer_profile.html', user=user, current_user=current_user)
+        return render_template('consumer_profile.html', user=user, current_user=current_user,
+                               meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
@@ -125,17 +140,22 @@ def consumer_profile(user_id):
 @app.route('/user/edit/<user_id>')
 def edit_consumer(user_id):
     user = Consumer.query.filter_by(id=user_id).first()
+    meta_description = 'Редактирование профиля пользователя Маркетплейс'
     if current_user.id == int(user_id):
-        return render_template('edit_consumer.html', user=user, current_user=current_user)
+        return render_template('edit_consumer.html', user=user, current_user=current_user,
+                               meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
 
 @app.route('/order_history/<user_id>')
 def order_history(user_id):
+    user = Consumer.query.filter_by(id=user_id).first()
     orders = order_utils.get_formatted_orders_by_consumer_id(user_id)
+    meta_description = 'История заказов пользователя Маркетплейс'
     if current_user.id == int(user_id):
-        return render_template('order_history.html', orders=orders, current_user=current_user)
+        return render_template('order_history.html', orders=orders, current_user=current_user,
+                               meta_description=meta_description, user=user)
     else:
         return redirect(url_for('index'))
 
@@ -144,15 +164,19 @@ def order_history(user_id):
 @app.route('/producer/<producer_id>')
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
+    meta_description = 'Профиль производителя Маркетплейс'
     if producer != None:
-        return render_template('producer_profile.html', producer=producer, current_user=current_user)
+        return render_template('producer_profile.html', producer=producer, current_user=current_user,
+                               meta_description=meta_description)
 
 
 @app.route('/producer/<producer_id>/edit')
 def edit_producer(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
+    meta_description = 'Редактирование профиля производителя Маркетплейс'
     if current_user.id == int(producer_id):
-        return render_template('edit_producer.html', producer=producer, current_user=current_user)
+        return render_template('edit_producer.html', producer=producer, current_user=current_user,
+                               meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
@@ -161,10 +185,12 @@ def edit_producer(producer_id):
 def producer_orders(producer_id):
     if current_user.id == int(producer_id):
         orders = Order.query.filter_by(producer_id=int(producer_id)).all()
+        meta_description = 'Заказы производителя Маркетплейс'
         products = {}
         for order in orders:
             products[order.id] = order_utils.get_products_by_order_id(order.id)
-        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products)
+        return render_template('producer_orders.html', current_user=current_user, orders=orders, products=products,
+                               meta_description=meta_description)
     else:
         return redirect(url_for('index'))
 
@@ -172,17 +198,20 @@ def producer_orders(producer_id):
 # о нас и помощь
 @app.route('/about_us')
 def about_us():
-    return render_template('about_us.html')
+    meta_description = 'О нас - Маркетплейс фермерских товаров'
+    return render_template('about_us.html', meta_description=meta_description)
 
 
 @app.route('/consumer_help')
 def consumer_help():
-    return render_template('consumer_help.html')
+    meta_description = 'Помощь для покупателей - Маркетплейс фермерских товаров'
+    return render_template('consumer_help.html', meta_description=meta_description)
 
 
 @app.route('/producer_help')
 def producer_help():
-    return render_template('producer_help.html')
+    meta_description = 'Помощь для производителей - Маркетплейс фермерских товаров'
+    return render_template('producer_help.html', meta_description=meta_description)
 
 
 @app.route('/version')
@@ -207,6 +236,7 @@ def email_confirm(token):
 
 @app.route('/password/recovery/<token>', methods=['GET', 'POST'])
 def password_recovery(token):
+    meta_description = 'Сброс пароля - Маркетплейс фермерских товаров'
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     payload = email_tools.confirm_token(token)
@@ -225,13 +255,14 @@ def password_recovery(token):
         db.session.commit()
         flash('Пароль успешно изменен', category='info')
         return redirect(url_for('index'))
-    return render_template('reset_password.html', form=form)
+    return render_template('reset_password.html', form=form, meta_description=meta_description)
 
-  
+
 @app.route('/search')
 def global_search():
+    meta_description = 'Поиск по каталогу - Маркетплейс фермерских товаров'
     products = product_utils.search_by_keyword(request.args.get('find'))
-    return render_template('global_search_results.html', products=products)
+    return render_template('global_search_results.html', products=products, meta_description=meta_description)
 
 
 @app.route('/review')
@@ -253,8 +284,8 @@ def review():
 
     products = product_utils.get_products_by_order_id(order_id)
     number_of_products = len(products)
-    return render_template('review.html', order=order, products=products, number_of_products=number_of_products)
-
+    meta_description = 'Оставить отзыв - Маркетплейс фермерских товаров'
+    return render_template('review.html', order=order, products=products, number_of_products=number_of_products, meta_description=meta_description)
 
 
 @app.errorhandler(404)

@@ -7,28 +7,14 @@ $(document).ready(function () {
                 category_name: null,
                 producer_name: null,
                 quantity: null,
-                in_stock: 0
+                in_stock: 0,
+                page: 1
             };
 
             // get base category name
             var addr = window.location + '';
             addr = addr.split('/');
             var base_category = addr[addr.length - 1];
-
-
-            $('.filter-block select').change(function () {
-                update_page(sorts_and_filters, base_category);
-            });
-
-            $('#in_stock_catalog_products').click(function () {
-                if ($(this).is(":checked")) {
-                    sorts_and_filters['in_stock'] = 1;
-                } else {
-                    sorts_and_filters['in_stock'] = 0;
-                }
-                update_page(sorts_and_filters, base_category);
-            });
-
 
             function fill_sorts_and_filters(sorts_and_filters, base_category) {
                 let selected_option_1 = $('#sortByPriceOrPopularity option:selected');
@@ -64,8 +50,7 @@ $(document).ready(function () {
                 $.post('/api/v1/products/filter',
                     sorts_and_filters,
                     function (products, status) {
-                        delete_current_products();
-                        add_new_products(products);
+                        add_new_products(products.products, products.next_page);
                         display_valid_options(sorts_and_filters, base_category)
                     });
             }
@@ -77,7 +62,7 @@ $(document).ready(function () {
                 }
             }
 
-            function add_new_products(products) {
+            function add_new_products(products, next_page_number) {
                 for (var i = 0; i < products.length; i++) {
                     $("#productsByCategory").append(
                         '<div class="col-6 col-sm-3 card-item" >' +
@@ -99,6 +84,21 @@ $(document).ready(function () {
                             'Нет в наличии' +
                             '</p>');
                     }
+                }
+                if (next_page_number) {
+                    $("#productsByCategory").append(
+                        '<div style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                    );
+
+                    let element = $('#page' + next_page_number);
+                    $(window).on('resize scroll', function () {
+                        if (isInViewport(element)) {
+                            element.remove();
+                            console.log(next_page_number);
+                            sorts_and_filters['page'] = next_page_number;
+                            update_page(sorts_and_filters, base_category);
+                        }
+                    });
                 }
             }
 
@@ -161,6 +161,36 @@ $(document).ready(function () {
                 display_filtered_and_sorted_products(sorts_and_filters, base_category);
             }
 
+            $('.filter-block select').change(function () {
+                delete_current_products();
+                sorts_and_filters['page'] = 1;
+                update_page(sorts_and_filters, base_category);
+            });
+
+            $('#in_stock_catalog_products').click(function () {
+                delete_current_products();
+                sorts_and_filters['page'] = 1;
+                if ($(this).is(":checked")) {
+                    sorts_and_filters['in_stock'] = 1;
+                } else {
+                    sorts_and_filters['in_stock'] = 0;
+                }
+                update_page(sorts_and_filters, base_category);
+            });
+
+            // добавляем товары на страницу при первой её загрзке
+            update_page(sorts_and_filters, base_category);
         }
+
+        let isInViewport = function (element) {
+            var elementTop = element.offset().top;
+            var elementBottom = elementTop + element.outerHeight();
+
+            var viewportTop = $(window).scrollTop();
+            var viewportBottom = viewportTop + $(window).height();
+
+            return elementBottom > viewportTop && elementTop < viewportBottom;
+        };
     }
 );
+

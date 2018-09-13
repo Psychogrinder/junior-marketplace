@@ -22,7 +22,7 @@ def post_consumer(args):
     db.session.add(new_consumer)
     db.session.commit()
     # временно закоменчено, потому-что иначе ломает
-    # email_tools.send_confirmation_email(new_consumer.email)
+    email_tools.send_confirmation_email(new_consumer.email)
     return new_consumer
 
 

@@ -28,7 +28,7 @@ def _send_email(to, template, subject):
         subject=subject,
         recipients=[to],
         html=template,
-        sender='xtramarket@rambler.ru'
+        sender='customers@xtramarket.ru'
     )
     mail.connect()
     mail.send(msg)
@@ -39,7 +39,6 @@ def send_confirmation_email(user_email):
     subject = 'MARKETPLACE. Подтверждение электронной почты'
     confirm_url = url_for('.email_confirm', token=token, _external=True)
     html = render_template('email_confirm.html', confirm_url=confirm_url)
-    print(confirm_url)
     _send_email.delay(user_email, html, subject)
 
 
@@ -50,5 +49,4 @@ def send_password_recovery_email(user_email):
     subject = 'MARKETPLACE. Восстановление пароля'
     confirm_url = url_for('.password_recovery', token=token, _external=True)
     html = render_template('email_recovery_password.html', confirm_url=confirm_url)
-    print(confirm_url)
     # _send_email.delay(user_email, html, subject)
