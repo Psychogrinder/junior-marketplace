@@ -25,6 +25,7 @@ services:
         - SECRET_KEY
         - SECURITY_PASSWORD_SALT
         - UPLOAD_FOLDER
+        - MAIL_PASSWORD
     environment:
       - FLASK_ENV=production
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
@@ -33,6 +34,7 @@ services:
       - SECRET_KEY=#{SECRET_KEY}
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     ports:
       - "10.100.1.39:8000:8000"
     command:
@@ -64,6 +66,7 @@ services:
         - SQLALCHEMY_DATABASE_URI
         - SECRET_KEY
         - SECURITY_PASSWORD_SALT
+        - MAIL_PASSWORD
     command:
       "celery -A marketplace.celery --loglevel=info worker"
     networks:
@@ -75,6 +78,7 @@ services:
       - SECRET_KEY=#{SECRET_KEY}
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     volumes:
       - "marketplace_user_image:${UPLOAD_FOLDER}"
     depends_on:
