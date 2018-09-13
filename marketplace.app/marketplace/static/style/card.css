@@ -123,7 +123,8 @@
 }
 
 .review-product-item {
-    border-bottom: 1px solid #dadadafa;
+    /* border-bottom: 1px solid #dadadafa; */
+    border-bottom: 1px solid rgba(217, 217, 217, 0.98);
     margin-bottom: 1rem;
     padding: 0;
 }

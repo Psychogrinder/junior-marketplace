@@ -24,3 +24,4 @@ YaDiskClient
 Pillow
 Flask-HTTPAuth
 Flask-WTF
+pyscss
