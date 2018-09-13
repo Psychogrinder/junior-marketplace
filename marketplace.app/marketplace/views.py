@@ -57,9 +57,6 @@ def product_card(product_id):
 def producer_products(producer_id):
     products = product_utils.get_products_by_producer_id(producer_id)
     producer_name = producer_utils.get_producer_by_id(producer_id).name
-    print('-------------')
-    print(producer_utils.get_producer_by_id(producer_id))
-    print('-------------')
     meta_description = 'все товары производителя Маркетплейс'
     if current_user.id == int(producer_id):
         return render_template('producer_products.html', products=products, current_user=current_user,
@@ -112,16 +109,16 @@ def cart(user_id):
         return redirect(url_for('index'))
 
 
-@app.route('/cart/<user_id>/order_registration/')
+@app.route('/cart/<int:user_id>/order_registration/')
 def order_registration(user_id):
-    user = Consumer.query.filter_by(id=user_id).first()
-    items = Cart.query.filter_by(consumer_id=user.id).first().items
-    items = {int(k): (v) for k, v in items.items()}
-    products = cart_utils.get_products_from_cart(items)
-    producer_ids = set(product.producer_id for product in products)
-    producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
-    meta_description = 'Оформление заказа Маркетплейс'
-    if current_user.id == int(user_id):
+    if current_user.is_authenticated and current_user.id == user_id:
+        user = Consumer.query.filter_by(id=user_id).first()
+        items = Cart.query.filter_by(consumer_id=user.id).first().items
+        items = {int(k): (v) for k, v in items.items()}
+        products = cart_utils.get_products_from_cart(items)
+        producer_ids = set(product.producer_id for product in products)
+        producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
+        meta_description = 'Оформление заказа Маркетплейс'
         return render_template('order_registration.html', current_user=current_user, producers=producers, items=items,
                                products=products, meta_description=meta_description)
     else:
