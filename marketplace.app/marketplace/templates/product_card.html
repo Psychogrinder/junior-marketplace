@@ -35,6 +35,10 @@
                     <span class="product_id">#{{ product.id }}</span>
                     <span class="product_price_title">ЦЕНА</span>
                     <span class="product_price_value">{{ product.price }}</span>
+                    {% if current_user.entity == 'producer' %}
+                        <span class="product_balance_title">ОСТАТОК</span>
+                        <span class="product_balance_value">{{ product.quantity }}</span>
+                    {% endif %}
                     <span class="product_price_title">
                         {% if product.measurement_unit == 'кг' %}
                             {{ "ВЕС" }}
