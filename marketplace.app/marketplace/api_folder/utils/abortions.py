@@ -38,10 +38,10 @@ def abort_if_category_doesnt_exist_slug_or_get(category_slug):
     return category
 
 
-def abort_if_product_doesnt_exist_or_get(product):
-    product = Product.query.get(product)
+def abort_if_product_doesnt_exist_or_get(product_id):
+    product = Product.query.get(product_id)
     if product is None:
-        abort(404, message='Product with id = {} doesn\'t exists'.format(product))
+        abort(404, message='Product with id = {} doesn\'t exists'.format(product_id))
     return product
 
 
@@ -50,6 +50,13 @@ def abort_if_comment_doesnt_exist_or_get(comment_id):
     if comment is None:
         abort(404, message='Comment with id = {} doesn\'t exists'.format(comment_id))
     return comment
+
+
+def abort_if_not_enough_products_or_get(product_id, quantity):
+    product = abort_if_product_doesnt_exist_or_get(product_id)
+    if product.quantity < quantity:
+        abort(406, message='Not enough items of {} to create order'.format(product.name))
+    return product
 
 
 def failed_email_check(email):

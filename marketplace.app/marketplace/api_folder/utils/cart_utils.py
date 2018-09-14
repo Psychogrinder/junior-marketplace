@@ -2,7 +2,7 @@ import json
 
 from marketplace import db
 from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exist_or_get, \
-    abort_if_product_doesnt_exist_or_get
+    abort_if_product_doesnt_exist_or_get, abort_if_not_enough_products_or_get
 from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.product_utils import get_product_by_id
 from marketplace.models import Cart, Order
@@ -63,9 +63,11 @@ def clear_cart_by_consumer_id(consumer_id):
 def decrease_products_quantity_and_increase_times_ordered(consumer_id):
     items = get_cart_by_consumer_id(consumer_id).items
     for item, quantity in items.items():
-        get_product_by_id(int(item)).quantity -= int(quantity)
-        get_product_by_id(int(item)).times_ordered += 1
-        db.session.commit()
+        if int(quantity) > 0:
+            product = abort_if_not_enough_products_or_get(int(item), int(quantity))
+            product.quantity -= int(quantity)
+            product.times_ordered += 1
+    db.session.commit()
 
 
 def increase_products_quantity_and_decrease_times_ordered(order_id):
@@ -97,15 +99,20 @@ def post_orders(args):
     items = get_cart_by_consumer_id(consumer_id).items
     orders = json.loads(orders)
     for order in orders:
+        is_empty = True
         total_cost = 0
         current_items = {}
         for product_id, quantity in items.items():
-            product = get_product_by_id(int(product_id))
-            if product.producer_id == int(order['producer_id']):
-                current_items[product_id] = quantity
-                total_cost += float(product.price.strip('₽').strip(' ')) * int(quantity)
-        new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
-                          phone, email, consumer_id, order['producer_id'], first_name=first_name, last_name=last_name)
-        db.session.add(new_order)
+            if int(quantity) > 0:
+                is_empty = False
+                product = get_product_by_id(int(product_id))
+                if product.producer_id == int(order['producer_id']):
+                    current_items[product_id] = quantity
+                    total_cost += float(product.price.strip('₽').strip(' ')) * int(quantity)
+        if not is_empty:
+            new_order = Order(total_cost, current_items, order['delivery_method'], delivery_address,
+                              phone, email, consumer_id, order['producer_id'], first_name=first_name,
+                              last_name=last_name)
+            db.session.add(new_order)
     clear_cart_by_consumer_id(consumer_id)
     db.session.commit()
