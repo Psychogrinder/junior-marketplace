@@ -58,7 +58,7 @@ class UnprocessedOrdersByProducerId(Resource):
         return {"quantity": order_utils.get_number_of_unprocessed_orders_by_producer_id(kwargs['producer_id'])}, 200
 
 
-filtered_orders_args = ['producer_id', 'order_status']
+filtered_orders_args = ['producer_id', 'order_status', 'page']
 filtered_orders_parser = reqparse.RequestParser()
 for arg in filtered_orders_args:
     filtered_orders_parser.add_argument(arg)
