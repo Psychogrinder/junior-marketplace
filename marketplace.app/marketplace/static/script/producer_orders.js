@@ -75,6 +75,16 @@ if ($('main.producer-orders').length > 0) {
         return elementBottom > viewportTop && elementTop < viewportBottom;
     };
 
+    $(window).on('resize scroll', function () {
+        let element = $('.pageNumber');
+        if (element.length > 0 && isInViewport(element)) {
+            element.remove();
+            orderFilter['page'] = element.attr("data-page-number");
+            update_orders_page(orderFilter);
+        }
+    });
+
+
     // get and set producer id in orderFilter
     let addr = window.location + '';
     addr = addr.split('/');
@@ -103,7 +113,7 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="row order_history_info">' +
                 '<div class="col-6">' +
                 '<span>№ </span>' +
-                '<span id="orderId' + i + '">' + orders[i].id + '</span>' +
+                '<span id="orderId' + orders[i].id + '">' + orders[i].id + '</span>' +
                 '</div>' +
                 '<div class="col-2">' + orders[i].order_timestamp + '</div>' +
                 '<div class="col-3">' +
@@ -138,14 +148,14 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="row">' +
                 '<div class="col-4">Статус заказа:</div>' +
                 '<div class="col-8">' +
-                '<select class="form-control select-order-status" name="subcategory" id="changeOrderStatusSelect' + i + '" onchange="orderStatusOnChange(' + i + ')">' +
+                '<select class="form-control select-order-status" name="subcategory" id="changeOrderStatusSelect' + orders[i].id + '" onchange="orderStatusOnChange(' + orders[i].id + ')">' +
                 '<option value="Не обработан">Не обработан</option>' +
                 '<option value="Обрабатывается">Обрабатывается</option>' +
                 '<option value="Отправлен">Отправлен</option>' +
                 '<option value="Готов к самовывозу">Готов к самовывозу</option>' +
                 '<option value="Завершён">Завершён</option>' +
                 '</select>' +
-                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtn' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
+                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtn' + orders[i].id + '" onclick="saveOrderStatusClicked(' + orders[i].id + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
@@ -187,21 +197,6 @@ if ($('main.producer-orders').length > 0) {
                 )
             }
         }
-        let next_page_number = page;
-        if (next_page_number) {
-            $("#producerOrderSection").append(
-                '<div style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
-            );
-
-            let element = $('#page' + next_page_number);
-            $(window).on('resize scroll', function () {
-                if (isInViewport(element)) {
-                    element.remove();
-                    orderFilter['page'] = next_page_number;
-                    update_orders_page(orderFilter);
-                }
-            });
-        }
     }
 
     function add_new_orders_table_view(orders, page) {
@@ -211,7 +206,7 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="table_global_row">' +
                 '<div class="table_global_cell">' +
                 '<div>Номер заказа</div>' +
-                '<div class="main-text" id="orderIdTable' + i + '">' + orders[i].id + '</div>' +
+                '<div class="main-text" id="orderIdTable' + orders[i].id + '">' + orders[i].id + '</div>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<div>Покупатель</div>' +
@@ -260,7 +255,7 @@ if ($('main.producer-orders').length > 0) {
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<div>Статус заказа</div>' +
-                '<select class="form-control select-order-status" id="changeOrderStatusSelectTable' + i + '" name="subcategory" onchange="orderStatusOnChange(' + i + ')">' +
+                '<select class="form-control select-order-status" id="changeOrderStatusSelectTable' + orders[i].id + '" name="subcategory" onchange="orderStatusOnChange(' + orders[i].id + ')">' +
                 '<option value="Не обработан">Не обработан</option>' +
                 '<option value="Обрабатывается">Обрабатывается</option>' +
                 '<option value="Отправлен">Отправлен</option>' +
@@ -269,7 +264,7 @@ if ($('main.producer-orders').length > 0) {
                 '</select>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
-                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtnTable' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
+                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtnTable' + orders[i].id + '" onclick="saveOrderStatusClicked(' + orders[i].id + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>'
@@ -296,31 +291,22 @@ if ($('main.producer-orders').length > 0) {
         }
         let next_page_number = page;
         if (next_page_number) {
-            $("#producerOrderSectionTable").append(
-                '<div style="width: 1px; height: 1px;" id="tablePage' + next_page_number + '"></div>'
+            $("#mainProducerOrderSection").append(
+                '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
             );
-
-            let element = $('#tablePage' + next_page_number);
-            $(window).on('resize scroll', function () {
-                if (isInViewport(element)) {
-                    element.remove();
-                    orderFilter['page'] = next_page_number;
-                    update_orders_page(orderFilter);
-                }
-            });
         }
     }
 
     // Set the right status of each order
-    function set_selected_options() {
-        for (let i = 0; i < currentOrders.length; i++) {
-            let currentSelect = document.getElementById('changeOrderStatusSelect' + i);
+    function set_selected_options(orders) {
+        for (let i = 0; i < orders.length; i++) {
+            let currentSelect = document.getElementById('changeOrderStatusSelect' + orders[i].id);
             for (var o = 0; o < currentSelect.options.length; o++) {
                 if (currentSelect.options[o].value === currentOrders[i].status) {
                     currentSelect.options[o].selected = 'selected'
                 }
             }
-            let currentSelectTable = document.getElementById('changeOrderStatusSelectTable' + i);
+            let currentSelectTable = document.getElementById('changeOrderStatusSelectTable' + orders[i].id);
             for (var o = 0; o < currentSelectTable.options.length; o++) {
                 if (currentSelectTable.options[o].value === currentOrders[i].status) {
                     currentSelectTable.options[o].selected = 'selected'
@@ -331,6 +317,8 @@ if ($('main.producer-orders').length > 0) {
 
     // if a different order status is selected, show "save" button
     function orderStatusOnChange(i) {
+        console.log('i: ' + i);
+        console.log($('#saveStatusOrderBtn' + i));
         if (currentOrdersView === 'common') {
             $('#saveStatusOrderBtn' + i).show();
         } else if (currentOrdersView === 'table') {
@@ -376,23 +364,23 @@ if ($('main.producer-orders').length > 0) {
         $.post('/api/v1/producers/filtered_orders',
             orderFilter,
             function (orders, status) {
+                console.log(orders.page);
                 currentOrders = orders.orders;
                 add_new_orders_common_view(orders.orders, orders.page);
                 add_new_orders_table_view(orders.orders, orders.page);
-                set_selected_options();
+                set_selected_options(orders.orders);
                 if (currentOrdersView === 'table') {
-                    $('#page' + orders.page).hide();
                     showTable()
                 } else {
                     currentOrdersView = 'common';
-                    $('#tablePage' + orders.page).hide();
                     showCommon();
                 }
 
                 // hide all "save" buttons until a new status is selected
-                for (var i = 0; i < orders.orders.length; i++) {
-                    $("#saveStatusOrderBtn" + i).hide();
-                    $("#saveStatusOrderBtnTable" + i).hide();
+                let items = orders.orders;
+                for (let i = 0; i < items.length; i++) {
+                    $("#saveStatusOrderBtn" + items[i].id).hide();
+                    $("#saveStatusOrderBtnTable" + items[i].id).hide();
                 }
             });
     }
@@ -411,4 +399,5 @@ if ($('main.producer-orders').length > 0) {
         update_orders_page(orderFilter);
     });
     update_orders_page(orderFilter);
+
 }
