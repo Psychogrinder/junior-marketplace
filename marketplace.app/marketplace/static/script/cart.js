@@ -22,6 +22,14 @@ var putToCart = function (consumer_id, product_id) {
     }
 };
 
+if ($('#cartMain').length > 0) {
+    $('.product_quantity_input').on('change keyup input click mouseup', function () {
+        if (this.value.match(/[^0-9]|^0{1}/g)) {
+            this.value = this.value.replace(/./g, '');
+        }
+    });
+}
+
 var getNumberOfProductsInCart;
 if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'consumer')) {
     $(document).ready(function () {
@@ -117,6 +125,10 @@ if (localStorage.getItem("globalUserId") > 0) {
 
 function changeQuantityOfProduct(product_id) {
     let quantity = $('#number' + product_id).val();
+    if (quantity == '') {
+        quantity = 1;
+    }
+    $('#number' + product_id).val(quantity);
     var user_id = localStorage.getItem("globalUserId");
     $.post("/api/v1/consumers/" + user_id + "/cart",
         {

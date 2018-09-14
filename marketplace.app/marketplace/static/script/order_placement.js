@@ -53,6 +53,11 @@ if ($('main .order_registration').length > 0) {
                             '                 <h2>Ваш заказ был успешно оформлен. С Вами свяжутся в ближайшее время. </h2>\n' +
                             '            </section>')
                     }
+                }).fail(function (data, textStatus, xhr) {
+                    if (data.status == 406) {
+                        var hulla = new hullabaloo();
+                        hulla.send(data.responseJSON.message, "secondary");
+                    }
                 });
         }
     });
