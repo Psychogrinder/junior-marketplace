@@ -14,8 +14,8 @@
         {% if products %}
             <section class="notEmptyCart">
                 {% for product in products %}
-                    <section class="{{ product.id }}">
-                        <div class="container">
+                    <section class="{{ product.id }}" id="productCartContainer">
+                        <div class="container" id="productCartItemAlert{{ product.id }}">
                             <div class="row">
                                 <div class="col-2">
                                     <img src="/{{ product.photo_url }}" alt=""
@@ -43,7 +43,7 @@
                                         {% endif %}
                                         {{ product.measurement_unit }}
                                     </p>
-                                    <p id="allProductsInStock">{{ product.quantity }}</p>
+                                    <p id="allProductsInStock{{ product.id }}">{{ product.quantity }}</p>
                                 </div>
                                 <div class="col-3 quantity_container">
                                     <p>Количество</p>
@@ -64,6 +64,7 @@
                                              value="Increase Value">+
                                         </div>
                                     </form>
+                                    <p id="alertProductOutOfStock{{ product.id }}" class="alert_product_out_of_stock">Товар закончился. Заказ на этот товар не будет оформлен.</p>
                                 </div>
                                 <div class="col-1">
                                     <button type="button" class="close"
