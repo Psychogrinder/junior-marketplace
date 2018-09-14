@@ -172,3 +172,11 @@ def get_route_by_name(routes, route_name):
     for route in routes:
         if route_name in route:
             return route
+
+
+def login(email, password):
+    return requests.post('http://127.0.0.1:8000/api/v1/login',
+                         data={'email': email, 'password': password})
+
+def logout():
+    return requests.get('http://127.0.0.1:8000/api/v1/logout')
