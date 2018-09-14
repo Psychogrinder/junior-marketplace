@@ -12,7 +12,7 @@ services:
 
   influx:
     container_name: marketplace.influxdb
-    image: influxdb:1.5-alpine
+    image: influxdb:1.2
     volumes:
       - "marketplace_monitor:/var/lib/influxdb"
     networks:
@@ -23,9 +23,9 @@ services:
 
   diamond:
     container_name: marketplace.diamond
-    image: lesaux/diamond-containercollector
+    image: python-diamond:latest
     networks:
       - marketplace
-    # env_file: diamond.env
+    env_file: diamond.env
     depends_on:
       - influx
