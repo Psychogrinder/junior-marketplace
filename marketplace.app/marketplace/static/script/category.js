@@ -100,18 +100,6 @@ $(document).ready(function () {
                     $("#productsByCategory").append(
                         '<div data-page-number="' + next_page_number +  '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                     );
-
-                    // // let element = $('#page' + next_page_number);
-                    // $(window).on('resize scroll', function (e) {
-                    //     let element = document.getElementsByClassName('pageNumber')
-                    //     if (element !== undefined && isInViewport(element)) {
-                    //         console.log(element);
-                    //         element.remove();
-                    //         console.log(next_page_number);
-                    //         sorts_and_filters['page'] = next_page_number;
-                    //         update_page(sorts_and_filters, base_category);
-                    //     }
-                    // });
                 }
             }
 
