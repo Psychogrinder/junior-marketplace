@@ -3,117 +3,112 @@
 {% block meta_title %}Оформление заказа{% endblock %}
 
 {% block meta_description %}
-    <meta name="description" content='{{ current_user.first_name }} {{ current_user.last_name }} {{ meta_description }}'>
+<meta name="description" content='{{ current_user.first_name }} {{ current_user.last_name }} {{ meta_description }}'>
 {% endblock %}
 
 {% block body %}
-    <main>
-        <div class="container order_registration">
-            <section class="breadcrumbs">
-                <span><a href={{ url_for('cart', user_id = current_user.id) }}>Корзина</a></span>
-                <span><a class="active">Оформление заказа</a></span>
-            </section>
-            <section class="registration-order-items-block">
-                <div class="row order-registration-header">
-                    <h1>ЗАКАЗ</h1>
-                </div>
-                {% for producer in producers %}
-                    <div class="registration-order-items{{ producer.id }}">
-                        <div class="registration-order-item">
-                            <div class="producer-name">
-                                <p>{{ producer.name }}</p>
-                                <span class="visuallyHiddenProducerId" style="display: none;">{{ producer.id }}</span>
-                            </div>
-                            <div class="row order-item-header">
-                                <div class="col-4">
-                                    Название товара
-                                </div>
-                                <div class="col-4">
-                                    Количество
-                                </div>
-                                <div class="col-4">
-                                    Цена
-                                </div>
-                            </div>
-                            {% for product in products %}
-                                {% if product.producer_id == producer.id %}
-                                    <div class="row order-item">
-                                        <div class="col-4">
-                                            {{ product.name }}
-                                        </div>
-                                        <div class="col-4">
-                                            {% for product_id, quantity in items.items() %}
-                                                {% if product.id == product_id %}
-                                                    {{ quantity }}
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                        <div class="col-4">
-                                            {{ product.price }}
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                            <div class="row delivery-method">
-                                <div class="col-4">
-                                    Способ доставки
-                                </div>
-                                <form class="col-3">
-                                    <select class="form-control deliveryMethodSelect" required>
-                                        <option value="Курьером">Курьером</option>
-                                        <option value="Самовывоз">Самовывоз</option>
-                                    </select>
-                                </form>
-                            </div>
+<main>
+    <div class="container order_registration">
+        <section class="breadcrumbs">
+            <span><a href="{{ url_for('cart', user_id = current_user.id) }}">Корзина</a></span>
+            <span><a class="active">Оформление заказа</a></span>
+        </section>
+        <section class="registration-order-items-block">
+            <div class="row order-registration-header">
+                <h1>ЗАКАЗ</h1>
+            </div>
+            {% for producer, items in products.items() %}
+            <div class="registration-order-items{{ producer.id }}">
+                <div class="registration-order-item">
+                    <div class="producer-name">
+                        <p>{{ producer[1] }}</p>
+                        <span class="visuallyHiddenProducerId" style="display: none;">{{ producer[0] }}</span>
+                    </div>
+                    <div class="row order-item-header">
+                        <div class="col-4">
+                            Название товара
+                        </div>
+                        <div class="col-4">
+                            Количество
+                        </div>
+                        <div class="col-4">
+                            Цена
                         </div>
                     </div>
-                {% endfor %}
-                <div class="order-sum row">
-                    <div class="col-auto">
-                        СУММА ЗАКАЗА:
+                    {% for product in items %}
+                    <div class="row order-item">
+                        <div class="col-4">
+                            {{ product.name }}
+                        </div>
+                        <div class="col-4">
+                            {{ product.quantity }}
+                        </div>
+                        <div class="col-4">
+                            {{ product.price }}
+                        </div>
                     </div>
-                    <div class="col-4">
+                    {% endfor %}
+                    <div class="row delivery-method">
+                        <div class="col-4">
+                            Способ доставки
+                        </div>
+                        <form class="col-3">
+                            <select class="form-control deliveryMethodSelect" required>
+                                <option value="Курьером">Курьером</option>
+                                <option value="Самовывоз">Самовывоз</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="order-sum row">
+                <div class="col-auto">
+                    СУММА ЗАКАЗА:
+                </div>
+                <div class="col-4">
                         <span id="totalCost">
                         </span>
-                        <span>₽</span>
-                    </div>
+                    <span>₽</span>
                 </div>
-            </section>
-            <section class="registraion-order-contact-inf">
-                <div class="row order-registration-header">
-                    <h1>КОНТАКТНАЯ ИНФОРМАЦИЯ</h1>
+            </div>
+        </section>
+        <section class="registraion-order-contact-inf">
+            <div class="row order-registration-header">
+                <h1>КОНТАКТНАЯ ИНФОРМАЦИЯ</h1>
+            </div>
+            <form action="#">
+                <div class="row order-registration-item">
+                    <label for="orderRegistrationFirstName" class="col-4 col-sm-2">Имя</label>
+                    <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationFirstName"
+                           placeholder="Иван" value="{{ current_user.first_name }}">
                 </div>
-                <form action="#">
-                    <div class="row order-registration-item">
-                        <label for="orderRegistrationFirstName" class="col-4 col-sm-2">Имя</label>
-                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationFirstName"
-                               placeholder="Иван" value={{ current_user.first_name }}>
-                    </div>
-                    <div class="row order-registration-item">
-                        <label for="orderRegistrationLastName" class="col-4 col-sm-2">Фамилия</label>
-                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationLastName"
-                               placeholder="Кузнецов" value={{ current_user.last_name }}>
-                    </div>
-                    <div class="row order-registration-item">
-                        <label for="orderRegistrationEmail" class="col-4 col-sm-2">Email</label>
-                        <input type="email" class="form-control col-8 col-sm-4" id="orderRegistrationEmail"
-                               aria-describedby="emailHelp" placeholder="example@email.com" value={{ current_user.email }} disabled>
-                    </div>
-                    <div class="row order-registration-item">
-                        <label for="orderRegistrationPhone" class="col-4 col-sm-2">Телефон</label>
-                        <input type="text" class="form-control col-8 col-sm-4 phone_mask" id="orderRegistrationPhone"
-                               placeholder="+7(___)___-__-__" value={{ current_user.phone_number }}>
-                    </div>
-                    <div class="row order-registration-item">
-                        <label for="orderRegistrationAddress" class="col-4 col-sm-2">Адрес</label>
-                        <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationAddress"
-                               placeholder="Улица Пушкина д.3 кв 62" value='{{ current_user.address }}'>
-                    </div>
-                    <div class="col-12 col-sm-6 order-registration-agree">
-                        <input type="button" class="btn btn-success" id="orderPlacementBtn" value="ПОДТВЕРДИТЬ ЗАКАЗ">
-                    </div>
-                </form>
-            </section>
-        </div>
-    </main>
+                <div class="row order-registration-item">
+                    <label for="orderRegistrationLastName" class="col-4 col-sm-2">Фамилия</label>
+                    <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationLastName"
+                           placeholder="Кузнецов" value="{{ current_user.last_name }}">
+                </div>
+                <div class="row order-registration-item">
+                    <label for="orderRegistrationEmail" class="col-4 col-sm-2">Email</label>
+                    <input type="email" class="form-control col-8 col-sm-4" id="orderRegistrationEmail"
+                           aria-describedby="emailHelp" placeholder="example@email.com" value="{{ current_user.email }}"
+                           disabled>
+                </div>
+                <div class="row order-registration-item">
+                    <label for="orderRegistrationPhone" class="col-4 col-sm-2">Телефон</label>
+                    <input type="text" class="form-control col-8 col-sm-4 phone_mask" id="orderRegistrationPhone"
+                           placeholder="+7(___)___-__-__" value="{{ current_user.phone_number }}">
+                </div>
+                <div class="row order-registration-item">
+                    <label for="orderRegistrationAddress" class="col-4 col-sm-2">Адрес</label>
+                    <input type="text" class="form-control col-8 col-sm-4" id="orderRegistrationAddress"
+                           placeholder="Улица Пушкина д.3 кв 62" value='{{ current_user.address }}'>
+                </div>
+                <div class="col-12 col-sm-6 order-registration-agree">
+                    <input type="button" class="btn btn-success" id="orderPlacementBtn" value="ПОДТВЕРДИТЬ ЗАКАЗ">
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
 {% endblock %}
