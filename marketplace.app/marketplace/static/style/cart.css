@@ -116,3 +116,9 @@
 .cart_product_stock_info a {
     color: #5a5a5a;
 }
+
+.alert_product_out_of_stock {
+    color: #ee686e;
+    display: none;
+    padding-top: 1rem;
+}
