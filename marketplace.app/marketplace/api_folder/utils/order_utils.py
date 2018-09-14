@@ -52,12 +52,20 @@ def get_number_of_unprocessed_orders_by_producer_id(producer_id):
 
 
 def get_filtered_orders(args):
+    """
+    Функция для отображения заказов на странице истории заказов производителя.
+    """
     order_status = args['order_status']
+    page = int(args['page'])
     if order_status == 'Все':
-        orders = order_schema_list.dump(Order.query.filter_by(producer_id=int(args['producer_id'])).all()).data
+        orders = Order.query.filter_by(producer_id=int(args['producer_id'])).paginate(page, ORDERS_PER_PAGE)
+        next_page = orders.next_num
+        orders = order_schema_list.dump(orders.items).data
     else:
-        orders = order_schema_list.dump(
-            Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).all()).data
+        orders = Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).paginate(
+            page, ORDERS_PER_PAGE)
+        next_page = orders.next_num
+        orders = order_schema_list.dump(orders.items).data
     for order in orders:
         order['items'] = []
         order['order_timestamp'] = order['order_timestamp'].split('T')[0]
@@ -73,7 +81,8 @@ def get_filtered_orders(args):
             order['items'].append(product)
         del order['order_items_json']
 
-    return orders
+    return {'orders': orders,
+            'page': next_page}
 
 
 def get_formatted_orders_by_consumer_id(consumer_id: int, page: int) -> dict:

@@ -62,6 +62,17 @@ if ($('main.producer-orders').length > 0) {
     let orderFilter = {
         producer_id: null,
         order_status: null,
+        page: 1,
+    };
+
+    let isInViewport = function (element) {
+        let elementTop = element.offset().top;
+        let elementBottom = elementTop + element.outerHeight();
+
+        let viewportTop = $(window).scrollTop();
+        let viewportBottom = viewportTop + $(window).height();
+
+        return elementBottom > viewportTop && elementTop < viewportBottom;
     };
 
     // get and set producer id in orderFilter
@@ -85,7 +96,7 @@ if ($('main.producer-orders').length > 0) {
         }
     }
 
-    function add_new_orders_common_view(orders) {
+    function add_new_orders_common_view(orders, page) {
         for (var i = 0; i < orders.length; i++) {
             $("#producerOrderSection").append(
                 '<div class="container item_order">' +
@@ -99,7 +110,7 @@ if ($('main.producer-orders').length > 0) {
                 '<span> СУММА ЗАКАЗА: ' + orders[i].total_cost + '</span>' +
                 '</div>' +
                 '</div>' +
-                '<div id="orderProducts' + i + '"></div>' +
+                '<div id="orderProducts' + orders[i].id + '"></div>' +
                 '<div class="row">' +
                 '<div class="col-6">' +
                 '<div class="row producer-order-delivery">' +
@@ -141,9 +152,9 @@ if ($('main.producer-orders').length > 0) {
                 '</div>' +
                 '</div>'
             );
-            var items = orders[i]['items'];
-            for (var p = 0; p < items.length; p++) {
-                $("#orderProducts" + i).append(
+            let items = orders[i]['items'];
+            for (let p = 0; p < items.length; p++) {
+                $("#orderProducts" + orders[i].id).append(
                     '<div class="row">' +
                     '<div class="col-2">' +
                     '<img class="order-product-photo" src="/' + items[p].photo_url + '" alt="" width="150px">' +
@@ -176,9 +187,24 @@ if ($('main.producer-orders').length > 0) {
                 )
             }
         }
+        let next_page_number = page;
+        if (next_page_number) {
+            $("#producerOrderSection").append(
+                '<div style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+            );
+
+            let element = $('#page' + next_page_number);
+            $(window).on('resize scroll', function () {
+                if (isInViewport(element)) {
+                    element.remove();
+                    orderFilter['page'] = next_page_number;
+                    update_orders_page(orderFilter);
+                }
+            });
+        }
     }
 
-    function add_new_orders_table_view(orders) {
+    function add_new_orders_table_view(orders, page) {
         for (var i = 0; i < orders.length; i++) {
             $("#producerOrderSectionTable").append(
                 '<div class="container table_container hidden">' +
@@ -218,7 +244,7 @@ if ($('main.producer-orders').length > 0) {
                 '<div>Количество</div>' +
                 '</div>' +
                 '</div>' +
-                '<div id="innerTableProductsSection' + i + '"></div>' +
+                '<div id="innerTableProductsSection' + orders[i].id + '"></div>' +
                 '<div class="table_global_row">' +
                 '<div class="table_global_cell">' +
                 '<div>Способ доставки</div>' +
@@ -248,9 +274,9 @@ if ($('main.producer-orders').length > 0) {
                 '</div>' +
                 '</div>'
             );
-            var items = orders[i]['items'];
-            for (var p = 0; p < items.length; p++) {
-                $("#innerTableProductsSection" + i).append(
+            let items = orders[i]['items'];
+            for (let p = 0; p < items.length; p++) {
+                $("#innerTableProductsSection" + orders[i].id).append(
                     '<div class="table_global_row">' +
                     '<div class="table_global_cell producer-orders-item">' +
                     '<div class="main-text">' + items[p].name + '</div>' +
@@ -268,11 +294,26 @@ if ($('main.producer-orders').length > 0) {
                 );
             }
         }
+        let next_page_number = page;
+        if (next_page_number) {
+            $("#producerOrderSectionTable").append(
+                '<div style="width: 1px; height: 1px;" id="tablePage' + next_page_number + '"></div>'
+            );
+
+            let element = $('#tablePage' + next_page_number);
+            $(window).on('resize scroll', function () {
+                if (isInViewport(element)) {
+                    element.remove();
+                    orderFilter['page'] = next_page_number;
+                    update_orders_page(orderFilter);
+                }
+            });
+        }
     }
 
     // Set the right status of each order
     function set_selected_options() {
-        for (var i = 0; i < currentOrders.length; i++) {
+        for (let i = 0; i < currentOrders.length; i++) {
             let currentSelect = document.getElementById('changeOrderStatusSelect' + i);
             for (var o = 0; o < currentSelect.options.length; o++) {
                 if (currentSelect.options[o].value === currentOrders[i].status) {
@@ -335,19 +376,21 @@ if ($('main.producer-orders').length > 0) {
         $.post('/api/v1/producers/filtered_orders',
             orderFilter,
             function (orders, status) {
-                currentOrders = orders;
-                add_new_orders_common_view(orders);
-                add_new_orders_table_view(orders);
+                currentOrders = orders.orders;
+                add_new_orders_common_view(orders.orders, orders.page);
+                add_new_orders_table_view(orders.orders, orders.page);
                 set_selected_options();
                 if (currentOrdersView === 'table') {
+                    $('#page' + orders.page).hide();
                     showTable()
                 } else {
                     currentOrdersView = 'common';
+                    $('#tablePage' + orders.page).hide();
                     showCommon();
                 }
 
                 // hide all "save" buttons until a new status is selected
-                for (var i = 0; i < orders.length; i++) {
+                for (var i = 0; i < orders.orders.length; i++) {
                     $("#saveStatusOrderBtn" + i).hide();
                     $("#saveStatusOrderBtnTable" + i).hide();
                 }
@@ -357,12 +400,14 @@ if ($('main.producer-orders').length > 0) {
 
     function update_orders_page(orderFilter) {
         fill_order_filter(orderFilter);
-        delete_current_orders();
         display_new_orders(orderFilter);
     }
 
+
 // update orders on change of the main select
     $('#statuses').change(function () {
+        delete_current_orders();
+        orderFilter['page'] = 1;
         update_orders_page(orderFilter);
     });
     update_orders_page(orderFilter);
