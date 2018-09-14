@@ -112,7 +112,6 @@ if ($('main.order-history').length > 0) {
                         '</div>' +
                         '</div>'
                     );
-                    console.log(data.orders[i]);
                     let items = data.orders[i].items;
                     for (let k = 0; k < items.length; k++) {
                         $('#orderHistoryItemsContainer' + data.orders[i].id).append(

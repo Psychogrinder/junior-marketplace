@@ -53,7 +53,6 @@ form .filter-block:first-child {
     width: fit-content !important;
     max-width: 500px !important;
     top: 70px !important;
-    /*background-color: rgba(122, 193, 173, 0.71) !important;*/
 }
 
 .hullabaloo.alert.alert-dismissible.alert-default {

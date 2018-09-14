@@ -22,10 +22,21 @@ var putToCart = function (consumer_id, product_id) {
     }
 };
 
-if ($('#cartMain').length > 0) {
+if (($('#cartMain').length > 0) || ($('.product-card-main').length > 0)) {
     $('.product_quantity_input').on('change keyup input click mouseup', function () {
         if (this.value.match(/[^0-9]|^0{1}/g)) {
             this.value = this.value.replace(/./g, '');
+        }
+        let products_in_stock = $('#allProductsInStock').text();
+        let product_quantity = $('.product_quantity_input').val();
+        if (product_quantity > Number(products_in_stock)) {
+            $('.product_quantity_input').val(products_in_stock);
+        }
+    });
+    $('.product_quantity_input').on('change', function () {
+        let product_quantity = $('.product_quantity_input').val();
+        if (product_quantity == '' || product_quantity < 1) {
+            $('.product_quantity_input').val(1);
         }
     });
 }
@@ -125,8 +136,12 @@ if (localStorage.getItem("globalUserId") > 0) {
 
 function changeQuantityOfProduct(product_id) {
     let quantity = $('#number' + product_id).val();
-    if (quantity == '') {
+    if (quantity == '' || quantity < 1) {
         quantity = 1;
+    }
+    let products_in_stock = $('#allProductsInStock').text();
+    if (quantity > Number(products_in_stock)) {
+        quantity = products_in_stock;
     }
     $('#number' + product_id).val(quantity);
     var user_id = localStorage.getItem("globalUserId");
