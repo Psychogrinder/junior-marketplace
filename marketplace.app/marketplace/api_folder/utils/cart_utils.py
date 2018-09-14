@@ -2,7 +2,7 @@ import json
 
 from marketplace import db
 from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exist_or_get, \
-    abort_if_product_doesnt_exist_or_get, abort_if_not_enough_products_or_get
+    abort_if_product_doesnt_exist_or_get, abort_if_not_enough_products_or_get, less_than_zero_items_in_carts
 from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.product_utils import get_product_by_id
 from marketplace.models import Cart, Order
@@ -37,13 +37,16 @@ def post_item_to_cart_by_consumer_id(args, consumer_id):
     cart = get_cart_by_consumer_id(consumer_id)
     product_id = args['product_id']
     quantity = int(args['quantity'])
+    cur_quantity = 0 if product_id not in cart.items else cart.items[product_id]
     if args['mode'] == 'inc':
-        cur_quantity = 0 if product_id not in cart.items else cart.items[product_id]
         abort_if_not_enough_products_or_get(int(product_id), cur_quantity + quantity)
         cart.increase_item_quantity(product_id, quantity)
     elif args['mode'] == 'dec':
+        if cur_quantity - int(quantity) < 0:
+            less_than_zero_items_in_carts()
         cart.decrease_item_quantity(product_id, quantity)
     elif args['mode'] == 'set':
+        abort_if_not_enough_products_or_get(int(product_id), quantity)
         cart.set_item_quantity(product_id, quantity)
     db.session.commit()
     return cart
