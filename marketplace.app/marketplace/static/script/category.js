@@ -183,11 +183,11 @@ $(document).ready(function () {
         }
 
         let isInViewport = function (element) {
-            var elementTop = element.offset().top;
-            var elementBottom = elementTop + element.outerHeight();
+            let elementTop = element.offset().top;
+            let elementBottom = elementTop + element.outerHeight();
 
-            var viewportTop = $(window).scrollTop();
-            var viewportBottom = viewportTop + $(window).height();
+            let viewportTop = $(window).scrollTop();
+            let viewportBottom = viewportTop + $(window).height();
 
             return elementBottom > viewportTop && elementTop < viewportBottom;
         };

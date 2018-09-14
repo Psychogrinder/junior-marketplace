@@ -58,7 +58,7 @@ class UnprocessedOrdersByProducerId(Resource):
         return {"quantity": order_utils.get_number_of_unprocessed_orders_by_producer_id(kwargs['producer_id'])}, 200
 
 
-filtered_orders_args = ['producer_id', 'order_status']
+filtered_orders_args = ['producer_id', 'order_status', 'page']
 filtered_orders_parser = reqparse.RequestParser()
 for arg in filtered_orders_args:
     filtered_orders_parser.add_argument(arg)
@@ -68,3 +68,14 @@ class FilteredOrdersByProducerId(Resource):
     def post(self):
         args = filtered_orders_parser.parse_args()
         return order_utils.get_filtered_orders(args), 200
+
+
+consumer_order_parser = reqparse.RequestParser()
+consumer_order_parser.add_argument('page')
+consumer_order_parser.add_argument('consumer_id')
+
+
+class FormattedConsumerOrders(Resource):
+    def post(self):
+        args = consumer_order_parser.parse_args()
+        return order_utils.get_formatted_orders_by_consumer_id(args['consumer_id'], int(args['page']))

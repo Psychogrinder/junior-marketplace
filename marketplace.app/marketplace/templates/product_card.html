@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-    <main>
+    <main class="product-card-main">
         <section class="container breadcrumbs">
             <span><a href="{{ url_for( 'index' ) }}">Каталог</a></span>
             <span><a href="{{ url_for( 'category', category_name = category.slug ) }}">{{ category_name }}</a></span>
@@ -35,6 +35,8 @@
                     <span class="product_id">#{{ product.id }}</span>
                     <span class="product_price_title">ЦЕНА</span>
                     <span class="product_price_value">{{ product.price }}</span>
+                    <span class="product_balance_title">ОСТАТОК</span>
+                    <span class="product_balance_value" id="allProductsInStock">{{ product.quantity }}</span>
                     <span class="product_price_title">
                         {% if product.measurement_unit == 'кг' %}
                             {{ "ВЕС" }}

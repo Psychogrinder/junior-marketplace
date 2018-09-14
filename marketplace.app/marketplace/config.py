@@ -37,6 +37,7 @@ class Base(object):
 
     COMMENTS_PER_PAGE = 2
     PRODUCTS_PER_PAGE = 16
+    ORDERS_PER_PAGE = 10
 
 
 class Development(Base):
