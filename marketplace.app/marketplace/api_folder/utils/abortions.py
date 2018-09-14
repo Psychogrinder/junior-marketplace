@@ -59,6 +59,10 @@ def abort_if_not_enough_products_or_get(product_id, quantity):
     return product
 
 
+def less_than_zero_items_in_carts():
+    abort(406, message='Can\'t add negative number of elements to cart')
+
+
 def failed_email_check(email):
     abort(406, message='Given email = \'{}\'  is invalid'.format(email))
 
