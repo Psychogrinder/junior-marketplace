@@ -166,3 +166,9 @@ def check_price(sorted, args_price):
         return is_price_sorted(price_in_slug, args_price)
     else:
         return True
+
+
+def get_route_by_name(routes, route_name):
+    for route in routes:
+        if route_name in route:
+            return route
