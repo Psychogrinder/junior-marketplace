@@ -14,7 +14,8 @@
 
 .producer_title_name,
 .product_id,
-.product_price_value {
+.product_price_value,
+.product_balance_value {
     color: #000;
     margin-bottom: 15px;
 }
