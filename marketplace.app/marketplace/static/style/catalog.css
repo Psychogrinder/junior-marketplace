@@ -23,6 +23,7 @@
 .catalog-category-item a p {
     margin-top: 1rem;
     color: #5a5a5a;
+    text-align: center;
 }
 
 .catalog-category-item a:hover {
@@ -37,14 +38,9 @@
     margin-top: 30px;
 }
 
-.card-item .product-item-photo {
-    height: 150px;
-}
-
 .card-item .product-item-photo img {
     max-width: 100%;
     width: auto;
-    height: 100%;
     margin-left: auto;
     display: block;
 }

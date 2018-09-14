@@ -29,7 +29,7 @@
                                 <img src="/{{ product.photo_url }}" alt="">
                             </div>
                             <div class="product-item-description">
-                                <p>{{ product.price }}</p>
+                                <p>{{ (product.price | string).split('.')[0] }} ₽</p>
                                 <b>{{ product.name }}</b>
                                 {% for producer in producers %}
                                     {% if product.producer_id == producer.id %}
