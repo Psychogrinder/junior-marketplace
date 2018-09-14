@@ -115,17 +115,13 @@ def order_registration(user_id):
         cart = Cart.query.filter_by(consumer_id=current_user.id).first()
         if not cart or not cart.items:
             return redirect(url_for('cart', user_id=user_id))
-        products = cart_utils.get_products_from_cart(cart.items)
-        producer_ids = set(product.producer_id for product in products)
-        producers = [producer_utils.get_producer_by_id(id) for id in producer_ids]
+        products = cart_utils.get_formatted_products_from_cart(user_id)
         meta_description = 'Оформление заказа Маркетплейс'
         return render_template(
             'order_registration.html',
             current_user=current_user,
-            producers=producers,
-            items=cart.items,
             products=products,
-            meta_description=meta_description
+            meta_description=meta_description,
         )
     else:
         return redirect(url_for('index'))
