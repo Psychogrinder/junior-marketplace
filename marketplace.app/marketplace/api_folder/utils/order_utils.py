@@ -60,12 +60,12 @@ def get_filtered_orders(args):
     if order_status == 'Все':
         orders = Order.query.filter_by(producer_id=int(args['producer_id'])).paginate(page, ORDERS_PER_PAGE)
         next_page = orders.next_num
-        orders = order_schema_list.dump(orders.items).data                                                                                                   ORDERS_PER_PAGE)).data
+        orders = order_schema_list.dump(orders.items).data
     else:
         orders = Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).paginate(
             page, ORDERS_PER_PAGE)
         next_page = orders.next_num
-        orders = order_schema_list.dump(orders.items).data                                                                                                     ORDERS_PER_PAGE)).data
+        orders = order_schema_list.dump(orders.items).data
     for order in orders:
         order['items'] = []
         order['order_timestamp'] = order['order_timestamp'].split('T')[0]
