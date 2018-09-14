@@ -3,7 +3,7 @@ from marketplace.models import Category, User, Product, Producer
 from urllib.request import Request, urlopen
 import requests, json
 
-def parseApiRoutes(file='../views.py'):
+def parseViews(file='../views.py'):
 
     routes = {'auth': [],
               'not_auth': ['/category/<category_name>',
@@ -16,10 +16,10 @@ def parseApiRoutes(file='../views.py'):
         for s in f:
             """ parsing classes of routes (keys) and routes:
                                 seek first, last symbols in strings"""
-            #for views.py
+
             if '@app.route' in s:
-                first_symbol, last_symblol = s.find('/'), s.rfind('\'')
-                route = s[first_symbol:last_symblol]
+                start, end = s.find('/'), s.rfind('\'')
+                route = s[start:end]
 
                 if route not in (routes['not_auth']):
                     if ('<' or '>' or 'products') not in route:
@@ -29,9 +29,41 @@ def parseApiRoutes(file='../views.py'):
     return routes
 
 
-def getCategorySlugs(args):
+def parseRoutes(file='../api_routes.py'):
+    routes = {'Orders': [],
+              'Cart': [],
+              'Authorization': [],
+              'Upload': [],
+              'Category': [],
+              'Producers': [],
+              'Consumers': [],
+              'Products': [],
+              'Password': [],
+    }
+
+    with open(file) as f:
+        for s in f:
+
+            if '#' in s:
+                string = ''
+                for char in s:
+                    if char.isalpha():
+                        string += char
+                route_category = string
+
+            if 'api.add_resource' in s:
+                start, end = s.find('/'), s.rfind('\'')
+                route = s[start:end]
+                for key in routes:
+                    if route_category == key:
+                        routes[key].append(route)
+
+    return routes
+
+def getCategorySlugs(parent_id=0):
     category_slugs = []
-    if args['parent_id'] == 0:
+
+    if parent_id == 0:
         categories = Category.query.filter_by(parent_id=0)
     else:
         categories = Category.query.all()

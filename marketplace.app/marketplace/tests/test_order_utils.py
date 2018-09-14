@@ -29,11 +29,19 @@ class TestCase(unittest.TestCase):
             except we.NotFound:
                 pass
 
-
-    @unittest.skip #return only last product from order
+    #TODO: add to cart products, change status and compare products from order and cart
     def test_get_products_by_order_id(self):
-        products = get_products_by_order_id(6)
-        print((products))
+        products_from_order = get_products_by_order_id(5)
+
+        for product in products_from_order:
+            pass
+            # product.name
+            # product.id
+            # product.producer_id
+            # product.category_id
+            # product.price
+            # product.measurement_unit
+
 
 if __name__ == '__main__':
     unittest.main()
