@@ -55,7 +55,7 @@ def abort_if_comment_doesnt_exist_or_get(comment_id):
 def abort_if_not_enough_products_or_get(product_id, quantity):
     product = abort_if_product_doesnt_exist_or_get(product_id)
     if product.quantity < quantity:
-        abort(406, message='Not enough items of {} to create order'.format(product.name))
+        abort(406, message='Товара {} в остатке меньше, чем вы заказали'.format(product.name))
     return product
 
 

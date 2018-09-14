@@ -110,6 +110,7 @@ def cart(user_id):
 
 @app.route('/cart/<int:user_id>/order_registration')
 def order_registration(user_id):
+
     if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
         cart = Cart.query.filter_by(consumer_id=current_user.id).first()
         if not cart or not cart.items:
