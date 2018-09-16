@@ -1,7 +1,7 @@
 import json
 import redis
 from flask import request
-from marketplace import cache, REDIS_STORAGE_TIME
+from marketplace import cache, REDIS_STORAGE_TIME, error_reports
 
 
 # Decorators
@@ -23,6 +23,7 @@ def check_redis_connection(cache_function):
             kwargs['is_connected'] = True
         except redis.exceptions.ConnectionError:
             kwargs['is_connected'] = False
+            error_reports.send_report('No connect to redis', 'app', reporter='cache')
         return cache_function(**kwargs)
 
     return check_connection_wrapper
