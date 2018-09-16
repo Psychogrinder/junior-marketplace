@@ -12,7 +12,6 @@ import redis
 import cssmin
 import jsmin
 from flask_mail import Mail
-from marketplace import _celery
 from influxdb import InfluxDBClient
 from raven.contrib.flask import Sentry
 
@@ -22,6 +21,17 @@ assets = Environment(app)
 app.config.from_object(
     Development if os.getenv('FLASK_ENV') == 'development' else Production
 )
+
+if os.getenv('CELERY_APP'):
+    from raven import Client
+    from raven.contrib.celery import register_signal, register_logger_signal
+    sentry = Client(app.config['SENTRY_DSN'])
+    register_logger_signal(sentry)
+    register_signal(sentry)
+else:
+    sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
+from marketplace import _celery
+
 mail = Mail(app)
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
@@ -41,7 +51,6 @@ influx_client = InfluxDBClient(
     database=app.config['INFLUXDB_DATABASE']
 )
 
-sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
 
 from marketplace import models, views, api_routes
 from marketplace.models import Admin
