@@ -66,3 +66,5 @@ class Production(Base):
     CACHE_STORAGE_PORT = 6379
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
+
+    SENTRY_DSN = os.getenv('SENTRY_DSN')
