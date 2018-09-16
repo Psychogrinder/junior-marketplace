@@ -7,12 +7,14 @@ from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
 import os
+import logging
 import redis
 import cssmin
 import jsmin
 from flask_mail import Mail
 from marketplace import _celery
 from influxdb import InfluxDBClient
+from raven.contrib.flask import Sentry
 
 
 app = Flask(__name__)
@@ -38,6 +40,8 @@ influx_client = InfluxDBClient(
     host=app.config['INFLUX_HOST'],
     database=app.config['INFLUX_DATABASE']
 )
+
+sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
 
 from marketplace import models, views, api_routes
 from marketplace.models import Admin
