@@ -37,8 +37,8 @@ REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
 COMMENTS_PER_PAGE = app.config['COMMENTS_PER_PAGE']
 
 influx_client = InfluxDBClient(
-    host=app.config['INFLUX_HOST'],
-    database=app.config['INFLUX_DATABASE']
+    host=app.config['INFLUXDB_HOST'],
+    database=app.config['INFLUXDB_DATABASE']
 )
 
 sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
