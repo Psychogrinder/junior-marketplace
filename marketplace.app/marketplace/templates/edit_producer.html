@@ -3,7 +3,7 @@
 {% block meta_title %}Редактирование профиля магазина{% endblock %}
 
 {% block meta_description %}
-    <meta name="description" content='{{ producer.name }} - {{ meta_description }}'>
+<meta name="description" content='{{ producer.name }} - {{ meta_description }}'>
 {% endblock %}
 
 {% block body %}
@@ -29,12 +29,14 @@
         <form action="#" id="editProducerForm" data-parsley-validate>
             <div class="row edit-profile-item">
                 <label for="producer_name" class="col-12 col-sm-2">Название фермы</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="producer_name" data-parsley-pattern="(?!^\d+$)^.+$" placeholder="Сельхоз Ивана"
+                <input type="text" class="form-control col-12 col-sm-4" id="producer_name"
+                       data-parsley-pattern="(?!^\d+$)^.+$" placeholder="Сельхоз Ивана"
                        value="{{ producer.name }}" required>
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_contact_person" class="col-12 col-sm-2">Контактное лицо</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="producer_contact_person" placeholder="Иван" data-parsley-pattern="/^[a-zA-Zа-яёА-ЯЁ\s]*$/" value="{{ producer.person_to_contact }}" required>
+                <input type="text" class="form-control col-12 col-sm-4" id="producer_contact_person" placeholder="Иван"
+                       data-parsley-pattern="/^[a-zA-Zа-яёА-ЯЁ\s]*$/" value="{{ producer.person_to_contact }}" required>
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_email" class="col-12 col-sm-2">Email</label>
@@ -53,11 +55,9 @@
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_description" class="col-12 col-sm-2">Описание</label>
-                <!--<textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="producer_description"-->
-                          <!--name="description">{{ producer.description }}</textarea>-->
             </div>
             <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="producer_description"
-                          name="description">{{ producer.description }}</textarea>
+                      name="description">{{ producer.description}}</textarea>
             <div class="col-12 col-sm-10 edit-profile-save">
                 <button type="submit" class="btn btn-success" id="save_producer_profile">СОХРАНИТЬ</button>
             </div>

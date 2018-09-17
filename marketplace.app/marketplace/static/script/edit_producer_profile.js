@@ -12,7 +12,7 @@ $(document).ready(function () {
                 image_data: image_data,
             },
             success: function (data, status) {
-                
+
             },
         });
     }
@@ -50,7 +50,10 @@ $(document).ready(function () {
             event.preventDefault();
             submitEditProfileForm();
         });
-    })
-    ;
-    var description_textarea = new SimpleMDE({ element: document.getElementById("producer_description") });
+    });
+
+    // Если на странице есть поле для редактирования описания производителя, то преобразуем его в редактор
+    if ($("#producer_description").length > 0) {
+           var description_textarea = new SimpleMDE({element: document.getElementById("producer_description")});
+    }
 });
