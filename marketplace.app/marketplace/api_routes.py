@@ -15,7 +15,7 @@ from marketplace.api_folder.consumer_api import (
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders, UnprocessedOrdersByProducerId, \
-    FilteredOrdersByProducerId
+    FilteredOrdersByProducerId, FormattedConsumerOrders
 from marketplace.api_folder.producer_api import (
     ProductsByProducer,
     GlobalProducers,
@@ -34,7 +34,10 @@ from marketplace.api_folder.product_api import (
     PopularProducts,
     ProductsSortedAndFiltered,
     ProductSearchByParams,
+    Comments,
     ProductComments)
+
+from marketplace.api_folder.password_api import PasswordRecovery
 
 # Orders
 api.add_resource(GlobalOrders, '/orders')
@@ -43,6 +46,7 @@ api.add_resource(ConsumerOrders, '/consumers/<int:consumer_id>/orders')
 api.add_resource(ProducerOrders, '/producers/<int:producer_id>/orders')
 api.add_resource(UnprocessedOrdersByProducerId, '/producers/<int:producer_id>/unprocessed_orders')
 api.add_resource(FilteredOrdersByProducerId, '/producers/filtered_orders')
+api.add_resource(FormattedConsumerOrders, '/consumers/formatted_orders')
 
 # Cart
 api.add_resource(GlobalCart, '/consumers/<int:consumer_id>/cart')
@@ -82,7 +86,8 @@ api.add_resource(ConsumerComments, '/consumers/<int:consumer_id>/comments')
 # Products
 api.add_resource(GlobalProducts, '/products')
 api.add_resource(ProductRest, '/products/<int:product_id>')
-api.add_resource(ProductComments, '/comments')
+api.add_resource(Comments, '/comments')
+api.add_resource(ProductComments, '/products/<int:product_id>/comments')
 api.add_resource(ProductSearchByParams, '/products/search')
 api.add_resource(ProductsByCategory, '/categories/<int:category_id>')
 api.add_resource(PopularProductsByCategory, '/categories/<int:category_id>/popularity/<string:direction>')
@@ -90,3 +95,6 @@ api.add_resource(ProductsByPrice, '/categories/<int:category_id>/price/<string:d
 api.add_resource(ProductsByProducer, '/producers/<int:producer_id>/products')
 api.add_resource(PopularProducts, '/products/popular')
 api.add_resource(ProductsSortedAndFiltered, '/products/filter')
+
+# Password
+api.add_resource(PasswordRecovery, '/password/recovery')

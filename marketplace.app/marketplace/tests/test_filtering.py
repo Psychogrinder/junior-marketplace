@@ -1,7 +1,7 @@
 from path_file import *
 
 
-from testMethods import getCategorySlugs, is_price_sorted, check_price
+from testing_utils import getCategorySlugs, is_price_sorted, check_price
 
 from marketplace.api_folder.utils.product_utils import get_sorted_and_filtered_products
 from marketplace.api_folder.utils.producer_utils import get_all_producers

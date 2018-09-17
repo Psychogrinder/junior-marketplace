@@ -7,7 +7,7 @@ networks:
 volumes:
   marketplace_user_image:
     external: true
-  marketplace_tasts:
+  marketplace_tasks:
     external: true
 
 
@@ -26,6 +26,8 @@ services:
         - SECURITY_PASSWORD_SALT
         - UPLOAD_FOLDER
         - SENTRY_DSN
+        - MAIL_PASSWORD
+
     environment:
       - FLASK_ENV=production
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
@@ -35,6 +37,7 @@ services:
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
       - SENTRY_DSN=${SENTRY_DSN}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     ports:
       - "10.100.1.39:8000:8000"
     command:
@@ -51,7 +54,7 @@ services:
     networks:
       - marketplace
     volumes:
-      - "marketplace_tasts: /data"
+      - "marketplace_tasks:/data"
 
 
   celery:
@@ -68,6 +71,7 @@ services:
         - SECURITY_PASSWORD_SALT
         - CELERY_APP
         - SENTRY_DSN
+        - MAIL_PASSWORD
     command:
       "celery -A marketplace.celery --loglevel=info worker"
     networks:
@@ -81,6 +85,7 @@ services:
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
       - CELERY_APP=True
       - SENTRY_DSN=${SENTRY_DSN}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     volumes:
       - "marketplace_user_image:${UPLOAD_FOLDER}"
     depends_on:

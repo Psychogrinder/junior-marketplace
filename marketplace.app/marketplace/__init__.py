@@ -46,6 +46,8 @@ cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACH
                     db=app.config['CACHE_STORAGE_DB'])
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
 COMMENTS_PER_PAGE = app.config['COMMENTS_PER_PAGE']
+PRODUCTS_PER_PAGE = app.config['PRODUCTS_PER_PAGE']
+ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
 influx_client = InfluxDBClient(
     host=app.config['INFLUXDB_HOST'],
@@ -56,21 +58,13 @@ influx_client = InfluxDBClient(
 from marketplace import models, views, api_routes
 from marketplace.models import Admin
 
-
-# if Admin.query.filter_by(email='admin@mail.ru').first() is None:
-#     admin = Admin('admin@mail.ru', 'admin')
-#     db.session.add(admin)
-#     db.session.commit()
-
-
-css = Bundle('style/base.css', 'style/header.css', 'style/footer.css', 'style/catalog.css', 'style/modal.css',
-             'style/category.css',
-             'style/breadcrumbs.css', 'style/card.css', 'style/cart.css', 'style/edit_profile.css', 'style/profile.css',
-             'style/order_history.css', 'style/producer_products.css', 'style/edit_product.css',
-             'style/producer_products.css', 'style/producer_orders.css', 'style/order_registration.css',
-             'style/sing.css', 'style/validation.css', 'style/404.css', 'style/croppie.css', 'style/image_crop.css',
-             'style/input_file.css',
-             filters=['cssmin'], output='bundle.min.css')
+css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'style/footer.css', 'style/catalog.css',
+             'style/modal.css', 'style/category.scss', 'style/breadcrumbs.css', 'style/card.css', 'style/cart.scss',
+             'style/edit_profile.css', 'style/profile.css', 'style/order_history.css', 'style/edit_product.css',
+             'style/producer_products.scss', 'style/producer_orders.css', 'style/order_registration.css',
+             'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/croppie.css', 'style/image_crop.css',
+             'style/input_file.css', 'style/reset_password.css',
+             filters=['pyscss', 'cssmin'], output='bundle.min.css')
 
 assets.register('css_all', css)
 
@@ -81,8 +75,8 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             'script/i18n/ru.js', 'script/edit_product_post.js', 'script/producer_orders.js', 'script/phone_mask.js',
             'script/category.js', 'script/orders_badge.js', 'script/hullabaloo.js', 'script/producer_products.js',
             'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js', 'script/croppie.js',
-            'script/image_crop.js', 'script/get_comments.js', 'script/review.js','script/jquery.inputmask.bundle.js',
-
+            'script/image_crop.js', 'script/get_comments.js', 'script/review.js', 'script/jquery.inputmask.bundle.js',
+            'script/password_recovery.js',
 
             filters=['jsmin'], output='app.min.js')
 

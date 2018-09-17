@@ -1,48 +1,56 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}
-    Корзина
+{% block meta_title %}Корзина{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content='{{ meta_description }}'>
 {% endblock %}
 
 {% block body %}
     <main id="cartMain">
         <div class="container">
-            <section class="breadcrumbs">
-                <span><a class="active">Корзина</a></span>
-            </section>
+            <h2>КОРЗИНА</h2>
         </div>
-
         {% if products %}
             <section class="notEmptyCart">
                 {% for product in products %}
-                    <section class={{ product.id }}>
-                        <div class="container">
+                    <section class="{{ product.id }}" id="productCartContainer">
+                        <div class="container" id="productCartItemAlert{{ product.id }}">
                             <div class="row">
-                                <div class="col-2">
-                                    <img src={{ url_for('static', filename ="img/apple-ant.jpg") }} alt=""
+                                <div class="col-12 col-sm-4 col-lg-2">
+                                    <img src="/{{ product.photo_url }}" alt=""
                                          width="150px"
                                          height="auto">
                                 </div>
-                                <div class="col-1 cart_product_stock_title">
+                                <div class="col-4 col-sm-4 col-lg-1 cart_product_stock_title">
                                     <p>Название</p>
                                     <p>Цена</p>
                                     <p>Артикул</p>
                                     <p>Вес</p>
+                                    <p>Остаток</p>
                                 </div>
-                                <div class="col-3 cart_product_stock_info">
-                                    <p>{{ product.name }}</p>
+                                <div class="col-8 col-sm-4 col-lg-3 cart_product_stock_info">
+                                    <a href="{{ url_for('product_card', product_id=product.id ) }}">
+                                        <p>{{ product.name }}</p>
+                                    </a>
                                     <p>{{ product.price }}</p>
                                     <p id="productIdCart">#{{ product.id }}</p>
                                     <p>
-                                        {{ product.weight }} {{ product.measurement_unit }}
+                                        {% if (product.weight | string).split('.')[1] == '0' %}
+                                            {{ (product.weight | string).split('.')[0] }}
+                                        {% else %}
+                                            {{ product.weight }}
+                                        {% endif %}
+                                        {{ product.measurement_unit }}
                                     </p>
+                                    <p id="allProductsInStock{{ product.id }}">{{ product.quantity }}</p>
                                 </div>
-                                <div class="col-3 quantity_container">
+                                <div class="col-10 col-sm-10 col-lg-3 quantity_container">
                                     <p>Количество</p>
                                     <form class="product_quantity">
                                         <div class="value-button" id='decrease{{ product.id }}'
                                              onclick="decreaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
-                                             value="Decrease Value">-
+                                             value="Decrease Value">–
                                         </div>
                                         {% for product_id, quantity in items.items() %}
                                             {% if product.id == product_id %}
@@ -56,8 +64,9 @@
                                              value="Increase Value">+
                                         </div>
                                     </form>
+                                    <p id="alertProductOutOfStock{{ product.id }}" class="alert_product_out_of_stock">Товар закончился. Заказ на этот товар не будет оформлен.</p>
                                 </div>
-                                <div class="col-1">
+                                <div class="col-2 col-sm-2 col-lg-1">
                                     <button type="button" class="close"
                                             onclick="deleteProduct('{{ product.id }}',{{ current_user.id }})">
                                         <span aria-hidden="true">&times;</span>
@@ -67,15 +76,15 @@
                         </div>
                     </section>
                 {% endfor %}
-
                 <div class="container total_container ">
                     <div class="row">
-                        <div class="col-8 total_box">
-                            <span>ИТОГО:</span>
-                            <span class="total_value" id="totalCost"></span><span> ₽</span>
+                        <div class="col-12 col-md-8 total_box">
+                            <span>ИТОГО: &nbsp;</span>
+                            <span class="total_value" id="totalCost"></span><span class="total_value"> ₽</span>
                         </div>
-                        <div class="col-4 order_box">
-                            <a href={{ url_for('order_registration', user_id = current_user.id) }} class="btn btn-primary
+                        <div class="col-12 col-md-4 order_box">
+                            <a href="{{ url_for('order_registration', user_id = current_user.id) }}" class="btn
+                               btn-primary
                                btn_order" id="placeOrderButton">
                                 ОФОРМИТЬ ЗАКАЗ
                             </a>

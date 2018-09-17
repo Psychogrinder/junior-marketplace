@@ -16,11 +16,30 @@ var putToCart = function (consumer_id, product_id) {
                 }
                 document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
                 var hulla = new hullabaloo();
-                hulla.send("Товар успешно добавлен в корзину", "secondary");
+                hulla.send("Товар успешно добавлен в корзину", "default");
 
             });
     }
 };
+
+if ($('.product-card-main').length > 0) {
+    $('.product_quantity_input').on('change keyup input click mouseup', function () {
+        if (this.value.match(/[^0-9]|^0{1}/g)) {
+            this.value = this.value.replace(/./g, '');
+        }
+        let products_in_stock = $('#allProductsInStock').text();
+        let product_quantity = $('.product_quantity_input').val();
+        if (product_quantity > Number(products_in_stock)) {
+            $('.product_quantity_input').val(products_in_stock);
+        }
+    });
+    $('.product_quantity_input').on('change', function () {
+        let product_quantity = $('.product_quantity_input').val();
+        if (product_quantity == '' || product_quantity < 1) {
+            $('.product_quantity_input').val(1);
+        }
+    });
+}
 
 var getNumberOfProductsInCart;
 if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalUserEntity") == 'consumer')) {
@@ -117,6 +136,15 @@ if (localStorage.getItem("globalUserId") > 0) {
 
 function changeQuantityOfProduct(product_id) {
     let quantity = $('#number' + product_id).val();
+    if ($('#cartMain').length > 0) {
+        if (quantity == '' || quantity < 1) {
+            quantity = 1;
+        }
+        if (quantity > $('#allProductsInStock' + product_id).text()) {
+            quantity = Number($('#allProductsInStock' + product_id).text());
+        }
+    }
+    $('#number' + product_id).val(quantity);
     var user_id = localStorage.getItem("globalUserId");
     $.post("/api/v1/consumers/" + user_id + "/cart",
         {
@@ -134,4 +162,32 @@ function changeQuantityOfProduct(product_id) {
             document.getElementById('numberOfProductsInCart').innerHTML = number_of_products_in_cart;
         });
     countTotalCost();
+}
+
+
+//при загрузке страницы проверяем наличие товара в корзине
+if ($('#cartMain').length > 0) {
+    let products_in_stock = $('[id^=allProductsInStock]');
+    let input_value = $('.product_quantity_input');
+    for (let i = 0; i < products_in_stock.length; i++) {
+        if (Number($(products_in_stock[i]).text()) < $(input_value[i]).val()) {
+            $(input_value[i]).val(Number($(products_in_stock[i]).text()));
+            var user_id = localStorage.getItem("globalUserId");
+            let product_id = parseInt(/[0-9]+/.exec($(products_in_stock[i]).attr('id')));
+            changeQuantityOfProduct(product_id);
+        }
+        if (Number($(products_in_stock[i]).text()) == 0) {
+            let cssValues = {
+                'background-color': 'rgba(0, 0, 0, 0.03)',
+                'border-radius': '5px',
+                'margin-bottom': '2rem',
+                'padding-top': '1rem'
+            };
+            $(input_value[i]).css('border-color', '#ee686e');
+            let product_id = parseInt(/[0-9]+/.exec($(products_in_stock[i]).attr('id')));
+            $('#productCartItemAlert' + product_id).css(cssValues);
+            $('#alertProductOutOfStock' + product_id).css('display', 'block');
+        }
+    }
+
 }

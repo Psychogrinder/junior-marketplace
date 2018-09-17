@@ -2,6 +2,10 @@
 
 {% block meta_title %}Каталог{% endblock %}
 
+{% block meta_description %}
+    <meta name="description" content='{{ meta_description }}'>
+{% endblock %}
+
 {% block body %}
     <main>
         <div class="container catalog">
@@ -25,11 +29,11 @@
                                 <img src="/{{ product.photo_url }}" alt="">
                             </div>
                             <div class="product-item-description">
-                                <p>{{ product.price }}</p>
+                                <p>{{ (product.price | string).split('.')[0] }} ₽</p>
                                 <b>{{ product.name }}</b>
                                 {% for producer in producers %}
                                     {% if product.producer_id == producer.id %}
-                                        <p>{{ producer.name }}</p>
+                                        <p class="producer_name">{{ producer.name }}</p>
                                     {% endif %}
                                 {% endfor %}
                             </div>

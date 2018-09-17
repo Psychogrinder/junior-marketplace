@@ -62,7 +62,28 @@ if ($('main.producer-orders').length > 0) {
     let orderFilter = {
         producer_id: null,
         order_status: null,
+        page: 1,
     };
+
+    let isInViewport = function (element) {
+        let elementTop = element.offset().top;
+        let elementBottom = elementTop + element.outerHeight();
+
+        let viewportTop = $(window).scrollTop();
+        let viewportBottom = viewportTop + $(window).height();
+
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
+
+    $(window).on('resize scroll', function () {
+        let element = $('.pageNumber');
+        if (element.length > 0 && isInViewport(element)) {
+            element.remove();
+            orderFilter['page'] = element.attr("data-page-number");
+            update_orders_page(orderFilter);
+        }
+    });
+
 
     // get and set producer id in orderFilter
     let addr = window.location + '';
@@ -85,20 +106,21 @@ if ($('main.producer-orders').length > 0) {
         }
     }
 
-    function add_new_orders_common_view(orders) {
+    function add_new_orders_common_view(orders, page) {
         for (var i = 0; i < orders.length; i++) {
             $("#producerOrderSection").append(
                 '<div class="container item_order">' +
                 '<div class="row order_history_info">' +
                 '<div class="col-6">' +
-                '<span id="orderId' + i + '">' + orders[i].id + '</span>' +
+                '<span>№ </span>' +
+                '<span id="orderId' + orders[i].id + '">' + orders[i].id + '</span>' +
                 '</div>' +
                 '<div class="col-2">' + orders[i].order_timestamp + '</div>' +
                 '<div class="col-3">' +
                 '<span> СУММА ЗАКАЗА: ' + orders[i].total_cost + '</span>' +
                 '</div>' +
                 '</div>' +
-                '<div id="orderProducts' + i + '"></div>' +
+                '<div id="orderProducts' + orders[i].id + '"></div>' +
                 '<div class="row">' +
                 '<div class="col-6">' +
                 '<div class="row producer-order-delivery">' +
@@ -126,31 +148,33 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="row">' +
                 '<div class="col-4">Статус заказа:</div>' +
                 '<div class="col-8">' +
-                '<select class="form-control select-order-status" name="subcategory" id="changeOrderStatusSelect' + i + '" onchange="orderStatusOnChange(' + i + ')">' +
+                '<select class="form-control select-order-status" name="subcategory" id="changeOrderStatusSelect' + orders[i].id + '" onchange="orderStatusOnChange(' + orders[i].id + ')">' +
                 '<option value="Не обработан">Не обработан</option>' +
                 '<option value="Обрабатывается">Обрабатывается</option>' +
                 '<option value="Отправлен">Отправлен</option>' +
                 '<option value="Готов к самовывозу">Готов к самовывозу</option>' +
                 '<option value="Завершён">Завершён</option>' +
                 '</select>' +
-                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtn' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
+                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtn' + orders[i].id + '" onclick="saveOrderStatusClicked(' + orders[i].id + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>'
             );
-            var items = orders[i]['items'];
-            for (var p = 0; p < items.length; p++) {
-                $("#orderProducts" + i).append(
+            let items = orders[i]['items'];
+            for (let p = 0; p < items.length; p++) {
+                $("#orderProducts" + orders[i].id).append(
                     '<div class="row">' +
                     '<div class="col-2">' +
-                    '<img class="order-product-photo" src="/static/img/apple-ant.jpg" alt="" width="150px">' +
+                    '<img class="order-product-photo" src="/' + items[p].photo_url + '" alt="" width="150px">' +
                     '</div>' +
                     '<div class="col-4">' +
                     '<div class="row">' +
                     '<p class="col-6">Название</p>' +
-                    '<p class="col-6 main-text">' + items[p].name + '</p>' +
+                    '<a href="/products/' + items[p].id + '">' +
+                    '<p class="col-12 main-text">' + items[p].name + '</p>' +
+                    '</a>' +
                     '</div>' +
                     '<div class="row">' +
                     '<p class="col-6">Цена</p>' +
@@ -175,14 +199,14 @@ if ($('main.producer-orders').length > 0) {
         }
     }
 
-    function add_new_orders_table_view(orders) {
+    function add_new_orders_table_view(orders, page) {
         for (var i = 0; i < orders.length; i++) {
             $("#producerOrderSectionTable").append(
                 '<div class="container table_container hidden">' +
                 '<div class="table_global_row">' +
                 '<div class="table_global_cell">' +
                 '<div>Номер заказа</div>' +
-                '<div class="main-text" id="orderIdTable' + i + '">' + orders[i].id + '</div>' +
+                '<div class="main-text" id="orderIdTable' + orders[i].id + '">' + orders[i].id + '</div>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<div>Покупатель</div>' +
@@ -215,7 +239,7 @@ if ($('main.producer-orders').length > 0) {
                 '<div>Количество</div>' +
                 '</div>' +
                 '</div>' +
-                '<div id="innerTableProductsSection' + i + '"></div>' +
+                '<div id="innerTableProductsSection' + orders[i].id + '"></div>' +
                 '<div class="table_global_row">' +
                 '<div class="table_global_cell">' +
                 '<div>Способ доставки</div>' +
@@ -231,7 +255,7 @@ if ($('main.producer-orders').length > 0) {
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<div>Статус заказа</div>' +
-                '<select class="form-control select-order-status" id="changeOrderStatusSelectTable' + i + '" name="subcategory" onchange="orderStatusOnChange(' + i + ')">' +
+                '<select class="form-control select-order-status" id="changeOrderStatusSelectTable' + orders[i].id + '" name="subcategory" onchange="orderStatusOnChange(' + orders[i].id + ')">' +
                 '<option value="Не обработан">Не обработан</option>' +
                 '<option value="Обрабатывается">Обрабатывается</option>' +
                 '<option value="Отправлен">Отправлен</option>' +
@@ -240,14 +264,14 @@ if ($('main.producer-orders').length > 0) {
                 '</select>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
-                '<button class="btn btn-success common-view-btn" id="saveStatusOrderBtnTable' + i + '" onclick="saveOrderStatusClicked(' + i + ')">Сохранить</button>' +
+                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtnTable' + orders[i].id + '" onclick="saveOrderStatusClicked(' + orders[i].id + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>'
             );
-            var items = orders[i]['items'];
-            for (var p = 0; p < items.length; p++) {
-                $("#innerTableProductsSection" + i).append(
+            let items = orders[i]['items'];
+            for (let p = 0; p < items.length; p++) {
+                $("#innerTableProductsSection" + orders[i].id).append(
                     '<div class="table_global_row">' +
                     '<div class="table_global_cell producer-orders-item">' +
                     '<div class="main-text">' + items[p].name + '</div>' +
@@ -265,18 +289,24 @@ if ($('main.producer-orders').length > 0) {
                 );
             }
         }
+        let next_page_number = page;
+        if (next_page_number) {
+            $("#mainProducerOrderSection").append(
+                '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+            );
+        }
     }
 
     // Set the right status of each order
-    function set_selected_options() {
-        for (var i = 0; i < currentOrders.length; i++) {
-            let currentSelect = document.getElementById('changeOrderStatusSelect' + i);
+    function set_selected_options(orders) {
+        for (let i = 0; i < orders.length; i++) {
+            let currentSelect = document.getElementById('changeOrderStatusSelect' + orders[i].id);
             for (var o = 0; o < currentSelect.options.length; o++) {
                 if (currentSelect.options[o].value === currentOrders[i].status) {
                     currentSelect.options[o].selected = 'selected'
                 }
             }
-            let currentSelectTable = document.getElementById('changeOrderStatusSelectTable' + i);
+            let currentSelectTable = document.getElementById('changeOrderStatusSelectTable' + orders[i].id);
             for (var o = 0; o < currentSelectTable.options.length; o++) {
                 if (currentSelectTable.options[o].value === currentOrders[i].status) {
                     currentSelectTable.options[o].selected = 'selected'
@@ -287,6 +317,8 @@ if ($('main.producer-orders').length > 0) {
 
     // if a different order status is selected, show "save" button
     function orderStatusOnChange(i) {
+        console.log('i: ' + i);
+        console.log($('#saveStatusOrderBtn' + i));
         if (currentOrdersView === 'common') {
             $('#saveStatusOrderBtn' + i).show();
         } else if (currentOrdersView === 'table') {
@@ -332,10 +364,11 @@ if ($('main.producer-orders').length > 0) {
         $.post('/api/v1/producers/filtered_orders',
             orderFilter,
             function (orders, status) {
-                currentOrders = orders;
-                add_new_orders_common_view(orders);
-                add_new_orders_table_view(orders);
-                set_selected_options();
+                console.log(orders.page);
+                currentOrders = orders.orders;
+                add_new_orders_common_view(orders.orders, orders.page);
+                add_new_orders_table_view(orders.orders, orders.page);
+                set_selected_options(orders.orders);
                 if (currentOrdersView === 'table') {
                     showTable()
                 } else {
@@ -344,9 +377,10 @@ if ($('main.producer-orders').length > 0) {
                 }
 
                 // hide all "save" buttons until a new status is selected
-                for (var i = 0; i < orders.length; i++) {
-                    $("#saveStatusOrderBtn" + i).hide();
-                    $("#saveStatusOrderBtnTable" + i).hide();
+                let items = orders.orders;
+                for (let i = 0; i < items.length; i++) {
+                    $("#saveStatusOrderBtn" + items[i].id).hide();
+                    $("#saveStatusOrderBtnTable" + items[i].id).hide();
                 }
             });
     }
@@ -354,12 +388,16 @@ if ($('main.producer-orders').length > 0) {
 
     function update_orders_page(orderFilter) {
         fill_order_filter(orderFilter);
-        delete_current_orders();
         display_new_orders(orderFilter);
     }
 
+
 // update orders on change of the main select
     $('#statuses').change(function () {
+        delete_current_orders();
+        orderFilter['page'] = 1;
         update_orders_page(orderFilter);
     });
+    update_orders_page(orderFilter);
+
 }

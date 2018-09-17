@@ -5,7 +5,7 @@ from marketplace.api_folder.schemas import order_schema_list, order_schema
 from marketplace.api_folder.utils import caching_utils
 import marketplace.api_folder.utils.cart_utils as cart_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
-from marketplace.api_folder.utils.login_utils import account_access_required
+from marketplace.api_folder.utils.login_utils import account_access_required, login_as_admin_required
 
 order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost', 'first_name',
               'last_name']
@@ -17,6 +17,7 @@ for arg in order_args:
 
 class GlobalOrders(Resource):
 
+    @login_as_admin_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
@@ -58,7 +59,7 @@ class UnprocessedOrdersByProducerId(Resource):
         return {"quantity": order_utils.get_number_of_unprocessed_orders_by_producer_id(kwargs['producer_id'])}, 200
 
 
-filtered_orders_args = ['producer_id', 'order_status']
+filtered_orders_args = ['producer_id', 'order_status', 'page']
 filtered_orders_parser = reqparse.RequestParser()
 for arg in filtered_orders_args:
     filtered_orders_parser.add_argument(arg)
@@ -68,3 +69,14 @@ class FilteredOrdersByProducerId(Resource):
     def post(self):
         args = filtered_orders_parser.parse_args()
         return order_utils.get_filtered_orders(args), 200
+
+
+consumer_order_parser = reqparse.RequestParser()
+consumer_order_parser.add_argument('page')
+consumer_order_parser.add_argument('consumer_id')
+
+
+class FormattedConsumerOrders(Resource):
+    def post(self):
+        args = consumer_order_parser.parse_args()
+        return order_utils.get_formatted_orders_by_consumer_id(args['consumer_id'], int(args['page']))

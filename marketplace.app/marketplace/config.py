@@ -17,13 +17,13 @@ class Base(object):
     ALLOWED_UPLOAD_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'webp'])
     USER_IMAGE_DEFAULT_FORMAT = 'webp'
 
-    MAIL_SERVER = 'smtp.mail.ru'
-    MAIL_PORT = 2525
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_SERVER = 'smtp.yandex.ru'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME') or 'customers@xtramarket.ru'
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
-    MAIL_DEFAULT_SENDER = 'xtramarket@rambler.ru'
+
+    RECOVERY_PASSWORD_URL_EXPIRES = 300 # 5 minutes
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL') or 'redis://localhost:6379/0'
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL') or 'redis://localhost:6379/9'
@@ -33,7 +33,11 @@ class Base(object):
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
 
+    CSRF_ENABLED = True
+
     COMMENTS_PER_PAGE = 2
+    PRODUCTS_PER_PAGE = 16
+    ORDERS_PER_PAGE = 10
 
     INFLUXDB_HOST = 'influx'
     INFLUXDB_DATABASE = 'marketplace'
@@ -68,3 +72,5 @@ class Production(Base):
     REDIS_STORAGE_TIME = 1
 
     SENTRY_DSN = os.getenv('SENTRY_DSN')
+    
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')

@@ -1,28 +1,29 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}Сельхоз Иваныч товары {% endblock %}
+{% block meta_title %}Товары производителя {{ current_user.name }} {% endblock %}
+
+{% block meta_description %}
+<meta name="description" content='{{ current_user.name }} - {{ meta_description }}'>
+{% endblock %}
 
 {% block body %}
 
     <main>
         <div class="container products">
-            <section class="breadcrumbs">
-                <span><a class="active">Товары</a></span>
-            </section>
-            {% if products %}
-                <section class="product-filter">
+            {% if producer_has_products %}
+                <section class="product-filter container">
                     <form action="#" class="row">
-                        <div class="filter-block col-12 col-sm-4">
+                        <div class="filter-block col-12 col-sm-6 col-md-3">
                             <select class="form-control" name="sort_by" id="sortProducerProducts">
                                 <option>По цене ↑</option>
                                 <option>По цене ↓</option>
                                 <option>По популярности</option>
                             </select>
                         </div>
-                        <div class="filter-block col-12 col-sm-4">
+                        <div class="filter-block col-12 col-sm-6 col-md-3">
                             <input class="form-control mr-sm-2" type="text" placeholder="Поиск" id="producerProductsSearch">
                         </div>
-                        <div class="filter-block col-12 col-sm-4">
+                        <div class="filter-block col-12 col-sm-6 col-md-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="in_stock" name="in_stock">
                                 <label class="form-check-label" for="in_stock">
@@ -30,37 +31,14 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-12 col-sm-6 col-md-3 filter-block">
+                            <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
+                        current_user.id ) }}"> Добавить товар</a>
+                        </div>
                     </form>
-                    <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
-                        products[0].producer_id ) }}"> Добавить товар</a>
                 </section>
                 <section class="product-card row" id="producerProducts">
-                    {% for product in products %}
-                        <div class="col-6 col-sm-3 card-item">
-                            <a href="{{ url_for('product_card', product_id = product.id ) }}">
-                                <div class="product-item-photo">
-                                    <img src="/{{ product.photo_url }}" alt="">
-                                </div>
-                                <div class="product-item-description">
-                                    <p>{{ product.price }}</p>
-                                    <b>{{ product.name }}</b>
-                                    <p class="edit-product">
-                                        <a href="{{ url_for('edit_product', producer_id = product.producer_id, product_id = product.id ) }}">
-                                            <img src="{{ url_for( 'static', filename = 'img/edit-regular.svg') }}">
-                                            Редактировать
-                                        </a>
-                                    </p>
-                                    </p>
-                                    {% if product.quantity == 0 %}
-                                        <p class="goods-ended">
-                                            <img src="{{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}">
-                                            Нет в наличии
-                                        </p>
-                                    {% endif %}
-                                </div>
-                            </a>
-                        </div>
-                    {% endfor %}
+
                 </section>
             {% else %}
                 <section class="producer_products_empty">

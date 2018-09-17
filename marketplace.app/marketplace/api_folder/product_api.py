@@ -113,8 +113,15 @@ class ProductsInCart(Resource):
             return cache, 200
 
 
-class ProductComments(Resource):
+class Comments(Resource):
 
+    @login_required
+    def post(self):
+        args = comment_parser.parse_args()
+        return comment_schema.dump(comment_utils.post_comment(args)).data, 201
+
+
+class ProductComments(Resource):
     @get_cache
     def get(self, path, cache, **kwargs):
         response = dict()
@@ -130,11 +137,6 @@ class ProductComments(Resource):
             response['meta'] = kwargs['meta']
             response['body'] = cache
         return response, 200
-
-    @login_required
-    def post(self):
-        args = comment_parser.parse_args()
-        return comment_schema.dump(comment_utils.post_comment(args)).data, 201
 
 
 class ProductSearchByParams(Resource):
@@ -154,7 +156,7 @@ class ProductSearchByParams(Resource):
             return cache
 
 
-product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock', 'search']
+product_args = ['price', 'popularity', 'category_name', 'producer_name', 'in_stock', 'search', 'page']
 filter_parser = reqparse.RequestParser()
 
 for arg in product_args:

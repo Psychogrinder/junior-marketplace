@@ -48,9 +48,15 @@ if ($('main .order_registration').length > 0) {
                 function (data, status) {
                     if (status) {
                         $('.order_registration').remove();
+                        $('#numberOfProductsInCart').remove();
                         $('main').append('<section class="container total_container py-4" id="emptyCart">\n' +
                             '                 <h2>Ваш заказ был успешно оформлен. С Вами свяжутся в ближайшее время. </h2>\n' +
                             '            </section>')
+                    }
+                }).fail(function (data, textStatus, xhr) {
+                    if (data.status == 406) {
+                        var hulla = new hullabaloo();
+                        hulla.send(data.responseJSON.message, "secondary");
                     }
                 });
         }

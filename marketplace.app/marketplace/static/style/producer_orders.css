@@ -1,5 +1,6 @@
 .main-text{
-    color: #242525e0;
+    /* color: #242525e0; */
+    color: rgba(35,36,36,0.88);
 }
 
 .breadcrumb{
@@ -11,14 +12,16 @@
 .breadcrumb li {
     display: inline-block;
     font-size: 16px;
-    color: #242525e0;
+    /* color: #242525e0; */
+    color: rgba(35,36,36,0.88);
     margin-right: 40px;
 }
 
 
 .order_history_info{
     margin: 30px 0;
-    color: #242525e0;
+    /* color: #242525e0; */
+    color: rgba(35,36,36,0.88);
 }
 
 .cart_product_stock_title span,
@@ -27,7 +30,8 @@
 }
 
 .cart_product_stock_info{
-    color: #242525e0;
+    /* color: #242525e0; */
+    color: rgba(35,36,36,0.88);
 }
 
 
@@ -62,7 +66,8 @@
 }
 
 .total_value{
-    color: #242525e0;
+    /* color: #242525e0; */
+    color: rgba(35,36,36,0.88);
 }
 
 .btn_order{
@@ -139,4 +144,12 @@
 .saveStatusOrderBtnTable {
     width: fit-content;
     margin-top: auto;
+}
+
+.save-status-order-btn {
+    margin-top: 1rem;
+}
+
+.item_order a {
+    color: #5a5a5a;
 }

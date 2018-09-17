@@ -3,7 +3,7 @@ import string
 from sqlalchemy import desc, func, exc
 from sqlalchemy_searchable import inspect_search_vectors
 
-from marketplace import db, app
+from marketplace import db, app, PRODUCTS_PER_PAGE
 from marketplace.api_folder.schemas import product_schema, product_schema_list
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
     abort_if_producer_doesnt_exist_or_get, abort_if_category_doesnt_exist_or_get
@@ -34,6 +34,13 @@ def get_products_by_producer_id(producer_id):
     return Product.query.filter_by(producer_id=producer_id).all()
 
 
+def producer_has_products(producer_id):
+    abort_if_producer_doesnt_exist_or_get(producer_id)
+    if Product.query.filter_by(producer_id=producer_id).first():
+        return True
+    return False
+
+
 def get_all_products_from_a_list_of_categories(categories):
     all_products = []
     for category in categories:
@@ -47,6 +54,8 @@ def get_products_from_a_parent_category(parent_category_id):
 
 
 def get_sorted_and_filtered_products(args):
+    products = []
+    args['page'] = int(args['page'])
     query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
                              Producer.name.label('producer_name')).filter(
         Product.producer_id == Producer.id)
@@ -83,11 +92,11 @@ def get_sorted_and_filtered_products(args):
             query = query.order_by(Product.price.asc())
 
     product_schema = ("id", "name", "price", "photo_url", "producer_name")
-    products_data = query.all()
-    products = []
-    for product_data in products_data:
-        products.append(dict(zip(product_schema, product_data)))
-    return products
+    page_products = query.paginate(args['page'], PRODUCTS_PER_PAGE)
+    for product in page_products.items:
+        products.append(dict(zip(product_schema, product)))
+    return {"products": products,
+            "next_page": page_products.next_num}
 
 
 def get_popular_products():
@@ -165,6 +174,20 @@ def search_by_keyword(search_key_word):
     search_query = '&'.join(search_key_word.split(' '))
     result = search_products_by_param(search_query)
     return product_schema_list.dump(result).data
+
+
+def get_products_for_global_search(search_key_word):
+    products = search_by_keyword(search_key_word)
+    producers = Producer.query.all()
+    # формат: {1: Совхоз А, 2: Совхоз Б}
+    producer_id_name_mapping = {}
+    for producer in producers:
+        producer_id_name_mapping[producer.id] = producer.name
+    # в продуктах добавляем producer_name
+    for product in products:
+        product['producer_name'] = producer_id_name_mapping[product['producer_id']]
+    return products
+
 
 def post_product(args):
     abort_if_producer_doesnt_exist_or_get(args['producer_id'])

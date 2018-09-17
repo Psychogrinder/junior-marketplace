@@ -2,6 +2,10 @@
 
 {% block meta_title %}Создание товара{% endblock %}
 
+{% block meta_description %}
+    <meta name="description" content='{{ meta_description }}'>
+{% endblock %}
+
 {% block body %}
 <main>
     <div class="container edit-product-card" id="createProductPage">
@@ -9,32 +13,19 @@
             <span><a href="{{ url_for('producer_products', producer_id = current_user.id )}}">Товары</a></span>
             <span><a class="active">Создание товара</a></span>
         </section>
-        <form id="upload-new-product-image" method="post" enctype="multipart/form-data">
-            <div class="row edit-product-item">
-                <label class="col-5 col-sm-3">Выберите изображение</label>
-                <input name="image" type="file" class="form-control-file col-8 col-sm-4">
-            </div>
-        </form>
+        {% include 'inc/image_upload.html' %}
         <form id="createProductForm" action="#" data-parsley-validate>
             <div class="row edit-product-item">
                 <label for="createName" class="col-4 col-sm-2">Название</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="createName" placeholder="Продукт" required
                        value="">
             </div>
-            <!--<div class="row edit-product-item">-->
-            <!--<label for="createPhoto" class="col-4 col-sm-2">Фотография</label>-->
-            <!--<input type="file" class="form-control-file col-8 col-sm-4" id="createPhoto" aria-describedby="fileHelp">-->
-            <!--</div>-->
             <div class="row edit-product-item">
                 <label for="createPrice" class="col-4 col-sm-2">Цена</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="createPrice" placeholder="100"
                        pattern="^[ 0-9]+$"
                        required>
             </div>
-            <!--<div class="row edit-product-item">-->
-            <!--<label for="createArticle" class="col-4 col-sm-2">Артикул</label>-->
-            <!--<input type="text" class="form-control col-8 col-sm-4" id="createArticle" value="564895" disabled>-->
-            <!--</div>-->
             <div class="row edit-product-item">
                 <label for="createCategory" class="col-4 col-sm-2">Категория</label>
                 <select class="form-control col-8 col-sm-4" name="category" id="createCategory" required>
@@ -53,7 +44,7 @@
                        pattern="^[ 0-9]+$" required>
             </div>
             <div class="row edit-product-item">
-                <label for="editWeight" class="col-5 col-sm-3">Вес / Единицы измерения</label>
+                <label for="editWeight" class="col-5 col-sm-2">Вес / Единицы измерения</label>
                 <input type="text" class="form-control col-5 col-sm-3" pattern="^[ 0-9]+$" name="weigth"
                        id="createWeigth">
                 <select class="form-control col-4 col-sm-1" name="weigth_init" id="createUnits" required>
@@ -65,8 +56,7 @@
             <div class="row edit-product-item">
                 <label for="createDescription" class="col-4 col-sm-2">Описание</label>
                 <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="createDescription"
-                          name="description">
-                </textarea>
+                          name="description"></textarea>
             </div>
             <div class="col-12 col-sm-10 edit-product-save">
                 <button type="submit" class="btn btn-success" id="createProductSave">СОХРАНИТЬ</button>

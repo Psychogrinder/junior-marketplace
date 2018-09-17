@@ -21,7 +21,8 @@ file = open('data/producer-description.txt', 'r')
 description = file.read()
 file.close()
 
-with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names)), context=context) as response:
+with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(producer_names)),
+                            context=context) as response:
     data = response.read()
     data = json.loads(data)
     for company in data["results"]:
@@ -31,7 +32,7 @@ with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(p
         db.session.add(producer)
 
 for i, producer in enumerate(Producer.query.all()):
-    producer.id = i+1
+    producer.id = i + 1
 
 with urllib.request.urlopen("https://randomuser.me/api/?results=100", context=context) as response:
     data = response.read()
@@ -67,7 +68,7 @@ for category_name in category_data:
         db.session.add(category)
 
 for i, cat in enumerate(Category.query.all()):
-    cat.id = i+1
+    cat.id = i + 1
 
 category_eng_names = []
 
@@ -80,7 +81,7 @@ for i, cat in enumerate(Category.query.all()):
 
 prices = range(50, 1000)
 quantity = range(100, 500)
-producer_ids = range(1, number_of_producers+1)
+producer_ids = range(1, number_of_producers + 1)
 measurement_units = ['кг', 'л', 'шт']
 weights = range(5, 50)
 product_descriptions = ['Очень вкусный продукт', 'Самый вкусный продукт']
@@ -133,13 +134,16 @@ for cat, subcats in product_names.items():
             category = Category.query.filter_by(name=subcat_name).first()
             producer_id = choice(producer_ids)
             producer = Producer.query.filter_by(id=producer_id).first()
-            product = Product(choice(prices), product_name, choice(quantity), producer_id, category.id, choice(measurement_units), choice(weights), choice(product_descriptions))
+            product = Product(choice(prices), product_name, choice(quantity), producer_id, category.id,
+                              choice(measurement_units), choice(weights), choice(product_descriptions))
             db.session.add(product)
             producer.categories.append(category)
             parent_category = Category.query.filter_by(id=category.parent_id).first()
             producer.categories.append(parent_category)
-        
-        
+
+for i in range(200):
+    db.session.add(Product(100, f'Product{i}', 5, 1, 2, 'кг', 12, 'whaaaat'))
+
 for i, cat in enumerate(Category.query.all()):
     cat.name = cat.name.title()
 
@@ -153,7 +157,11 @@ for i in range(1, 10):
 comments = ['GOOOOOOD', 'GREAAAT', 'Maaaah nigga, its fucking aaawesome', 'I want more', "Where do they do that at?"]
 
 for i, comment in enumerate(comments):
-    new_comment = Comment(1, i+10, comment, consumer_name='Покупатель')
+    new_comment = Comment(1, i + 10, comment, consumer_name='Покупатель')
     db.session.add(new_comment)
+
+for _ in range(100):
+    db.session.add(Order(500, {'1': 5}, 'Самовывоз', 'Baker Street', '911585456', '10mail.ru',
+                         11, 5, status='Не обработан', first_name=':jgf', last_name='Li'))
 
 db.session.commit()

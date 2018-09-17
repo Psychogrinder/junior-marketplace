@@ -1,6 +1,9 @@
+
 .order_history_info {
     margin: 30px 0;
-    color: #242525e0;
+    color: #5a5a5a;
+    font-weight: 700;
+    font-size: 1rem;
 }
 
 .cart_product_stock_title span,
@@ -9,7 +12,8 @@
 }
 
 .cart_product_stock_info {
-    color: #242525e0;
+    /* color: #242525e0; */
+    color: rgba(35,36,36,0.88);
 }
 
 .delivery_container {
@@ -95,6 +99,13 @@
 }
 
 .consumer-review-block label {
-    /*font-size: 1.2rem;*/
+    color: #5a5a5a;
+}
+
+.order-history-product {
+    margin-bottom: 1rem;
+}
+
+.order-history-producer-link {
     color: #5a5a5a;
 }

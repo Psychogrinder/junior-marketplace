@@ -6,11 +6,7 @@
         <div class="product-item-description">
             <p>{{ product.price }}</p>
             <b>{{ product.name }}</b>
-            {% for producer in producers %}
-            {% if product.producer_id == producer.id %}
-            <p>{{ producer.name }}</p>
-            {% endif %}
-            {% endfor %}
+            <b>{{ product.producer_name }}</b>
             {% if product.quantity == 0 %}
             <p class="goods-ended">
                 <img src="{{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}">

@@ -14,7 +14,8 @@
 
 .producer_title_name,
 .product_id,
-.product_price_value {
+.product_price_value,
+.product_balance_value {
     color: #000;
     margin-bottom: 15px;
 }
@@ -123,7 +124,8 @@
 }
 
 .review-product-item {
-    border-bottom: 1px solid #dadadafa;
+    /* border-bottom: 1px solid #dadadafa; */
+    border-bottom: 1px solid rgba(217, 217, 217, 0.98);
     margin-bottom: 1rem;
     padding: 0;
 }
