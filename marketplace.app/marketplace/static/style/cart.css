@@ -91,13 +91,20 @@
     color: #000;
 }
 
-.col-8.total_box {
+.col-md-8.total_box {
     display: flex;
     justify-content: flex-end;
     padding-right: 2rem;
     align-items: center;
 }
 
+.col-12.total_box {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 25px;
+    padding-right: 2rem;
+    align-items: center;
+}
 
 .btn_order {
     display: block;
