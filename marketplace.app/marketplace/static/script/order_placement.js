@@ -7,7 +7,6 @@ if ($('main .order_registration').length > 0) {
         let phone = $('#orderRegistrationPhone').val();
         let address = $('#orderRegistrationAddress').val();
         let producer_ids = $('.visuallyHiddenProducerId').text();
-        console.log(producer_ids);
         producer_ids.split('');
         let orders = [];
         for (let i = 0; i < producer_ids.length; i++) {
@@ -60,7 +59,6 @@ if ($('main .order_registration').length > 0) {
                         hulla.send(data.responseJSON.message, "secondary");
 
                     }
-                    console.log(orders);
                 });
         }
     });
