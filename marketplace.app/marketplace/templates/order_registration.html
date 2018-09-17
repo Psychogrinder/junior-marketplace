@@ -31,7 +31,7 @@
                         <div class="col-4">
                             Количество
                         </div>
-                        <div class="col-4">
+                        <div class="col-4 price_box">
                             Цена
                         </div>
                     </div>
@@ -43,16 +43,16 @@
                         <div class="col-4">
                             {{ product.quantity }}
                         </div>
-                        <div class="col-4">
+                        <div class="col-4 price_box">
                             {{ product.price }}
                         </div>
                     </div>
                     {% endfor %}
                     <div class="row delivery-method">
-                        <div class="col-4">
+                        <div class="col-4 col-md-3">
                             Способ доставки
                         </div>
-                        <form class="col-3">
+                        <form class="col-8 col-md-3">
                             <select class="form-control deliveryMethodSelect" required>
                                 <option value="Курьером">Курьером</option>
                                 <option value="Самовывоз">Самовывоз</option>
