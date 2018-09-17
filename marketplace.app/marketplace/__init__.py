@@ -22,7 +22,7 @@ app.config.from_object(
     Development if os.getenv('FLASK_ENV') == 'development' else Production
 )
 
-if app.config['SENTRY_DSN']:
+if app.config.get('SENTRY_DSN'):
     if os.getenv('CELERY_APP'):
         from raven import Client
         from raven.contrib.celery import register_signal, register_logger_signal
