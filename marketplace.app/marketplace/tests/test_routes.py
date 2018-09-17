@@ -68,14 +68,12 @@ class TestSmoke(unittest.TestCase):
         }
 
         #new order
-        response = login('15mail.ru', '123123')
-        print(response.content)
+        login('15mail.ru', '123123')
 
         response = requests.post(url, data=args)
-        print(response.content)
 
 
-    @unittest.skip
+
     def test_05_orders(self):
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
@@ -84,7 +82,6 @@ class TestSmoke(unittest.TestCase):
         #     if '<category_name>' in route:
         #         for category_slug in self.category_slugs:
         #             test_url = replaceCategoryName(self.url + route, category_slug)
-
 
 
 
