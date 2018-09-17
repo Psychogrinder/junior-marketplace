@@ -25,7 +25,7 @@ $(document).ready(function () {
             email: $('#producer_email').val(),
             phone_number: $('#producer_phone').val(),
             address: $('#producer_address').val(),
-            description: $('#producer_description').val()
+            description: description_textarea.value()
         };
 
         function submitEditProfileForm() {
@@ -52,4 +52,5 @@ $(document).ready(function () {
         });
     })
     ;
+    var description_textarea = new SimpleMDE({ element: document.getElementById("producer_description") });
 });

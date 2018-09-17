@@ -53,13 +53,16 @@
             </div>
             <div class="row edit-profile-item">
                 <label for="producer_description" class="col-12 col-sm-2">Описание</label>
-                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="producer_description"
-                          name="description">{{ producer.description }}</textarea>
+                <!--<textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="producer_description"-->
+                          <!--name="description">{{ producer.description }}</textarea>-->
             </div>
+            <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="producer_description"
+                          name="description">{{ producer.description }}</textarea>
             <div class="col-12 col-sm-10 edit-profile-save">
                 <button type="submit" class="btn btn-success" id="save_producer_profile">СОХРАНИТЬ</button>
             </div>
         </form>
+
     </div>
 </main>
 {% endblock %}
