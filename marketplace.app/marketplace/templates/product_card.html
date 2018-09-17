@@ -54,7 +54,7 @@
                     {% endif %}
                         {{ product.measurement_unit }}
                      </span>
-                    {% if current_user.entity == 'consumer' and product.quantity != 0%}
+                    {% if current_user.entity == 'consumer' and product.quantity != 0 %}
                         <div>
                             <form class="product_quantity">
                                 <div class="value-button" id="decrease" onclick="decreaseQuantity('number')"
