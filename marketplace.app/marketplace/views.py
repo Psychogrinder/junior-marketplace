@@ -290,7 +290,7 @@ def password_recovery(token):
 @app.route('/search')
 def global_search():
     meta_description = 'Поиск по каталогу - Маркетплейс фермерских товаров'
-    products = product_utils.search_by_keyword(request.args.get('find'))
+    products = product_utils.get_products_for_global_search(request.args.get('find'))
     return render_template(
         'global_search_results.html',
         products=products,
