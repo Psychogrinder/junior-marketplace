@@ -39,6 +39,9 @@ class Base(object):
     PRODUCTS_PER_PAGE = 16
     ORDERS_PER_PAGE = 10
 
+    INFLUXDB_HOST = 'influx'
+    INFLUXDB_DATABASE = 'marketplace'
+
 
 class Development(Base):
     SQLALCHEMY_DATABASE_URI = (
@@ -68,4 +71,6 @@ class Production(Base):
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
 
+    SENTRY_DSN = os.getenv('SENTRY_DSN')
+    
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
