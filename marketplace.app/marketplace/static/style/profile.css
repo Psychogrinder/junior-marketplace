@@ -23,8 +23,9 @@
 }
 
 .name_container {
-    display:  flex;
+    display: flex;
     justify-content: space-between;
+    padding: 0 15px;
 }
 
 .profile-keys span,
@@ -52,7 +53,6 @@
     margin-right: 10px;
 }
 
-
 @media (max-width: 800px) {
     main.profile + .modal + footer {
         position: relative;
@@ -63,7 +63,7 @@
     max-height: 320px;
 }
 
-.producer-banner img{
+.producer-banner img {
     max-height: 320px;
     max-height: -webkit-fill-available;
     width: 100%;
