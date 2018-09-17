@@ -35,7 +35,7 @@ class Base(object):
 
     COMMENTS_PER_PAGE = 2
 
-    INFLUXDB_HOST = 'marketplace'
+    INFLUXDB_HOST = 'influx'
     INFLUXDB_DATABASE = 'marketplace'
 
 
