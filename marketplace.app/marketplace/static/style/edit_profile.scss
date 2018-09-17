@@ -73,6 +73,16 @@ main.edit_consumer + .modal + footer {
   width: 100%;
 }
 
+.editor-toolbar,
+.CodeMirror,
+.editor-statusbar {
+  max-width: 900px;
+}
+
+.edit-profile-item--last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 800px) {
   main.edit_consumer + .modal + footer {
     position: relative;

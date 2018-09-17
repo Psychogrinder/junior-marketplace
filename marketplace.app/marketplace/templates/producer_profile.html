@@ -66,14 +66,12 @@
                 </div>
             </div>
             {% if producer.description %}
-            <div class="row">
-                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
-                    <p>Описание:</p>
+                <div class="row my-4">
+                    <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
+                        <span class="main-text" id="mainProducerDescription"
+                              data-description="{{ producer.description }}"></span>
+                    </div>
                 </div>
-                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
-                    <span class="main-text" id="mainProducerDescription" data-description="{{ producer.description }}"></span>
-                </div>
-            </div>
             {% endif %}
         </div>
     </main>
