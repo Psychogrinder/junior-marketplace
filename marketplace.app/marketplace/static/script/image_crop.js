@@ -20,23 +20,23 @@
             var type = 'producers';
             viewportHeight = 85;
             imageWidth = 1000;
-            imageHeight = 424;
+            imageHeight = 324;
             setSrcAttr(type);
         }
         else if ((addr[3] === 'producer') && (addr[5] === 'products')) {
             var id = addr[6];
             var type = 'products';
             viewportHeight = 117;
-            imageWidth = 255;
-            imageHeight = 150;
+            imageWidth = 1020;
+            imageHeight = 764;
             setSrcAttr(type);
         }
 
         else if ((addr[3] === 'producer') && (addr[5] === 'create_product')) {
             var type = 'products';
             viewportHeight = 117;
-            imageWidth = 255;
-            imageHeight = 150;
+            imageWidth = 1020;
+            imageHeight = 764;
             $(".gambar").attr("src", '/static/img/standard.png');
         }
 
