@@ -54,8 +54,8 @@ class TestSmoke(unittest.TestCase):
         self.assertEqual(201, response.status_code)
         self.assertIn('logout', content.lower())
 
-
-    def test_04_global_orders(self):
+    @unittest.skip
+    def test_04_get_global_orders(self):
         """only admin has permission to get global orders"""
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders')
@@ -78,26 +78,45 @@ class TestSmoke(unittest.TestCase):
         self.assertIn('reject access', response.text.lower())
 
 
-        """POST order"""
-        args = {'total_cost': '1 730.00 ₽',
-                'order_items_json': {'58': 10},
-                'delivery_method': 'Самовывоз',
-                'delivery_address': 'политехническая',
-                'consumer_phone': '72231224242',
-                'consumer_email': '15mail.ru',
-                'consumer_id': 24,
-                'producer_id': 2,
-        }
+    def test_05_post_global_orders(self):
+        routes = self.routes['Orders']
+        url = self.url + get_route_by_name(routes, '/orders')
 
-        login('15mail.ru', '123123')
-        response = requests.post(url, data=args)
+        post_args = {'orders': '[{"producer_id": "21", "delivery_method": "Самовывоз"}]',
+                     'delivery_address': 'new address',
+                     'phone': '+7(123)123-23-21',
+                     'email': None,
+                     'consumer_id': None,
+                     'status': None,
+                     'total_cost': '9 999.00 ₽',
+                     'first_name': 'sasas',
+                     'last_name': 'smara'}
+
+        users = [self.consumer, self.admin, self.producer]
+
+        for user in users:
+            response_login = login(email=user['email'], password=user['password'])
+            cookie = getCookiesFromResponse(response_login)
+            content = json.loads(response_login.text)
+
+            post_args['email'] = user['email']
+            post_args['consumer_id'] = content['id']
+
+            response_post = requests.Session().post(url, data=post_args, cookies=cookie)
+            if content['entity'] == 'consumer':
+                self.assertEqual(201, response_post.status_code)
+            else:
+                self.assertEqual(404, response_post.status_code)
+
+        logout()
+        response_logout = requests.post(url, data=post_args)
+        self.assertNotEqual(201, response_logout.status_code)
 
 
 
-    def test_05_orders(self):
+    def test_06_orders(self):
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
-
 
         #     if '<category_name>' in route:
         #         for category_slug in self.category_slugs:
