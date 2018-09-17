@@ -14,9 +14,9 @@
             <span><a href="{{ url_for( 'index' ) }}">Каталог</a></span>
             <span><a class="active">{{ category_name }}</a></span>
         </section>
-        <section class="product-filter">
-            <form action="#">
-                <div class="filter-block  col-6 col-sm-4">
+        <section class="product-filter container">
+            <form action="#" class="row">
+                <div class="filter-block  col-12 col-sm-6 col-md-3">
                     <select class="form-control" name="sort_by" id="sortByPriceOrPopularity">
                         <option value="" disabled selected="selected">Сортировать</option>
                         <option id="sortByPriceUp">По цене ↑</option>
@@ -24,7 +24,7 @@
                         <option id="sortByPriceByPopularity">По популярности</option>
                     </select>
                 </div>
-                <div class="filter-block col-6 col-sm-4">
+                <div class="filter-block col-12 col-sm-6 col-md-3">
                     <select class="form-control" name="subcategory" id="sortByCategory">
                         <option value="" selected>Подкатегория</option>
                         {% for subcategory in subcategories %}
@@ -32,7 +32,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="filter-block col-6 col-sm-4">
+                <div class="filter-block col-12 col-sm-6 col-md-3">
                     <select class="form-control" name="producer" id="sortByProducer">
                         <option value="" selected>Производитель</option>
                         {% for producer in category.producers %}
@@ -40,7 +40,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="filter-block col-6 col-sm-4">
+                <div class="filter-block col-12 col-sm-6 col-md-3">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="in_stock" id="in_stock_catalog_products">
                         <label class="form-check-label" for="in_stock_catalog_products">
