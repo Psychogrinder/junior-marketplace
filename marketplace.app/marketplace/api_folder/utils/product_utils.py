@@ -176,6 +176,19 @@ def search_by_keyword(search_key_word):
     return product_schema_list.dump(result).data
 
 
+def get_products_for_global_search(search_key_word):
+    products = search_by_keyword(search_key_word)
+    producers = Producer.query.all()
+    # формат: {1: Совхоз А, 2: Совхоз Б}
+    producer_id_name_mapping = {}
+    for producer in producers:
+        producer_id_name_mapping[producer.id] = producer.name
+    # в продуктах добавляем producer_name
+    for product in products:
+        product['producer_name'] = producer_id_name_mapping[product['producer_id']]
+    return products
+
+
 def post_product(args):
     abort_if_producer_doesnt_exist_or_get(args['producer_id'])
     abort_if_category_doesnt_exist_or_get(args['category_id'])
