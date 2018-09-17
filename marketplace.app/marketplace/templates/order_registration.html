@@ -18,7 +18,7 @@
                 <h1>ЗАКАЗ</h1>
             </div>
             {% for producer, items in products.items() %}
-            <div class="registration-order-items{{ producer.id }}">
+            <div class="registration-order-items{{ producer[0] }}">
                 <div class="registration-order-item">
                     <div class="producer-name">
                         <p>{{ producer[1] }}</p>
