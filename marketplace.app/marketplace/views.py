@@ -59,10 +59,10 @@ def product_card(product_id):
 @app.route('/producer/<int:producer_id>/products')
 def producer_products(producer_id):
     if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
-        products = product_utils.get_products_by_producer_id(producer_id)
         meta_description = 'все товары производителя Маркетплейс'
-        return render_template('producer_products.html', products=products, current_user=current_user,
-                               meta_description=meta_description, producer_name=current_user.name)
+        producer_has_products = product_utils.producer_has_products(producer_id)
+        return render_template('producer_products.html', meta_description=meta_description,
+                               producer_has_products=producer_has_products)
     else:
         return redirect(url_for('index'))
 
@@ -110,7 +110,6 @@ def cart(user_id):
 
 @app.route('/cart/<int:user_id>/order_registration')
 def order_registration(user_id):
-
     if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
         cart = Cart.query.filter_by(consumer_id=current_user.id).first()
         if not cart or not cart.items:

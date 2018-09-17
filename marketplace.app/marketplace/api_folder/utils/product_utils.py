@@ -34,6 +34,13 @@ def get_products_by_producer_id(producer_id):
     return Product.query.filter_by(producer_id=producer_id).all()
 
 
+def producer_has_products(producer_id):
+    abort_if_producer_doesnt_exist_or_get(producer_id)
+    if Product.query.filter_by(producer_id=producer_id).first():
+        return True
+    return False
+
+
 def get_all_products_from_a_list_of_categories(categories):
     all_products = []
     for category in categories:
