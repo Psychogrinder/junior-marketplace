@@ -1,3 +1,4 @@
+@import 'variable';
 
 .edit-product-card form {
     margin-top: 40px;
@@ -47,4 +48,15 @@ input::placeholder { font-weight: 100; }
 
 #createProductPage .breadcrumbs {
     margin-bottom: 30px;
+}
+
+@media (max-width: $small) {
+  .edit-product-item {
+    margin-right: 0;
+    margin-left: 0;
+    input.form-control,
+    select.form-control{
+      max-width: 280px;
+    }
+  }
 }

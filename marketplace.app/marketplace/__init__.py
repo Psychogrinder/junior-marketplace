@@ -60,7 +60,7 @@ from marketplace.models import Admin
 
 css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'style/footer.css', 'style/catalog.css',
              'style/modal.css', 'style/category.scss', 'style/breadcrumbs.css', 'style/card.css', 'style/cart.scss',
-             'style/edit_profile.css', 'style/profile.css', 'style/order_history.css', 'style/edit_product.css',
+             'style/edit_profile.scss', 'style/profile.css', 'style/order_history.css', 'style/edit_product.scss',
              'style/producer_products.scss', 'style/producer_orders.css', 'style/order_registration.css',
              'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/croppie.css', 'style/image_crop.css',
              'style/input_file.css', 'style/reset_password.css',
