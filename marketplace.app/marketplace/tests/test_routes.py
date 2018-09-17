@@ -27,8 +27,10 @@ class TestSmoke(unittest.TestCase):
                          'password': '123123',
                          }
 
+
     def test_01_connection(self):
-        self.assertEqual(200, urlopen('http://127.0.0.1:8000').getcode(), 'Website doesn\'t response')
+        self.assertEqual(200, urlopen('http://127.0.0.1:8000').getcode(),
+                         'Website does not response')
 
 
     def test_02_login(self):
@@ -41,7 +43,8 @@ class TestSmoke(unittest.TestCase):
 
         for email in login_data['emails']:
             response = requests.post(url, data={'email': email, 'password': login_data['password']})
-            self.assertEqual(201, response.status_code)
+            self.assertEqual(201, response.status_code,
+                             'unexpected status code after logout')
 
 
     def test_03_logout(self):
@@ -51,10 +54,11 @@ class TestSmoke(unittest.TestCase):
         response = requests.get(url)
         content = json.loads(response.content)
 
-        self.assertEqual(201, response.status_code)
+        self.assertEqual(201, response.status_code,
+                         'unexpected status code after logout')
         self.assertIn('logout', content.lower())
 
-    @unittest.skip
+
     def test_04_get_global_orders(self):
         """only admin has permission to get global orders"""
         routes = self.routes['Orders']
@@ -68,14 +72,17 @@ class TestSmoke(unittest.TestCase):
 
             response = requests.session().get(url, cookies=cookie)
             if content['entity'] == 'admin':
-                self.assertNotIn('reject access', response.text.lower())
+                self.assertNotIn('reject access', response.text.lower(),
+                                 '{} can not GET global order'.format(content['entity']))
             else:
-                self.assertIn('reject access', response.text.lower())
+                self.assertIn('reject access', response.text.lower(),
+                              '{} can GET global order'.format(content['entity']))
 
         logout()
         response = requests.get(url)
         self.assertNotEqual(200, response.status_code)
-        self.assertIn('reject access', response.text.lower())
+        self.assertIn('reject access', response.text.lower(),
+                      'unauthorized user can GET global order')
 
 
     def test_05_post_global_orders(self):
@@ -104,20 +111,23 @@ class TestSmoke(unittest.TestCase):
 
             response_post = requests.Session().post(url, data=post_args, cookies=cookie)
             if content['entity'] == 'consumer':
-                self.assertEqual(201, response_post.status_code)
+                self.assertEqual(201, response_post.status_code,
+                                 '{} can not POST to global order'.format(content['entity']))
             else:
-                self.assertEqual(404, response_post.status_code)
+                self.assertEqual(404, response_post.status_code,
+                                 '{} can POST to global order'.format(content['entity']))
 
         logout()
         response_logout = requests.post(url, data=post_args)
-        self.assertNotEqual(201, response_logout.status_code)
+        self.assertNotEqual(201, response_logout.status_code,
+                            'unauthorized user can POST to global order')
 
 
 
     def test_06_orders(self):
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
-
+        print(url)
         #     if '<category_name>' in route:
         #         for category_slug in self.category_slugs:
         #             test_url = replaceCategoryName(self.url + route, category_slug)
