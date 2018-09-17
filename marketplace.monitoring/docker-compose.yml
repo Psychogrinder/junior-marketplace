@@ -23,7 +23,7 @@ services:
 
   diamond:
     container_name: marketplace.diamond
-    image: python-diamond:latest
+    image: diamond-dockercollect:latest
     networks:
       - marketplace
     env_file: diamond.env
