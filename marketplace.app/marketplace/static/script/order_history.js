@@ -62,7 +62,7 @@ if ($('main.order-history').length > 0) {
                         '</span>' +
                         '</div>' +
                         '<div class="col-4 order-history-producer-name">' +
-                        '<a href="/producer_profile/' +
+                        '<a href="/producer/' +
                         data.orders[i].producer_id +
                         '" class="order-history-producer-link">' +
                         '<span>' +
@@ -147,7 +147,9 @@ if ($('main.order-history').length > 0) {
                             '<p>Артикул</p>' +
                             '</div>' +
                             '<div class="col-3 cart_product_stock_info">' +
-                            '<a href="url_for(\'product_card\', product_id=items[k].id )">' +
+                            '<a href="/products/' +
+                             items[k].id +
+                            '">' +
                             '<p>' +
                             items[k].name +
                             '</p>' +
@@ -187,7 +189,7 @@ if ($('main.order-history').length > 0) {
                             '</div>' +
                             '</div>'
                         )
-                    } else if (data.orders[i].status === 'Завершён') {
+                    } else if ((data.orders[i].status === 'Завершён') && (data.orders[i].reviewed !== true)) {
                         $('#orderButtonSection' + data.orders[i].id).append(
                             '<div class="row order-history-btn-block"> ' +
                             '<div class="col-4">' +
@@ -200,6 +202,8 @@ if ($('main.order-history').length > 0) {
                             '</div>'
                         )
                     }
+
+
 
                     let next_page_number = data.page;
                     if (next_page_number) {
