@@ -1,3 +1,5 @@
+@import 'variable';
+
 .cart_producer_title {
     margin: 30px 0;
 }
@@ -128,4 +130,14 @@
     color: #ee686e;
     display: none;
     padding-top: 1rem;
+}
+
+.producer_title_name a{
+    color: $secondary;
+}
+
+@media (max-width: 359px) {
+    .product_info .product_quantity + button {
+        margin-top: 1rem;
+    }
 }
