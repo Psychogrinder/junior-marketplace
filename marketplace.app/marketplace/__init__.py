@@ -22,14 +22,15 @@ app.config.from_object(
     Development if os.getenv('FLASK_ENV') == 'development' else Production
 )
 
-if os.getenv('CELERY_APP'):
-    from raven import Client
-    from raven.contrib.celery import register_signal, register_logger_signal
-    sentry = Client(app.config['SENTRY_DSN'])
-    register_logger_signal(sentry)
-    register_signal(sentry)
-else:
-    sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
+if app.config['SENTRY_DSN']:
+    if os.getenv('CELERY_APP'):
+        from raven import Client
+        from raven.contrib.celery import register_signal, register_logger_signal
+        sentry = Client(app.config['SENTRY_DSN'])
+        register_logger_signal(sentry)
+        register_signal(sentry)
+    else:
+        sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
 from marketplace import _celery
 
 mail = Mail(app)
