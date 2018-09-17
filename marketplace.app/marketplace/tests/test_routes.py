@@ -1,6 +1,6 @@
 from path_file import *
 from testing_utils import login, logout, parseRoutes, get_route_by_name, getCategorySlugs,  getProductIds, getUserIds, \
-    replaceCategoryName, replaceUserId, replaceProductId
+    replaceCategoryName, replaceUserId, replaceProductId, getCookiesFromResponse, getLoginResponse
 
 import unittest
 from urllib.request import urlopen
@@ -16,10 +16,19 @@ class TestSmoke(unittest.TestCase):
         self.user_ids = getUserIds()
         self.product_ids = getProductIds()
 
+        #login data
+        self.admin = {'email': 'ad@min.ru',
+                      'password': '123123',
+                      }
+        self.producer = {'email': 'melissa.clark@example.com',
+                         'password': '123123',
+                         }
+        self.consumer = {'email': '5mail.ru',
+                         'password': '123123',
+                         }
 
     def test_01_connection(self):
-        self.assertEqual(200, urlopen('http://127.0.0.1:8000').getcode())
-        print('Connection is OK\n')
+        self.assertEqual(200, urlopen('http://127.0.0.1:8000').getcode(), 'Website doesn\'t response')
 
 
     def test_02_login(self):
@@ -47,16 +56,29 @@ class TestSmoke(unittest.TestCase):
 
 
     def test_04_global_orders(self):
-
+        """only admin has permission to get global orders"""
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders')
 
+        users = [self.admin, self.consumer, self.producer]
+        for user in users:
+            response_login = login(email=user['email'], password=user['password'])
+            cookie = getCookiesFromResponse(response_login)
+            content = json.loads(response_login.text)
+
+            response = requests.session().get(url, cookies=cookie)
+            if content['entity'] == 'admin':
+                self.assertNotIn('reject access', response.text.lower())
+            else:
+                self.assertIn('reject access', response.text.lower())
+
         logout()
         response = requests.get(url)
-        content = json.loads(response.content)
-        # убрать, когда будет ограничение по просмотру заказов
-        # self.assertNotEqual(200, response.status_code)
+        self.assertNotEqual(200, response.status_code)
+        self.assertIn('reject access', response.text.lower())
 
+
+        """POST order"""
         args = {'total_cost': '1 730.00 ₽',
                 'order_items_json': {'58': 10},
                 'delivery_method': 'Самовывоз',
@@ -67,9 +89,7 @@ class TestSmoke(unittest.TestCase):
                 'producer_id': 2,
         }
 
-        #new order
         login('15mail.ru', '123123')
-
         response = requests.post(url, data=args)
 
 
