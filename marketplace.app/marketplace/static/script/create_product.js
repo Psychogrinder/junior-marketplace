@@ -7,20 +7,22 @@ $(document).ready(function () {
         addr = addr.split('/');
         var producerId = addr[addr.length - 2];
 
+
         function uploadNewProductImage(product_id) {
-            var form_data = new FormData($('#upload-new-product-image')[0]);
+            var image_data = $('#item-img-output').attr('src');
+            image_data = image_data.split(',')[1];
             $.ajax({
                 type: 'POST',
                 url: "/api/v1/products/" + product_id + "/upload",
-                data: form_data,
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function (data) {
+                data: {
+                    image_data: image_data,
+                },
+                success: function (data, status) {
                     location.replace('/products/' + product_id);
                 },
             });
         }
+
 
         function createNewProductObject() {
             categoryId = parseInt($('#createSubcategory option:selected').data('id'));
