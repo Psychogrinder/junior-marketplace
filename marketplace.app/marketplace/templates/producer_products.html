@@ -11,19 +11,19 @@
     <main>
         <div class="container products">
             {% if products %}
-                <section class="product-filter">
+                <section class="product-filter container">
                     <form action="#" class="row">
-                        <div class="filter-block col-12 col-sm-4">
+                        <div class="filter-block col-12 col-sm-6 col-md-3">
                             <select class="form-control" name="sort_by" id="sortProducerProducts">
                                 <option>По цене ↑</option>
                                 <option>По цене ↓</option>
                                 <option>По популярности</option>
                             </select>
                         </div>
-                        <div class="filter-block col-12 col-sm-4">
+                        <div class="filter-block col-12 col-sm-6 col-md-3">
                             <input class="form-control mr-sm-2" type="text" placeholder="Поиск" id="producerProductsSearch">
                         </div>
-                        <div class="filter-block col-12 col-sm-4">
+                        <div class="filter-block col-12 col-sm-6 col-md-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="in_stock" name="in_stock">
                                 <label class="form-check-label" for="in_stock">
@@ -31,9 +31,12 @@
                                 </label>
                             </div>
                         </div>
-                    </form>
-                    <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
+                        <div class="col-12 col-sm-6 col-md-3 filter-block">
+                            <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
                         products[0].producer_id ) }}"> Добавить товар</a>
+                        </div>
+                    </form>
+
                 </section>
                 <section class="product-card row" id="producerProducts">
                     {% for product in products %}

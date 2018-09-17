@@ -1,3 +1,5 @@
+@import "variable";
+
 main .products .product-card {
   margin-top: 40px;
 }
@@ -24,11 +26,6 @@ main .products .product-card {
   cursor: pointer;
   color: #56CC9D;
 }
-
-$small: 576px;
-$media: 768px;
-$large: 992px;
-$xl: 1200px;
 
 @media (max-width: $media) {
   .products .product-filter .filter-block {
