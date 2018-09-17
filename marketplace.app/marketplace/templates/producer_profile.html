@@ -12,7 +12,7 @@
             <img src="/{{ producer.photo_url }}" alt="">
         </div>
         <div class="container profile_title">
-            <div class="name_container">
+            <div class="name_container row">
                 <h1>{{ producer.name }}</h1>
                 {% if current_user.id == producer.id %}
                     <p class="edit-profile">
@@ -24,28 +24,57 @@
                 {% endif %}
             </div>
         </div>
-        </div>
         <div class="container">
             <div class="row">
-                <div class="col-3 profile-keys">
+                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
                     <p>Название фермы:</p>
-                    <p>Контактное лицо:</p>
-                    <p>E-mail:</p>
-                    <p>Телефон:</p>
-                    <p>Адрес:</p>
-                    {% if producer.description %}
-                    <p>Описание:</p>
-                    {% endif %}
                 </div>
-                <div class="col-9 profile-values">
+                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
                     <p class="main-text">{{ producer.name }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                    <p>Контактное лицо:</p>
+                </div>
+                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
                     <p class="main-text">{{ producer.person_to_contact }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                    <p>E-mail:</p>
+                </div>
+                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
                     <p class="main-text">{{ producer.email }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                    <p>Телефон:</p>
+                </div>
+                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
                     <p class="main-text">{{ producer.phone_number }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                    <p>Адрес:</p>
+                </div>
+                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
                     <p class="main-text">{{ producer.address }}</p>
+                </div>
+            </div>
+            {% if producer.description %}
+            <div class="row">
+                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                    <p>Описание:</p>
+                </div>
+                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
                     <p class="main-text">{{ producer.description }}</p>
                 </div>
             </div>
+            {% endif %}
         </div>
     </main>
 {% endblock %}
