@@ -5,7 +5,7 @@ from marketplace.api_folder.schemas import order_schema_list, order_schema
 from marketplace.api_folder.utils import caching_utils
 import marketplace.api_folder.utils.cart_utils as cart_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
-from marketplace.api_folder.utils.login_utils import account_access_required
+from marketplace.api_folder.utils.login_utils import account_access_required, login_as_admin_required
 
 order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost', 'first_name',
               'last_name']
@@ -17,6 +17,7 @@ for arg in order_args:
 
 class GlobalOrders(Resource):
 
+    @login_as_admin_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:

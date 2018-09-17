@@ -146,7 +146,6 @@ function changeQuantityOfProduct(product_id) {
     }
     $('#number' + product_id).val(quantity);
     var user_id = localStorage.getItem("globalUserId");
-    console.log(quantity);
     $.post("/api/v1/consumers/" + user_id + "/cart",
         {
             product_id: product_id,

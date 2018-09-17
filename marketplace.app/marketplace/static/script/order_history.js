@@ -19,6 +19,25 @@ if ($('main.order-history').length > 0) {
         page: 1
     };
 
+    let isInViewport = function (element) {
+        let elementTop = element.offset().top;
+        let elementBottom = elementTop + element.outerHeight();
+
+        let viewportTop = $(window).scrollTop();
+        let viewportBottom = viewportTop + $(window).height();
+
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
+
+    $(window).on('resize scroll', function () {
+        let element = $('.pageNumber');
+        if (element.length > 0 && isInViewport(element)) {
+            element.remove();
+            order_data['page'] = element.attr("data-page-number");
+            addOrders();
+        }
+    });
+
     function addOrders() {
         $.post("/api/v1/consumers/formatted_orders",
             order_data,
@@ -185,31 +204,12 @@ if ($('main.order-history').length > 0) {
                     let next_page_number = data.page;
                     if (next_page_number) {
                         $("#consumerOrderHistory").append(
-                            '<div style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                            '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                         );
-
-                        let element = $('#page' + next_page_number);
-                        $(window).on('resize scroll', function () {
-                            if (isInViewport(element)) {
-                                element.remove();
-                                order_data['page'] = next_page_number;
-                                addOrders();
-                            }
-                        });
                     }
                 }
             })
     }
-
-    let isInViewport = function (element) {
-        let elementTop = element.offset().top;
-        let elementBottom = elementTop + element.outerHeight();
-
-        let viewportTop = $(window).scrollTop();
-        let viewportBottom = viewportTop + $(window).height();
-
-        return elementBottom > viewportTop && elementTop < viewportBottom;
-    };
 
     addOrders();
 }

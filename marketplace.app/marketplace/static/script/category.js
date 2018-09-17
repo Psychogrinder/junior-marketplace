@@ -1,5 +1,16 @@
 $(document).ready(function () {
         if ($('#sortByPriceOrPopularity').length > 0) {
+
+
+            $(window).on('resize scroll', function () {
+                let element = $('.pageNumber');
+                if (element.length > 0 && isInViewport(element)) {
+                    element.remove();
+                    sorts_and_filters['page'] = element.attr("data-page-number");
+                    update_page(sorts_and_filters, base_category);
+                }
+            });
+
             // data for request
             var sorts_and_filters = {
                 price: null,
@@ -87,18 +98,8 @@ $(document).ready(function () {
                 }
                 if (next_page_number) {
                     $("#productsByCategory").append(
-                        '<div style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                        '<div data-page-number="' + next_page_number +  '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                     );
-
-                    let element = $('#page' + next_page_number);
-                    $(window).on('resize scroll', function () {
-                        if (isInViewport(element)) {
-                            element.remove();
-                            console.log(next_page_number);
-                            sorts_and_filters['page'] = next_page_number;
-                            update_page(sorts_and_filters, base_category);
-                        }
-                    });
                 }
             }
 

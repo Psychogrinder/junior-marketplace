@@ -3,51 +3,52 @@
 {% block meta_title %}Заказы{% endblock %}
 
 {% block meta_description %}
-    <meta name="description" content='{{ meta_description }}'>
+<meta name="description" content='{{ meta_description }}'>
 {% endblock %}
 
 
 {% block body %}
-    <main class="producer-orders">
-        <div class="container">
-            {% if orders %}
-                <div class="row">
-                    <div class="col-lg-2 col-md-4">
-                        <select class="form-control select-order-status" name="subcategory" id="statuses">
-                            <option value="Все" selected>Все</option>
-                            <option value="Не обработан">Не обработан</option>
-                            <option value="Обрабатывается">Обрабатывается</option>
-                            <option value="Отправлен">Отправлен</option>
-                            <option value="Готов к самовывозу">Готов к самовывозу</option>
-                            <option value="Завершён">Завершён</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="text" placeholder="Найти...">
-                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
-                        </form>
-                    </div>
-                    <div class="col-lg-1 col-md-2">
-                        <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle" type="button" id="tableSelect"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Вид
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#" id="common_mode" onclick="showCommon()">Обычный</a>
-                                <a class="dropdown-item" href="#" id="table_mode" onclick="showTable()">Таблица</a>
-                            </div>
-                        </div>
+<main class="producer-orders">
+    <div class="container">
+        {% if orders %}
+        <div class="row">
+            <div class="col-lg-2 col-md-4">
+                <select class="form-control select-order-status" name="subcategory" id="statuses">
+                    <option value="Все" selected>Все</option>
+                    <option value="Не обработан">Не обработан</option>
+                    <option value="Обрабатывается">Обрабатывается</option>
+                    <option value="Отправлен">Отправлен</option>
+                    <option value="Готов к самовывозу">Готов к самовывозу</option>
+                    <option value="Завершён">Завершён</option>
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Найти...">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
+                </form>
+            </div>
+            <div class="col-lg-1 col-md-2">
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="tableSelect"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Вид
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#" id="common_mode" onclick="showCommon()">Обычный</a>
+                        <a class="dropdown-item" href="#" id="table_mode" onclick="showTable()">Таблица</a>
                     </div>
                 </div>
-            {% else %}
-                <h2>У Вас нет заказов</h2>
-            {% endif %}
+            </div>
         </div>
+        {% else %}
+        <h2>У Вас нет заказов</h2>
+        {% endif %}
+    </div>
 
-        <!-- Common view -->
+    <!-- Common view -->
+    <div id="mainProducerOrderSection">
         <div class="common_global_container" id="producerOrderSection">
-{#            {% endfor %}#}
+
         </div>
 
         <!-- Table view -->
@@ -55,5 +56,6 @@
         <div class="table_global_container" id="producerOrderSectionTable">
 
         </div>
-    </main>
+    </div>
+</main>
 {% endblock %}
