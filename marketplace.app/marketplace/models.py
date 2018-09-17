@@ -226,6 +226,8 @@ class Product(SetPhotoUrlMixin, db.Model):
     category_id = db.Column(db.Integer)
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
+    rating = db.Column(db.Float, default=0)
+    votes = db.Column(db.Integer, default=0)
     search_vector = db.Column(TSVectorType(
         'name',
         'description',
@@ -254,6 +256,11 @@ class Product(SetPhotoUrlMixin, db.Model):
 
     def get_category(self):
         return Category.query.filter_by(id=self.category_id).all()
+
+    def update_rating(self, rating):
+        self.votes += 1
+        self.rating = self.rating + (rating - self.rating) / self.votes
+        return round(self.rating, 2)
 
 
 class Category(db.Model):
