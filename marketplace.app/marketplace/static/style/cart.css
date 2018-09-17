@@ -44,6 +44,10 @@
     cursor: pointer;
 }
 
+.quantity_container{
+    margin-bottom: 25px;
+}
+
 .product_quantity .product_quantity_decrease {
     margin-right: -4px;
 }
@@ -91,13 +95,17 @@
     color: #000;
 }
 
-.col-8.total_box {
+.total_box {
     display: flex;
     justify-content: flex-end;
     padding-right: 2rem;
     align-items: center;
 }
 
+.order_box {
+    display: flex;
+    justify-content: flex-end;
+}
 
 .btn_order {
     display: block;
@@ -106,7 +114,6 @@
 #placeOrderButton {
     color: #fff;
     width: fit-content;
-    margin-right: auto;
 }
 
 .notEmptyCart {

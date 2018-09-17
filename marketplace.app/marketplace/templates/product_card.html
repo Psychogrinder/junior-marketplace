@@ -10,7 +10,7 @@
     <main class="product-card-main">
         <section class="container breadcrumbs">
             <span><a href="{{ url_for( 'index' ) }}">Каталог</a></span>
-            <span><a href="{{ url_for( 'category', category_name = category.slug ) }}">{{ category_name }}</a></span>
+            <span><a href="{{ url_for( 'category', category_name = base_category.slug ) }}">{{ base_category.name }}</a></span>
             <span><a class="active">{{ product.name }}</a></span>
         </section>
         <div class="container">
@@ -54,7 +54,7 @@
                     {% endif %}
                         {{ product.measurement_unit }}
                      </span>
-                    {% if current_user.entity == 'consumer' %}
+                    {% if current_user.entity == 'consumer' and product.quantity != 0 %}
                         <div>
                             <form class="product_quantity">
                                 <div class="value-button" id="decrease" onclick="decreaseQuantity('number')"
