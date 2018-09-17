@@ -7,7 +7,7 @@ $(document).ready(function () {
         addr = addr.split('/');
         var product_id = addr[addr.length - 2];
         $.ajax({
-            url: "/api/v1/products/" + product_id,
+            url: "/orders[i].id/" + product_id,
             success: handleChildCategory
         });
 

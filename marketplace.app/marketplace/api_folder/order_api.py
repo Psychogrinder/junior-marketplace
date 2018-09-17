@@ -8,7 +8,7 @@ from marketplace.api_folder.utils.caching_utils import get_cache
 from marketplace.api_folder.utils.login_utils import account_access_required, login_as_admin_required
 
 order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost', 'first_name',
-              'last_name']
+              'last_name', 'delivery_method']
 parser = reqparse.RequestParser()
 
 for arg in order_args:
