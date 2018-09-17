@@ -1,7 +1,10 @@
-from marketplace import sentry, app
+try:
+    from marketplace import sentry
+except ImportError:
+    sentry = None
 
 
 def send_report(msg, service, **tags):
-    if app.config['SENTRY_DSN']:
+    if sentry:
         tags.update({'service': service})
         sentry.captureMessage(msg, tags=tags)
