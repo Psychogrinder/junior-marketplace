@@ -129,12 +129,12 @@ def getResponseCode(url):
     return response
 
 
-def getResponse(login_url, email, password):
+def getLoginResponse(email, password):
     payload = {
         'email': email,
         'password': password
     }
-    return requests.Session().post(login_url, data=payload, allow_redirects=False)
+    return requests.Session().post(url='http://127.0.0.1:8000/api/v1/login', data=payload, allow_redirects=False)
 
 
 def getCookiesFromResponse(response):

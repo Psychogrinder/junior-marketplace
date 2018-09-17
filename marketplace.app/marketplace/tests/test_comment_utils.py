@@ -1,6 +1,6 @@
 from path_file import *
 
-from testing_utils import replaceUserId, replaceProductId, getResponse, getCookiesFromResponse
+from testing_utils import replaceUserId, replaceProductId, getLoginResponse, getCookiesFromResponse
 
 from marketplace.api_folder.utils.comment_utils import get_comment_by_id, get_comments_by_product_id, \
     get_comments_by_consumer_id, post_comment, delete_comment_by_id

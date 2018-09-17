@@ -1,7 +1,7 @@
 from path_file import *
 
 import json
-from testing_utils import getResponse, getCookiesFromResponse, parseViews, replaceUserId, replaceProductId, login, logout
+from testing_utils import getLoginResponse, getCookiesFromResponse, parseViews, replaceUserId, replaceProductId, login, logout
 
 from marketplace.api_folder.utils.user_utils import get_user_by_email
 
