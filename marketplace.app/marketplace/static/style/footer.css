@@ -7,20 +7,20 @@ footer {
 .footer-item h3,
 .footer-item p a,
 .footer-item b {
-	color: #fff;
+    color: #fff;
 }
 
 .footer-item h3 {
-	font-size: 1.2rem;
+    font-size: 1.2rem;
     padding-bottom: 0.8rem;
 }
 
 .footer-social-icon div img {
-	height: 30px;
+    height: 30px;
 }
 
 .footer-social-icon {
-	display: flex;
+    display: flex;
 }
 
 .footer-social-icon div {
@@ -44,7 +44,7 @@ footer .container .watermark {
 .footer-social-icon div:hover,
 .footer-social-icon div:active {
 
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .footer-social-icon .insta-icon:hover,
@@ -60,4 +60,25 @@ footer .container .watermark {
 .footer-social-icon .vk-icon:hover,
 .footer-social-icon .vk-icon:active {
     background-color: #4d7198;
+}
+
+@media (max-width: 576px) {
+    footer h3,
+    footer p {
+        text-align: center;
+    }
+
+    footer .footer-item-social {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    footer .container .watermark {
+        margin: auto;
+    }
+
+    footer .footer-item {
+        margin-bottom: 1rem;
+    }
 }

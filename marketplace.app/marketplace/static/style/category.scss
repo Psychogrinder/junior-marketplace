@@ -1,0 +1,44 @@
+main .products .product-card {
+  margin-top: 40px;
+}
+
+.card-item {
+  margin-bottom: 2rem;
+}
+
+.product-filter {
+  margin-top: 30px;
+}
+
+.product-filter form {
+  display: flex;
+  width: 100%;
+}
+
+.product-filter form .filter-block {
+  box-sizing: border-box;
+}
+
+.form-check:hover .form-check-label,
+.form-check:hover .form-check-input {
+  cursor: pointer;
+  color: #56CC9D;
+}
+
+$small: 576px;
+$media: 768px;
+$large: 992px;
+$xl: 1200px;
+
+@media (max-width: $media) {
+  .products .product-filter .filter-block {
+    margin-bottom: 1rem;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: $small) {
+  .products .product-filter {
+     margin-left: 0;
+  }
+}

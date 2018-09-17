@@ -1,11 +1,12 @@
 import json
+from collections import defaultdict
 
 from marketplace import db
 from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exist_or_get, \
     abort_if_product_doesnt_exist_or_get, abort_if_not_enough_products_or_get, less_than_zero_items_in_carts
 from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.product_utils import get_product_by_id
-from marketplace.models import Cart, Order
+from marketplace.models import Cart, Order, Product, Producer
 
 
 def get_cart_by_consumer_id(consumer_id):
@@ -23,6 +24,20 @@ def get_products_from_cart(items):
     items = {int(k): int(v) for k, v in items.items()}
     products = [get_product_by_id(id) for id in items]
     return products
+
+
+def get_formatted_products_from_cart(consumer_id):
+    product_schema = ('id', 'name', 'price', 'producer_id', 'producer_name')
+    cart = get_cart_by_consumer_id(consumer_id)
+    products = defaultdict(list)
+    for product_id, quantity in cart.items.items():
+        product = db.session.query(Product.id, Product.name, Product.price, Producer.id, Producer.name).filter(
+            Product.id == int(product_id)).filter(Producer.id == Product.producer_id).first()
+        product = dict(zip(product_schema, product))
+        product['quantity'] = quantity
+        product['price'] = ''.join(product['price'].split('.00'))
+        products[tuple([product['producer_id'], product['producer_name']])].append(product)
+    return dict(products)
 
 
 def post_cart(consumer_id):
