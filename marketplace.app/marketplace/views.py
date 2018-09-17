@@ -46,23 +46,25 @@ def category(category_name):
 def product_card(product_id):
     product = product_utils.get_product_by_id(product_id)
     category = category_utils.get_category_by_id(product.category_id)
+    base_category = category_utils.get_category_by_id(category.parent_id)
     producer = producer_utils.get_producer_by_id(product.producer_id)
     comments = comment_utils.get_comments_by_product_id(product_id)
     next_page = comments.next_num
     meta_description = 'каталог фермерских товаров Маркетплейс'
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
-                           comments=comments.items, next_page=next_page, meta_description=meta_description)
+                           comments=comments.items, next_page=next_page, meta_description=meta_description,
+                           base_category=base_category)
 
 
 # товары производителя
 @app.route('/producer/<int:producer_id>/products')
 def producer_products(producer_id):
     if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
-        products = product_utils.get_products_by_producer_id(producer_id)
         meta_description = 'все товары производителя Маркетплейс'
-        return render_template('producer_products.html', products=products, current_user=current_user,
-                               meta_description=meta_description, producer_name=current_user.name)
+        producer_has_products = product_utils.producer_has_products(producer_id)
+        return render_template('producer_products.html', meta_description=meta_description,
+                               producer_has_products=producer_has_products)
     else:
         return redirect(url_for('index'))
 
@@ -110,7 +112,6 @@ def cart(user_id):
 
 @app.route('/cart/<int:user_id>/order_registration')
 def order_registration(user_id):
-
     if current_user.is_authenticated and current_user.id == user_id and current_user.entity == 'consumer':
         cart = Cart.query.filter_by(consumer_id=current_user.id).first()
         if not cart or not cart.items:
@@ -289,7 +290,7 @@ def password_recovery(token):
 @app.route('/search')
 def global_search():
     meta_description = 'Поиск по каталогу - Маркетплейс фермерских товаров'
-    products = product_utils.search_by_keyword(request.args.get('find'))
+    products = product_utils.get_products_for_global_search(request.args.get('find'))
     return render_template(
         'global_search_results.html',
         products=products,

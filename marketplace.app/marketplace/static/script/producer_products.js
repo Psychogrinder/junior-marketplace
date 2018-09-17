@@ -1,5 +1,17 @@
 if ($('#producerProducts').length > 0) {
-    // data for request
+
+    let isInViewport = function (element) {
+        let elementTop = element.offset().top;
+        let elementBottom = elementTop + element.outerHeight();
+
+        let viewportTop = $(window).scrollTop();
+        let viewportBottom = viewportTop + $(window).height();
+
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
+
+
+    // фильтры, сортировка, поиск
     var producer_sorts_and_filters = {
         price: null,
         popularity: null,
@@ -7,10 +19,21 @@ if ($('#producerProducts').length > 0) {
         producer_name: null,
         quantity: null,
         search: null,
-        in_stock: 0
+        in_stock: 0,
+        page: 1
     };
 
-    // get producer id
+    $(window).on('resize scroll', function () {
+        let element = $('.pageNumber');
+        // достигнув разделитель
+        if (element.length > 0 && isInViewport(element)) {
+            element.remove();
+            producer_sorts_and_filters['page'] = element.attr("data-page-number");
+            updateProducerProductsPage(producer_sorts_and_filters);
+        }
+    });
+
+    // так как мы на странице производителя, мы сразу устанавливаем его имя в фильтр и больше не меняем его
     let addr = window.location + '';
     addr = addr.split('/');
     var producer_id = addr[addr.length - 2];
@@ -24,7 +47,7 @@ if ($('#producerProducts').length > 0) {
 
     getAndSetProducerName(producer_id);
 
-    // check what sorting, filtering and search options are selected
+    // наполняем объект параметрами: фильтры, сортировка, в наличии, поиск по имени
     function producer_fill_sorts_and_filters(producer_sorts_and_filters) {
         let selected_option_1 = $('#sortProducerProducts option:selected');
         if (selected_option_1.val() === 'По цене ↑') {
@@ -54,11 +77,11 @@ if ($('#producerProducts').length > 0) {
         }
     }
 
-    function add_new_producer_products(products) {
-        for (var i = 0; i < products.length; i++) {
+    function add_new_producer_products(products, next_page_number) {
+        for (let i = 0; i < products.length; i++) {
             $("#producerProducts").append(
                 '<div class="col-6 col-sm-3 card-item">' +
-                '<a href="/products' + products[i].id + '">' +
+                '<a href="/products/' + products[i].id + '">' +
                 '<div class="product-item-photo">' +
                 '<img src="/' + products[i].photo_url + '"></div>' +
                 '<div class="product-item-description" id="producerItemDescription' + i + '">' +
@@ -71,7 +94,7 @@ if ($('#producerProducts').length > 0) {
                 "</a>" +
                 "</div>");
 
-            // if a product is out of stock, display a warning
+            // если продукта нет в наличии, отображаем предупреждение
             if (products[i].quantity === 0) {
                 $("#producerItemDescription" + i).append(
                     '<p class="goods-ended">' +
@@ -81,14 +104,21 @@ if ($('#producerProducts').length > 0) {
                 )
             }
         }
+
+        // если есть следующая страница, то в конец прикрепляем разделитель, по достижении которого вновь
+        // обновляем страницу
+        if (next_page_number) {
+            $("#producerProducts").append(
+                '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+            );
+        }
     }
 
     function display_producer_filtered_and_sorted_products(producer_sorts_and_filters) {
         $.post('/api/v1/products/filter',
             producer_sorts_and_filters,
             function (products, status) {
-                delete_current_producer_products();
-                add_new_producer_products(products);
+                add_new_producer_products(products.products, products.next_page);
             });
     }
 
@@ -99,10 +129,14 @@ if ($('#producerProducts').length > 0) {
     }
 
     $('#sortProducerProducts').change(function () {
+        producer_sorts_and_filters['page'] = 1;
+        delete_current_producer_products();
         updateProducerProductsPage(producer_sorts_and_filters);
     });
 
     $('#in_stock').click(function () {
+        producer_sorts_and_filters['page'] = 1;
+        delete_current_producer_products();
         if ($(this).is(":checked")) {
             producer_sorts_and_filters['in_stock'] = 1;
         } else {
@@ -113,8 +147,17 @@ if ($('#producerProducts').length > 0) {
 
     $("#producerProductsSearch").on('keypress', function (e) {
         if (e.key === 'Enter') {
+            // preventDefault() для того, чтобы по нажатию Enter в адресную строку не отправлялись параметры
+            // нам это не нужно
             e.preventDefault();
+            producer_sorts_and_filters['page'] = 1;
+            delete_current_producer_products();
             updateProducerProductsPage(producer_sorts_and_filters);
         }
     });
+
+    // Если не отображается надпись "У вас нет товаров", то обновляем страницу
+    if ($('.producer_products_empty').length === 0) {
+        updateProducerProductsPage(producer_sorts_and_filters)
+    }
 }

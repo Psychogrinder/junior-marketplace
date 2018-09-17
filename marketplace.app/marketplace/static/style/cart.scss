@@ -1,3 +1,5 @@
+@import 'variable';
+
 .cart_producer_title {
     margin: 30px 0;
 }
@@ -42,6 +44,10 @@
 
 .value-button:hover {
     cursor: pointer;
+}
+
+.quantity_container{
+    margin-bottom: 25px;
 }
 
 .product_quantity .product_quantity_decrease {
@@ -91,13 +97,17 @@
     color: #000;
 }
 
-.col-8.total_box {
+.total_box {
     display: flex;
     justify-content: flex-end;
     padding-right: 2rem;
     align-items: center;
 }
 
+.order_box {
+    display: flex;
+    justify-content: flex-end;
+}
 
 .btn_order {
     display: block;
@@ -106,7 +116,6 @@
 #placeOrderButton {
     color: #fff;
     width: fit-content;
-    margin-right: auto;
 }
 
 .notEmptyCart {
@@ -121,4 +130,14 @@
     color: #ee686e;
     display: none;
     padding-top: 1rem;
+}
+
+.producer_title_name a{
+    color: $secondary;
+}
+
+@media (max-width: 359px) {
+    .product_info .product_quantity + button {
+        margin-top: 1rem;
+    }
 }

@@ -34,6 +34,13 @@ def get_products_by_producer_id(producer_id):
     return Product.query.filter_by(producer_id=producer_id).all()
 
 
+def producer_has_products(producer_id):
+    abort_if_producer_doesnt_exist_or_get(producer_id)
+    if Product.query.filter_by(producer_id=producer_id).first():
+        return True
+    return False
+
+
 def get_all_products_from_a_list_of_categories(categories):
     all_products = []
     for category in categories:
@@ -167,6 +174,19 @@ def search_by_keyword(search_key_word):
     search_query = '&'.join(search_key_word.split(' '))
     result = search_products_by_param(search_query)
     return product_schema_list.dump(result).data
+
+
+def get_products_for_global_search(search_key_word):
+    products = search_by_keyword(search_key_word)
+    producers = Producer.query.all()
+    # формат: {1: Совхоз А, 2: Совхоз Б}
+    producer_id_name_mapping = {}
+    for producer in producers:
+        producer_id_name_mapping[producer.id] = producer.name
+    # в продуктах добавляем producer_name
+    for product in products:
+        product['producer_name'] = producer_id_name_mapping[product['producer_id']]
+    return products
 
 
 def post_product(args):
