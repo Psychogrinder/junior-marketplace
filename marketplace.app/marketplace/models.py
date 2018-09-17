@@ -25,6 +25,13 @@ producer_category_association_table = db.Table('producers_categories',
                                                )
 
 
+class RatedMixin():
+    def update_rating(self, rating):
+        self.votes += 1
+        self.rating = self.rating + (rating - self.rating) / self.votes
+        return round(self.rating, 2)
+
+
 class SetPhotoUrlMixin():
     def set_photo_url(self, photo_url):
         if self.photo_url is None:
@@ -137,11 +144,13 @@ class Cart(db.Model):
         self.items.clear()
 
 
-class Producer(User):
+class Producer(RatedMixin, User):
     __mapper_args__ = {'polymorphic_identity': 'producer'}
     name = db.Column(db.String(128), unique=True)
     person_to_contact = db.Column(db.String(128))
     description = db.Column(db.String(256))
+    rating = db.Column(db.Float, default=0)
+    votes = db.Column(db.Integer, default=0)
     categories = db.relationship(
         "Category",
         secondary=producer_category_association_table,
@@ -213,7 +222,7 @@ class ProductQuery(BaseQuery, SearchQueryMixin):
     pass
 
 
-class Product(SetPhotoUrlMixin, db.Model):
+class Product(SetPhotoUrlMixin, RatedMixin, db.Model):
     query_class = ProductQuery
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
@@ -226,6 +235,8 @@ class Product(SetPhotoUrlMixin, db.Model):
     category_id = db.Column(db.Integer)
     measurement_unit = db.Column(db.String(16))
     weight = db.Column(db.Float)
+    rating = db.Column(db.Float, default=0)
+    votes = db.Column(db.Integer, default=0)
     search_vector = db.Column(TSVectorType(
         'name',
         'description',

@@ -55,7 +55,9 @@ class ConsumerSchema(ma.ModelSchema):
 class ProducerSchema(ma.ModelSchema):
     class Meta:
         model = Producer
-        fields = ('id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address', 'photo_url')
+        fields = (
+            'id', 'email', 'name', 'person_to_contact', 'description', 'phone_number', 'address', 'photo_url', 'rating',
+            'votes')
 
 
 class CommentSchema(ma.ModelSchema):
