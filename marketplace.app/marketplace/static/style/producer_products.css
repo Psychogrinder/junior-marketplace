@@ -6,7 +6,6 @@
 
  .product-filter form {
 	display: flex;
-	width: 75%;
 }
  .product-filter form .filter-block {
     box-sizing: border-box;
