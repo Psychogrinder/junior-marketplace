@@ -20,6 +20,12 @@ comment_parser = reqparse.RequestParser()
 for arg in comment_args:
     comment_parser.add_argument(arg)
 
+rating_args = ['rating']
+rating_parser = reqparse.RequestParser()
+
+for arg in rating_args:
+    rating_parser.add_argument(arg)
+
 search_parser = reqparse.RequestParser()
 search_parser.add_argument(
     'find', type=str, location='args', required=True
@@ -35,7 +41,7 @@ search_parser.add_argument(
 class GlobalProducts(Resource):
 
     @get_cache
-    def get(self, path, cache):
+    def get(self, path, cache, **kwargs):
         if cache is None:
             products = product_schema_list.dump(product_utils.get_all_products()).data
             return caching_utils.cache_json_and_get(path=path, response=products), 200
@@ -137,6 +143,17 @@ class ProductComments(Resource):
             response['meta'] = kwargs['meta']
             response['body'] = cache
         return response, 200
+
+
+class ProductRating(Resource):
+
+    def get(self, **kwargs):
+        return {'rating': product_utils.get_product_rating_by_id(kwargs['product_id'])}, 200
+
+    @login_required
+    def post(self, **kwargs):
+        args = rating_parser.parse_args()
+        return product_utils.post_rating(int(args['rating']), kwargs['product_id']), 201
 
 
 class ProductSearchByParams(Resource):

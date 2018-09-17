@@ -35,7 +35,7 @@ from marketplace.api_folder.product_api import (
     ProductsSortedAndFiltered,
     ProductSearchByParams,
     Comments,
-    ProductComments)
+    ProductComments, ProductRating)
 
 from marketplace.api_folder.password_api import PasswordRecovery
 
@@ -86,6 +86,7 @@ api.add_resource(ConsumerComments, '/consumers/<int:consumer_id>/comments')
 # Products
 api.add_resource(GlobalProducts, '/products')
 api.add_resource(ProductRest, '/products/<int:product_id>')
+api.add_resource(ProductRating, '/products/<int:product_id>/rating')
 api.add_resource(Comments, '/comments')
 api.add_resource(ProductComments, '/products/<int:product_id>/comments')
 api.add_resource(ProductSearchByParams, '/products/search')

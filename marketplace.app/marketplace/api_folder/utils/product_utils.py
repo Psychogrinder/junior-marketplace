@@ -6,7 +6,7 @@ from sqlalchemy_searchable import inspect_search_vectors
 from marketplace import db, app, PRODUCTS_PER_PAGE
 from marketplace.api_folder.schemas import product_schema, product_schema_list
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
-    abort_if_producer_doesnt_exist_or_get, abort_if_category_doesnt_exist_or_get
+    abort_if_producer_doesnt_exist_or_get, abort_if_category_doesnt_exist_or_get, abort_if_invalid_rating_value
 from marketplace.api_folder.utils.category_utils import get_category_by_id, get_subcategories_by_category_id, \
     check_producer_categories, delete_categories_if_it_was_the_last_product
 from marketplace.api_folder.utils.order_utils import get_order_by_id
@@ -32,6 +32,10 @@ def get_products_by_category_id(category_id):
 def get_products_by_producer_id(producer_id):
     abort_if_producer_doesnt_exist_or_get(producer_id)
     return Product.query.filter_by(producer_id=producer_id).all()
+
+
+def get_product_rating_by_id(product_id):
+    return round(get_product_by_id(product_id).rating, 2)
 
 
 def producer_has_products(producer_id):
@@ -202,6 +206,14 @@ def post_product(args):
             producer.categories.append(category)
     db.session.commit()
     return new_product
+
+
+def post_rating(rating, product_id):
+    product = get_product_by_id(product_id)
+    abort_if_invalid_rating_value(rating)
+    rating = product.update_rating(rating)
+    db.session.commit()
+    return {'rating': rating}
 
 
 def put_product(args, product_id):
