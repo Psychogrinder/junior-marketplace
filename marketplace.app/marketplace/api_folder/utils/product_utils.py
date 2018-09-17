@@ -208,14 +208,6 @@ def post_product(args):
     return new_product
 
 
-def post_rating(rating, product_id):
-    product = get_product_by_id(product_id)
-    abort_if_invalid_rating_value(rating)
-    rating = product.update_rating(rating)
-    db.session.commit()
-    return {'rating': rating}
-
-
 def put_product(args, product_id):
     product = get_product_by_id(product_id)
 

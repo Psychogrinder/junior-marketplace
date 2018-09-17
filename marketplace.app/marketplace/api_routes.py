@@ -23,8 +23,8 @@ from marketplace.api_folder.producer_api import (
     ProducerOrders,
     UploadImageProducer,
     ProducerNamesByCategoryName,
-    ProducerNameById
-)
+    ProducerNameById,
+    ProducerRating)
 from marketplace.api_folder.product_api import (
     GlobalProducts,
     ProductRest,
@@ -76,6 +76,7 @@ api.add_resource(SubcategoriesBySlug, '/categories/slug/<string:category_slug>/s
 # Producers
 api.add_resource(GlobalProducers, '/producers')
 api.add_resource(ProducerRest, '/producers/<int:producer_id>')
+api.add_resource(ProducerRating, '/producers/<int:producer_id>/rating')
 api.add_resource(ProducerNameById, '/producers/<int:producer_id>/name')
 
 # Consumers

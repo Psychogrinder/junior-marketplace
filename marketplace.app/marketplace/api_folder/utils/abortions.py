@@ -63,7 +63,6 @@ possible_ratings = [0, 1, 2, 3, 4, 5]
 
 
 def abort_if_invalid_rating_value(rating):
-    print(5 in possible_ratings)
     if rating not in possible_ratings:
         abort(406, message='Invalid rating value')
 

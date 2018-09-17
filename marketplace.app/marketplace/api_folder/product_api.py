@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for
 from flask_login import login_required, current_user
 from flask_restful import Resource, reqparse
-from marketplace.api_folder.utils import product_utils, comment_utils, pagination_utils
+from marketplace.api_folder.utils import product_utils, comment_utils, pagination_utils, rating_utils, producer_utils
 from marketplace.api_folder.utils import cart_utils
 from marketplace.api_folder.schemas import product_schema_list, product_schema, comment_schema_list, comment_schema
 from marketplace.api_folder.utils import caching_utils
@@ -153,7 +153,11 @@ class ProductRating(Resource):
     @login_required
     def post(self, **kwargs):
         args = rating_parser.parse_args()
-        return product_utils.post_rating(int(args['rating']), kwargs['product_id']), 201
+        product = product_utils.get_product_by_id(kwargs['product_id'])
+        producer = producer_utils.get_producer_by_id(product.producer_id)
+        print(producer.id)
+        rating_utils.post_rating(int(args['rating']), producer)
+        return rating_utils.post_rating(int(args['rating']), product), 201
 
 
 class ProductSearchByParams(Resource):
