@@ -57,7 +57,6 @@ if ($('main .order_registration').length > 0) {
                     if (data.status == 406) {
                         var hulla = new hullabaloo();
                         hulla.send(data.responseJSON.message, "secondary");
-
                     }
                 });
         }
