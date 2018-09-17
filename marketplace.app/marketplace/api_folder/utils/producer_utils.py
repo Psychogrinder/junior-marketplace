@@ -4,7 +4,7 @@ from sqlalchemy import update
 
 from marketplace import db, email_tools, app
 from marketplace.api_folder.schemas import producer_sign_up_schema
-from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exist_or_get
+from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exist_or_get, abort_if_invalid_rating_value
 from marketplace.api_folder.utils.checkers import check_email_uniqueness, check_producer_name_uniqueness
 from marketplace.api_folder.utils.uploaders import upload_image
 from marketplace.api_folder.utils.validators import validate_registration_data
@@ -13,6 +13,10 @@ from marketplace.models import Producer, Category, Product
 
 def get_producer_by_id(producer_id):
     return abort_if_producer_doesnt_exist_or_get(producer_id)
+
+
+def get_producer_rating_by_id(producer_id):
+    return round(get_producer_by_id(producer_id).rating, 2)
 
 
 def get_producer_by_name(name):
