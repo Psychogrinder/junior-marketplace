@@ -298,11 +298,10 @@ def global_search():
     )
 
 
-@app.route('/review')
-def review():
+@app.route('/review/<int:order_id>')
+def review(order_id):
     if not current_user.is_authenticated:
         return abort(404)
-    order_id = request.args.get('order_id')
     try:
         order = order_utils.get_order_by_id(int(order_id))
     except TypeError:
