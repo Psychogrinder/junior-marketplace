@@ -5,8 +5,8 @@ $(document).ready(function () {
             $(window).on('resize scroll', function () {
                 let element = $('.pageNumber');
                 if (element.length > 0 && isInViewport(element)) {
-                    element.remove();
                     sorts_and_filters['page'] = element.attr("data-page-number");
+                    element.remove();
                     update_page(sorts_and_filters, base_category);
                 }
             });
@@ -194,4 +194,3 @@ $(document).ready(function () {
         };
     }
 );
-
