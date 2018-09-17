@@ -4,8 +4,8 @@ function markdownToHTML(text) {
 }
 
 $(document).ready(function () {
+    if ($("#mainProducerDescription").length > 0) {
     let producerDescription = $("#mainProducerDescription");
-    if (producerDescription.length > 0) {
         let text = producerDescription.attr('data-description');
         text = markdownToHTML(text);
         producerDescription.append(
