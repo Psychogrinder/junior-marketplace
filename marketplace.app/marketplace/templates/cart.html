@@ -50,7 +50,7 @@
                                     <form class="product_quantity">
                                         <div class="value-button" id='decrease{{ product.id }}'
                                              onclick="decreaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
-                                             value="Decrease Value">-
+                                             value="Decrease Value">–
                                         </div>
                                         {% for product_id, quantity in items.items() %}
                                             {% if product.id == product_id %}
