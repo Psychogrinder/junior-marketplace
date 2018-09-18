@@ -26,17 +26,19 @@ $('#sendReviews').click(function () {
     for (let i = 1; i <= number_of_products; i++) {
         let review = $('#review' + i);
         let body = review.val();
-        if (body) {
-            let product_id = review.attr('data-product-id');
-            for (let k = 1; k < 6; k++) {
-                if ($('#ratingStar' + k + '_' + product_id).is(':checked')) {
-                    var rating = k;
-                    break;
-                }
-
+        let product_id = review.attr('data-product-id');
+        for (let k = 1; k < 6; k++) {
+            if ($('#ratingStar' + k + '_' + product_id).is(':checked')) {
+                var rating = k;
+                break;
             }
-            let data = makeReviewObject(consumer_name, consumer_id, product_id, body, order_id, rating);
+        }
+        let data = makeReviewObject(consumer_name, consumer_id, product_id, body, order_id, rating);
+        if (rating) {
             postReview(data);
+        } else {
+            var hulla = new hullabaloo();
+            hulla.send("Вы забыли оценить товар", "danger");
         }
     }
 });
