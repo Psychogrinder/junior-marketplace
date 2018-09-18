@@ -1,6 +1,9 @@
+
 from path_file import *
 from testing_utils import login, logout, parseRoutes, get_route_by_name, getCategorySlugs,  getProductIds, getUserIds, \
     replaceCategoryName, replaceUserId, replaceProductId, getCookiesFromResponse, getLoginResponse
+
+from marketplace.models import Order
 
 import unittest
 from urllib.request import urlopen
@@ -77,14 +80,13 @@ class TestSmoke(unittest.TestCase):
             else:
                 self.assertIn('reject access', response.text.lower(),
                               '{} can GET global order'.format(content['entity']))
-
         logout()
         response = requests.get(url)
         self.assertNotEqual(200, response.status_code)
         self.assertIn('reject access', response.text.lower(),
                       'unauthorized user can GET global order')
 
-
+    @unittest.skip
     def test_05_post_global_orders(self):
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders')
@@ -99,8 +101,7 @@ class TestSmoke(unittest.TestCase):
                      'first_name': 'sasas',
                      'last_name': 'smara'}
 
-        users = [self.consumer, self.admin, self.producer]
-
+        users = [self.consumer, self.producer, self.admin]
         for user in users:
             response_login = login(email=user['email'], password=user['password'])
             cookie = getCookiesFromResponse(response_login)
@@ -116,22 +117,43 @@ class TestSmoke(unittest.TestCase):
             else:
                 self.assertEqual(404, response_post.status_code,
                                  '{} can POST to global order'.format(content['entity']))
-
         logout()
         response_logout = requests.post(url, data=post_args)
         self.assertNotEqual(201, response_logout.status_code,
                             'unauthorized user can POST to global order')
 
 
-
-    def test_06_orders(self):
+    def test_06_get_orders(self):
         routes = self.routes['Orders']
-        url = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
-        print(url)
-        #     if '<category_name>' in route:
-        #         for category_slug in self.category_slugs:
-        #             test_url = replaceCategoryName(self.url + route, category_slug)
+        url_route = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
 
+        orders = Order.query.all()
+        users = [self.consumer, self.producer, self.admin]
+        for order in orders:
+            url = url_route.replace('<int:order_id>', str(order.id))
+
+            for user in users:
+                response_login = login(email=user['email'], password=user['password'])
+                cookie = getCookiesFromResponse(response_login)
+                content = json.loads(response_login.text)
+
+                response_get = requests.Session().get(url, cookies=cookie)
+                if content['id'] != order.consumer_id:
+                    self.assertIn('reject access', response_get.text.lower(),
+                                  'order №{} with consumer_id: {} can see consumer with id {}'.format(
+                                      order.id, order.consumer_id, content['id']))
+                    self.assertNotEqual(order.consumer_email, user['email'])
+                    self.assertNotEqual(content['id'], order.consumer_id)
+                else:
+                    self.assertEqual(content['id'], order.consumer_id)
+                    self.assertEqual(user['email'], order.consumer_email,
+                                     'order №{} with consumer_id: {} can not see consumer with id {}'.format(
+                                      order.id, order.consumer_id, content['id']))
+
+            logout()
+            response = requests.get(url)
+            self.assertIn('reject access', response.text.lower(),
+                          'unauthorized user can see order №{}'.format(order.id))
 
 
 if __name__ == '__main__':
