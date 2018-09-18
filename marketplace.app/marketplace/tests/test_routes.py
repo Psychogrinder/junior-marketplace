@@ -3,7 +3,7 @@ from path_file import *
 from testing_utils import login, logout, parseRoutes, get_route_by_name, getCategorySlugs,  getProductIds, getUserIds, \
     replaceCategoryName, replaceUserId, replaceProductId, getCookiesFromResponse, getLoginResponse
 
-from marketplace.models import Order
+from marketplace.models import Order, User
 
 import unittest
 from urllib.request import urlopen
@@ -15,21 +15,13 @@ class TestSmoke(unittest.TestCase):
     def setUp(self):
         self.url = 'http://127.0.0.1:8000/api/v1'
         self.routes = parseRoutes()
-        self.category_slugs = getCategorySlugs(1)
-        self.user_ids = getUserIds()
-        self.product_ids = getProductIds()
 
-        #login data
-        self.admin = {'email': 'ad@min.ru',
-                      'password': '123123',
-                      }
-        self.producer = {'email': 'melissa.clark@example.com',
-                         'password': '123123',
-                         }
-        self.consumer = {'email': '5mail.ru',
-                         'password': '123123',
-                         }
+        self.consumers = User.query.filter_by(entity='consumer').limit(5).all()
+        self.producers = User.query.filter_by(entity='producer').limit(5).all()
+        self.admin = User.query.filter_by(entity='admin').limit(1).all()
+        self.users = self.consumers + self.producers + self.admin
 
+        self.password = '123123'
 
     def test_01_connection(self):
         self.assertEqual(200, urlopen('http://127.0.0.1:8000').getcode(),
@@ -37,26 +29,15 @@ class TestSmoke(unittest.TestCase):
 
 
     def test_02_login(self):
-        routes = self.routes['Authorization']
-        url = self.url + get_route_by_name(routes, 'login')
-
-        login_data = {'emails': ['15mail.ru', '50mail.ru', 'melissa.clark@example.com'],
-                      'password': 123123,
-                      }
-
-        for email in login_data['emails']:
-            response = requests.post(url, data={'email': email, 'password': login_data['password']})
+        for user in self.users:
+            response = login(user.email, self.password)
             self.assertEqual(201, response.status_code,
-                             'unexpected status code after logout')
+                             'unexpected status code after login')
 
 
     def test_03_logout(self):
-        routes = self.routes['Authorization']
-        url = self.url + get_route_by_name(routes, 'logout')
-
-        response = requests.get(url)
+        response = logout()
         content = json.loads(response.content)
-
         self.assertEqual(201, response.status_code,
                          'unexpected status code after logout')
         self.assertIn('logout', content.lower())
@@ -67,13 +48,13 @@ class TestSmoke(unittest.TestCase):
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders')
 
-        users = [self.admin, self.consumer, self.producer]
-        for user in users:
-            response_login = login(email=user['email'], password=user['password'])
+        for user in self.users:
+            response_login = login(email=user.email, password=self.password)
             cookie = getCookiesFromResponse(response_login)
             content = json.loads(response_login.text)
 
             response = requests.session().get(url, cookies=cookie)
+
             if content['entity'] == 'admin':
                 self.assertNotIn('reject access', response.text.lower(),
                                  '{} can not GET global order'.format(content['entity']))
@@ -86,7 +67,7 @@ class TestSmoke(unittest.TestCase):
         self.assertIn('reject access', response.text.lower(),
                       'unauthorized user can GET global order')
 
-    @unittest.skip
+    
     def test_05_post_global_orders(self):
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders')
@@ -101,22 +82,21 @@ class TestSmoke(unittest.TestCase):
                      'first_name': 'sasas',
                      'last_name': 'smara'}
 
-        users = [self.consumer, self.producer, self.admin]
-        for user in users:
-            response_login = login(email=user['email'], password=user['password'])
+        for user in self.users:
+            response_login = login(email=user.email, password=self.password)
             cookie = getCookiesFromResponse(response_login)
             content = json.loads(response_login.text)
 
-            post_args['email'] = user['email']
+            post_args['email'] = user.email
             post_args['consumer_id'] = content['id']
 
             response_post = requests.Session().post(url, data=post_args, cookies=cookie)
             if content['entity'] == 'consumer':
                 self.assertEqual(201, response_post.status_code,
-                                 '{} can not POST to global order'.format(content['entity']))
+                                 '{} should POST to global order'.format(content['entity']))
             else:
                 self.assertEqual(404, response_post.status_code,
-                                 '{} can POST to global order'.format(content['entity']))
+                                 '{} should not POST to global order'.format(content['entity']))
         logout()
         response_logout = requests.post(url, data=post_args)
         self.assertNotEqual(201, response_logout.status_code,
@@ -127,33 +107,32 @@ class TestSmoke(unittest.TestCase):
         routes = self.routes['Orders']
         url_route = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
 
-        orders = Order.query.all()
-        users = [self.consumer, self.producer, self.admin]
+        orders = Order.query.limit(5).all()
         for order in orders:
             url = url_route.replace('<int:order_id>', str(order.id))
 
-            for user in users:
-                response_login = login(email=user['email'], password=user['password'])
+            for user in self.users:
+                response_login = login(email=user.email, password=self.password)
                 cookie = getCookiesFromResponse(response_login)
                 content = json.loads(response_login.text)
 
                 response_get = requests.Session().get(url, cookies=cookie)
-                if content['id'] != order.consumer_id:
-                    self.assertIn('reject access', response_get.text.lower(),
-                                  'order №{} with consumer_id: {} can see consumer with id {}'.format(
-                                      order.id, order.consumer_id, content['id']))
-                    self.assertNotEqual(order.consumer_email, user['email'])
-                    self.assertNotEqual(content['id'], order.consumer_id)
-                else:
+                if user.id == order.consumer_id:
+                    self.assertEqual(user.email, order.consumer_email,
+                                    'order №{} (consumer_id: {}) should see consumer with id {}'
+                                     .format(order.id, order.consumer_id, user.id))
                     self.assertEqual(content['id'], order.consumer_id)
-                    self.assertEqual(user['email'], order.consumer_email,
-                                     'order №{} with consumer_id: {} can not see consumer with id {}'.format(
-                                      order.id, order.consumer_id, content['id']))
+                else:
+                    self.assertIn('reject access', response_get.text.lower(),
+                                  'order №{} with consumer_id: {} should not see consumer with id {}'
+                                  .format(order.id, order.consumer_id, content['id']))
+                    self.assertNotEqual(user.email, order.consumer_email)
+                    self.assertNotEqual(content['id'], order.consumer_id)
 
             logout()
             response = requests.get(url)
             self.assertIn('reject access', response.text.lower(),
-                          'unauthorized user can see order №{}'.format(order.id))
+                          'unauthorized user should not see order №{}'.format(order.id))
 
 
 if __name__ == '__main__':
