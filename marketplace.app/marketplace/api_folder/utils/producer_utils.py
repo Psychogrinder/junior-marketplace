@@ -11,27 +11,33 @@ from marketplace.api_folder.utils.validators import validate_registration_data
 from marketplace.models import Producer, Category, Product
 
 
-def get_producer_by_id(producer_id):
+def get_producer_by_id(producer_id: int) -> Producer:
+    """Returns producer"""
     return abort_if_producer_doesnt_exist_or_get(producer_id)
 
 
-def get_producer_rating_by_id(producer_id):
+def get_producer_rating_by_id(producer_id: int) -> float:
+    """Returns producer's rating"""
     return round(get_producer_by_id(producer_id).rating, 2)
 
 
-def get_producer_by_name(name):
+def get_producer_by_name(name: str) -> Producer:
+    """Returns producer by name"""
     return Producer.query.filter_by(name=name).first()
 
 
-def get_producer_name_by_id(producer_id):
+def get_producer_name_by_id(producer_id: int) -> str:
+    """Returns producers's name"""
     return db.session.query(Producer.name).filter(Producer.id == producer_id).first()[0]
 
 
-def get_all_producers():
+def get_all_producers() -> list:
+    """"Returns all producers"""
     return Producer.query.filter_by(entity='producer').all()
 
 
-def post_producer(args):
+def post_producer(args: dict) -> Producer:
+    """Post producer and return him"""
     validate_registration_data(args['email'], args['password'])
     check_email_uniqueness(args['email'])
     check_producer_name_uniqueness(args['name'])
@@ -45,7 +51,8 @@ def post_producer(args):
     return new_producer
 
 
-def put_producer(args, producer_id):
+def put_producer(args: dict, producer_id: int) -> Producer:
+    """Change producer and returns it"""
     producer = get_producer_by_id(producer_id)
     args['id'] = None
     for k, v in args.items():
@@ -55,7 +62,8 @@ def put_producer(args, producer_id):
     return producer
 
 
-def delete_producer_by_id(producer_id):
+def delete_producer_by_id(producer_id: int) -> dict:
+    """Delete producer with given id"""
     producer = get_producer_by_id(producer_id)
     # TODO перенести функцию get_products_by_producer_id из product_utils в producer_utils
     # producer_products = get_products_by_producer_id(producer_id)
@@ -69,13 +77,15 @@ def delete_producer_by_id(producer_id):
     return {"message": "Producer with id {} has been deleted successfully".format(producer_id)}
 
 
-def upload_producer_image(producer_id, image_data):
+def upload_producer_image(producer_id: int, image_data) -> bool:
+    """Upload producer's image"""
     producer = get_producer_by_id(producer_id)
     image_size = app.config['USER_IMAGE_PRODUCER_LOGO_SIZE']
     return upload_image(producer, image_data, producer_id, image_size)
 
 
-def get_producer_names_by_category_name(category_name):
+def get_producer_names_by_category_name(category_name: str) -> list:
+    """Returns list of producers with category presented"""
     category = Category.query.filter_by(name=category_name).first()
     producers = get_all_producers()
     return [producer.name for producer in producers if category in producer.categories]
