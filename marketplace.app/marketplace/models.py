@@ -14,6 +14,11 @@ from sqlalchemy.dialects.postgresql import MONEY
 from flask_login import UserMixin
 from sqlalchemy_searchable import SearchQueryMixin, make_searchable
 from sqlalchemy_utils.types.ts_vector import TSVectorType
+import logging
+
+logging.basicConfig(filename="models.log", level=logging.INFO)
+log = logging.getLogger("ex")
+
 
 make_searchable(db.metadata)
 
