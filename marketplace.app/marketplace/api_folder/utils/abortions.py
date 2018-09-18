@@ -35,7 +35,7 @@ def abort_if_category_doesnt_exist_or_get(category_id: int) -> Category:
     return category
 
 
-def abort_if_category_doesnt_exist_slug_or_get(category_slug: int) -> Category:
+def abort_if_category_doesnt_exist_slug_or_get(category_slug: str) -> Category:
     """Return category with given slug if exists, else aborts"""
     category = Category.query.filter_by(slug=category_slug)
     if category is None:
