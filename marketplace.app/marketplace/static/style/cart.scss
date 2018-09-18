@@ -154,3 +154,34 @@
         margin-top: 1rem;
     }
 }
+
+//product-rating
+.product-rating {
+  display: flex;
+  align-items: center;
+}
+
+.product-rating img {
+  max-width: 30px;
+}
+
+.product-rating__number {
+  margin-left: 1rem;
+  color: $main-text;
+  font-size: 1.4rem;
+  margin-top: 0.4rem;
+  margin-right: 0.5rem;
+}
+
+.product-rating__votes {
+  color: $main-text;;
+  margin-top: 0.4rem;
+}
+
+.product-rating--comment img {
+  max-width: 20px;
+}
+
+.product-rating--comment {
+  align-items: flex-start;
+}

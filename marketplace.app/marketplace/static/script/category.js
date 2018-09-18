@@ -85,6 +85,10 @@ $(document).ready(function () {
                         "<b>" + products[i].name + "</b>" +
                         '<p class="producer_name">' + products[i].producer_name + "</p>" +
                         "</div>" +
+                        '<div class="product-rating product-rating--product-cart" id="productRating' +
+                        products[i].id +
+                        '">' +
+                        '</div>' +
                         "</a>" +
                         '</div>');
                     // if a product is out of stock, display a warning
@@ -95,10 +99,30 @@ $(document).ready(function () {
                             'Нет в наличии' +
                             '</p>');
                     }
+
+                    for (let k = 0; k < products[i].stars.length; k++) {
+                        $('#productRating' + products[i].id).append(
+                            '<span class="product-rating__icon">' +
+                            '<img src="/static/' +
+                            products[i].stars[k] +
+                            '" alt="">' +
+                            '</span>'
+                        )
+                    }
+
+                    $('#productRating' + products[i].id).append(
+                        '<span class="product-rating__number">' +
+                        products[i].rating +
+                        '</span>' +
+                        '<span class="product-rating__votes">' +
+                        '(' + products[i].votes + ')' +
+                        '</span>'
+                    );
+
                 }
                 if (next_page_number) {
                     $("#productsByCategory").append(
-                        '<div data-page-number="' + next_page_number +  '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                        '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                     );
                 }
             }

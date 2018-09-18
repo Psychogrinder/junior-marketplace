@@ -15,8 +15,21 @@
         </section>
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-md-7 col-lg-6 col-xl-5">
                     <h1 class="product_title">{{ product.name }}</h1>
+                </div>
+                <div class="col-12 col-md-5 col-lg-6 col-xl-7 product-rating">
+                    {% for star in stars %}
+                        <span class="product-rating__icon--empty">
+                            <img src="{{ url_for( 'static', filename = star) }}" alt="">
+                        </span>
+                    {% endfor %}
+                    <span class="product-rating__number">
+                        {{ product.rating }}
+                    </span>
+                    <span class="product-rating__votes">
+                        ({{ product.votes }})
+                    </span>
                 </div>
             </div>
         </div>
@@ -103,11 +116,20 @@
                     {% for comment in comments %}
                         <div class="review-product-item col-12 col-lg-9">
                             <div class="row">
-                                <div class="col-12 col-sm-6">
+                                <div class="col-12 col-sm-8">
                                     <p class="review-consumer">{{ comment.consumer_name }}</p>
                                 </div>
-                                <div class="col-12 col-sm-6">
-                                    <p class="review-data">{{ comment.timestamp.date() }}</p>
+                                <div class="col-12 col-sm-4 row">
+                                    <div class="col-6 product-rating product-rating--comment">
+                                        {% for i in range(comment.rating) %}
+                                            <span class="product-rating__icon">
+                                                <img src="{{ url_for( 'static', filename = 'img/star.png') }}" alt="">
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="review-data">{{ comment.timestamp.date() }}</p>
+                                    </div>
                                 </div>
                             </div>
                             <p class="review-comment">{{ comment.body }}</p>
