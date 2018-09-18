@@ -19,7 +19,6 @@
                     <h1 class="product_title">{{ product.name }}</h1>
                 </div>
                 <div class="col-12 col-md-5 col-lg-6 col-xl-7 product-rating">
-                <p>{{ stars }}</p>
                     {% for star in stars %}
                         <span class="product-rating__icon--empty">
                             <img src="{{ url_for( 'static', filename = star) }}" alt="">

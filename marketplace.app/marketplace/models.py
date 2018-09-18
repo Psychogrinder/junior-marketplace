@@ -14,11 +14,6 @@ from sqlalchemy.dialects.postgresql import MONEY
 from flask_login import UserMixin
 from sqlalchemy_searchable import SearchQueryMixin, make_searchable
 from sqlalchemy_utils.types.ts_vector import TSVectorType
-import logging
-
-logging.basicConfig(filename="models.log", level=logging.INFO)
-log = logging.getLogger("ex")
-
 
 make_searchable(db.metadata)
 
@@ -32,8 +27,14 @@ producer_category_association_table = db.Table('producers_categories',
 
 class RatedMixin():
     def update_rating(self, rating):
+        print('----------------', self)
+        print('votes before', self.votes)
         self.votes += 1
+        print('votes after', self.votes)
+        print('rating before', self.rating)
         self.rating = self.rating + (rating - self.rating) / self.votes
+        print('rating after', self.rating)
+        print('---------------------------------------------------------')
         return round(self.rating, 2)
 
 
