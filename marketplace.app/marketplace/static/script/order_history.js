@@ -57,12 +57,12 @@ if ($('main.order-history').length > 0) {
                         '<div class="container">' +
                         // first row start
                         '<div class="row order_history_info">' +
-                        '<div class="col-4 col-lg-2">' +
+                        '<div class="col-12 col-lg-2">' +
                         '<span>№ ' +
                         data.orders[i].id +
                         '</span>' +
                         '</div>' +
-                        '<div class="col-8 col-lg-4 order-history-producer-name">' +
+                        '<div class="col-12 col-lg-4 order-history-producer-name">' +
                         '<a href="/producer_profile/' +
                         data.orders[i].producer_id +
                         '" class="order-history-producer-link">' +
@@ -71,12 +71,12 @@ if ($('main.order-history').length > 0) {
                         '</span>' +
                         '</a>' +
                         '</div>' +
-                        '<div class="col-4 col-lg-2 order_history_date"> ' +
+                        '<div class="col-12 col-lg-2 order_history_date"> ' +
                         '<span class="orderTimeStamp">' +
                         data.orders[i].placement_date +
                         '</span>' +
                         '</div>' +
-                        '<div class="col-8 col-lg-4"> ' +
+                        '<div class="col-12 col-lg-4"> ' +
                         '<span>СУММА ЗАКАЗА: ' +
                         data.orders[i].cost +
                         '</span>' +
