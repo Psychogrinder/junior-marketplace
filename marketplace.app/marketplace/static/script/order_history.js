@@ -146,12 +146,12 @@ if ($('main.order-history').length > 0) {
                             items[k].photo_url +
                             '" alt="" width="150px">' +
                             '</div>' +
-                            '<div class="col-3 col-lg-1 cart_product_stock_title">' +
+                            '<div class="col-5 col-lg-1 cart_product_stock_title">' +
                             '<p>Название</p>' +
                             '<p>Цена</p>' +
                             '<p>Артикул</p>' +
                             '</div>' +
-                            '<div class="col-9 col-lg-3 cart_product_stock_info">' +
+                            '<div class="col-7 col-lg-3 cart_product_stock_info">' +
                             '<a href="url_for(\'product_card\', product_id=items[k].id )">' +
                             '<p>' +
                             items[k].name +
@@ -163,7 +163,7 @@ if ($('main.order-history').length > 0) {
                             '<p>#' +
                             items[k].id +
                             '</p>' +
-                            '</div> <div class="col-12 col-lg-2">' +
+                            '</div> <div class="col-5 col-lg-2">' +
                             '<span>Вес:</span>' +
                             '<span class="main-text"> ' +
                             items[k].weight +
@@ -172,7 +172,7 @@ if ($('main.order-history').length > 0) {
                             items[k].measurement_unit +
                             '</span>' +
                             '</div>' +
-                            '<div class="col-12 col-lg-4 quantity_container">' +
+                            '<div class="col-7 col-lg-4 quantity_container">' +
                             '<span>Количество: </span>' +
                             '<span class="main-text">' +
                             items[k].quantity +
