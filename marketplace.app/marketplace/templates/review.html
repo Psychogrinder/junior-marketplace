@@ -21,6 +21,7 @@
                     <div class="col-12 col-md-6 col-sm-8">
                         <form>
                             <label for="review{{ loop.index }}">Отзыв</label>
+                            {% include 'inc/star_rating.html' %}
                             <textarea data-product-id="{{ product.id }}" id="review{{ loop.index }}" type="text"
                                       placeholder="" class="form-control"></textarea>
                         </form>

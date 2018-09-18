@@ -157,7 +157,7 @@ for i in range(1, 10):
 comments = ['GOOOOOOD', 'GREAAAT', 'Maaaah nigga, its fucking aaawesome', 'I want more', "Where do they do that at?"]
 
 for i, comment in enumerate(comments):
-    new_comment = Comment(1, i + 10, comment, consumer_name='Покупатель')
+    new_comment = Comment(1, i + 10, comment, 3, consumer_name='Покупатель')
     db.session.add(new_comment)
 
 for _ in range(100):

@@ -60,7 +60,7 @@ def get_products_from_a_parent_category(parent_category_id):
 def get_sorted_and_filtered_products(args):
     products = []
     args['page'] = int(args['page'])
-    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
+    query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url, Product.rating, Product.votes,
                              Producer.name.label('producer_name')).filter(
         Product.producer_id == Producer.id)
 
@@ -95,10 +95,12 @@ def get_sorted_and_filtered_products(args):
         elif args['price'] == 'up':
             query = query.order_by(Product.price.asc())
 
-    product_schema = ("id", "name", "price", "photo_url", "producer_name")
+    product_schema = ("id", "name", "price", "photo_url", "rating", "votes", "producer_name")
     page_products = query.paginate(args['page'], PRODUCTS_PER_PAGE)
     for product in page_products.items:
         products.append(dict(zip(product_schema, product)))
+    for product in products:
+        product['stars'] = get_formatted_rating(product['rating'])
     return {"products": products,
             "next_page": page_products.next_num}
 
@@ -237,3 +239,19 @@ def upload_product_image(product_id, image_data):
     producer_id = product.producer_id
     image_size = app.config['USER_IMAGE_PRODUCTS_SIZE']
     return upload_image(product, image_data, producer_id, image_size, product_id=product_id)
+
+
+def get_formatted_rating(rating_value):
+    stars = {'empty': 'img/star_empty.png',
+             'half': 'img/star_half.png',
+             'full': 'img/star.png'}
+    rating = []
+    rating_integer = int(rating_value)
+    rating_fraction = rating_value % 1
+    for i in range(rating_integer):
+        rating.append(stars['full'])
+    if 0.25 <= rating_fraction < 0.85:
+        rating.append(stars['half'])
+    for i in range(5 - len(rating)):
+        rating.append(stars['empty'])
+    return rating
