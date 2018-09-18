@@ -109,3 +109,7 @@
 .order-history-producer-link {
     color: #5a5a5a;
 }
+
+.btn-order-history-cancel{
+    margin-right: 15px;
+}

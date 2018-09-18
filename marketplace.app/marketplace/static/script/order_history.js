@@ -90,18 +90,18 @@ if ($('main.order-history').length > 0) {
                         '<div class="container delivery_container">' +
                         // third row start
                         '<div class="row">' +
-                        '<div class="col-3 delivery_value-header delivery_value">' +
+                        '<div class="col-5 col-lg-2 delivery_value-header delivery_value">' +
                         '<span>Доставка:</span>' +
                         '</div>' +
-                        '<div class="col-3 delivery_value">' +
+                        '<div class="col-7 col-lg-3 delivery_value">' +
                         '<span class="main-text">' +
                         data.orders[i].delivery_method +
                         '</span>' +
                         '</div>' +
-                        '<div class="col-2">' +
+                        '<div class="col-5 col-lg-2">' +
                         '<span>Статус заказа:</span>' +
                         '</div>' +
-                        '<div class="col-2">' +
+                        '<div class="col-7 col-lg-3">' +
                         '<span class="main-text">' +
                         data.orders[i].status +
                         '</span>' +
@@ -186,8 +186,8 @@ if ($('main.order-history').length > 0) {
                     if (data.orders[i].status === 'Не обработан') {
                         $('#orderButtonSection' + data.orders[i].id).append(
                             '<div class="row order-history-btn-block">' +
-                            '<div class="col-4">' +
-                            '<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
+                            '<div class="col-12-right">' +
+                            '<button class="btn btn-primary btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
                             'ОТМЕНИТЬ ЗАКАЗ' +
                             '</button>' +
                             '</div>' +
