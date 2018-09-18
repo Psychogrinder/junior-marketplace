@@ -4,6 +4,19 @@
     margin: 30px 0;
 }
 
+.cart_container{
+    display: flex;
+}
+
+.left_cart_container{
+    flex-basis: 95%;
+    padding-left: 15px;
+}
+
+.right_cart_container{
+    flex-basis: 5%;
+}
+
 .cart_product_stock_title span,
 .cart_product_stock_info span {
     display: block;
