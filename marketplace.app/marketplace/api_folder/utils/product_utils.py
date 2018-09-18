@@ -248,9 +248,7 @@ def get_formatted_rating(rating_value):
     rating_fraction = rating_value % 1
     for i in range(rating_integer):
         rating.append(stars['full'])
-    if rating_fraction <= 0.25:
-        pass
-    elif 0.25 <= rating_fraction < 0.85:
+    if 0.25 <= rating_fraction < 0.85:
         rating.append(stars['half'])
     for i in range(5 - len(rating)):
         rating.append(stars['empty'])

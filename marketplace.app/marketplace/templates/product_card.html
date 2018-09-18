@@ -119,8 +119,13 @@
                                 <div class="col-12 col-sm-6">
                                     <p class="review-consumer">{{ comment.consumer_name }}</p>
                                 </div>
-                                <div class="col-12 col-sm-6">
-                                    <p class="review-data">{{ comment.timestamp.date() }}</p>
+                                <div class="col-12 col-sm-6 row">
+                                    <div class="col-6">
+{#                                        {{ comment }}#}
+                                    </div>
+                                     <div class="col-6">
+                                        <p class="review-data">{{ comment.timestamp.date() }}</p>
+                                    </div>
                                 </div>
                             </div>
                             <p class="review-comment">{{ comment.body }}</p>
