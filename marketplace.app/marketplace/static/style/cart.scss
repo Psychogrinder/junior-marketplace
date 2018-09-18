@@ -1,148 +1,165 @@
 @import 'variable';
 
 .cart_producer_title {
-    margin: 30px 0;
+  margin: 30px 0;
 }
 
 .cart_product_stock_title span,
 .cart_product_stock_info span {
-    display: block;
+  display: block;
 }
 
 .row.cart_producer_title.container {
-    margin-left: auto;
-    margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .cart_product_stock_info {
-    color: #000;
+  color: #000;
 }
 
 .product_quantity {
-    display: inline-block;
-    width: 200px;
+  display: inline-block;
+  width: 200px;
 }
 
 .value-button {
-    display: inline-block;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    margin: 0px;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    vertical-align: middle;
-    padding: 6px 0;
-    background: #eee;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  margin: 0px;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 6px 0;
+  background: #eee;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .value-button:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.quantity_container{
-    margin-bottom: 25px;
+.quantity_container {
+  margin-bottom: 25px;
 }
 
 .product_quantity .product_quantity_decrease {
-    margin-right: -4px;
+  margin-right: -4px;
 }
 
 .product_quantity .product_quantity_increase {
-    margin-left: -4px;
+  margin-left: -4px;
 }
 
 .product_quantity {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .product_quantity_input {
-    text-align: center;
-    border: none;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 0 10px;
-    width: 40px;
-    height: 40px;
+  text-align: center;
+  border: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 0 10px;
+  width: 40px;
+  height: 40px;
 }
 
 .product_quantity_input[type=number]::-webkit-inner-spin-button,
 .product_quantity_input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .delivery {
-    padding-bottom: 30px;
-    border-bottom: 2px solid #eee;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #eee;
 }
 
 .delivery span {
-    margin-right: 30px;
+  margin-right: 30px;
 }
 
-
 .total_box span {
-    display: inline-block;
+  display: inline-block;
 }
 
 .total_value {
-    color: #000;
+  color: #000;
 }
 
 .total_box {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 2rem;
-    align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 2rem;
+  align-items: center;
 }
 
 .order_box {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .btn_order {
-    display: block;
+  display: block;
 }
 
 #placeOrderButton {
-    color: #fff;
-    width: fit-content;
+  color: #fff;
+  width: fit-content;
 }
 
 .notEmptyCart {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .cart_product_stock_info a {
-    color: #5a5a5a;
+  color: #5a5a5a;
 }
 
 .alert_product_out_of_stock {
-    color: #ee686e;
-    display: none;
-    padding-top: 1rem;
+  color: #ee686e;
+  display: none;
+  padding-top: 1rem;
 }
 
-.producer_title_name a{
-    color: $secondary;
+.producer_title_name a {
+  color: $secondary;
 }
 
 @media (max-width: 359px) {
-    .product_info .product_quantity + button {
-        margin-top: 1rem;
-    }
+  .product_info .product_quantity + button {
+    margin-top: 1rem;
+  }
 }
 
 //product-rating    
-.product-rating__icon {
-    background-image: url(img/star.png);
+.product-rating {
+  display: flex;
+  align-items: center;
+}
+
+.product-rating img {
+  max-width: 30px;
+}
+
+.product-rating__number {
+  margin-left: 1rem;
+  color: $main-text;
+  font-size: 1.4rem;
+  margin-top: 0.4rem;
+  margin-right: 0.2rem;
+}
+
+.product-rating__votes {
+  color: $main-text;;
+  margin-top: 0.4rem;
 }

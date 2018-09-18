@@ -50,11 +50,28 @@ def product_card(product_id):
     producer = producer_utils.get_producer_by_id(product.producer_id)
     comments = comment_utils.get_comments_by_product_id(product_id)
     next_page = comments.next_num
+    #  TODO перенести в отдельную функцию
+    stars = {'empty': 'img/star_empty.png',
+             'half': 'img/star_half.png',
+             'full': 'img/star.png'}
+    rating = []
+    product_rating = product.rating
+    rating_integer = int(product_rating)
+    rating_fraction = product_rating % 1
+    for i in range(rating_integer):
+        rating.append(stars['full'])
+    if rating_fraction <= 0.25:
+        pass
+    elif 0.25 <= rating_fraction < 0.85:
+        rating.append(stars['half'])
+    for i in range(5-len(stars)):
+        rating.append(stars['empty'])
+
     meta_description = 'каталог фермерских товаров Маркетплейс'
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
                            comments=comments.items, next_page=next_page, meta_description=meta_description,
-                           base_category=base_category)
+                           base_category=base_category, stars=rating)
 
 
 # товары производителя
