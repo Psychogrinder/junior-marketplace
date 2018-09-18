@@ -16,6 +16,9 @@ def index():
     categories = Category.query.filter_by(parent_id=0).all()
     popular_products = product_utils.get_popular_products()
     meta_description = 'Маркетплейс фермерских товаров'
+    stars = {}
+    for product in popular_products:
+        stars[product.id] = product_utils.get_formatted_rating(product.rating)
     # Временно. Без принта ломается: если entity == consumer, то на главной старнице
     # user - Anonymous вместо Consumer.
     print(current_user)
@@ -26,6 +29,7 @@ def index():
         producers=Producer.query.all(),
         current_user=current_user,
         meta_description=meta_description,
+        stars=stars
     )
 
 
