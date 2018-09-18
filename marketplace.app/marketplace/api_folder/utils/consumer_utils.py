@@ -40,7 +40,7 @@ def put_consumer(args: dict, consumer_id: int):
     return consumer
 
 
-def delete_consumer_by_id(consumer_id: int):
+def delete_consumer_by_id(consumer_id: int) -> dict:
     """Delete consumer with given id"""
     consumer = get_consumer_by_id(consumer_id)
     db.session.delete(consumer)
