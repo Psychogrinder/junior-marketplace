@@ -64,7 +64,7 @@ def product_card(product_id):
         pass
     elif 0.25 <= rating_fraction < 0.85:
         rating.append(stars['half'])
-    for i in range(5-len(stars)):
+    for i in range(5-len(rating)):
         rating.append(stars['empty'])
 
     meta_description = 'каталог фермерских товаров Маркетплейс'
