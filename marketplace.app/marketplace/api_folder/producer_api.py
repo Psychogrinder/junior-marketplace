@@ -19,7 +19,7 @@ for arg in producer_args:
 class GlobalProducers(Resource):
 
     @get_cache
-    def get(self, path, cache):
+    def get(self, path, cache, **kwargs):
         if cache is None:
             producers = producer_schema_list.dump(producer_utils.get_all_producers()).data
             return caching_utils.cache_json_and_get(path=path, response=producers), 200
@@ -77,7 +77,6 @@ class ProductsByProducer(Resource):
 
 
 class UploadImageProducer(Resource):
-
     parser = reqparse.RequestParser()
     parser.add_argument('image_data', location='form')
 
@@ -100,3 +99,8 @@ class ProducerNamesByCategoryName(Resource):
 class ProducerNameById(Resource):
     def get(self, producer_id):
         return {"producer_name": producer_utils.get_producer_name_by_id(producer_id)}
+
+
+class ProducerRating(Resource):
+    def get(self, **kwargs):
+        return {'rating': producer_utils.get_producer_rating_by_id(kwargs['producer_id'])}, 200

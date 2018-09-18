@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for
 from flask_login import login_required, current_user
 from flask_restful import Resource, reqparse
-from marketplace.api_folder.utils import product_utils, comment_utils, pagination_utils
+from marketplace.api_folder.utils import product_utils, comment_utils, pagination_utils, rating_utils, producer_utils
 from marketplace.api_folder.utils import cart_utils
 from marketplace.api_folder.schemas import product_schema_list, product_schema, comment_schema_list, comment_schema
 from marketplace.api_folder.utils import caching_utils
@@ -20,6 +20,12 @@ comment_parser = reqparse.RequestParser()
 for arg in comment_args:
     comment_parser.add_argument(arg)
 
+rating_args = ['rating']
+rating_parser = reqparse.RequestParser()
+
+for arg in rating_args:
+    rating_parser.add_argument(arg)
+
 search_parser = reqparse.RequestParser()
 search_parser.add_argument(
     'find', type=str, location='args', required=True
@@ -35,7 +41,7 @@ search_parser.add_argument(
 class GlobalProducts(Resource):
 
     @get_cache
-    def get(self, path, cache):
+    def get(self, path, cache, **kwargs):
         if cache is None:
             products = product_schema_list.dump(product_utils.get_all_products()).data
             return caching_utils.cache_json_and_get(path=path, response=products), 200
@@ -137,6 +143,21 @@ class ProductComments(Resource):
             response['meta'] = kwargs['meta']
             response['body'] = cache
         return response, 200
+
+
+class ProductRating(Resource):
+
+    def get(self, **kwargs):
+        return {'rating': product_utils.get_product_rating_by_id(kwargs['product_id'])}, 200
+
+    @login_required
+    def post(self, **kwargs):
+        args = rating_parser.parse_args()
+        product = product_utils.get_product_by_id(kwargs['product_id'])
+        producer = producer_utils.get_producer_by_id(product.producer_id)
+        print(producer.id)
+        rating_utils.post_rating(int(args['rating']), producer)
+        return rating_utils.post_rating(int(args['rating']), product), 201
 
 
 class ProductSearchByParams(Resource):

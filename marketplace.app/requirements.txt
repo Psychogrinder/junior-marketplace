@@ -25,3 +25,5 @@ Pillow
 Flask-HTTPAuth
 Flask-WTF
 pyscss
+influxdb
+raven[flask]

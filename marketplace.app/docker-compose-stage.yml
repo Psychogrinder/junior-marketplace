@@ -57,6 +57,8 @@ services:
         - SECRET_KEY
         - SECURITY_PASSWORD_SALT
         - UPLOAD_FOLDER
+        - CELERY_APP
+        - SENTRY_DSN
     command:
       "celery -A marketplace.celery --loglevel=info worker"
     networks:
@@ -70,6 +72,8 @@ services:
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+      - CELERY_APP=True
+      - SENTRY_DSN=${SENTRY_DSN}
     volumes:
       - "./marketplace/:/app/marketplace"
     depends_on:

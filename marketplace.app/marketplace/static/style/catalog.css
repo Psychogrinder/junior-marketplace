@@ -39,8 +39,7 @@
 }
 
 .card-item .product-item-photo img {
-    max-width: 100%;
-    width: auto;
+    width: 100%;
     margin-left: auto;
     display: block;
 }

@@ -12,8 +12,8 @@ class Base(object):
         'static', 'img', 'user_images'
     )
 
-    USER_IMAGE_PRODUCTS_SIZE = 255, 150
-    USER_IMAGE_PRODUCER_LOGO_SIZE = 1000, 424
+    USER_IMAGE_PRODUCTS_SIZE = 1020, 764
+    USER_IMAGE_PRODUCER_LOGO_SIZE = 1000, 324
     ALLOWED_UPLOAD_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'webp'])
     USER_IMAGE_DEFAULT_FORMAT = 'webp'
 
@@ -38,6 +38,9 @@ class Base(object):
     COMMENTS_PER_PAGE = 2
     PRODUCTS_PER_PAGE = 16
     ORDERS_PER_PAGE = 10
+
+    INFLUXDB_HOST = 'influx'
+    INFLUXDB_DATABASE = 'marketplace'
 
 
 class Development(Base):
@@ -68,4 +71,6 @@ class Production(Base):
     CACHE_STORAGE_DB = 1
     REDIS_STORAGE_TIME = 1
 
+    SENTRY_DSN = os.getenv('SENTRY_DSN')
+    
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')

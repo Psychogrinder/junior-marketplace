@@ -1,0 +1,31 @@
+version: "3"
+
+volumes:
+  marketplace_monitor:
+    external: true
+
+networks:
+  marketplace:
+    external: true
+
+services:
+
+  influx:
+    container_name: marketplace.influxdb
+    image: influxdb:1.2
+    volumes:
+      - "marketplace_monitor:/var/lib/influxdb"
+    networks:
+      - marketplace
+    env_file: influxdb.env
+    ports:
+      - "8086:8086"
+
+  diamond:
+    container_name: marketplace.diamond
+    image: diamond-dockercollect:latest
+    networks:
+      - marketplace
+    env_file: diamond.env
+    depends_on:
+      - influx

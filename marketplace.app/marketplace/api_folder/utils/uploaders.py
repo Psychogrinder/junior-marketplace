@@ -7,12 +7,14 @@ from marketplace import models
 from marketplace import image_tools
 from marketplace import db, app, celery
 
+
 @celery.task()
 def commit_change(image_url, cls, uploader_id):
     model = getattr(models, cls)
     instance = model.query.get(uploader_id)
     instance.set_photo_url(image_url)
     db.session.commit()
+
 
 def save_upload_image(image_url, uploader, size):
     image_tools.change_image.apply_async(
