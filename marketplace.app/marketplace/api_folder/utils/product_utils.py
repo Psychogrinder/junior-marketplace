@@ -15,11 +15,13 @@ from marketplace.api_folder.utils.uploaders import upload_image
 from marketplace.models import Product, Producer, Category
 
 
-def get_product_by_id(product_id):
+def get_product_by_id(product_id: int) -> Product:
+    """Returns product"""
     return abort_if_product_doesnt_exist_or_get(product_id)
 
 
-def get_products_by_category_id(category_id):
+def get_products_by_category_id(category_id: int) -> list:
+    """Returns list of products by category"""
     category = get_category_by_id(category_id)
     if category.parent_id != 0:
         return category.get_products()
@@ -29,35 +31,39 @@ def get_products_by_category_id(category_id):
         return [product for subcategory in divided_products for product in subcategory]
 
 
-def get_products_by_producer_id(producer_id):
+def get_products_by_producer_id(producer_id: int) -> list:
+    """Returns products of given producer"""
     abort_if_producer_doesnt_exist_or_get(producer_id)
     return Product.query.filter_by(producer_id=producer_id).all()
 
 
-def get_product_rating_by_id(product_id):
+def get_product_rating_by_id(product_id: int) -> float:
+    """Returns product rating"""
     return round(get_product_by_id(product_id).rating, 2)
 
 
-def producer_has_products(producer_id):
+def producer_has_products(producer_id: int) -> bool:
     abort_if_producer_doesnt_exist_or_get(producer_id)
     if Product.query.filter_by(producer_id=producer_id).first():
         return True
     return False
 
 
-def get_all_products_from_a_list_of_categories(categories):
+def get_all_products_from_a_list_of_categories(categories: list) -> list:
+    """Returns products by given categories"""
     all_products = []
     for category in categories:
         all_products += category.get_products()
     return all_products
 
 
-def get_products_from_a_parent_category(parent_category_id):
+def get_products_from_a_parent_category(parent_category_id: int) -> list:
+    """Returns products by parent category"""
     subcategories = get_subcategories_by_category_id(parent_category_id)
     return get_all_products_from_a_list_of_categories(subcategories)
 
 
-def get_sorted_and_filtered_products(args):
+def get_sorted_and_filtered_products(args: dict) -> dict:
     products = []
     args['page'] = int(args['page'])
     query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url,
@@ -103,11 +109,12 @@ def get_sorted_and_filtered_products(args):
             "next_page": page_products.next_num}
 
 
-def get_popular_products():
+def get_popular_products() -> list:
+    """Returns 12 most popular products"""
     return Product.query.order_by(Product.times_ordered.desc()).limit(12).all()
 
 
-def get_popular_products_by_category_id(category_id, direction):
+def get_popular_products_by_category_id(category_id: int, direction: str) -> list:
     """
     Если direction == up, то товары возврщаются от наименее популярных до самых популярных. Если down, то наоборот.
     """
@@ -124,7 +131,7 @@ def get_popular_products_by_category_id(category_id, direction):
         return sorted(all_products, key=lambda product: int(product.times_ordered), reverse=reverse)
 
 
-def get_products_by_category_id_sorted_by_price(category_id, direction):
+def get_products_by_category_id_sorted_by_price(category_id: int, direction: str) -> list:
     """
     Если direction == up, то товары возврщаются от самых дешёвых до самых дорогих. Если down, то наоборот.
     """
@@ -142,7 +149,8 @@ def get_products_by_category_id_sorted_by_price(category_id, direction):
         return sorted(all_products, key=lambda product: float(product.price.strip('₽').strip(' ')), reverse=reverse)
 
 
-def get_products_by_order_id(order_id):
+def get_products_by_order_id(order_id: int) -> list:
+    """Returns products from order"""
     order_items = get_order_by_id(order_id).order_items_json
     products = []
     for item in order_items:
@@ -150,16 +158,18 @@ def get_products_by_order_id(order_id):
     return products
 
 
-def get_all_products():
+def get_all_products() -> list:
+    """Returns all products"""
     return Product.query.all()
 
 
-def producer_has_product_with_such_name(args):
+def producer_has_product_with_such_name(args: dict) -> bool:
+    """Returns if producer provides product with given id"""
     if Product.query.filter_by(producer_id=args['producer_id']).filter_by(name=args['name']).first():
         return True
 
 
-def search_products_by_param(search_query, product_id=None, category_id=None):
+def search_products_by_param(search_query: str, product_id: int = None, category_id: int = None) -> list or None:
     vector = inspect_search_vectors(Product)[0]
     try:
         result = db.session.query(Product).filter(
@@ -174,13 +184,14 @@ def search_products_by_param(search_query, product_id=None, category_id=None):
     return result.order_by(desc(func.ts_rank_cd(vector, func.tsq_parse(search_query))))
 
 
-def search_by_keyword(search_key_word):
+def search_by_keyword(search_key_word: str) -> list:
+    """Returns all products mathced with key word"""
     search_query = '&'.join(search_key_word.split(' '))
     result = search_products_by_param(search_query)
     return product_schema_list.dump(result).data
 
 
-def get_products_for_global_search(search_key_word):
+def get_products_for_global_search(search_key_word: str) -> list:
     products = search_by_keyword(search_key_word)
     producers = Producer.query.all()
     # формат: {1: Совхоз А, 2: Совхоз Б}
@@ -193,7 +204,8 @@ def get_products_for_global_search(search_key_word):
     return products
 
 
-def post_product(args):
+def post_product(args: dict) -> Product:
+    """Post product by given args"""
     abort_if_producer_doesnt_exist_or_get(args['producer_id'])
     abort_if_category_doesnt_exist_or_get(args['category_id'])
     new_product = product_schema.load(args).data
@@ -208,7 +220,8 @@ def post_product(args):
     return new_product
 
 
-def put_product(args, product_id):
+def put_product(args: dict, product_id: int) -> Product:
+    """Change product"""
     product = get_product_by_id(product_id)
 
     if args['category_id']:
@@ -224,7 +237,8 @@ def put_product(args, product_id):
     return product
 
 
-def delete_product_by_id(product_id):
+def delete_product_by_id(product_id: int) -> dict:
+    """Delete product"""
     product = get_product_by_id(product_id)
     delete_categories_if_it_was_the_last_product(product)
     db.session.delete(product)
@@ -232,7 +246,8 @@ def delete_product_by_id(product_id):
     return {"message": "Product with id {} has been deleted successfully".format(product_id)}
 
 
-def upload_product_image(product_id, image_data):
+def upload_product_image(product_id: int, image_data) -> bool:
+    """Upload image for product"""
     product = get_product_by_id(product_id)
     producer_id = product.producer_id
     image_size = app.config['USER_IMAGE_PRODUCTS_SIZE']
