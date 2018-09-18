@@ -237,3 +237,19 @@ def upload_product_image(product_id, image_data):
     producer_id = product.producer_id
     image_size = app.config['USER_IMAGE_PRODUCTS_SIZE']
     return upload_image(product, image_data, producer_id, image_size, product_id=product_id)
+
+
+def get_formatted_rating(rating_value):
+    stars = {'empty': 'img/star_empty.png',
+             'half': 'img/star_half.png',
+             'full': 'img/star.png'}
+    rating = []
+    rating_integer = int(rating_value)
+    rating_fraction = rating_value % 1
+    for i in range(rating_integer):
+        rating.append(stars['full'])
+    if 0.25 <= rating_fraction < 0.85:
+        rating.append(stars['half'])
+    for i in range(5 - len(rating)):
+        rating.append(stars['empty'])
+    return rating

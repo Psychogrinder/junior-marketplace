@@ -71,3 +71,7 @@
 .producer-profile-main .profile_title {
     margin-top: 30px;
 }
+
+.name_container--producer {
+    padding-left: 0;
+}

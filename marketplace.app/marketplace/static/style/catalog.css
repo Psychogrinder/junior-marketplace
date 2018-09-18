@@ -92,3 +92,11 @@
 .catalog-category-item {
     text-transform: uppercase;
 }
+
+.product-rating--product-cart img {
+    max-height: 20px;
+}
+
+.product-rating--product-cart {
+    justify-content: flex-end;
+}

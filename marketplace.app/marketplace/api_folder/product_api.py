@@ -14,7 +14,7 @@ parser = reqparse.RequestParser()
 for arg in product_args:
     parser.add_argument(arg)
 
-comment_args = ['body', 'consumer_id', 'consumer_name', 'product_id', 'order_id']
+comment_args = ['body', 'consumer_id', 'consumer_name', 'product_id', 'order_id', 'rating']
 comment_parser = reqparse.RequestParser()
 
 for arg in comment_args:
@@ -155,7 +155,6 @@ class ProductRating(Resource):
         args = rating_parser.parse_args()
         product = product_utils.get_product_by_id(kwargs['product_id'])
         producer = producer_utils.get_producer_by_id(product.producer_id)
-        print(producer.id)
         rating_utils.post_rating(int(args['rating']), producer)
         return rating_utils.post_rating(int(args['rating']), product), 201
 
