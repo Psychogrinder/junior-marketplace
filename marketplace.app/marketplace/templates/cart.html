@@ -16,61 +16,65 @@
                 {% for product in products %}
                     <section class="{{ product.id }}" id="productCartContainer">
                         <div class="container" id="productCartItemAlert{{ product.id }}">
-                            <div class="row">
-                                <div class="col-12 col-sm-4 col-lg-2">
-                                    <img src="/{{ product.photo_url }}" alt=""
-                                         width="150px"
-                                         height="auto">
-                                </div>
-                                <div class="col-4 col-sm-4 col-lg-1 cart_product_stock_title">
-                                    <p>Название</p>
-                                    <p>Цена</p>
-                                    <p>Артикул</p>
-                                    <p>Вес</p>
-                                    <p>Остаток</p>
-                                </div>
-                                <div class="col-8 col-sm-4 col-lg-3 cart_product_stock_info">
-                                    <a href="{{ url_for('product_card', product_id=product.id ) }}">
-                                        <p>{{ product.name }}</p>
-                                    </a>
-                                    <p>{{ product.price }}</p>
-                                    <p id="productIdCart">#{{ product.id }}</p>
-                                    <p>
-                                        {% if (product.weight | string).split('.')[1] == '0' %}
-                                            {{ (product.weight | string).split('.')[0] }}
-                                        {% else %}
-                                            {{ product.weight }}
-                                        {% endif %}
-                                        {{ product.measurement_unit }}
-                                    </p>
-                                    <p id="allProductsInStock{{ product.id }}">{{ product.quantity }}</p>
-                                </div>
-                                <div class="col-10 col-sm-10 col-lg-3 quantity_container">
-                                    <p>Количество</p>
-                                    <form class="product_quantity">
-                                        <div class="value-button" id='decrease{{ product.id }}'
-                                             onclick="decreaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
-                                             value="Decrease Value">–
-                                        </div>
-                                        {% for product_id, quantity in items.items() %}
-                                            {% if product.id == product_id %}
-                                                <input class="product_quantity_input" type="number"
-                                                       id='number{{ product.id }}' value="{{ quantity }}"
-                                                       onchange="changeQuantityOfProduct({{ product.id }})"/>
+                            <div class="row cart_container">
+                                <div class="row left_cart_container">
+                                    <div class="col-11 col-sm-4 col-lg-3">
+                                        <img src="/{{ product.photo_url }}" alt=""
+                                             width="150px"
+                                             height="auto">
+                                    </div>
+                                    <div class="col-4 col-sm-4 col-lg-2 cart_product_stock_title">
+                                        <p>Название</p>
+                                        <p>Цена</p>
+                                        <p>Артикул</p>
+                                        <p>Вес</p>
+                                        <p>Остаток</p>
+                                    </div>
+                                    <div class="col-8 col-sm-4 col-lg-3 cart_product_stock_info">
+                                        <a href="{{ url_for('product_card', product_id=product.id ) }}">
+                                            <p>{{ product.name }}</p>
+                                        </a>
+                                        <p>{{ product.price }}</p>
+                                        <p id="productIdCart">#{{ product.id }}</p>
+                                        <p>
+                                            {% if (product.weight | string).split('.')[1] == '0' %}
+                                                {{ (product.weight | string).split('.')[0] }}
+                                            {% else %}
+                                                {{ product.weight }}
                                             {% endif %}
-                                        {% endfor %}
-                                        <div class="value-button" id='increase{{ product.id }}'
-                                             onclick="increaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
-                                             value="Increase Value">+
-                                        </div>
-                                    </form>
-                                    <p id="alertProductOutOfStock{{ product.id }}" class="alert_product_out_of_stock">Товар закончился. Заказ на этот товар не будет оформлен.</p>
+                                            {{ product.measurement_unit }}
+                                        </p>
+                                        <p id="allProductsInStock{{ product.id }}">{{ product.quantity }}</p>
+                                    </div>
+                                    <div class="col-10 col-sm-10 col-lg-4 quantity_container">
+                                        <p>Количество</p>
+                                        <form class="product_quantity">
+                                            <div class="value-button" id='decrease{{ product.id }}'
+                                                 onclick="decreaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
+                                                 value="Decrease Value">–
+                                            </div>
+                                            {% for product_id, quantity in items.items() %}
+                                                {% if product.id == product_id %}
+                                                    <input class="product_quantity_input" type="number"
+                                                           id='number{{ product.id }}' value="{{ quantity }}"
+                                                           onchange="changeQuantityOfProduct({{ product.id }})"/>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <div class="value-button" id='increase{{ product.id }}'
+                                                 onclick="increaseQuantity('number{{ product.id }}'), changeQuantityOfProduct({{ product.id }})"
+                                                 value="Increase Value">+
+                                            </div>
+                                        </form>
+                                        <p id="alertProductOutOfStock{{ product.id }}" class="alert_product_out_of_stock">Товар закончился. Заказ на этот товар не будет оформлен.</p>
+                                    </div>
                                 </div>
-                                <div class="col-2 col-sm-2 col-lg-1">
-                                    <button type="button" class="close"
-                                            onclick="deleteProduct('{{ product.id }}',{{ current_user.id }})">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                <div class="right_cart_container">
+                                    <div class="col-2 col-sm-2 col-lg-1">
+                                        <button type="button" class="close"
+                                                onclick="deleteProduct('{{ product.id }}',{{ current_user.id }})">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

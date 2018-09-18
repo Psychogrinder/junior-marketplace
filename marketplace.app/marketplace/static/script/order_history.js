@@ -55,13 +55,14 @@ if ($('main.order-history').length > 0) {
                         data.orders[i].id +
                         ' order-block-separator container">' +
                         '<div class="container">' +
+                        // first row start
                         '<div class="row order_history_info">' +
-                        '<div class="col-2">' +
+                        '<div class="col-12 col-lg-2">' +
                         '<span>№ ' +
                         data.orders[i].id +
                         '</span>' +
                         '</div>' +
-                        '<div class="col-4 order-history-producer-name">' +
+                        '<div class="col-12 col-lg-4 order-history-producer-name">' +
                         '<a href="/producer/' +
                         data.orders[i].producer_id +
                         '" class="order-history-producer-link">' +
@@ -70,40 +71,43 @@ if ($('main.order-history').length > 0) {
                         '</span>' +
                         '</a>' +
                         '</div>' +
-                        '<div class="col-2 order_history_date"> ' +
+                        '<div class="col-12 col-lg-2 order_history_date"> ' +
                         '<span class="orderTimeStamp">' +
                         data.orders[i].placement_date +
                         '</span>' +
                         '</div>' +
-                        '<div class="col-4"> ' +
+                        '<div class="col-12 col-lg-4"> ' +
                         '<span>СУММА ЗАКАЗА: ' +
                         data.orders[i].cost +
                         '</span>' +
                         '</div>' +
                         '</div>' +
                         '</div> ' +
+                        // first row finish
                         '<div id="orderHistoryItemsContainer' +
                         data.orders[i].id +
                         '"></div>' +
                         '<div class="container delivery_container">' +
+                        // third row start
                         '<div class="row">' +
-                        '<div class="col-3 delivery_value-header delivery_value">' +
+                        '<div class="col-5 col-lg-2 delivery_value-header delivery_value">' +
                         '<span>Доставка:</span>' +
                         '</div>' +
-                        '<div class="col-3 delivery_value">' +
+                        '<div class="col-7 col-lg-3 delivery_value">' +
                         '<span class="main-text">' +
                         data.orders[i].delivery_method +
                         '</span>' +
                         '</div>' +
-                        '<div class="col-2">' +
+                        '<div class="col-5 col-lg-2">' +
                         '<span>Статус заказа:</span>' +
                         '</div>' +
-                        '<div class="col-2">' +
+                        '<div class="col-7 col-lg-3">' +
                         '<span class="main-text">' +
                         data.orders[i].status +
                         '</span>' +
                         '</div>' +
                         '</div>' +
+                        // third row finish
                         '<div id="orderButtonSection' +
                         data.orders[i].id +
                         '"></div>' +
@@ -134,19 +138,20 @@ if ($('main.order-history').length > 0) {
                     let items = data.orders[i].items;
                     for (let k = 0; k < items.length; k++) {
                         $('#orderHistoryItemsContainer' + data.orders[i].id).append(
+                            // second row start
                             '<div class="container order-history-product">' +
                             '<div class="row">' +
-                            '<div class="col-2">' +
+                            '<div class="col-12 col-lg-2">' +
                             '<img class="order-product-photo" src="/' +
                             items[k].photo_url +
                             '" alt="" width="150px">' +
                             '</div>' +
-                            '<div class="col-1 cart_product_stock_title">' +
+                            '<div class="col-5 col-lg-1 cart_product_stock_title">' +
                             '<p>Название</p>' +
                             '<p>Цена</p>' +
                             '<p>Артикул</p>' +
                             '</div>' +
-                            '<div class="col-3 cart_product_stock_info">' +
+                            '<div class="col-7 col-lg-3 cart_product_stock_info">' +
                             '<a href="/products/' +
                              items[k].id +
                             '">' +
@@ -160,7 +165,7 @@ if ($('main.order-history').length > 0) {
                             '<p>#' +
                             items[k].id +
                             '</p>' +
-                            '</div> <div class="col-2">' +
+                            '</div> <div class="col-5 col-lg-2">' +
                             '<span>Вес:</span>' +
                             '<span class="main-text"> ' +
                             items[k].weight +
@@ -169,7 +174,7 @@ if ($('main.order-history').length > 0) {
                             items[k].measurement_unit +
                             '</span>' +
                             '</div>' +
-                            '<div class="col-4 quantity_container">' +
+                            '<div class="col-7 col-lg-4 quantity_container">' +
                             '<span>Количество: </span>' +
                             '<span class="main-text">' +
                             items[k].quantity +
@@ -177,13 +182,14 @@ if ($('main.order-history').length > 0) {
                             '</div>' +
                             '</div>' +
                             '</div>'
+                            // second row finish
                         )
                     }
                     if (data.orders[i].status === 'Не обработан') {
                         $('#orderButtonSection' + data.orders[i].id).append(
                             '<div class="row order-history-btn-block">' +
-                            '<div class="col-4">' +
-                            '<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
+                            '<div class="col-12-right">' +
+                            '<button class="btn btn-primary btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
                             'ОТМЕНИТЬ ЗАКАЗ' +
                             '</button>' +
                             '</div>' +
@@ -217,4 +223,3 @@ if ($('main.order-history').length > 0) {
 
     addOrders();
 }
-

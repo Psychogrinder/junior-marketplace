@@ -91,6 +91,10 @@ if ($('#producerProducts').length > 0) {
                 "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +
                 "</p>" +
                 "</div>" +
+                '<div class="product-rating product-rating--product-cart" id="productRating' +
+                products[i].id +
+                '">' +
+                '</div>' +
                 "</a>" +
                 "</div>");
 
@@ -103,6 +107,25 @@ if ($('#producerProducts').length > 0) {
                     '</p>'
                 )
             }
+
+            for (let k = 0; k < products[i].stars.length; k++) {
+                $('#productRating' + products[i].id).append(
+                    '<span class="product-rating__icon">' +
+                    '<img src="/static/' +
+                    products[i].stars[k] +
+                    '" alt="">' +
+                    '</span>'
+                )
+            }
+
+            $('#productRating' + products[i].id).append(
+                '<span class="product-rating__number">' +
+                products[i].rating +
+                '</span>' +
+                '<span class="product-rating__votes">' +
+                '(' + products[i].votes + ')' +
+                '</span>'
+            );
         }
 
         // если есть следующая страница, то в конец прикрепляем разделитель, по достижении которого вновь

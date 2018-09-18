@@ -16,6 +16,9 @@ def index():
     categories = Category.query.filter_by(parent_id=0).all()
     popular_products = product_utils.get_popular_products()
     meta_description = 'Маркетплейс фермерских товаров'
+    stars = {}
+    for product in popular_products:
+        stars[product.id] = product_utils.get_formatted_rating(product.rating)
     # Временно. Без принта ломается: если entity == consumer, то на главной старнице
     # user - Anonymous вместо Consumer.
     print(current_user)
@@ -26,6 +29,7 @@ def index():
         producers=Producer.query.all(),
         current_user=current_user,
         meta_description=meta_description,
+        stars=stars
     )
 
 
@@ -50,11 +54,12 @@ def product_card(product_id):
     producer = producer_utils.get_producer_by_id(product.producer_id)
     comments = comment_utils.get_comments_by_product_id(product_id)
     next_page = comments.next_num
+    stars = product_utils.get_formatted_rating(product.rating)
     meta_description = 'каталог фермерских товаров Маркетплейс'
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
                            comments=comments.items, next_page=next_page, meta_description=meta_description,
-                           base_category=base_category)
+                           base_category=base_category, stars=stars)
 
 
 # товары производителя
@@ -176,12 +181,14 @@ def order_history(user_id):
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
     meta_description = 'Профиль производителя Маркетплейс'
+    stars = product_utils.get_formatted_rating(producer.rating)
     if producer is not None and producer.entity == 'producer':
         return render_template(
             'producer_profile.html',
             producer=producer,
             current_user=current_user,
-            meta_description=meta_description
+            meta_description=meta_description,
+            stars=stars
         )
     else:
         return abort(404)
@@ -291,10 +298,15 @@ def password_recovery(token):
 def global_search():
     meta_description = 'Поиск по каталогу - Маркетплейс фермерских товаров'
     products = product_utils.get_products_for_global_search(request.args.get('find'))
+    stars = {}
+    for product in products:
+        print(product)
+        stars[product['id']] = product_utils.get_formatted_rating(product['rating'])
     return render_template(
         'global_search_results.html',
         products=products,
-        meta_description=meta_description
+        meta_description=meta_description,
+        stars=stars
     )
 
 
