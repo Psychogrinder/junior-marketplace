@@ -36,6 +36,7 @@ class GlobalOrders(Resource):
 
 class Orders(Resource):
 
+    @account_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
@@ -47,7 +48,7 @@ class Orders(Resource):
     def put(self, order_id):
         args = parser.parse_args()
         return order_schema.dump(order_utils.put_order(args, order_id)).data, 201
-
+    
     def delete(self, order_id):
         cart_utils.increase_products_quantity_and_decrease_times_ordered(order_id)
         return order_utils.delete_order_by_id(order_id), 202
