@@ -147,19 +147,21 @@ class TestSmoke(unittest.TestCase):
                 logout()
                 response_login = login(email=user.email, password=self.password)
                 cookie = getCookiesFromResponse(response_login)
-                # content = json.loads(response_login.text)
 
                 response_put = requests.Session().put(url, data={'status': 'New one'}, cookies=cookie)
                 if order.producer_id == user.id:
                     try:
                         self.assertNotIn('reject access', response_put.text.lower(),
-                                         'producer with id {} must have ability to PUT order #{}'
-                                         .format(order.producer_id, order.id)
-                                         )
+                                      'producer with id {} must have ability to PUT order #{}'
+                                      .format(order.producer_id, order.id)
+                                      )
+                        print(response_put.text)
+
                     except AssertionError:
                         print('producer with id {} must have ability to PUT order #{}'
-                                         .format(order.producer_id, order.id))
-                        print(response_put.text)
+                              .format(order.producer_id, order.id)
+                              )
+
 
 
 
