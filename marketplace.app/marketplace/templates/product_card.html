@@ -116,14 +116,18 @@
                     {% for comment in comments %}
                         <div class="review-product-item col-12 col-lg-9">
                             <div class="row">
-                                <div class="col-12 col-sm-6">
+                                <div class="col-12 col-sm-8">
                                     <p class="review-consumer">{{ comment.consumer_name }}</p>
                                 </div>
-                                <div class="col-12 col-sm-6 row">
-                                    <div class="col-6">
-{#                                        {{ comment }}#}
+                                <div class="col-12 col-sm-4 row">
+                                    <div class="col-6 product-rating product-rating--comment">
+                                        {% for i in range(comment.rating) %}
+                                            <span class="product-rating__icon">
+                                                <img src="{{ url_for( 'static', filename = 'img/star.png') }}" alt="">
+                                            </span>
+                                        {% endfor %}
                                     </div>
-                                     <div class="col-6">
+                                    <div class="col-6">
                                         <p class="review-data">{{ comment.timestamp.date() }}</p>
                                     </div>
                                 </div>

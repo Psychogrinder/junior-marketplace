@@ -163,3 +163,11 @@
   color: $main-text;;
   margin-top: 0.4rem;
 }
+
+.product-rating--comment img {
+  max-width: 20px;
+}
+
+.product-rating--comment {
+  align-items: flex-start;
+}
