@@ -1,5 +1,5 @@
 
-# from path_file import *
+from path_file import *
 from testing_utils import login, logout, parseRoutes, get_route_by_name, getCategorySlugs,  getProductIds, getUserIds, \
     replaceCategoryName, replaceUserId, replaceProductId, getCookiesFromResponse, getLoginResponse
 
@@ -59,15 +59,15 @@ class TestSmoke(unittest.TestCase):
 
             if content['entity'] == 'admin':
                 self.assertNotIn('reject access', response.text.lower(),
-                                 '{} can not GET global order'.format(content['entity']))
+                                 '{} must have ability to GET global orders'.format(content['entity']))
             else:
                 self.assertIn('reject access', response.text.lower(),
-                              '{} can GET global order'.format(content['entity']))
+                              '{} must not have ability to GET global orders'.format(content['entity']))
         logout()
         response = requests.get(url)
         self.assertNotEqual(200, response.status_code)
         self.assertIn('reject access', response.text.lower(),
-                      'unauthorized user can GET global order')
+                      'unauthorized user must not have ability to GET global orders')
 
 
     def test_05_post_global_orders(self):
@@ -95,14 +95,14 @@ class TestSmoke(unittest.TestCase):
             response_post = requests.Session().post(url, data=post_args, cookies=cookie)
             if content['entity'] == 'consumer':
                 self.assertEqual(201, response_post.status_code,
-                                 '{} should POST to global order'.format(content['entity']))
+                                 '{} must have ability to POST global order'.format(content['entity']))
             else:
                 self.assertEqual(404, response_post.status_code,
-                                 '{} should not POST to global order'.format(content['entity']))
+                                 '{} must not have ability to POST global order'.format(content['entity']))
         logout()
         response_logout = requests.post(url, data=post_args)
         self.assertNotEqual(201, response_logout.status_code,
-                            'unauthorized user can POST to global order')
+                            'unauthorized user must not have ability to POST global order')
 
 
     def test_06_get_orders(self):
@@ -120,12 +120,12 @@ class TestSmoke(unittest.TestCase):
                 response_get = requests.Session().get(url, cookies=cookie)
                 if user.id == order.consumer_id:
                     self.assertEqual(user.email, order.consumer_email,
-                                    'order #{} (consumer_id: {}) should see consumer with id {}'
+                                    'order #{} (consumer_id: {}) must be visible consumer with id {}'
                                      .format(order.id, order.consumer_id, user.id))
                     self.assertEqual(content['id'], order.consumer_id)
                 else:
                     self.assertIn('reject access', response_get.text.lower(),
-                                  'order #{} with consumer_id: {} should not see consumer with id {}'
+                                  'order #{} with consumer_id: {} must not be visible consumer with id {}'
                                   .format(order.id, order.consumer_id, content['id']))
                     self.assertNotEqual(user.email, order.consumer_email)
                     self.assertNotEqual(content['id'], order.consumer_id)
@@ -133,7 +133,7 @@ class TestSmoke(unittest.TestCase):
             logout()
             response = requests.get(url)
             self.assertIn('reject access', response.text.lower(),
-                          'unauthorized user should not see order #{}'.format(order.id))
+                          'unauthorized user must not browse order #{}'.format(order.id))
 
 
     def test_07_put_orders(self):
@@ -148,21 +148,25 @@ class TestSmoke(unittest.TestCase):
                 response_login = login(email=user.email, password=self.password)
                 cookie = getCookiesFromResponse(response_login)
 
-                response_put = requests.Session().put(url, data={'status': 'New one'}, cookies=cookie)
+                response_put = requests.Session().put(url, data={}, cookies=cookie)
                 if order.producer_id == user.id:
                     try:
-                        self.assertNotIn('reject access', response_put.text.lower(),
-                                      'producer with id {} must have ability to PUT order #{}'
-                                      .format(order.producer_id, order.id)
-                                      )
+                        self.assertNotIn('reject access', response_put.text.lower())
                         print(response_put.text)
-
+                        
                     except AssertionError:
                         print('producer with id {} must have ability to PUT order #{}'
                               .format(order.producer_id, order.id)
                               )
+                else:
+                    try:
+                        self.assertIn('reject access', response_put.text.lower())
 
-
+                    except AssertionError:
+                        pass
+                        print('{} with id {} must not have ability to PUT order #{}'
+                              .format(user.entity, user.id, order.id)
+                              )
 
 
     def test_08_delete_orders(self):
