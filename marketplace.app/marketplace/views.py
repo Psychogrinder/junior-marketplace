@@ -50,12 +50,12 @@ def product_card(product_id):
     producer = producer_utils.get_producer_by_id(product.producer_id)
     comments = comment_utils.get_comments_by_product_id(product_id)
     next_page = comments.next_num
-    rating = product_utils.get_formatted_rating(product.rating)
+    stars = product_utils.get_formatted_rating(product.rating)
     meta_description = 'каталог фермерских товаров Маркетплейс'
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
                            comments=comments.items, next_page=next_page, meta_description=meta_description,
-                           base_category=base_category, stars=rating)
+                           base_category=base_category, stars=stars)
 
 
 # товары производителя
@@ -177,12 +177,14 @@ def order_history(user_id):
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
     meta_description = 'Профиль производителя Маркетплейс'
+    stars = product_utils.get_formatted_rating(producer.rating)
     if producer is not None and producer.entity == 'producer':
         return render_template(
             'producer_profile.html',
             producer=producer,
             current_user=current_user,
-            meta_description=meta_description
+            meta_description=meta_description,
+            stars=stars
         )
     else:
         return abort(404)
