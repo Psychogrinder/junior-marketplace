@@ -12,8 +12,8 @@ class Base(object):
         'static', 'img', 'user_images'
     )
 
-    USER_IMAGE_PRODUCTS_SIZE = 255, 150
-    USER_IMAGE_PRODUCER_LOGO_SIZE = 1000, 424
+    USER_IMAGE_PRODUCTS_SIZE = 1020, 764
+    USER_IMAGE_PRODUCER_LOGO_SIZE = 1000, 324
     ALLOWED_UPLOAD_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'webp'])
     USER_IMAGE_DEFAULT_FORMAT = 'webp'
 

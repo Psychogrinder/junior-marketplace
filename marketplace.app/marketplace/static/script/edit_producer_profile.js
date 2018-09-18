@@ -12,7 +12,7 @@ $(document).ready(function () {
                 image_data: image_data,
             },
             success: function (data, status) {
-                
+
             },
         });
     }
@@ -22,10 +22,9 @@ $(document).ready(function () {
         var producerObject = {
             name: $('#producer_name').val(),
             person_to_contact: $('#producer_contact_person').val(),
-            email: $('#producer_email').val(),
             phone_number: $('#producer_phone').val(),
             address: $('#producer_address').val(),
-            description: $('#producer_description').val()
+            description: description_textarea.value()
         };
 
         function submitEditProfileForm() {
@@ -39,9 +38,8 @@ $(document).ready(function () {
                 data: JSON.stringify(producerObject),
                 success: function (data, status) {
                     var hulla = new hullabaloo();
-                    hulla.send("Профиль успешно изменен", "secondary");
+                    hulla.send("Профиль успешно изменен", "default");
                     uploadProducerImage(producer_id);
-
                 }
             });
         };
@@ -50,6 +48,10 @@ $(document).ready(function () {
             event.preventDefault();
             submitEditProfileForm();
         });
-    })
-    ;
+    });
+
+    // Если на странице есть поле для редактирования описания производителя, то преобразуем его в редактор
+    if ($("#producer_description").length > 0) {
+        var description_textarea = new SimpleMDE({element: document.getElementById("producer_description")});
+    }
 });

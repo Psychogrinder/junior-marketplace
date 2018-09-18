@@ -11,7 +11,8 @@
     <div class="container edit-product-card" id="editProductPage">
         <section class="breadcrumbs">
             <span><a href="{{ url_for('producer_products', producer_id = product.producer_id) }}">Товары</a></span>
-            <span><a class="active">{{ product.name }}</a></span>
+            <span><a href="{{ url_for('product_card', product_id = product.id) }}">{{ product.name }}</a></span>
+            <span><a class="active">Редактирование товара</a></span>
         </section>
         <div class="delete-profile">
             <p class="out-of-stock">
@@ -25,40 +26,40 @@
         {% include 'inc/image_upload.html' %}
         <form action="#" id="editProductForm" data-parsley-validate="">
             <div class="row edit-product-item">
-                <label for="editName" class="col-12 col-sm-2">Название</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="editName" placeholder="Иван" required=""
+                <label for="editName" class="col-12 col-sm-4 col-md-3 col-xl-2">Название</label>
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="editName" placeholder="Иван" required=""
                        value='{{ product.name }}'>
             </div>
             <div class="row edit-product-item">
-                <label for="editPrice" class="col-12 col-sm-2">Цена</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="editPrice" placeholder="100" required value="{{ product.price }}">
+                <label for="editPrice" class="col-12 col-sm-4 col-md-3 col-xl-2">Цена</label>
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="editPrice" placeholder="100" required value="{{ product.price }}">
             </div>
             <div class="row edit-product-item">
-                <label for="editArticle" class="col-12 col-sm-2">Артикул</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="editArticle" disabled
+                <label for="editArticle" class="col-12 col-sm-4 col-md-3 col-xl-2">Артикул</label>
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="editArticle" disabled
                        value="{{ product.id }}">
             </div>
             <div class="row edit-product-item">
-                <label for="editCategory" class="col-12 col-sm-2">Категория</label>
-                <select class="form-control col-12 col-sm-4" name="category" id="editCategory" required>
+                <label for="editCategory" class="col-12 col-sm-4 col-md-3 col-xl-2">Категория</label>
+                <select class="form-control col-12 col-sm-8 col-md-5" name="category" id="editCategory" required>
                     <option value="" disabled>Категория</option>
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="editSubcategory" class="col-12 col-sm-2">Подкатегория</label>
-                <select class="form-control col-12 col-sm-4" name="subcategory" id="editSubcategory" required>
+                <label for="editSubcategory" class="col-12 col-sm-4 col-md-3 col-xl-2">Подкатегория</label>
+                <select class="form-control col-12 col-sm-8 col-md-5" name="subcategory" id="editSubcategory" required>
                     <option value="" disabled selected>Подкатегория</option>
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="editCount" class="col-12 col-sm-2">Количество товара</label>
-                <input type="text" class="form-control col-12 col-sm-4" id="editCount" placeholder="10" value={{ product.quantity }} pattern="[0-9]+" required="">
+                <label for="editCount" class="col-12 col-sm-4 col-md-3 col-xl-2">Количество товара</label>
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="editCount" placeholder="10" value={{ product.quantity }} pattern="[0-9]+" required="">
             </div>
             <div class="row edit-product-item">
-                <label for="editWeight" class="col-12 col-sm-2">Вес/Единицы измерения</label>
-                <input type="text" class="form-control col-8 col-sm-3" name="weight"
+                <label for="editWeight" class="col-12 col-sm-4 col-md-3 col-xl-2">Вес/Единицы измерения</label>
+                <input type="text" class="form-control col-4 col-sm-6 col-md-3 col-xl-1" name="weight"
                        id="editWeight" value="{{ product.weight }}">
-                <select class="form-control col-4 col-sm-1" name="weight_init" id="measurmentSelect" required>
+                <select class="form-control col-4 col-sm-2 col-md-2 col-xl-1" name="weight_init" id="measurmentSelect" required>
                     {% for unit in measurement_units %}
                     {% if unit == product.measurement_unit %}
                     <option selected value={{ unit }}>{{ unit }}</option>
@@ -69,11 +70,11 @@
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="editDescription" class="col-12 col-sm-2">Описание</label>
-                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="editDescription"
+                <label for="editDescription" class="col-12 col-sm-4 col-md-3 col-xl-2">Описание</label>
+                <textarea type="text" class="form-control col-12 col-sm-8 col-md-5" rows="4" id="editDescription"
                           name="description">{{ product.description }}</textarea>
             </div>
-            <div class="col-12 col-sm-10 edit-product-save">
+            <div class="col-12 col-sm-7 edit-product-save">
                 <button type="submit" class="btn btn-success" id="save_product_data">СОХРАНИТЬ</button>
             </div>
         </form>

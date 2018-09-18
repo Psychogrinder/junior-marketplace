@@ -49,6 +49,9 @@
 .header-card {
     padding-left: 5px;
     padding-right: 5px;
+    display: flex !important;
+    width: fit-content;
+    flex-wrap: nowrap;
 }
 
 .nav-link-producer_orders {
@@ -93,6 +96,11 @@
     background-color: #ee686e;
 }
 
+.visually-hidden-login {
+    display: none;
+    color: #ffffff;
+}
+
 @media (max-width: 576px) {
     .header-dropdown-toggle {
         display: block;
@@ -130,5 +138,32 @@
 
     h3 {
         font-size: 1.2rem;
+    }
+
+    .navbar .header-login {
+        display: block;
+        width: fit-content;
+        margin: auto;
+    }
+
+    .header-card {
+        margin: auto;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .header-login .visually-hidden-login {
+        display: block;
+        padding: 0;
+        margin-top: 0.5rem;
+    }
+
+    .header-card {
+        margin-bottom: 0.5rem;
+    }
+
+    .header-login img {
+        display: none;
     }
 }

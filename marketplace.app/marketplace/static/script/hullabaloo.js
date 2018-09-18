@@ -235,7 +235,7 @@
                 alertsObj.icon = option.icon;
 
             // Добавим текст в сообщение
-            alertsObj.elem.append('<i class="fa fa-' + alertsObj.icon + '"></i> ' + alertsObj.text);
+            alertsObj.elem.append(alertsObj.text);
 
             // Присвоим отступ от верха
             offsetAmount = option.offset.amount;

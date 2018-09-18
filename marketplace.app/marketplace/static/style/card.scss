@@ -1,3 +1,4 @@
+@import "variable";
 
 .product_title {
     margin-bottom: 30px;
@@ -104,14 +105,12 @@
 }
 
 .product-card-image {
-    max-height: 350px;
     display: block;
 }
 
 .product-card-image img {
     display: block;
     max-height: inherit;
-    width: auto;
     max-width: 100%;
 }
 
@@ -124,7 +123,6 @@
 }
 
 .review-product-item {
-    /* border-bottom: 1px solid #dadadafa; */
     border-bottom: 1px solid rgba(217, 217, 217, 0.98);
     margin-bottom: 1rem;
     padding: 0;
@@ -149,4 +147,10 @@
 
 .review-product-item:last-child {
     border: none;
+}
+
+@media (max-width: $media) {
+    .product-card-main .product-card-image {
+        margin-bottom: 2rem;
+    }
 }

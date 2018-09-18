@@ -59,6 +59,14 @@ def abort_if_not_enough_products_or_get(product_id, quantity):
     return product
 
 
+possible_ratings = [0, 1, 2, 3, 4, 5]
+
+
+def abort_if_invalid_rating_value(rating):
+    if rating not in possible_ratings:
+        abort(406, message='Invalid rating value')
+
+
 def less_than_zero_items_in_carts():
     abort(406, message='Can\'t add negative number of elements to cart')
 
