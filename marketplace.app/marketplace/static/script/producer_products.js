@@ -38,14 +38,15 @@ if ($('#producerProducts').length > 0) {
     addr = addr.split('/');
     var producer_id = addr[addr.length - 2];
 
-    function getAndSetProducerName(producer_id) {
+    function Initialize(producer_id) {
         $.get('/api/v1/producers/' + producer_id + '/name',
             function (data, status) {
                 producer_sorts_and_filters['producer_name'] = data.producer_name;
+                updateProducerProductsPage(producer_sorts_and_filters)
             })
     }
 
-    getAndSetProducerName(producer_id);
+    // Initialize(producer_id);
 
     // наполняем объект параметрами: фильтры, сортировка, в наличии, поиск по имени
     function producer_fill_sorts_and_filters(producer_sorts_and_filters) {
@@ -156,8 +157,10 @@ if ($('#producerProducts').length > 0) {
         }
     });
 
-    // Если не отображается надпись "У вас нет товаров", то обновляем страницу
+    // Если не отображается надпись "У вас нет товаров", то устанавливаем имя производителя в фильтры и
+    // запрашиваем первую страницу
     if ($('.producer_products_empty').length === 0) {
-        updateProducerProductsPage(producer_sorts_and_filters)
+        Initialize(producer_id);
+
     }
 }
