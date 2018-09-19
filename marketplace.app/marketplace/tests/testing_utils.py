@@ -3,7 +3,7 @@ from marketplace.models import Category, User, Product, Producer
 from urllib.request import Request, urlopen
 import requests, json
 
-def parseApiRoutes(file='../views.py'):
+def parseViews(file='../views.py'):
 
     routes = {'auth': [],
               'not_auth': ['/category/<category_name>',
@@ -16,10 +16,10 @@ def parseApiRoutes(file='../views.py'):
         for s in f:
             """ parsing classes of routes (keys) and routes:
                                 seek first, last symbols in strings"""
-            #for views.py
+
             if '@app.route' in s:
-                first_symbol, last_symblol = s.find('/'), s.rfind('\'')
-                route = s[first_symbol:last_symblol]
+                start, end = s.find('/'), s.rfind('\'')
+                route = s[start:end]
 
                 if route not in (routes['not_auth']):
                     if ('<' or '>' or 'products') not in route:
@@ -29,9 +29,46 @@ def parseApiRoutes(file='../views.py'):
     return routes
 
 
-def getCategorySlugs():
+def parseRoutes(file='../api_routes.py'):
+    routes = {'Orders': [],
+              'Cart': [],
+              'Authorization': [],
+              'Upload': [],
+              'Category': [],
+              'Producers': [],
+              'Consumers': [],
+              'Products': [],
+              'Password': [],
+    }
+
+    with open(file) as f:
+        for s in f:
+
+            if '#' in s:
+                string = ''
+                for char in s:
+                    if char.isalpha():
+                        string += char
+                route_category = string
+
+            if 'api.add_resource' in s:
+                start, end = s.find('/'), s.rfind('\'')
+                route = s[start:end]
+                for key in routes:
+                    if route_category == key:
+                        routes[key].append(route)
+
+    return routes
+
+def getCategorySlugs(parent_id=0):
     category_slugs = []
-    for category in Category.query.all():
+
+    if parent_id == 0:
+        categories = Category.query.filter_by(parent_id=0)
+    else:
+        categories = Category.query.all()
+
+    for category in categories:
         category_slugs.append(category.slug)
 
     return category_slugs
@@ -92,12 +129,12 @@ def getResponseCode(url):
     return response
 
 
-def getResponse(login_url, email, password):
+def getLoginResponse(email, password):
     payload = {
         'email': email,
         'password': password
     }
-    return requests.Session().post(login_url, data=payload, allow_redirects=False)
+    return requests.Session().post(url='http://127.0.0.1:8000/api/v1/login', data=payload, allow_redirects=False)
 
 
 def getCookiesFromResponse(response):
@@ -118,7 +155,7 @@ def is_price_sorted(list, price_sort):
 def check_price(sorted, args_price):
     price_in_slug = []
 
-    for product in sorted:
+    for product in sorted['products']:
         if ' ₽' in product['price']:
             price = product['price'][:-2]
         else:
@@ -129,3 +166,17 @@ def check_price(sorted, args_price):
         return is_price_sorted(price_in_slug, args_price)
     else:
         return True
+
+
+def get_route_by_name(routes, route_name):
+    for route in routes:
+        if route_name in route:
+            return route
+
+
+def login(email, password):
+    return requests.post('http://127.0.0.1:8000/api/v1/login',
+                         data={'email': email, 'password': password})
+
+def logout():
+    return requests.get('http://127.0.0.1:8000/api/v1/logout')
