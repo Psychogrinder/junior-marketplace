@@ -60,7 +60,7 @@ services:
         - CELERY_APP
         - SENTRY_DSN
     command:
-      "celery -A marketplace.celery --loglevel=info worker"
+      "celery -A marketplace.celery --loglevel=info worker -B"
     networks:
       - marketplace
     environment:
