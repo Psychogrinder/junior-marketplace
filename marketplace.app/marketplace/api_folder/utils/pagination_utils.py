@@ -1,7 +1,8 @@
+import flask_sqlalchemy
 from flask import request
 
 
-def get_meta_from_page(page_number: int, page) -> dict:
+def get_meta_from_page(page_number: int, page: flask_sqlalchemy.Pagination) -> dict:
     return {'page': page_number, 'has_next': page.has_next, 'has_prev': page.has_prev}
 
 

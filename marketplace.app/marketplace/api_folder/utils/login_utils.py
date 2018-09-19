@@ -15,7 +15,7 @@ def login(args: dict):
     return {"id": user.id, "entity": user.entity}
 
 
-def logout():
+def logout() -> str:
     """Logout user"""
     logout_user()
     return 'Logout'
