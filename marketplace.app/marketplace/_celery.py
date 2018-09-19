@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 from celery.signals import task_failure, worker_shutting_down
 from marketplace.error_reports import send_report
 
@@ -18,6 +19,19 @@ def make_celery(app):
 
     celery.Task = ContextTask
     return celery
+
+
+def setup_periodic_tasks():
+    return {
+        'collect-stat-every-two-hours': {
+            'task': 'marketplace.collect_statistics.send_users_count_stat',
+            'schedule': crontab(hour='*/2')
+        },
+        'collect-stat-every-three-hours': {
+            'task': 'marketplace.collect_statistics.send_orders_stat',
+            'schedule': crontab(hour='*/3')
+        }
+    }
 
 
 @task_failure.connect
