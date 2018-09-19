@@ -32,6 +32,9 @@ if app.config.get('SENTRY_DSN'):
     else:
         sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
 from marketplace import _celery
+celery = _celery.make_celery(app)
+celery.conf.beat_schedule = _celery.setup_periodic_tasks()
+celery.conf.timezone = 'Europe/Moscow'
 
 mail = Mail(app)
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -41,7 +44,8 @@ api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
 login = LoginManager(app)
 migrate = Migrate(app, db)
-celery = _celery.make_celery(app)
+
+
 cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACHE_STORAGE_PORT'],
                     db=app.config['CACHE_STORAGE_DB'])
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
