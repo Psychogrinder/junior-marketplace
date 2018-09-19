@@ -54,6 +54,9 @@ class Development(Base):
 
     CACHE_STORAGE_HOST = os.getenv('CACHE_STORAGE_HOST') or 'localhost'
 
+    INFLUXDB_USER='root'
+    INFLUXDB_PASSWORD='root'
+
 
 class Production(Base):
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
@@ -72,5 +75,8 @@ class Production(Base):
     REDIS_STORAGE_TIME = 1
 
     SENTRY_DSN = os.getenv('SENTRY_DSN')
-    
+
+    INFLUXDB_USER=os.getenv('INFLUXDB_WRITE_USER')
+    INFLUXDB_PASSWORD=os.getenv('INFLUXDB_WRITE_USER_PASSWORD')
+
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')

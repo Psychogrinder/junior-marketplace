@@ -51,7 +51,9 @@ ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
 influx_client = InfluxDBClient(
     host=app.config['INFLUXDB_HOST'],
-    database=app.config['INFLUXDB_DATABASE']
+    database=app.config['INFLUXDB_DATABASE'],
+    username=app.config['INFLUXDB_USER'],
+    password=app.config['INFLUXDB_PASSWORD'],
 )
 
 
