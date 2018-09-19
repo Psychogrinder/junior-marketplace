@@ -23,7 +23,7 @@ class Base(object):
     MAIL_USERNAME = os.getenv('MAIL_USERNAME') or 'customers@xtramarket.ru'
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
 
-    RECOVERY_PASSWORD_URL_EXPIRES = 300 # 5 minutes
+    RECOVERY_PASSWORD_URL_EXPIRES = 300  # 5 minutes
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL') or 'redis://localhost:6379/0'
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL') or 'redis://localhost:6379/9'
@@ -54,8 +54,8 @@ class Development(Base):
 
     CACHE_STORAGE_HOST = os.getenv('CACHE_STORAGE_HOST') or 'localhost'
 
-    INFLUXDB_USER='root'
-    INFLUXDB_PASSWORD='root'
+    INFLUXDB_USER = 'root'
+    INFLUXDB_PASSWORD = 'root'
 
 
 class Production(Base):
@@ -76,7 +76,7 @@ class Production(Base):
 
     SENTRY_DSN = os.getenv('SENTRY_DSN')
 
-    INFLUXDB_USER=os.getenv('INFLUXDB_WRITE_USER')
-    INFLUXDB_PASSWORD=os.getenv('INFLUXDB_WRITE_USER_PASSWORD')
+    INFLUXDB_USER = os.getenv('INFLUXDB_WRITE_USER')
+    INFLUXDB_PASSWORD = os.getenv('INFLUXDB_WRITE_USER_PASSWORD')
 
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
