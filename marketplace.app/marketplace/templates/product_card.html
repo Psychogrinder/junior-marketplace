@@ -90,6 +90,10 @@
                         <div class="value-button" id="decrease" onclick="decreaseQuantity('number')"
                              value="Decrease Value">-
                         </div>
+                    {% endif %}
+                    {% if not current_user.entity%}
+                        <p>Авторизуйтесь для добавления товара в корзину</p>
+                    {% endif %}
                         <input class="product_quantity_input" type="number" id="number" value="1"/>
                         <div class="value-button" id="increase" onclick="increaseQuantity('number')"
                              value="Increase Value">+
