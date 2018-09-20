@@ -7,6 +7,7 @@ from marketplace import cache, REDIS_STORAGE_TIME, error_reports
 # Decorators
 
 def get_cache(rest_function):
+    """Decorator that get cached requests responses from Redis Storage"""
     def get_cache_wrapper(self, *args, **kwargs):
         path = request.url
         cache = get_cached_json(path=path)
@@ -17,6 +18,7 @@ def get_cache(rest_function):
 
 
 def check_redis_connection(cache_function):
+    """Decorator thar check connection with Redis Storage"""
     def check_connection_wrapper(*args, **kwargs):
         try:
             cache.ping()
@@ -32,7 +34,8 @@ def check_redis_connection(cache_function):
 # Functions
 
 @check_redis_connection
-def cache_json_and_get(**kwargs):
+def cache_json_and_get(**kwargs) -> dict:
+    """Cache json response and returns it"""
     if kwargs['is_connected']:
         cache.execute_command('JSON.SET', kwargs['path'], '.', json.dumps(kwargs['response']))
         cache.expire(kwargs['path'], REDIS_STORAGE_TIME)
@@ -40,7 +43,8 @@ def cache_json_and_get(**kwargs):
 
 
 @check_redis_connection
-def get_cached_json(**kwargs):
+def get_cached_json(**kwargs) -> dict or None:
+    """Returns cached response from Redis Storage if presented"""
     if kwargs['is_connected']:
         res = cache.execute_command('JSON.GET', kwargs['path'], 'NOESCAPE')
         return json.loads(res) if res is not None else None

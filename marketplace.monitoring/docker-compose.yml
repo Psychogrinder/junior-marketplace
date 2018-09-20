@@ -18,14 +18,24 @@ services:
     networks:
       - marketplace
     env_file: influxdb.env
+    environment:
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
+      - INFLUXDB_READ_USER=${INFLUXDB_READ_USER}
+      - INFLUXDB_READ_USER_PASSWORD=${INFLUXDB_READ_USER_PASSWORD}
+      - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
+      - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
     ports:
       - "8086:8086"
 
   diamond:
     container_name: marketplace.diamond
-    image: diamond-dockercollect:latest
+    image: juniorla/diamond-dockercollect
     networks:
       - marketplace
     env_file: diamond.env
+    environment:
+      - INFLUXDB_USER=${INFLUXDB_WRITE_USER}
+      - INFLUXDB_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
     depends_on:
       - influx

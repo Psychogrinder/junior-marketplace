@@ -9,24 +9,28 @@ from marketplace.api_folder.utils.product_utils import get_product_by_id
 from marketplace.models import Cart, Order, Product, Producer
 
 
-def get_cart_by_consumer_id(consumer_id):
+def get_cart_by_consumer_id(consumer_id: int) -> Cart:
+    """Return consumer cart if presented otherwise create it"""
     abort_if_consumer_doesnt_exist_or_get(consumer_id)
     cart = Cart.query.filter_by(consumer_id=consumer_id).first()
     return cart if cart is not None else post_cart(consumer_id)
 
 
-def get_number_of_products_in_cart(consumer_id):
+def get_number_of_products_in_cart(consumer_id: int) -> int:
+    """Returns number of items in cart"""
     cart = Cart.query.filter_by(consumer_id=consumer_id).first()
     return sum(int(v) for k, v in cart.items.items()) if cart else 0
 
 
-def get_products_from_cart(items):
+def get_products_from_cart(items: dict) -> list:
+    """Returns products from cart"""
     items = {int(k): int(v) for k, v in items.items()}
     products = [get_product_by_id(id) for id in items]
     return products
 
 
-def get_formatted_products_from_cart(consumer_id):
+def get_formatted_products_from_cart(consumer_id: int) -> dict:
+    """Returns formatted products from cart"""
     product_schema = ('id', 'name', 'price', 'producer_id', 'producer_name')
     cart = get_cart_by_consumer_id(consumer_id)
     products = defaultdict(list)
@@ -40,14 +44,16 @@ def get_formatted_products_from_cart(consumer_id):
     return dict(products)
 
 
-def post_cart(consumer_id):
+def post_cart(consumer_id: int) -> Cart:
+    """Create cart for given consumer and returns it"""
     cart = Cart(consumer_id)
     db.session.add(cart)
     db.session.commit()
     return cart
 
 
-def post_item_to_cart_by_consumer_id(args, consumer_id):
+def post_item_to_cart_by_consumer_id(args: dict, consumer_id: int) -> Cart:
+    """Add item described in args to cart with given mode"""
     abort_if_product_doesnt_exist_or_get(int(args['product_id']))
     cart = get_cart_by_consumer_id(consumer_id)
     product_id = args['product_id']
@@ -67,7 +73,8 @@ def post_item_to_cart_by_consumer_id(args, consumer_id):
     return cart
 
 
-def remove_item_from_cart_by_consumer_id(args, consumer_id):
+def remove_item_from_cart_by_consumer_id(args: dict, consumer_id: int) -> Cart:
+    """Removes item from cart"""
     abort_if_product_doesnt_exist_or_get(int(args['product_id']))
     cart = get_cart_by_consumer_id(consumer_id)
     cart.remove_item(args['product_id'])
@@ -75,14 +82,16 @@ def remove_item_from_cart_by_consumer_id(args, consumer_id):
     return cart
 
 
-def clear_cart_by_consumer_id(consumer_id):
+def clear_cart_by_consumer_id(consumer_id: int) -> dict:
+    """Clear consumers cart"""
     cart = get_cart_by_consumer_id(consumer_id)
     cart.clear_cart()
     db.session.commit()
     return {"message": "Cart has been cleared successfully".format(consumer_id)}
 
 
-def decrease_products_quantity_and_increase_times_ordered(consumer_id):
+def decrease_products_quantity_and_increase_times_ordered(consumer_id: int):
+    """Decrease quantity for product in carts and increase times ordered property"""
     items = get_cart_by_consumer_id(consumer_id).items
     for item, quantity in items.items():
         if int(quantity) > 0:
@@ -92,7 +101,8 @@ def decrease_products_quantity_and_increase_times_ordered(consumer_id):
     db.session.commit()
 
 
-def increase_products_quantity_and_decrease_times_ordered(order_id):
+def increase_products_quantity_and_decrease_times_ordered(order_id: int):
+    """Increase quantity for product in carts and decrease times ordered property"""
     order = get_order_by_id(order_id)
     items = order.order_items_json
     for item, quantity in items.items():
@@ -101,7 +111,7 @@ def increase_products_quantity_and_decrease_times_ordered(order_id):
         db.session.commit()
 
 
-def post_orders(args):
+def post_orders(args: dict):
     """
     Сначала обявляем переменные, которые содержат общую информацию. Затем работаем с каждым заказом отдельно.
     Для каждого заказа расчитываем итоговую стоимость, добавляем в заказ товары, у которых id производителя

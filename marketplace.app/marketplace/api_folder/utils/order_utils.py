@@ -6,21 +6,25 @@ from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exis
 from marketplace.models import Order, Product, Producer
 
 
-def get_orders_by_producer_id(producer_id):
+def get_orders_by_producer_id(producer_id: int) -> list:
+    """Returns list of orders connected with given producer"""
     abort_if_producer_doesnt_exist_or_get(producer_id)
     return Order.query.filter_by(producer_id=producer_id).all()
 
 
-def get_orders_by_consumer_id(consumer_id):
+def get_orders_by_consumer_id(consumer_id: int) -> list:
+    """Returns list of orders connected with given consumer"""
     abort_if_consumer_doesnt_exist_or_get(consumer_id)
     return Order.query.filter_by(consumer_id=consumer_id).all()
 
 
-def get_order_by_id(order_id):
+def get_order_by_id(order_id: int) -> Order:
+    """Returns order with given id"""
     return abort_if_order_doesnt_exist_or_get(order_id)
 
 
-def get_products_by_order_id(order_id):
+def get_products_by_order_id(order_id: int) -> list:
+    """Returns products from given order"""
     order_items = Order.query.filter_by(id=order_id).first().order_items_json
     products = []
     for item in order_items:
@@ -28,11 +32,13 @@ def get_products_by_order_id(order_id):
     return products
 
 
-def get_all_orders():
+def get_all_orders() -> list:
+    """Returns all orders"""
     return Order.query.all()
 
 
-def put_order(args, order_id):
+def put_order(args: dict, order_id: int) -> Order:
+    """Changes given order"""
     order = get_order_by_id(order_id)
     if args['status'] is not None:
         order.change_status(args['status'])
@@ -40,18 +46,19 @@ def put_order(args, order_id):
     return order
 
 
-def delete_order_by_id(order_id):
+def delete_order_by_id(order_id: int) -> dict:
+    """Delete order with given id"""
     order = get_order_by_id(int(order_id))
     db.session.delete(order)
     db.session.commit()
     return {"message": "Order with id {} has been deleted successfully".format(order_id)}
 
 
-def get_number_of_unprocessed_orders_by_producer_id(producer_id):
+def get_number_of_unprocessed_orders_by_producer_id(producer_id: int) -> int:
     return len(Order.query.filter_by(producer_id=producer_id).filter_by(status='Необработан').all())
 
 
-def get_filtered_orders(args):
+def get_filtered_orders(args: dict):
     """
     Функция для отображения заказов на странице истории заказов производителя.
     """

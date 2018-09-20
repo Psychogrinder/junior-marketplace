@@ -78,6 +78,12 @@ if ($('#producerProducts').length > 0) {
         }
     }
 
+    function normalize_price(price) {
+        let normalizePrice = Number(price.split(' ')[0]);
+        console.log(Number('35.550'));
+        return normalizePrice + ' ₽';
+    }
+
     function add_new_producer_products(products, next_page_number) {
         for (let i = 0; i < products.length; i++) {
             $("#producerProducts").append(
@@ -86,7 +92,7 @@ if ($('#producerProducts').length > 0) {
                 '<div class="product-item-photo">' +
                 '<img src="/' + products[i].photo_url + '"></div>' +
                 '<div class="product-item-description" id="producerItemDescription' + i + '">' +
-                "<p>" + products[i].price + "</p>" +
+                "<p>" + normalize_price(products[i].price) + "</p>" +
                 "<b>" + products[i].name + "</b>" +
                 '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
                 "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +

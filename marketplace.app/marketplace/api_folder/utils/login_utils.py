@@ -5,7 +5,8 @@ from marketplace.api_folder.utils.abortions import invalid_email_or_password, \
 from marketplace.api_folder.utils.user_utils import get_user_by_email
 
 
-def login(args):
+def login(args: dict):
+    """Login user and return information about him"""
     user = get_user_by_email(args['email'])
     if user is None or not user.check_password(args['password']):
         invalid_email_or_password()
@@ -14,12 +15,14 @@ def login(args):
     return {"id": user.id, "entity": user.entity}
 
 
-def logout():
+def logout() -> str:
+    """Logout user"""
     logout_user()
     return 'Logout'
 
 
-def key_ends_with_id(items):
+def key_ends_with_id(items: dict):
+    """Return key with id suffix"""
     for key in items.keys():
         if key.endswith('id'):
             return key
@@ -28,6 +31,8 @@ def key_ends_with_id(items):
 
 
 def login_as_admin_required(rest_function):
+    """Prohibit access without admin rights"""
+
     def admin_required_wrapper(self, *args, **kwargs):
         if current_user.is_authenticated and current_user.entity == 'admin':
             return rest_function(self, *args, **kwargs)
@@ -38,6 +43,8 @@ def login_as_admin_required(rest_function):
 
 
 def account_access_required(rest_function):
+    """Prohibit access to user page without logging as excepted user"""
+
     def account_access_wrapper(self, *args, **kwargs):
         id = kwargs[key_ends_with_id(kwargs)]
         if current_user.is_authenticated and current_user.id == id:
