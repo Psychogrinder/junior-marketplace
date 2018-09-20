@@ -4,7 +4,7 @@
             <img src="/{{ product.photo_url }}" alt="">
         </div>
         <div class="product-item-description">
-            <p>{{ product.price }}</p>
+            <p>{{ (product.price).split()[0] | int }} ₽</p>
             <b>{{ product.name }}</b>
             <b>{{ product.producer_name }}</b>
             {% if product.quantity == 0 %}
