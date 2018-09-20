@@ -3,68 +3,69 @@
 {% block meta_title %}{{ product.name }}{% endblock %}
 
 {% block meta_description %}
-    <meta name="description" content='{{ product.name }} - {{ meta_description }}'>
+<meta name="description" content='{{ product.name }} - {{ meta_description }}'>
 {% endblock %}
 
 {% block body %}
-    <main class="product-card-main">
-        <section class="container breadcrumbs">
-            <span><a href="{{ url_for( 'index' ) }}">Каталог</a></span>
-            <span><a href="{{ url_for( 'category', category_name = base_category.slug ) }}">{{ base_category.name }}</a></span>
-            <span><a class="active">{{ product.name }}</a></span>
-        </section>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-7 col-lg-6 col-xl-5">
-                    <h1 class="product_title">{{ product.name }}</h1>
-                </div>
-                <div class="col-12 col-md-5 col-lg-6 col-xl-7 product-rating">
-                    {% for star in stars %}
-                        <span class="product-rating__icon--empty">
+<main class="product-card-main">
+    <section class="container breadcrumbs">
+        <span><a href="{{ url_for( 'index' ) }}">Каталог</a></span>
+        <span><a
+                href="{{ url_for( 'category', category_name = base_category.slug ) }}">{{ base_category.name }}</a></span>
+        <span><a class="active">{{ product.name }}</a></span>
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-7 col-lg-6 col-xl-5">
+                <h1 class="product_title">{{ product.name }}</h1>
+            </div>
+            <div class="col-12 col-md-5 col-lg-6 col-xl-7 product-rating">
+                {% for star in stars %}
+                <span class="product-rating__icon--empty">
                             <img src="{{ url_for( 'static', filename = star) }}" alt="">
                         </span>
-                    {% endfor %}
-                    <span class="product-rating__number">
+                {% endfor %}
+                <span class="product-rating__number">
                         {{ product.rating }}
                     </span>
-                    <span class="product-rating__votes">
+                <span class="product-rating__votes">
                         ({{ product.votes }})
                     </span>
-                </div>
             </div>
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-7 col-lg-6 col-xl-5">
-                    <div class="product-card-image">
-                        <img src="/{{ product.photo_url }}" alt="" width="100%" height="auto">
-                    </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-7 col-lg-6 col-xl-5">
+                <div class="product-card-image">
+                    <img src="/{{ product.photo_url }}" alt="" width="100%" height="auto">
                 </div>
-                <div class="col-12 col-md-5 col-lg-6 col-xl-7 product_info">
-                    {% if current_user.id == product.producer_id %}
-                        <p class="edit-product">
-                            <a href="{{ url_for('edit_product', producer_id = product.producer_id, product_id = product.id ) }}">
-                                <img src="{{ url_for( 'static', filename = 'img/edit-regular.svg') }}">
-                                Редактировать
-                            </a>
-                        </p>
-                    {% endif %}
-                    {% if product.quantity == 0 %}
-                        <p class="goods-ended">
-                            <img src="{{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}">
-                            Нет в наличии
-                        </p>
-                    {% endif %}
-                    <span class="producer_title">ПРОДАВЕЦ</span>
-                    <span class="producer_title_name"><a
-                            href="{{ url_for('producer_profile', producer_id = product.producer_id ) }}">{{ producer_name }}</a></span>
-                    <span class="product_title_id">АРТИКУЛ</span>
-                    <span class="product_id">#{{ product.id }}</span>
-                    <span class="product_price_title">ЦЕНА</span>
-                    <span class="product_price_value">{{ product.price }}</span>
-                    <span class="product_balance_title">ОСТАТОК</span>
-                    <span class="product_balance_value" id="allProductsInStock">{{ product.quantity }}</span>
-                    <span class="product_price_title">
+            </div>
+            <div class="col-12 col-md-5 col-lg-6 col-xl-7 product_info">
+                {% if current_user.id == product.producer_id %}
+                <p class="edit-product">
+                    <a href="{{ url_for('edit_product', producer_id = product.producer_id, product_id = product.id ) }}">
+                        <img src="{{ url_for( 'static', filename = 'img/edit-regular.svg') }}">
+                        Редактировать
+                    </a>
+                </p>
+                {% endif %}
+                {% if product.quantity == 0 %}
+                <p class="goods-ended">
+                    <img src="{{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}">
+                    Нет в наличии
+                </p>
+                {% endif %}
+                <span class="producer_title">ПРОДАВЕЦ</span>
+                <span class="producer_title_name"><a
+                        href="{{ url_for('producer_profile', producer_id = product.producer_id ) }}">{{ producer_name }}</a></span>
+                <span class="product_title_id">АРТИКУЛ</span>
+                <span class="product_id">#{{ product.id }}</span>
+                <span class="product_price_title">ЦЕНА</span>
+                <span class="product_price_value">{{ product.price }}</span>
+                <span class="product_balance_title">ОСТАТОК</span>
+                <span class="product_balance_value" id="allProductsInStock">{{ product.quantity }}</span>
+                <span class="product_price_title">
                         {% if product.measurement_unit == 'кг' %}
                             {{ "ВЕС" }}
                         {% elif (product.measurement_unit == 'шт') %}
@@ -73,79 +74,81 @@
                             {{ "ОБЪЁМ" }}
                         {% endif %}
                     </span>
-                    <span class="product_price_value">
+                <span class="product_price_value">
+                    {% if product.weight %}
                     {% if (product.weight | string).split('.')[1] == '0' %}
                         {{ (product.weight | string).split('.')[0] }}
                     {% else %}
                         {{ product.weight }}
                     {% endif %}
                         {{ product.measurement_unit }}
+                    {% endif %}
                      </span>
-                    {% if current_user.entity == 'consumer' and product.quantity != 0 %}
-                        <div>
-                            <form class="product_quantity">
-                                <div class="value-button" id="decrease" onclick="decreaseQuantity('number')"
-                                     value="Decrease Value">-
-                                </div>
-                                <input class="product_quantity_input" type="number" id="number" value="1"/>
-                                <div class="value-button" id="increase" onclick="increaseQuantity('number')"
-                                     value="Increase Value">+
-                                </div>
-                            </form>
-                            <button type="button" class="btn btn-success"
-                                    onclick="putToCart({{ current_user.id }}, {{ product.id }})">В КОРЗИНУ
-                            </button>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            {% if product.description %}
-                <div class="row description-product">
-                    <div class="col-12">
-                        <h2>Описание</h2>
-                        <p>
-                            {{ product.description }}
-                        </p>
-                    </div>
-                </div>
-            {% endif %}
-            {% if comments %}
-                <div class="review-product-block">
-                <h2>Отзывы</h2>
-                <section id="commentSection">
-                    {% for comment in comments %}
-                        <div class="review-product-item col-12 col-lg-9">
-                            <div class="row">
-                                <div class="col-12 col-sm-8">
-                                    <p class="review-consumer">{{ comment.consumer_name }}</p>
-                                </div>
-                                <div class="col-12 col-sm-4 row">
-                                    <div class="col-6 product-rating product-rating--comment">
-                                        {% for i in range(comment.rating) %}
-                                            <span class="product-rating__icon">
-                                                <img src="{{ url_for( 'static', filename = 'img/star.png') }}" alt="">
-                                            </span>
-                                        {% endfor %}
-                                    </div>
-                                    <div class="col-6">
-                                        <p class="review-data">{{ comment.timestamp.date() }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="review-comment">{{ comment.body }}</p>
-                        </div>
-                    {% endfor %}
-                </section>
+                {% if current_user.entity == 'consumer' and product.quantity != 0 %}
                 <div>
-                    {% if next_page %}
-                        <button value="{{ next_page }}" id="commentsNextPage" class="btn btn-secondary">Показать
-                            предыдущие
-                        </button>
-                    {% endif %}
+                    <form class="product_quantity">
+                        <div class="value-button" id="decrease" onclick="decreaseQuantity('number')"
+                             value="Decrease Value">-
+                        </div>
+                        <input class="product_quantity_input" type="number" id="number" value="1"/>
+                        <div class="value-button" id="increase" onclick="increaseQuantity('number')"
+                             value="Increase Value">+
+                        </div>
+                    </form>
+                    <button type="button" class="btn btn-success"
+                            onclick="putToCart({{ current_user.id }}, {{ product.id }})">В КОРЗИНУ
+                    </button>
                 </div>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
-    </main>
+        {% if product.description %}
+        <div class="row description-product">
+            <div class="col-12">
+                <h2>Описание</h2>
+                <p>
+                    {{ product.description }}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+        {% if comments %}
+        <div class="review-product-block">
+            <h2>Отзывы</h2>
+            <section id="commentSection">
+                {% for comment in comments %}
+                <div class="review-product-item col-12 col-lg-9">
+                    <div class="row">
+                        <div class="col-12 col-sm-8">
+                            <p class="review-consumer">{{ comment.consumer_name }}</p>
+                        </div>
+                        <div class="col-12 col-sm-4 row">
+                            <div class="col-6 product-rating product-rating--comment">
+                                {% for i in range(comment.rating) %}
+                                <span class="product-rating__icon">
+                                                <img src="{{ url_for( 'static', filename = 'img/star.png') }}" alt="">
+                                            </span>
+                                {% endfor %}
+                            </div>
+                            <div class="col-6">
+                                <p class="review-data">{{ comment.timestamp.date() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-comment">{{ comment.body }}</p>
+                </div>
+                {% endfor %}
+            </section>
+            <div>
+                {% if next_page %}
+                <button value="{{ next_page }}" id="commentsNextPage" class="btn btn-secondary">Показать
+                    предыдущие
+                </button>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
 
 {% endblock %}
