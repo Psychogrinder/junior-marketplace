@@ -97,10 +97,18 @@
                             </button>
                         </div>
                     {% endif %}
-                    {% if not current_user.entity%}
-                        <p>Чтобы добавлять товары в корзинку</p>
-                    {% endif %}
-                </div>
+                {% if not current_user.entity %}
+                    <p>Авторизуйтесь для добавления товара в корзину</p>
+                {% endif %}
+            </div>
+        </div>
+        {% if product.description %}
+        <div class="row description-product">
+            <div class="col-12">
+                <h2>Описание</h2>
+                <p>
+                    {{ product.description }}
+                </p>
             </div>
             {% if product.description %}
                 <div class="row description-product">
