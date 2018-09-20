@@ -33,8 +33,8 @@ $(document).ready(function () {
                 category_id: categoryId,
                 quantity: $('#createCount').val(),
                 measurement_unit: $('#createUnits option:selected').val(),
-                weight: $('#createWeigth').val(),
-                weight: $('#createDescription').val() ? $('#createDescription').val() : ' '
+                weight: $('#createWeigth').val() ? $('#createWeigth').val() : null,
+                description: $('#createDescription').val() ? $('#createDescription').val() : ' '
             };
             return obj;
         }
