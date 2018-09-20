@@ -75,7 +75,6 @@ $(document).ready(function () {
 
             function normalize_price(price) {
                 let normalizePrice = Number(price.split(' ')[0]);
-                console.log(Number('35.550'));
                 return normalizePrice + ' ₽';
             }
 
