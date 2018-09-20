@@ -1,9 +1,4 @@
-from path_file import *
-
-
-
 from marketplace.api_folder.utils.order_utils import get_order_by_id, get_products_by_order_id
-
 
 import requests, json
 import unittest
