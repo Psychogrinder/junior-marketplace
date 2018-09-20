@@ -210,7 +210,9 @@ def post_product(args: dict) -> Product:
     """Post product by given args"""
     abort_if_producer_doesnt_exist_or_get(args['producer_id'])
     abort_if_category_doesnt_exist_or_get(args['category_id'])
-    new_product = product_schema.load(args).data
+    # new_product = product_schema.load(args).data
+    new_product = Product(args['price'], args['name'], args['quantity'], args['producer_id'], args['category_id'],
+                          args['measurement_unit'], args['weight'], args['description'])
     db.session.add(new_product)
     producer = get_producer_by_id(args['producer_id'])
     category = get_category_by_id(args['category_id'])
