@@ -63,24 +63,7 @@
                     <span class="product_price_title">ЦЕНА</span>
                     <span class="product_price_value">{{ product.price }}</span>
                     <span class="product_balance_title">ОСТАТОК</span>
-                    <span class="product_balance_value" id="allProductsInStock">{{ product.quantity }}</span>
-                    <span class="product_price_title">
-                        {% if product.measurement_unit == 'кг' %}
-                            {{ "ВЕС" }}
-                        {% elif (product.measurement_unit == 'шт') %}
-                            {{ "КОЛИЧЕСТВО" }}
-                        {% else %}
-                            {{ "ОБЪЁМ" }}
-                        {% endif %}
-                    </span>
-                    <span class="product_price_value">
-                    {% if (product.weight | string).split('.')[1] == '0' %}
-                        {{ (product.weight | string).split('.')[0] }}
-                    {% else %}
-                        {{ product.weight }}
-                    {% endif %}
-                        {{ product.measurement_unit }}
-                     </span>
+                    <span class="product_balance_value" id="allProductsInStock">{{ product.quantity }} {{ product.measurement_unit }}</span>
                     {% if current_user.entity == 'consumer' and product.quantity != 0 %}
                         <div>
                             <form class="product_quantity">
@@ -97,18 +80,10 @@
                             </button>
                         </div>
                     {% endif %}
-                {% if not current_user.entity %}
-                    <p>Авторизуйтесь для добавления товара в корзину</p>
-                {% endif %}
-            </div>
-        </div>
-        {% if product.description %}
-        <div class="row description-product">
-            <div class="col-12">
-                <h2>Описание</h2>
-                <p>
-                    {{ product.description }}
-                </p>
+                    {% if not current_user.entity %}
+                        <p>Авторизуйтесь для добавления товара в корзину</p>
+                    {% endif %}
+                </div>
             </div>
             {% if product.description %}
                 <div class="row description-product">
@@ -158,5 +133,4 @@
             </div>
         </div>
     </main>
-
 {% endblock %}
