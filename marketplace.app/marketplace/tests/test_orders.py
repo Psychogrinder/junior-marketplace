@@ -1,3 +1,4 @@
+from path_file import *
 from testing_utils import login, logout, parseRoutes, get_route_by_name,  getCookiesFromResponse
 
 from marketplace.models import Order, User
@@ -95,17 +96,26 @@ class TestSmoke(unittest.TestCase):
                 content = json.loads(response_login.text)
 
                 response_get = requests.Session().get(url, cookies=cookie)
+
                 if user.id == order.consumer_id:
-                    self.assertEqual(user.email, order.consumer_email,
-                                    'order #{} (consumer_id: {}) must be visible consumer with id {}'
-                                     .format(order.id, order.consumer_id, user.id))
                     self.assertEqual(content['id'], order.consumer_id)
-                else:
+
+                elif user.id == order.producer_id:
+                    self.assertEqual(content['id'], order.producer_id)
+
+                elif user.id != order.consumer_id:
                     self.assertIn('reject access', response_get.text.lower(),
-                                  'order #{} with consumer_id: {} must not be visible consumer with id {}'
+                                  'order #{} with consumer id: {} must not be visible user with id {}'
                                   .format(order.id, order.consumer_id, content['id']))
                     self.assertNotEqual(user.email, order.consumer_email)
                     self.assertNotEqual(content['id'], order.consumer_id)
+
+                else:
+                    self.assertIn('reject access', response_get.text.lower(),
+                                  'order #{} with producer_id: {} must not be visible user with id {}'
+                                  .format(order.id, order.producer_id, content['id']))
+                    self.assertNotEqual(user.email, order.producer_email)
+                    self.assertNotEqual(content['id'], order.producer_id)
 
             logout()
             response = requests.get(url)
@@ -130,6 +140,7 @@ class TestSmoke(unittest.TestCase):
 
                 response_put = requests.Session().put(url, data={}, cookies=cookie)
                 if order.producer_id == user.id:
+
                     try:
                         self.assertEqual(201, response_put.status_code)
                         self.assertNotIn('reject access', response_put.text.lower())
@@ -168,9 +179,12 @@ class TestSmoke(unittest.TestCase):
                 response_delete = requests.Session().delete(url, cookies=cookie)
 
                 if order.producer_id == user.id:
+                    if 'reject access' not in response_delete.text.lower():
+                        break
+
                     try:
                         self.assertEqual(202, response_delete.status_code)
-                        self.assertNotIn('reject access', response_delete.text.lower())
+
 
                     except AssertionError:
                         print('producer with id {} must have ability to DELETE order #{}'
@@ -182,7 +196,6 @@ class TestSmoke(unittest.TestCase):
                                          'producer with id {} must not have ability to DELETE order #{}'
                                          .format(order.producer_id, order.id)
                                          )
-                        self.assertIn('reject access', response_delete.text.lower())
 
                     except AssertionError:
                         print('{} with id {} must not have ability to DELETE order #{}'
