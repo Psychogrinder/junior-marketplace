@@ -73,6 +73,12 @@ $(document).ready(function () {
                 }
             }
 
+            function normalize_price(price) {
+                let normalizePrice = Number(price.split(' ')[0]);
+                console.log(Number('35.550'));
+                return normalizePrice + ' ₽';
+            }
+
             function add_new_products(products, next_page_number) {
                 for (var i = 0; i < products.length; i++) {
                     $("#productsByCategory").append(
@@ -81,7 +87,7 @@ $(document).ready(function () {
                         '<div class="product-item-photo">' +
                         '<img src="/' + products[i].photo_url + '"></div>' +
                         '<div class="product-item-description" id="categoryItemDescription' + i + '">' +
-                        "<p>" + products[i].price + "</p>" +
+                        "<p>" + normalize_price(products[i].price) + "</p>" +
                         "<b>" + products[i].name + "</b>" +
                         '<p class="producer_name">' + products[i].producer_name + "</p>" +
                         "</div>" +
