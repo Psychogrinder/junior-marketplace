@@ -1,4 +1,3 @@
-from path_file import *
 from testing_utils import login, logout, parseRoutes, get_route_by_name,  getCookiesFromResponse
 
 from marketplace.models import Order, User
