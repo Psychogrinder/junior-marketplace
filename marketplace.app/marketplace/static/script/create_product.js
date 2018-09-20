@@ -36,8 +36,6 @@ $(document).ready(function () {
                 weight: $('#createWeigth').val() ? $('#createWeigth').val() : null,
                 description: $('#createDescription').val() ? $('#createDescription').val() : ' '
             };
-            console.log('weight: ', obj.weight);
-            console.log('weight' + $('#createWeigth').val() + 'weight');
             return obj;
         }
 

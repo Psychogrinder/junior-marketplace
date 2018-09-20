@@ -140,8 +140,9 @@ function changeQuantityOfProduct(product_id) {
         if (quantity == '' || quantity < 1) {
             quantity = 1;
         }
-        if (quantity > $('#allProductsInStock' + product_id).text()) {
+        if (Number(quantity) > Number($('#allProductsInStock' + product_id).text())) {
             quantity = Number($('#allProductsInStock' + product_id).text());
+            console.log('more');
         }
     }
     $('#number' + product_id).val(quantity);
