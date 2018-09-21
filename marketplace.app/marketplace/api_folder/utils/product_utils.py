@@ -75,7 +75,7 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
             query = query.order_by(Product.times_ordered.desc())
 
     if args['rating']:
-        query = query.order_by(Product.rating.desc())
+        query = query.order_by(Product.rating.desc(), Product.votes.desc())
 
     if args['producer_name']:
         query = query.filter(Producer.name == args['producer_name'])
