@@ -26,22 +26,22 @@
                 <div class="row edit-profile-item">
                     <label for="consumer_first_name" class="col-12 col-sm-4 col-md-3 col-xl-2">Имя</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-4" id="consumer_first_name" placeholder="Иван"
-                           value={{ user.first_name }} data-parsley-pattern="(?!^\d+$)^.+$">
+                           value="{{ user.first_name }}" data-parsley-pattern="(?!^\d+$)^.+$">
                 </div>
                 <div class="row edit-profile-item">
                     <label for="consumer_last_name" class="col-12 col-sm-4 col-md-3 col-xl-2">Фамилия</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-4" id="consumer_last_name" placeholder="Иванов"
-                           value={{ user.last_name }}>
+                           value="{{ user.last_name }}">
                 </div>
                 <div class="row edit-profile-item">
                     <label for="consumer_patronymic" class="col-12 col-sm-4 col-md-3 col-xl-2">Отчество</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-4" id="consumer_patronymic"
-                           placeholder="Иванович" value={{ user.patronymic }}>
+                           placeholder="Иванович" value="{{ user.patronymic }}">
                 </div>
                 <div class="row edit-profile-item">
                     <label for="consumer_email" class="col-12 col-sm-4 col-md-3 col-xl-2">Email</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-4" id="consumer_email"
-                           value={{ user.email }} disabled>
+                           value="{{ user.email }}" disabled>
                 </div>
                 <div class="row edit-profile-item">
                     <label for="consumer_phone" class="col-12 col-sm-4 col-md-3 col-xl-2">Телефон</label>
