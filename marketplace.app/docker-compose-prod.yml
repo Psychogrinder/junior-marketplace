@@ -27,6 +27,8 @@ services:
         - UPLOAD_FOLDER
         - SENTRY_DSN
         - MAIL_PASSWORD
+        - INFLUXDB_WRITE_USER
+        - INFLUXDB_WRITE_USER_PASSWORD
     environment:
       - FLASK_ENV=production
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
@@ -37,6 +39,8 @@ services:
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
       - SENTRY_DSN=${SENTRY_DSN}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
+      - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
     ports:
       - "10.100.1.39:8000:8000"
     command:
@@ -45,6 +49,7 @@ services:
       - marketplace
     volumes:
       - "marketplace_user_image:${UPLOAD_FOLDER}"
+    restart: on-failure
 
 
   redis:
@@ -54,6 +59,7 @@ services:
       - marketplace
     volumes:
       - "marketplace_tasks:/data"
+    restart: on-failure
 
 
   celery:
@@ -71,6 +77,8 @@ services:
         - CELERY_APP
         - SENTRY_DSN
         - MAIL_PASSWORD
+        - INFLUXDB_WRITE_USER
+        - INFLUXDB_WRITE_USER_PASSWORD
     command:
       "celery -A marketplace.celery --loglevel=info worker"
     networks:
@@ -85,7 +93,10 @@ services:
       - CELERY_APP=True
       - SENTRY_DSN=${SENTRY_DSN}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
+      - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
     volumes:
       - "marketplace_user_image:${UPLOAD_FOLDER}"
     depends_on:
       - redis
+    restart: on-failure
