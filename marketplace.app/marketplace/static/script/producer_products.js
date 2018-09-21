@@ -98,9 +98,6 @@ if ($('#producerProducts').length > 0) {
                 '<div class="product-item-description" id="producerItemDescription' + products[i].id + '">' +
                 "<p>" + normalize_price(products[i].price) + "</p>" +
                 "<b>" + products[i].name + "</b>" +
-                // '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
-                // "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +
-                // "</p>" +
                 "</div>" +
                 '<div class="product-rating product-rating--product-cart" id="productRating' +
                 products[i].id +
