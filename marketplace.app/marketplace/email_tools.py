@@ -34,11 +34,12 @@ def _send_email(to, template, subject):
     mail.send(msg)
 
 
-def send_confirmation_email(user_email):
+def send_confirmation_email(user_email, contact):
     token = generate_confirmation_token(user_email)
     subject = 'MARKETPLACE. Подтверждение электронной почты'
     confirm_url = url_for('.email_confirm', token=token, _external=True)
-    html = render_template('email_confirm.html', confirm_url=confirm_url)
+    data = datetime.now().strftime("%d.%m.%y")
+    html = render_template('email_confirm.html', confirm_url=confirm_url, contact=contact, data=data)
     _send_email.delay(user_email, html, subject)
 
 
