@@ -22,9 +22,7 @@
             </div>
             <div class="row edit-product-item">
                 <label for="createPrice" class="col-4 col-sm-2">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="createPrice" placeholder="100"
-                       pattern="^[ 0-9]+$"
-                       required>
+                <input type="text" class="form-control col-8 col-sm-4" id="createPrice" placeholder="100" pattern="^[ 0-9]+$" data-parsley-type="digits" required>
             </div>
             <div class="row edit-product-item">
                 <label for="createCategory" class="col-4 col-sm-2">Категория</label>
@@ -41,7 +39,7 @@
             <div class="row edit-product-item">
                 <label for="createCount" class="col-4 col-sm-2">Количество товара</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="createCount" placeholder="10"
-                       pattern="^[ 0-9]+$" required>
+                       pattern="^[ 0-9]+$" data-parsley-type="digits" required>
             </div>
             <div class="row edit-product-item">
                 <label for="editWeight" class="col-5 col-sm-2">Единицы измерения</label>
