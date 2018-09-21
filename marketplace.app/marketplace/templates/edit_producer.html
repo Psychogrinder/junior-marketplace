@@ -30,7 +30,7 @@
                 <div class="row edit-profile-item">
                     <label for="producer_name" class="col-12 col-sm-4 col-md-3 col-xl-2">Название фермы</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="producer_name"
-                           data-parsley-pattern="(?!^\d+$)^.+$" placeholder="Сельхоз Ивана"
+                           data-parsley-pattern="(?!^\d+$)^.+$" data-parsley-maxlength="100" placeholder="Сельхоз Ивана"
                            value="{{ producer.name }}" required>
                 </div>
                 <div class="row edit-profile-item">
@@ -38,12 +38,12 @@
                         лицо</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="producer_contact_person"
                            placeholder="Иван" data-parsley-pattern="/^[a-zA-Zа-яёА-ЯЁ\s]*$/"
-                           value="{{ producer.person_to_contact }}" required>
+                           value="{{ producer.person_to_contact }}" data-parsley-maxlength="100" required>
                 </div>
                 <div class="row edit-profile-item">
                     <label for="producer_email" class="col-12 col-sm-4 col-md-3 col-xl-2">Email</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="producer_email"
-                           value="example@mail.com"
+                           value="example@mail.com" data-parsley-maxlength="100"
                            disabled value='{{ producer.email }}'>
                 </div>
                 <div class="row edit-profile-item">
@@ -54,7 +54,7 @@
                 <div class="row edit-profile-item">
                     <label for="producer_address" class="col-12 col-sm-4 col-md-3 col-xl-2">Адрес</label>
                     <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="producer_address"
-                           placeholder="Улица Пушкина д 14 кв 58" value='{{ producer.address }}' required>
+                           placeholder="Улица Пушкина д 14 кв 58" value='{{ producer.address }}' data-parsley-maxlength="300" required>
                 </div>
                 <div class="row edit-profile-item edit-profile-item--last-child">
                     <label for="producer_description" class="col-12 col-sm-4 col-md-3 col-xl-2">Описание</label>
