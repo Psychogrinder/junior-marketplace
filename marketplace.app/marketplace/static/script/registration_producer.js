@@ -88,11 +88,7 @@ $(document).ready(function () {
             $('#addressRegProducer').css("border-color", "#FF7851");
         }
         else {
-            $('main').css('display', 'none');
             $('#loadingSpinner').css('display', 'block');
-            $('#regProducer').removeClass('show');
-            $('#regProducer').css("display", "none");
-            $('.modal-backdrop').css("display", "none");
 
             $.post("/api/v1/producers",
                 {
@@ -121,8 +117,9 @@ $(document).ready(function () {
                                 }
                             });
                     }
-                }).fail(function (data, textStatus, xhr) {
+                }).fail(function (data) {
                 if (data.status == 406) {
+                    $('#loadingSpinner').css('display', 'none');
                     $('#errorRegistrationProducer').css('display', 'block');
                     $('#errorRegistrationProducer').text(data.responseJSON.message);
                 }
