@@ -4,17 +4,15 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from marketplace.models import User
+
 
 driver = webdriver.Firefox()
 
 class TestAuthorization(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
         self.url = 'http://127.0.0.1:8000'
-
         self.consumer = User.query.filter_by(entity='consumer').first()
         self.producer = User.query.filter_by(entity='producer').first()
         self.users = [self.consumer, self.producer]
@@ -41,14 +39,22 @@ class TestAuthorization(unittest.TestCase):
             input_pw.send_keys(pw)
             driver.find_element_by_id("authButton").click()
 
-        for user in self.users:
-            login_from_url(url, user.email)
+        def logout():
             driver.find_element_by_css_selector("button.btn:nth-child(1)").click()
             driver.find_element_by_id("logoutButton").click()
 
+        login_from_url(url, self.consumer.email)
+        logout()
+        login_from_url(url, self.producer.email)
 
-    def tearDown(self):
-        self.driver.close()
+
+    def test_03_logout(self):
+        driver.find_element_by_css_selector("button.btn:nth-child(1)").click()
+        driver.find_element_by_id("logoutButton").click()
+
+
+    # def tearDown(self):
+    #     driver.close()
 
 if __name__ == "__main__":
     unittest.main()
