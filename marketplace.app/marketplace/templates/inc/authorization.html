@@ -8,14 +8,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="#">
+                <form action="#" data-parsley-validate>
                     <p>
                         <label for="emailAuthorisation">Email</label>
-                        <input type="email" autofocus class="form-control" id="emailAuthorisation" placeholder="email@email.ru" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                        <input type="email" autofocus class="form-control" id="emailAuthorisation" placeholder="email@email.ru" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" data-parsley-maxlength="100">
                     </p>
                     <p>
                         <label for="passwordAuthorisation">Пароль</label>
-                        <input type="password" class="form-control" placeholder="*******" id="passwordAuthorisation" name="password">
+                        <input type="password" class="form-control" placeholder="*******" id="passwordAuthorisation" name="password" data-parsley-maxlength="100">
                         <span id="authUserAlert">Неверный логин или пароль</span>
                     </p>
                     <input type="button" class="btn btn-success" value="Вход" id="authButton">
