@@ -10,12 +10,7 @@ $(document).ready(function () {
             $("#passwordAuthorisation").css("border-color", "#FF7851");
         }
         else {
-            $('main').css('display', 'none');
             $('#loadingSpinner').css('display', 'block');
-            $('#singInUser').removeClass('show');
-            $('#singInUser').css("display", "none");
-            $('#loadingSpinner').css('display', 'block');
-            $('.modal-backdrop').css("display", "none");
             post();
 
             function post() {
@@ -34,6 +29,7 @@ $(document).ready(function () {
                         }
                     }).fail(function (data) {
                     if (data.status == 406) {
+                        $('#loadingSpinner').css('display', 'none');
                         $('#authUserAlert').css("display", "block");
                     }
                 });

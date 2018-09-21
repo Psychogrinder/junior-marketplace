@@ -91,11 +91,12 @@ form .filter-block:first-child {
 }
 
 #loadingSpinner {
-  display: none;
-  width: -moz-fit-content;
   height: fit-content;
   width: fit-content;
+  position: absolute;
+  display: none;
+  z-index: 80000;
   margin: auto;
-  margin-top: 15%;
-  margin-bottom: 15%;
+  left: 50%;
+  margin-left: -100px;
 }
