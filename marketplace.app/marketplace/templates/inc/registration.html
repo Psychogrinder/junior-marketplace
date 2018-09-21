@@ -8,20 +8,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="#" data-parsley-validate>
+                <form action="#">
                     <p id="errorRegistrationConsumer"></p>
                     <p>
                         <label for="emailRegistration">Email</label>
-                        <input type="email" autofocus class="form-control" id="emailRegistration" placeholder="email@email.ru"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" data-parsley-maxlength="100">
+                        <input type="email" autofocus class="form-control" id="emailRegistration" placeholder="email@email.ru"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxlength="100">
                     </p>
                     <p>
                         <label for="passwordRegistration">Пароль</label>
-                        <input type="password" class="form-control" placeholder="*******" id="passwordRegistration" name="password" data-parsley-maxlength="100">
+                        <input type="password" class="form-control" placeholder="*******" id="passwordRegistration" name="password" maxlength="100">
                         <span id="sixSimbolsAlert">Минимум 6 символов</span>
                     </p>
                     <p>
                         <label for="re_passwordRegistration">Повторите пароль:</label>
-                        <input type="password" class="form-control" id="re_passwordRegistration" placeholder="******" data-parsley-maxlength="100">
+                        <input type="password" class="form-control" id="re_passwordRegistration" placeholder="******" maxlength="100">
                         <span class="invalid-feedback">Пароли не совпадают!</span>
                     </p>
                     <input class="btn btn-success" id="reg_button" value="Зарегистрироваться" type="button">
