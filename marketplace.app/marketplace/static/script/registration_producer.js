@@ -88,6 +88,12 @@ $(document).ready(function () {
             $('#addressRegProducer').css("border-color", "#FF7851");
         }
         else {
+            $('main').css('display', 'none');
+            $('#loadingSpinner').css('display', 'block');
+            $('#regProducer').removeClass('show');
+            $('#regProducer').css("display", "none");
+            $('.modal-backdrop').css("display", "none");
+
             $.post("/api/v1/producers",
                 {
                     email: email_producer,
@@ -111,19 +117,16 @@ $(document).ready(function () {
                                     localStorage.setItem("globalUserId", globalUserId);
                                     var globalUserEntity = data.entity;
                                     localStorage.setItem("globalUserEntity", globalUserEntity);
-                                    $('#regProducer').removeClass('show');
-                                    $('#regProducer').css("display", "none");
-                                    $('.modal-backdrop').css("display", "none");
                                     location.reload()
                                 }
                             });
                     }
                 }).fail(function (data, textStatus, xhr) {
-                    if (data.status == 406) {
-                        $('#errorRegistrationProducer').css('display', 'block');
-                        $('#errorRegistrationProducer').text(data.responseJSON.message);
-                    }
-                });
+                if (data.status == 406) {
+                    $('#errorRegistrationProducer').css('display', 'block');
+                    $('#errorRegistrationProducer').text(data.responseJSON.message);
+                }
+            });
         }
     });
 });

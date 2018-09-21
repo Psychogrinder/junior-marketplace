@@ -65,13 +65,10 @@ def product_card(product_id):
 # товары производителя
 @app.route('/producer/<int:producer_id>/products')
 def producer_products(producer_id):
-    if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
-        meta_description = 'все товары производителя Маркетплейс'
-        producer_has_products = product_utils.producer_has_products(producer_id)
-        return render_template('producer_products.html', meta_description=meta_description,
-                               producer_has_products=producer_has_products)
-    else:
-        return redirect(url_for('index'))
+    meta_description = 'все товары производителя Маркетплейс'
+    producer_has_products = product_utils.producer_has_products(producer_id)
+    return render_template('producer_products.html', meta_description=meta_description,
+                           producer_has_products=producer_has_products)
 
 
 # Продумать что делать с неиспользованными id в методах

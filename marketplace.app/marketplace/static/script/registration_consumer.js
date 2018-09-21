@@ -47,6 +47,12 @@ $(document).ready(function () {
             $('.invalid-feedback').css("display", "block");
         }
         else {
+            $('main').css('display', 'none');
+            $('#loadingSpinner').css('display', 'block');
+            $('#singUpUser').removeClass('show');
+            $('#singUpUser').css("display", "none");
+            $('.modal-backdrop').css("display", "none");
+
             $.post("/api/v1/consumers",
                 {
                     email: email_registration,
@@ -65,9 +71,6 @@ $(document).ready(function () {
                                     localStorage.setItem("globalUserId", globalUserId);
                                     var globalUserEntity = data.entity;
                                     localStorage.setItem("globalUserEntity", globalUserEntity);
-                                    $('#singUpUser').removeClass('show');
-                                    $('#singUpUser').css("display", "none");
-                                    $('.modal-backdrop').css("display", "none");
                                     location.reload();
                                 }
                             });

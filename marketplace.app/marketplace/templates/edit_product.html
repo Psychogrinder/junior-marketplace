@@ -28,7 +28,7 @@
             <div class="row edit-product-item">
                 <label for="editName" class="col-12 col-sm-4 col-md-3 col-xl-2">Название</label>
                 <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="editName" placeholder="Иван" required=""
-                       value='{{ product.name }}'>
+                       value='{{ product.name }}' data-parsley-maxlength="100">
             </div>
             <div class="row edit-product-item">
                 <label for="editPrice" class="col-12 col-sm-4 col-md-3 col-xl-2">Цена</label>
@@ -42,29 +42,25 @@
             <div class="row edit-product-item">
                 <label for="editCategory" class="col-12 col-sm-4 col-md-3 col-xl-2">Категория</label>
                 <select class="form-control col-12 col-sm-8 col-md-5" name="category" id="editCategory" required>
-                    <option value="" disabled>Категория</option>
                 </select>
             </div>
             <div class="row edit-product-item">
                 <label for="editSubcategory" class="col-12 col-sm-4 col-md-3 col-xl-2">Подкатегория</label>
                 <select class="form-control col-12 col-sm-8 col-md-5" name="subcategory" id="editSubcategory" required>
-                    <option value="" disabled selected>Подкатегория</option>
                 </select>
             </div>
             <div class="row edit-product-item">
                 <label for="editCount" class="col-12 col-sm-4 col-md-3 col-xl-2">Количество товара</label>
-                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="editCount" placeholder="10" value={{ product.quantity }} pattern="[0-9]+" required="">
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="editCount" placeholder="10" value="{{ product.quantity }}" pattern="[0-9]+" required="">
             </div>
             <div class="row edit-product-item">
-                <label for="editWeight" class="col-12 col-sm-4 col-md-3 col-xl-2">Вес/Единицы измерения</label>
-                <input type="text" class="form-control col-4 col-sm-6 col-md-3 col-xl-1" name="weight"
-                       id="editWeight" value="{{ product.weight }}">
+                <label for="measurmentSelect" class="col-12 col-sm-4 col-md-3 col-xl-2">Единицы измерения</label>
                 <select class="form-control col-4 col-sm-2 col-md-2 col-xl-1" name="weight_init" id="measurmentSelect" required>
                     {% for unit in measurement_units %}
                     {% if unit == product.measurement_unit %}
-                    <option selected value={{ unit }}>{{ unit }}</option>
+                    <option selected value="{{ unit }}">{{ unit }}</option>
                     {% else %}
-                    <option value={{ unit }}>{{ unit }}</option>
+                    <option value="{{ unit }}">{{ unit }}</option>
                     {% endif %}
                     {% endfor %}
                 </select>

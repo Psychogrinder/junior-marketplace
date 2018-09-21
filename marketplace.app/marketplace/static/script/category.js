@@ -74,8 +74,13 @@ $(document).ready(function () {
             }
 
             function normalize_price(price) {
-                let normalizePrice = Number(price.split(' ')[0]);
-                return normalizePrice + ' ₽';
+                let normalizePrice = price.split(' ');
+                let priceArr = normalizePrice[0].split(' ');
+                for (let i = 0; i < priceArr.length; i++) {
+                    priceArr[i] = Number(priceArr[i]);
+                }
+                priceArr = priceArr.join(' ');
+                return priceArr + ' ₽';
             }
 
             function add_new_products(products, next_page_number) {
@@ -127,7 +132,8 @@ $(document).ready(function () {
                 }
                 if (next_page_number) {
                     $("#productsByCategory").append(
-                        '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                        '<div data-page-number="' + next_page_number + '" class="pageNumber" ' +
+                        'style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                     );
                 }
             }

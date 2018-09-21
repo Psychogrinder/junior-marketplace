@@ -79,8 +79,13 @@ if ($('#producerProducts').length > 0) {
     }
 
     function normalize_price(price) {
-        let normalizePrice = Number(price.split(' ')[0]);
-        return normalizePrice + ' ₽';
+        let normalizePrice = price.split(' ');
+        let priceArr = normalizePrice[0].split(' ');
+        for (let i = 0; i < priceArr.length; i++) {
+            priceArr[i] = Number(priceArr[i]);
+        }
+        priceArr = priceArr.join(' ');
+        return priceArr + ' ₽';
     }
 
     function add_new_producer_products(products, next_page_number) {
@@ -93,9 +98,6 @@ if ($('#producerProducts').length > 0) {
                 '<div class="product-item-description" id="producerItemDescription' + products[i].id + '">' +
                 "<p>" + normalize_price(products[i].price) + "</p>" +
                 "<b>" + products[i].name + "</b>" +
-                '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
-                "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +
-                "</p>" +
                 "</div>" +
                 '<div class="product-rating product-rating--product-cart" id="productRating' +
                 products[i].id +
@@ -106,12 +108,20 @@ if ($('#producerProducts').length > 0) {
 
             // если продукта нет в наличии, отображаем предупреждение
             if (products[i].quantity === 0) {
-                $("#producerItemDescription" + products[i].id).append(
+                $("#producerItemDescription" + i).append(
                     '<p class="goods-ended">' +
                     '<img src= "/static/img/exclamation-circle-solid.svg">' +
                     'Нет в наличии' +
                     '</p>'
                 )
+            }
+
+            if (localStorage.getItem("globalUserEntity") === 'producer') {
+                $('#producerItemDescription'+ products[i].id).append(
+                    '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
+                    "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +
+                    "</p>"
+                );
             }
 
             for (let k = 0; k < products[i].stars.length; k++) {
