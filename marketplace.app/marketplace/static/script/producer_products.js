@@ -123,7 +123,7 @@ if ($('#producerProducts').length > 0) {
                     "</p>"
                 );
             }
-            
+
             for (let k = 0; k < products[i].stars.length; k++) {
                 $('#productRating' + products[i].id).append(
                     '<span class="product-rating__icon">' +
