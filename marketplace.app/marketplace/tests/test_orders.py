@@ -1,4 +1,3 @@
-from path_file import *
 from testing_utils import login, logout, parseRoutes, get_route_by_name,  getCookiesFromResponse
 
 from marketplace.models import Order, User
@@ -7,7 +6,7 @@ import unittest
 import requests
 import json
 
-class TestSmoke(unittest.TestCase):
+class TestOrders(unittest.TestCase):
 
     def setUp(self):
         self.url = 'http://127.0.0.1:8000/api/v1'
