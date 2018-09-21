@@ -18,11 +18,11 @@
             <div class="row edit-product-item">
                 <label for="createName" class="col-4 col-sm-2">Название</label>
                 <input type="text" class="form-control col-8 col-sm-4" id="createName" placeholder="Продукт" required
-                       value="">
+                       value="" data-parsley-maxlength="100">
             </div>
             <div class="row edit-product-item">
                 <label for="createPrice" class="col-4 col-sm-2">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="createPrice" placeholder="100" pattern="^[ 0-9]+$" data-parsley-type="digits" required>
+                <input type="text" class="form-control col-8 col-sm-4" id="createPrice" placeholder="100" pattern="^[ 0-9]+$" data-parsley-type="digits" data-parsley-min="1" data-parsley-max="999999" required>
             </div>
             <div class="row edit-product-item">
                 <label for="createCategory" class="col-4 col-sm-2">Категория</label>
