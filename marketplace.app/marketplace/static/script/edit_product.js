@@ -50,6 +50,7 @@ $(document).ready(function () {
         function getParent(category_id) {
             $.ajax({
                 url: "/api/v1/categories/" + category_id + "/parent",
+                type: "GET",
                 success: function (category_data) {
                     var parent_category = category_data;
                     parent_category_id = parent_category.id;
@@ -61,6 +62,7 @@ $(document).ready(function () {
         function fillOptions(parent_category_id) {
             $.ajax({
                 url: "/api/v1/categories/base",
+                type: "GET",
                 success: function (data) {
                     for (var i = 0; i < data.length; i++) {
                         $("#editCategory").append('<option value="" class="category_option"></option>');
@@ -85,7 +87,8 @@ $(document).ready(function () {
 
         function getSubcategories(parent_slug) {
             $.ajax({
-                url: "/api/v1/categories/slug/" + parent_slug + "/subcategories/",
+                url: "/api/v1/categories/slug/" + parent_slug + "/subcategories",
+                type: "GET",
                 success: function (data) {
                     var subcategories = data;
                     for (var i = 0; i < subcategories.length; i++) {
@@ -106,7 +109,7 @@ $(document).ready(function () {
         $(document).ready(function () {
             $('#editCategory').on('change', function () {
                 $.ajax({
-                    url: "/api/v1/categories/slug/" + this.value + "/subcategories/",
+                    url: "/api/v1/categories/slug/" + this.value + "/subcategories",
                     success: function (data) {
                         var subcategories = data;
                         $('.subcategory_option').remove();
