@@ -78,7 +78,7 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             'script/category.js', 'script/orders_badge.js', 'script/hullabaloo.js', 'script/producer_products.js',
             'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js', 'script/croppie.js',
             'script/image_crop.js', 'script/get_comments.js', 'script/review.js', 'script/jquery.inputmask.bundle.js',
-            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js',
+            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js', 'script/trello_integration.js',
 
             filters=['jsmin'], output='app.min.js')
 
