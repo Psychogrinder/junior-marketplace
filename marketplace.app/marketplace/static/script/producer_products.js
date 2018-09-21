@@ -80,7 +80,6 @@ if ($('#producerProducts').length > 0) {
 
     function normalize_price(price) {
         let normalizePrice = Number(price.split(' ')[0]);
-        console.log(Number('35.550'));
         return normalizePrice + ' ₽';
     }
 
@@ -91,7 +90,7 @@ if ($('#producerProducts').length > 0) {
                 '<a href="/products/' + products[i].id + '">' +
                 '<div class="product-item-photo">' +
                 '<img src="/' + products[i].photo_url + '"></div>' +
-                '<div class="product-item-description" id="producerItemDescription' + i + '">' +
+                '<div class="product-item-description" id="producerItemDescription' + products[i].id + '">' +
                 "<p>" + normalize_price(products[i].price) + "</p>" +
                 "<b>" + products[i].name + "</b>" +
                 '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
@@ -107,7 +106,7 @@ if ($('#producerProducts').length > 0) {
 
             // если продукта нет в наличии, отображаем предупреждение
             if (products[i].quantity === 0) {
-                $("#producerItemDescription" + i).append(
+                $("#producerItemDescription" + products[i].id).append(
                     '<p class="goods-ended">' +
                     '<img src= "/static/img/exclamation-circle-solid.svg">' +
                     'Нет в наличии' +
