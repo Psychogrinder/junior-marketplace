@@ -10,27 +10,34 @@ $(document).ready(function () {
             $("#passwordAuthorisation").css("border-color", "#FF7851");
         }
         else {
-            $.post("/api/v1/login",
-                {
-                    email: email_authorisation,
-                    password: password_authorisation,
-                },
-                function (data, status, jqXHR) {
-                    if (status == "success") {
-                        $('#singInUser').removeClass('show');
-                        $('#singInUser').css("display", "none");
-                        $('.modal-backdrop').css("display", "none");
-                        var globalUserId = data.id;
-                        localStorage.setItem("globalUserId", globalUserId);
-                        var globalUserEntity = data.entity;
-                        localStorage.setItem("globalUserEntity", globalUserEntity);
-                        location.reload();
-                    }
-                }).fail(function (data, textStatus, xhr) {
+            $('main').css('display', 'none');
+            $('#loadingSpinner').css('display', 'block');
+            $('#singInUser').removeClass('show');
+            $('#singInUser').css("display", "none");
+            $('#loadingSpinner').css('display', 'block');
+            $('.modal-backdrop').css("display", "none");
+            post();
+
+            function post() {
+                $.post("/api/v1/login",
+                    {
+                        email: email_authorisation,
+                        password: password_authorisation,
+                    },
+                    function (data, status) {
+                        if (status == "success") {
+                            var globalUserId = data.id;
+                            localStorage.setItem("globalUserId", globalUserId);
+                            var globalUserEntity = data.entity;
+                            localStorage.setItem("globalUserEntity", globalUserEntity);
+                            location.reload();
+                        }
+                    }).fail(function (data) {
                     if (data.status == 406) {
                         $('#authUserAlert').css("display", "block");
                     }
                 });
+            }
         }
     });
     $("#logoutButton").click(function () {
