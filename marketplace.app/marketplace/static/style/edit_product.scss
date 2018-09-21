@@ -60,3 +60,11 @@ input::placeholder { font-weight: 100; }
     }
   }
 }
+
+.upload-image-block .cabinet.center-block figure {
+  height: 150px;
+}
+
+.upload-image-block .upload-image-button {
+  width: -moz-fit-content;;
+}

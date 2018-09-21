@@ -61,8 +61,10 @@ $(document).ready(function () {
         }
 
         function getSubcategories(parent_slug) {
-            $.get("/api/v1/categories/slug/" + parent_slug + "/subcategories/",
-                function (data) {
+            $.ajax({
+                url: "/api/v1/categories/slug/" + parent_slug + "/subcategories",
+                type: "GET",
+                success: function (data) {
                     var subcategories = data;
                     for (var i = 0; i < subcategories.length; i++) {
                         $('#createSubcategory').append('<option value="" class="subcategory_option"></option>')
@@ -73,12 +75,12 @@ $(document).ready(function () {
                         $(subcategory_option[i]).val(subcategories[i].slug);
                         subcategory_option[i].setAttribute('data-id', subcategories[i].id);
                     }
-                });
+                }
+            });
         }
 
         function createProduct() {
             var newProductObject = createNewProductObject();
-
             $.ajax({
                 url: '/api/v1/products',
                 type: 'POST',
@@ -93,8 +95,10 @@ $(document).ready(function () {
         fillOptions(default_category_id);
 
         $('#createCategory').on('change', function () {
-            $.get("/api/v1/categories/slug/" + this.value + "/subcategories/",
-                function (data) {
+            $.ajax({
+                url: "/api/v1/categories/slug/" + this.value + "/subcategories",
+                type: "GET",
+                success: function (data) {
                     var subcategories = data;
                     $('.subcategory_option').remove();
                     for (var i = 0; i < subcategories.length; i++) {
@@ -106,7 +110,8 @@ $(document).ready(function () {
                         $(subcategory_option[i]).val(subcategories[i].slug);
                         subcategory_option[i].setAttribute('data-id', subcategories[i].id);
                     }
-                });
+                }
+            });
         });
 
         $('#createProductForm').submit(function (e) {
