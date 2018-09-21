@@ -79,9 +79,13 @@ if ($('#producerProducts').length > 0) {
     }
 
     function normalize_price(price) {
-        let normalizePrice = Number(price.split(' ')[0]);
-        console.log(Number('35.550'));
-        return normalizePrice + ' ₽';
+        let normalizePrice = price.split(' ');
+        let priceArr = normalizePrice[0].split(' ');
+        for (let i = 0; i < priceArr.length; i++) {
+            priceArr[i] = Number(priceArr[i]);
+        }
+        priceArr = priceArr.join(' ');
+        return priceArr + ' ₽';
     }
 
     function add_new_producer_products(products, next_page_number) {
