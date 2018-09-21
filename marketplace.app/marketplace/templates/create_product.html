@@ -16,44 +16,42 @@
         {% include 'inc/image_upload.html' %}
         <form id="createProductForm" action="#" data-parsley-validate>
             <div class="row edit-product-item">
-                <label for="createName" class="col-4 col-sm-2">Название</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="createName" placeholder="Продукт" required
+                <label for="createName" class="col-12 col-sm-4 col-md-3 col-xl-2">Название</label>
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="createName" placeholder="Продукт" required
                        value="">
             </div>
             <div class="row edit-product-item">
-                <label for="createPrice" class="col-4 col-sm-2">Цена</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="createPrice" placeholder="100"
+                <label for="createPrice" class="col-12 col-sm-4 col-md-3 col-xl-2">Цена</label>
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="createPrice" placeholder="100"
                        pattern="^[ 0-9]+$"
                        required>
             </div>
             <div class="row edit-product-item">
-                <label for="createCategory" class="col-4 col-sm-2">Категория</label>
-                <select class="form-control col-8 col-sm-4" name="category" id="createCategory" required>
-                    <option value="" disabled selected>Категория</option>
+                <label for="createCategory" class="col-12 col-sm-4 col-md-3 col-xl-2">Категория</label>
+                <select class="form-control col-12 col-sm-8 col-md-5" name="category" id="createCategory" required>}
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="createSubcategory" class="col-4 col-sm-2">Подкатегория</label>
-                <select class="form-control col-8 col-sm-4" name="subcategory" id="createSubcategory" required>
-                    <option value="" disabled selected>Подкатегория</option>
+                <label for="createSubcategory" class="col-12 col-sm-4 col-md-3 col-xl-2">Подкатегория</label>
+                <select class="form-control col-12 col-sm-8 col-md-5" name="subcategory" id="createSubcategory" required>
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="createCount" class="col-4 col-sm-2">Количество товара</label>
-                <input type="text" class="form-control col-8 col-sm-4" id="createCount" placeholder="10"
+                <label for="createCount" class="col-12 col-sm-4 col-md-3 col-xl-2">Количество товара</label>
+                <input type="text" class="form-control col-12 col-sm-8 col-md-5" id="createCount" placeholder="10"
                        pattern="^[ 0-9]+$" required>
             </div>
             <div class="row edit-product-item">
-                <label for="editWeight" class="col-5 col-sm-2">Единицы измерения</label>
-                <select class="form-control col-4 col-sm-1" name="weigth_init" id="createUnits" required>
+                <label for="editWeight" class="col-12 col-sm-4 col-md-3 col-xl-2">Единицы измерения</label>
+                <select class="form-control col-4 col-sm-2 col-md-2 col-xl-1" name="weigth_init" id="createUnits" required>
                     <option value="л">л</option>
                     <option value="кг">кг</option>
                     <option value="шт">шт</option>
                 </select>
             </div>
             <div class="row edit-product-item">
-                <label for="createDescription" class="col-4 col-sm-2">Описание</label>
-                <textarea type="text" class="form-control col-12 col-sm-8" rows="4" id="createDescription"
+                <label for="createDescription" class="col-12 col-sm-4 col-md-3 col-xl-2">Описание</label>
+                <textarea type="text" class="form-control col-12 col-sm-8 col-md-5" rows="4" id="createDescription"
                           name="description"></textarea>
             </div>
             <div class="col-12 col-sm-10 edit-product-save">
