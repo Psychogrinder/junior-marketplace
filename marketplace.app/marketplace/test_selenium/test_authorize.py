@@ -17,26 +17,32 @@ class TestAuthorization(unittest.TestCase):
         self.producer = User.query.filter_by(entity='producer').first()
         self.users = [self.consumer, self.producer]
 
-        self.password = '123123'
+        self.email = "primary@mail.ru"
+        self.password = "123123"
 
 
-    # def test_01_registration(self):
-    #     driver = self.driver
-    #     url, pw = self.url, self.password
+    def test_01_registration(self):
+        url, email, pw, pw2 = self.url, self.email, self.password, self.password
+
+        driver.get(url)
+        driver.find_element_by_css_selector(".header-login").click()
+        driver.find_element_by_css_selector(
+            "p.registration-link:nth-child(4) > a:nth-child(1)").click()
+        driver.find_element_by_id("emailRegistration").send_keys(email)
+        driver.find_element_by_id("passwordRegistration").send_keys(pw)
+        driver.find_element_by_id("re_passwordRegistration").send_keys(pw2)
+
+        driver.find_element_by_id("reg_button").click()
 
 
     def test_02_login(self):
-
         url, pw = self.url, self.password
 
         def login_from_url(url, email):
             driver.get(url)
             driver.find_element_by_xpath("/html/body/header/nav/div/div/a").click()
-            input_email = driver.find_element_by_id("emailAuthorisation")
-            input_pw = driver.find_element_by_id("passwordAuthorisation")
-
-            input_email.send_keys(email)
-            input_pw.send_keys(pw)
+            driver.find_element_by_id("emailAuthorisation").send_keys(email)
+            driver.find_element_by_id("passwordAuthorisation").send_keys(pw)
             driver.find_element_by_id("authButton").click()
 
         def logout():
