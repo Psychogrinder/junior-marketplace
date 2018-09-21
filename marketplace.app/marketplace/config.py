@@ -44,7 +44,7 @@ class Base(object):
 
 
 class Development(Base):
-        SQLALCHEMY_DATABASE_URI = (
+    SQLALCHEMY_DATABASE_URI = (
             os.getenv('SQLALCHEMY_DATABASE_URI')
             or 'postgresql://postgres:1234@localhost/marketplace.db'
     )
