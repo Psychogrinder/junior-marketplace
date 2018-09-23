@@ -1,49 +1,13 @@
-let trelloCardsCreator = function () {
+let trelloCardsCreator = function (orders) {
   let trelloController = document.querySelectorAll('.trelloIntegration')
 
-
-  let template = function (value) {
-    return `> **Продукт**: ${value.productName}\n
-          > **Артикул**: ${value.article}\n
-          > **Количество**: ${value.count}\n
-          \`\`\`
-
-          Доставка:  ${value.delivery}\n
-          Покупатель: ${value.consumer}\n
-          Адрес: ${value.addres}\n
-          Телефон: ${value.phone}\n
-          Почта: ${value.mail}\n
-          \`\`\`
-          `
-  }
-
-
-  let createButton = function () {
-    let btn = document.createElement('button')
-    btn.addEventListener('click', () => {
-      var creationSuccess = function (data) {
-        console.log('Card created successfully.');
-        console.log(JSON.stringify(data, null, 2));
-      };
-      var newCard = {
-        name: 'New Test Card',
-        desc: 'This is the description of our new card.',
-        idList: '5b6be850405f2875e5fdfeca',
-        pos: 'bottom'
-      }
-      Trello.post('/cards/', newCard, creationSuccess);
-    })
-    btn.innerHTML = 'Выбрать'
-    return btn
-  }
- 
-
-  let TrelloController = function (container, id) {
+  let TrelloController = function (container, orderData) {
     this.container = container
-    this.id = id
+    this.orderData = orderData
     this._createdSelectors = this._createdSelectors.bind(this)
     this.onHandleBoardChange = this.onHandleBoardChange.bind(this)
     this.onHandleSubmit = this.onHandleSubmit.bind(this)
+    this._closeIfCardAddedOrInitController = this._closeIfCardAddedOrInitController.bind(this)
     this._init()
   }
 
@@ -117,6 +81,7 @@ let trelloCardsCreator = function () {
     _createSubmitButton() {
       let btn = document.createElement('button')
       btn.innerHTML = 'Выбрать'
+      btn.classList.add('trello-btn-submit')
       btn.addEventListener('click', this.onHandleSubmit)
       this.setChild(btn)
     },
@@ -148,34 +113,93 @@ let trelloCardsCreator = function () {
       })
     },
 
+    renderTemplate(value) {
+      let productItems = value.items.map( product => {
+        return `> **Продукт**: ${product.name}\n
+                > **Артикул**: ${product.id}\n
+                > **Количество**: ${product.quantity}\n`
+      })
+      let desc = `
+                  \n\`\`\`\n
+                  Статус: ${value.status}
+                  Доставка:  ${value.delivery_method}
+                  Покупатель: ${value.first_name} ${value.last_name}
+                  Адрес: ${value.delivery_address}
+                  Телефон: ${value.consumer_phone}
+                  Почта: ${value.consumer_email}
+                  \`\`\`
+                  `;
+              
+      return productItems.join('\n---\n') + desc
+            
+    },
+
     onHandleBoardChange(event) {
-      if (event.target.value.toLowerCase() === 'доска'){
+      if (event.target.value.toLowerCase() === 'доска') {
         this.changeListsOptions([])
       } else {
         this.getBoardLists(event.target.value)
-        .then(data => this.changeListsOptions(data))
-        .catch(error => this.changeListsOptions([]))
+          .then(data => this.changeListsOptions(data))
+          .catch(error => this.changeListsOptions([]))
       }
     },
 
     onHandleSubmit(event) {
-      if (this.boardSelector.value.toLowerCase() !== 'доска' && this.listSelector.value.toLowerCase() !== 'список') {
-        // this.createCard()
-        console.log(this.boardSelector.value, this.listSelector.value)
+      if (this.listSelector.value.toLowerCase() !== 'список') {
+        let newCard = {
+          name: 'Заказ #'+this.orderData.id,
+          desc: this.renderTemplate(this.orderData),
+          idList: this.listSelector.value,
+          pos: 'bottom'
+        }
+        this.createCard(newCard)
+          .then(data => {
+            this.addOrderIdToLocalStorage()
+            this.cardDone()
+          })
+      }
+    },
+
+    cardDone(){
+      let div = document.createElement('div')
+      div.classList.add('trello-card-done')
+      this.setChild(div ,true)
+    },
+
+    isAlreadyAdded(){
+      let ordersIds = JSON.parse(localStorage.getItem('trelloOrderIdsAdded')) || []
+      if (ordersIds.indexOf(this.orderData.id) > -1) return true
+      return false
+    },
+
+    addOrderIdToLocalStorage(){
+      let ordersIds = JSON.parse(localStorage.getItem('trelloOrderIdsAdded')) || []
+      ordersIds.push(this.orderData.id)
+      localStorage.setItem('trelloOrderIdsAdded', JSON.stringify(ordersIds))
+    },
+
+    _closeIfCardAddedOrInitController(){
+      if (this.isAlreadyAdded()){
+        this.cardDone()
+      } else {
+        this._createdSelectors()
       }
     },
 
     _init() {
       if (Trello.authorized()) {
-        this._createdSelectors()
+        this._closeIfCardAddedOrInitController()
       } else {
-        this.authonticated(this._createdSelectors)
+        this.authonticated(this._closeIfCardAddedOrInitController)
       }
     }
   }
 
   let onHandleTrelloControllerFirstClick = function (event) {
-    new TrelloController(event.target, event.target.dataOrderId)
+    let order = orders.find(el => {
+      if (el.id === Number.parseInt(event.target.dataset.orderId)) return el
+    })
+    new TrelloController(event.target, order)
     event.target.removeEventListener('click', onHandleTrelloControllerFirstClick)
   }
 
