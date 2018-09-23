@@ -3,86 +3,88 @@
 {% block meta_title %}Садовое хозяйство{% endblock %}
 
 {% block meta_description %}
-    <meta name="description" content='{{ producer.name }} - {{ meta_description }}'>
+<meta name="description" content='{{ producer.name }} - {{ meta_description }}'>
 {% endblock %}
 
 {% block body %}
-    <main class="profile producer-profile-main">
-        <div class="container producer-banner">
-            <img src="/{{ producer.photo_url }}" alt="">
-        </div>
-        <div class="container profile_title">
-            <div class="name_container name_container--producer row">
-                <div class="col-12 col-md-8">
-                    <h1>{{ producer.name }}</h1>
-                </div>
-                <div class="col-12 col-md-4 product-rating">
-                    {% for star in stars %}
-                        <span class="product-rating__icon--empty">
-                            <img src="{{ url_for( 'static', filename = star) }}" alt="">
-                        </span>
-                    {% endfor %}
-                    <span class="product-rating__number">
-                        {{ producer.rating }}
-                    </span>
-                    <span class="product-rating__votes">
-                        ({{ producer.votes }})
-                    </span>
-                </div>
-                {% if current_user.id == producer.id %}
-                    <p class="edit-profile col-12 col-sm-8">
-                        <a href="{{ url_for( 'edit_producer', producer_id = producer.id) }}">
-                            <img src="{{ url_for( 'static', filename = 'img/edit-regular.svg') }}">
-                            Редактировать
-                        </a>
-                    </p>
-                    {% if not is_trello_linked %}
-                        <button class='trellointegration-button' onclick="linkTrelloAccount({{current_user.id}})"> </button>
-                    {% endif %}
-                {% endif %}
+<main class="profile producer-profile-main">
+    <div class="container producer-banner">
+        <img src="/{{ producer.photo_url }}" alt="">
+    </div>
+    <div class="container profile_title">
+        <div class="name_container name_container--producer row">
+            <div class="col-12 col-md-8">
+                <h1>{{ producer.name }}</h1>
             </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
-                    <p>Контактное лицо:</p>
-                </div>
-                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
-                    <p class="main-text">{{ producer.person_to_contact }}</p>
-                </div>
+            <div class="col-12 col-md-4 product-rating">
+                {% for star in stars %}
+                <span class="product-rating__icon--empty">
+                    <img src="{{ url_for( 'static', filename = star) }}" alt="">
+                </span>
+                {% endfor %}
+                <span class="product-rating__number">
+                    {{ producer.rating }}
+                </span>
+                <span class="product-rating__votes">
+                    ({{ producer.votes }})
+                </span>
             </div>
-            <div class="row">
-                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
-                    <p>E-mail:</p>
+            {% if current_user.id == producer.id %}
+            <p class="edit-profile col-12 col-sm-8">
+                <a href="{{ url_for( 'edit_producer', producer_id = producer.id) }}">
+                    <img src="{{ url_for( 'static', filename = 'img/edit-regular.svg') }}">
+                    Редактировать
+                </a>
+            </p>
+                {% if not is_trello_linked %}
+                <div class="trellointegration">
+                    <button class="trellointegration-button" onclick="linkTrelloAccount({{current_user.id}})"></button>
+                    <input class="trellointegration-input" placeholder="название доски" type="text">
                 </div>
-                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
-                    <p class="main-text">{{ producer.email }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
-                    <p>Телефон:</p>
-                </div>
-                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
-                    <p class="main-text">{{ producer.phone_number }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
-                    <p>Адрес:</p>
-                </div>
-                <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
-                    <p class="main-text">{{ producer.address }}</p>
-                </div>
-            </div>
-            {% if producer.description %}
-                <div class="row my-4">
-                    <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
-                        <span class="main-text" id="mainProducerDescription"
-                              data-description="{{ producer.description }}"></span>
-                    </div>
-                </div>
+                 {% endif %}
             {% endif %}
         </div>
-    </main>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                <p>Контактное лицо:</p>
+            </div>
+            <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
+                <p class="main-text">{{ producer.person_to_contact }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                <p>E-mail:</p>
+            </div>
+            <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
+                <p class="main-text">{{ producer.email }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                <p>Телефон:</p>
+            </div>
+            <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
+                <p class="main-text">{{ producer.phone_number }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-4 col-md-3 col-xl-2 profile-keys">
+                <p>Адрес:</p>
+            </div>
+            <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
+                <p class="main-text">{{ producer.address }}</p>
+            </div>
+        </div>
+        {% if producer.description %}
+        <div class="row my-4">
+            <div class="col-12 col-sm-8 col-md-9 col-xl-10 profile-values">
+                <span class="main-text" id="mainProducerDescription" data-description="{{ producer.description }}"></span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
 {% endblock %}
