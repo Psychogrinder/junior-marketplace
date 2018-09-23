@@ -36,6 +36,9 @@
                             Редактировать
                         </a>
                     </p>
+                    {% if not is_trello_linked %}
+                        <button class='trellointegration-button' onclick="linkTrelloAccount({{current_user.id}})"> </button>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
