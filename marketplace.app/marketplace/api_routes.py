@@ -39,6 +39,7 @@ from marketplace.api_folder.product_api import (
     ProductComments, ProductRating)
 
 from marketplace.api_folder.password_api import PasswordRecovery
+from marketplace.api_folder.trello_api import TrelloWebHook
 
 # Orders
 api.add_resource(GlobalOrders, '/orders')
@@ -102,3 +103,6 @@ api.add_resource(ProductsSortedAndFiltered, '/products/filter')
 
 # Password
 api.add_resource(PasswordRecovery, '/password/recovery')
+
+# Trello
+api.add_resource(TrelloWebHook, '/trello/webhook')
