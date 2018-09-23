@@ -114,7 +114,7 @@ let trelloCardsCreator = function (orders) {
     },
 
     renderTemplate(value) {
-      let productItems = value.items.map( product => {
+      let productItems = value.items.map(product => {
         return `> **Продукт**: ${product.name}\n
                 > **Артикул**: ${product.id}\n
                 > **Количество**: ${product.quantity}\n`
@@ -129,9 +129,9 @@ let trelloCardsCreator = function (orders) {
                   \`\`\`\n
                   \`Статус: ${value.status}\`\n
                   `;
-              
+
       return productItems.join('\n---\n') + desc
-            
+
     },
 
     onHandleBoardChange(event) {
@@ -147,7 +147,7 @@ let trelloCardsCreator = function (orders) {
     onHandleSubmit(event) {
       if (this.listSelector.value.toLowerCase() !== 'список') {
         let newCard = {
-          name: 'Заказ #'+this.orderData.id,
+          name: 'Заказ #' + this.orderData.id,
           desc: this.renderTemplate(this.orderData),
           idList: this.listSelector.value,
           pos: 'bottom'
@@ -160,26 +160,26 @@ let trelloCardsCreator = function (orders) {
       }
     },
 
-    cardDone(){
+    cardDone() {
       let div = document.createElement('div')
       div.classList.add('trello-card-done')
-      this.setChild(div ,true)
+      this.setChild(div, true)
     },
 
-    isAlreadyAdded(){
+    isAlreadyAdded() {
       let ordersIds = JSON.parse(localStorage.getItem('trelloOrderIdsAdded')) || []
       if (ordersIds.indexOf(this.orderData.id) > -1) return true
       return false
     },
 
-    addOrderIdToLocalStorage(){
+    addOrderIdToLocalStorage() {
       let ordersIds = JSON.parse(localStorage.getItem('trelloOrderIdsAdded')) || []
       ordersIds.push(this.orderData.id)
       localStorage.setItem('trelloOrderIdsAdded', JSON.stringify(ordersIds))
     },
 
-    _closeIfCardAddedOrInitController(){
-      if (this.isAlreadyAdded()){
+    _closeIfCardAddedOrInitController() {
+      if (this.isAlreadyAdded()) {
         this.cardDone()
       } else {
         this._createdSelectors()
@@ -212,4 +212,35 @@ let trelloCardsCreator = function (orders) {
       cller.addEventListener('click', onHandleTrelloControllerFirstClick)
     })
   }
+}
+
+let linkTrelloAccount = function(producer_id) {
+  
+  let onSucces = function(){
+    console.log(Trello.token())
+    fetch(`/api/v1/producers/${producer_id}/trello-link`,{
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body:  JSON.stringify({
+        'trello_token': Trello.token(),
+        'board_name': 'Hello'
+      }),
+    })
+      .then( data => console.log(data.json()))
+  }
+
+  Trello.authorize({
+    type: 'popup',
+    name: 'Marketplace',
+    persist: false,
+    scope: {
+      read: 'true',
+      write: 'true'
+    },
+    expiration: 'never',
+    success: onSucces
+  })
+
 }
