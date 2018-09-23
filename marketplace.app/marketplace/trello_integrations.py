@@ -1,5 +1,6 @@
 from trello import TrelloClient, ResourceUnavailable, Unauthorized
 from contextlib import contextmanager
+from flask import url_for
 from marketplace.models import Producer, Product
 from marketplace import app
 
@@ -30,7 +31,7 @@ def _find_list(name, board_id, client):
     return all_lists[0]
 
 
-def create_card_if_producer_linked_trello_account(producer_id, order):
+def create_card_if_producer_linked_trello_account(producer_id, order, webhook=True):
     producer = Producer.query.get(producer_id)
     if producer is None or producer.trello_token is None:
         return
@@ -38,6 +39,13 @@ def create_card_if_producer_linked_trello_account(producer_id, order):
         board = client.get_board(producer.trello_board_id)
         list_new = board.all_lists()[0]
         _add_card(order, list_new, client)
+        if webhook:
+            callback_url = url_for('.trellowebhook', _external=True)
+            print('--------------------')
+            print(callback_url)
+            print('--------------------')
+            print(client.create_hook(callback_url, board.id, client.resource_owner_key))
+        
         
 
 def _create_card_template(order):
@@ -56,4 +64,3 @@ def _add_card(order, _list, client):
     name = f'Заказ №{order.id}'
     description = _create_card_template(order)
     _list.add_card(name, description)
-
