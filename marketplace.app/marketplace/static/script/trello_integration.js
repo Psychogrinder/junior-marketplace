@@ -121,13 +121,13 @@ let trelloCardsCreator = function (orders) {
       })
       let desc = `
                   \n\`\`\`\n
-                  Статус: ${value.status}
                   Доставка:  ${value.delivery_method}
-                  Покупатель: ${value.first_name} ${value.last_name}
+                  Покупатель: ${value.first_name}  ${value.last_name}
                   Адрес: ${value.delivery_address}
                   Телефон: ${value.consumer_phone}
                   Почта: ${value.consumer_email}
-                  \`\`\`
+                  \`\`\`\n
+                  \`Статус: ${value.status}\`\n
                   `;
               
       return productItems.join('\n---\n') + desc
@@ -200,12 +200,15 @@ let trelloCardsCreator = function (orders) {
       if (el.id === Number.parseInt(event.target.dataset.orderId)) return el
     })
     new TrelloController(event.target, order)
+    event.target.classList.remove('trello-init')
     event.target.removeEventListener('click', onHandleTrelloControllerFirstClick)
   }
 
   if (trelloController.length > 0) {
     trelloController.forEach(cller => {
-      cller.innerHTML = 'Нажмие для авторизации в Trello'
+      // let div = document.createElement('div')
+      cller.classList.add('trello-init')
+      // cller.appendChild(div)
       cller.addEventListener('click', onHandleTrelloControllerFirstClick)
     })
   }
