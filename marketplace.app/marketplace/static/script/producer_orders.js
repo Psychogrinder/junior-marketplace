@@ -114,7 +114,7 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="col-6">' +
                 '<span>№ </span>' +
                 '<span id="orderId' + orders[i].id + '">' + orders[i].id + '</span>' +
-                '<div class="trelloIntegration" style="height: 30px; background: #95dede;"> </div>' +
+                '<div class="trelloIntegration" data-order-id="' + orders[i].id + '"> </div>' +
                 '</div>' +
                 '<div class="col-2">' + orders[i].order_timestamp + '</div>' +
                 '<div class="col-3">' +
@@ -383,7 +383,7 @@ if ($('main.producer-orders').length > 0) {
                     $("#saveStatusOrderBtn" + items[i].id).hide();
                     $("#saveStatusOrderBtnTable" + items[i].id).hide();
                 }
-                trelloCardsCreator()
+                trelloCardsCreator(orders.orders)
             });
     }
 
