@@ -22,8 +22,13 @@
 
 .trellointegration-button{
     height: 20px;
-    width: 40px;
+    width: 60px;
     background-image: url('img/trello.png');
     background-repeat: no-repeat;
     background-size: contain;
+}
+
+.trellointegration-input{
+    height: 20px;
+    width: 150px;
 }
