@@ -1,9 +1,9 @@
-.trelloIntegration{
-    width: 100px;
-    height: 30px;
-    margin-left: 10px;
-    display: flex;
-}
+// .trelloIntegration{
+//     width: 100px;
+//     height: 30px;
+//     margin-left: 10px;
+//     display: flex;
+// }
 
 .trello-init{
     background-image: url('img/trello.png');
@@ -18,4 +18,12 @@
     background-size: contain;
     height: 100%;
     width: 100%;
+}
+
+.trellointegration-button{
+    height: 20px;
+    width: 40px;
+    background-image: url('img/trello.png');
+    background-repeat: no-repeat;
+    background-size: contain;
 }
