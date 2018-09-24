@@ -38,17 +38,20 @@
                                 {% endfor %}
                             </div>
                             <div class="product-rating product-rating--product-cart">
-                                {% for star in stars[product.id] %}
-                                    <span class="product-rating__icon--empty">
+                                <div>
+                                    {% for star in stars[product.id] %}
+                                        <span class="product-rating__icon--empty">
                                         <img src="{{ url_for( 'static', filename = star) }}" alt="">
                                     </span>
-                                {% endfor %}
-                                <span class="product-rating__number">
+                                    {% endfor %}
+                                    <span class="product-rating__number">
                                     {{ product.rating }}
                                 </span>
-                                <span class="product-rating__votes">
+                                    <span class="product-rating__votes">
                                     ({{ product.votes }})
                                 </span>
+                                </div>
+
                             </div>
                         </a>
                     </div>
