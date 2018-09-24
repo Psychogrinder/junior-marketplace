@@ -47,11 +47,7 @@ $(document).ready(function () {
             $('.invalid-feedback').css("display", "block");
         }
         else {
-            $('main').css('display', 'none');
             $('#loadingSpinner').css('display', 'block');
-            $('#singUpUser').removeClass('show');
-            $('#singUpUser').css("display", "none");
-            $('.modal-backdrop').css("display", "none");
 
             $.post("/api/v1/consumers",
                 {
@@ -76,8 +72,9 @@ $(document).ready(function () {
                             });
 
                     }
-                }).fail(function (data, textStatus, xhr) {
+                }).fail(function (data) {
                 if (data.status == 406) {
+                    $('#loadingSpinner').css('display', 'none');
                     $('#errorRegistrationConsumer').css('display', 'block');
                     $('#errorRegistrationConsumer').text(data.responseJSON.message);
                 }

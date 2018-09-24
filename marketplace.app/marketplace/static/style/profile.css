@@ -75,3 +75,8 @@
 .name_container--producer {
     padding-left: 0;
 }
+
+.producer-products-link {
+    display: flex;
+    justify-content: flex-end;
+}

@@ -15,6 +15,7 @@ $(document).ready(function () {
             var sorts_and_filters = {
                 price: null,
                 popularity: null,
+                rating: null,
                 category_name: null,
                 producer_name: null,
                 quantity: null,
@@ -31,15 +32,23 @@ $(document).ready(function () {
                 let selected_option_1 = $('#sortByPriceOrPopularity option:selected');
                 if (selected_option_1.val() === 'По цене ↑') {
                     sorts_and_filters['popularity'] = null;
+                    sorts_and_filters['rating'] = null;
                     sorts_and_filters['price'] = 'up';
                 }
                 if (selected_option_1.val() === 'По цене ↓') {
                     sorts_and_filters['popularity'] = null;
+                    sorts_and_filters['rating'] = null;
                     sorts_and_filters['price'] = 'down';
                 }
                 if (selected_option_1.val() === 'По популярности') {
                     sorts_and_filters['popularity'] = 'down';
+                    sorts_and_filters['rating'] = null;
                     sorts_and_filters['price'] = null
+                }
+                if (selected_option_1.val() === 'По рейтингу') {
+                    sorts_and_filters['popularity'] = null;
+                    sorts_and_filters['rating'] = 'down';
+                    sorts_and_filters['price'] = null;
                 }
 
                 let selected_option_2 = $('#sortByCategory option:selected');
