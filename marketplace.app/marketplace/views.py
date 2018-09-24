@@ -88,7 +88,7 @@ def edit_product(producer_id, product_id):
 
 @app.route('/producer/<int:producer_id>/create_product')
 def create_product(producer_id):
-    if current_user.is_authenticated and current_user.id == producer_id and current_user.entity == 'producer':
+    if current_user.is_authenticated and current_user.email_auth_status and current_user.id == producer_id and current_user.entity == 'producer':
         meta_description = 'Добавление товара Маркетплейс'
         return render_template('create_product.html', current_user=current_user, meta_description=meta_description)
     else:
