@@ -49,7 +49,8 @@ def order_access_required(rest_function):
     def order_access_access_wrapper(self, *args, **kwargs):
         id = kwargs['order_id']
         order = get_order_by_id(id)
-        if current_user.is_authenticated and current_user.id == order.producer_id:
+        if current_user.is_authenticated and (
+                current_user.id == order.producer_id or current_user.id == order.consumer_id):
             return rest_function(self, *args, **kwargs)
         else:
             account_access_denied()
