@@ -128,6 +128,7 @@ def post_orders(args: dict):
     phone = args['phone']
     email = args['email']
     orders = args['orders']
+    new_trello_card = []
     items = get_cart_by_consumer_id(consumer_id).items
     orders = json.loads(orders)
     for order in orders:
@@ -146,6 +147,8 @@ def post_orders(args: dict):
                               phone, email, consumer_id, order['producer_id'], first_name=first_name,
                               last_name=last_name)
             db.session.add(new_order)
-            create_card_if_producer_linked_trello_account(product.producer_id, new_order)
+            new_trello_card.append((new_order, order['producer_id']))
     clear_cart_by_consumer_id(consumer_id)
     db.session.commit()
+    for (order_card, producer_id) in new_trello_card:
+        create_card_if_producer_linked_trello_account.delay(producer_id, order_card.id)
