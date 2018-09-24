@@ -250,7 +250,7 @@ class Product(SetPhotoUrlMixin, RatedMixin, db.Model):
         regconfig='pg_catalog.russian'
     ))
 
-    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight='', description='',
+    def __init__(self, price, name, quantity, producer_id, category_id, measurement_unit, weight=None, description='',
                  photo_url='static/img/standard.png'):
         self.price = float(price)
         self.name = name

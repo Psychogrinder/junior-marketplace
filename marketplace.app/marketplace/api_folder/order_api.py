@@ -5,7 +5,8 @@ from marketplace.api_folder.schemas import order_schema_list, order_schema
 from marketplace.api_folder.utils import caching_utils
 import marketplace.api_folder.utils.cart_utils as cart_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
-from marketplace.api_folder.utils.login_utils import account_access_required, login_as_admin_required
+from marketplace.api_folder.utils.login_utils import account_access_required, login_as_admin_required, \
+    order_access_required
 
 order_args = ['orders', 'delivery_address', 'phone', 'email', 'consumer_id', 'status', 'total_cost', 'first_name',
               'last_name']
@@ -36,7 +37,7 @@ class GlobalOrders(Resource):
 
 class Orders(Resource):
 
-    @account_access_required
+    @order_access_required
     @get_cache
     def get(self, path, cache, **kwargs):
         if cache is None:
@@ -45,13 +46,15 @@ class Orders(Resource):
         else:
             return cache, 200
 
-    def put(self, order_id):
+    @order_access_required
+    def put(self, **kwargs):
         args = parser.parse_args()
-        return order_schema.dump(order_utils.put_order(args, order_id)).data, 201
-    
-    def delete(self, order_id):
-        cart_utils.increase_products_quantity_and_decrease_times_ordered(order_id)
-        return order_utils.delete_order_by_id(order_id), 202
+        return order_schema.dump(order_utils.put_order(args, kwargs['order_id'])).data, 201
+
+    @order_access_required
+    def delete(self, **kwargs):
+        cart_utils.increase_products_quantity_and_decrease_times_ordered(kwargs['order_id'])
+        return order_utils.delete_order_by_id(kwargs['order_id']), 201
 
 
 class UnprocessedOrdersByProducerId(Resource):

@@ -15,6 +15,7 @@ $(document).ready(function () {
             var sorts_and_filters = {
                 price: null,
                 popularity: null,
+                rating: null,
                 category_name: null,
                 producer_name: null,
                 quantity: null,
@@ -31,15 +32,23 @@ $(document).ready(function () {
                 let selected_option_1 = $('#sortByPriceOrPopularity option:selected');
                 if (selected_option_1.val() === 'По цене ↑') {
                     sorts_and_filters['popularity'] = null;
+                    sorts_and_filters['rating'] = null;
                     sorts_and_filters['price'] = 'up';
                 }
                 if (selected_option_1.val() === 'По цене ↓') {
                     sorts_and_filters['popularity'] = null;
+                    sorts_and_filters['rating'] = null;
                     sorts_and_filters['price'] = 'down';
                 }
                 if (selected_option_1.val() === 'По популярности') {
                     sorts_and_filters['popularity'] = 'down';
+                    sorts_and_filters['rating'] = null;
                     sorts_and_filters['price'] = null
+                }
+                if (selected_option_1.val() === 'По рейтингу') {
+                    sorts_and_filters['popularity'] = null;
+                    sorts_and_filters['rating'] = 'down';
+                    sorts_and_filters['price'] = null;
                 }
 
                 let selected_option_2 = $('#sortByCategory option:selected');
@@ -73,6 +82,16 @@ $(document).ready(function () {
                 }
             }
 
+            function normalize_price(price) {
+                let normalizePrice = price.split(' ');
+                let priceArr = normalizePrice[0].split(' ');
+                for (let i = 0; i < priceArr.length; i++) {
+                    priceArr[i] = Number(priceArr[i]);
+                }
+                priceArr = priceArr.join(' ');
+                return priceArr + ' ₽';
+            }
+
             function add_new_products(products, next_page_number) {
                 for (var i = 0; i < products.length; i++) {
                     $("#productsByCategory").append(
@@ -81,7 +100,7 @@ $(document).ready(function () {
                         '<div class="product-item-photo">' +
                         '<img src="/' + products[i].photo_url + '"></div>' +
                         '<div class="product-item-description" id="categoryItemDescription' + i + '">' +
-                        "<p>" + products[i].price + "</p>" +
+                        "<p>" + normalize_price(products[i].price) + "</p>" +
                         "<b>" + products[i].name + "</b>" +
                         '<p class="producer_name">' + products[i].producer_name + "</p>" +
                         "</div>" +
@@ -122,7 +141,8 @@ $(document).ready(function () {
                 }
                 if (next_page_number) {
                     $("#productsByCategory").append(
-                        '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                        '<div data-page-number="' + next_page_number + '" class="pageNumber" ' +
+                        'style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                     );
                 }
             }

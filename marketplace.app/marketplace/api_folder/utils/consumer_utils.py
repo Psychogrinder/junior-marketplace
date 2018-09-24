@@ -24,9 +24,10 @@ def post_consumer(args: dict):
     new_consumer = consumer_sign_up_schema.load(args).data
     db.session.add(new_consumer)
     db.session.commit()
-    # временно закоменчено, потому-что иначе ломает
-    #email_tools.send_confirmation_email(new_consumer.email)
+    email_tools.send_confirmation_email(new_consumer.email, new_consumer.first_name)
+
     return new_consumer
+
 
 
 def put_consumer(args: dict, consumer_id: int):

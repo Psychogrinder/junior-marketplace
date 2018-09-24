@@ -53,14 +53,22 @@ if ($('#producerProducts').length > 0) {
         let selected_option_1 = $('#sortProducerProducts option:selected');
         if (selected_option_1.val() === 'По цене ↑') {
             producer_sorts_and_filters['popularity'] = null;
+            producer_sorts_and_filters['rating'] = null;
             producer_sorts_and_filters['price'] = 'up';
         }
         if (selected_option_1.val() === 'По цене ↓') {
             producer_sorts_and_filters['popularity'] = null;
+            producer_sorts_and_filters['rating'] = null;
             producer_sorts_and_filters['price'] = 'down';
         }
         if (selected_option_1.val() === 'По популярности') {
             producer_sorts_and_filters['popularity'] = 'down';
+            producer_sorts_and_filters['rating'] = null;
+            producer_sorts_and_filters['price'] = null
+        }
+        if (selected_option_1.val() === 'По рейтингу') {
+            producer_sorts_and_filters['popularity'] = null;
+            producer_sorts_and_filters['rating'] = 'down';
             producer_sorts_and_filters['price'] = null;
         }
         let searchKeyWord = $("#producerProductsSearch").val();
@@ -78,6 +86,16 @@ if ($('#producerProducts').length > 0) {
         }
     }
 
+    function normalize_price(price) {
+        let normalizePrice = price.split(' ');
+        let priceArr = normalizePrice[0].split(' ');
+        for (let i = 0; i < priceArr.length; i++) {
+            priceArr[i] = Number(priceArr[i]);
+        }
+        priceArr = priceArr.join(' ');
+        return priceArr + ' ₽';
+    }
+
     function add_new_producer_products(products, next_page_number) {
         for (let i = 0; i < products.length; i++) {
             $("#producerProducts").append(
@@ -85,12 +103,9 @@ if ($('#producerProducts').length > 0) {
                 '<a href="/products/' + products[i].id + '">' +
                 '<div class="product-item-photo">' +
                 '<img src="/' + products[i].photo_url + '"></div>' +
-                '<div class="product-item-description" id="producerItemDescription' + i + '">' +
-                "<p>" + products[i].price + "</p>" +
+                '<div class="product-item-description" id="producerItemDescription' + products[i].id + '">' +
+                "<p>" + normalize_price(products[i].price) + "</p>" +
                 "<b>" + products[i].name + "</b>" +
-                '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
-                "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +
-                "</p>" +
                 "</div>" +
                 '<div class="product-rating product-rating--product-cart" id="productRating' +
                 products[i].id +
@@ -107,6 +122,14 @@ if ($('#producerProducts').length > 0) {
                     'Нет в наличии' +
                     '</p>'
                 )
+            }
+
+            if (localStorage.getItem("globalUserId") === producer_id) {
+                $('#producerItemDescription' + products[i].id).append(
+                    '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
+                    "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +
+                    "</p>"
+                );
             }
 
             for (let k = 0; k < products[i].stars.length; k++) {

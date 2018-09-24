@@ -32,6 +32,9 @@ if app.config.get('SENTRY_DSN'):
     else:
         sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
 from marketplace import _celery
+celery = _celery.make_celery(app)
+celery.conf.beat_schedule = _celery.setup_periodic_tasks()
+celery.conf.timezone = 'Europe/Moscow'
 
 mail = Mail(app)
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -41,7 +44,8 @@ api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
 login = LoginManager(app)
 migrate = Migrate(app, db)
-celery = _celery.make_celery(app)
+
+
 cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACHE_STORAGE_PORT'],
                     db=app.config['CACHE_STORAGE_DB'])
 REDIS_STORAGE_TIME = app.config['REDIS_STORAGE_TIME']
@@ -65,7 +69,7 @@ css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'styl
              'style/edit_profile.scss', 'style/profile.css', 'style/order_history.css', 'style/edit_product.scss',
              'style/producer_products.scss', 'style/producer_orders.css', 'style/order_registration.css',
              'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/croppie.css', 'style/image_crop.css',
-             'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/trello.scss',
+             'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/producers_list.css', 'style/trello.scss',
              filters=['pyscss', 'cssmin'], output='bundle.min.css')
 
 assets.register('css_all', css)
@@ -78,8 +82,7 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             'script/category.js', 'script/orders_badge.js', 'script/hullabaloo.js', 'script/producer_products.js',
             'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js', 'script/croppie.js',
             'script/image_crop.js', 'script/get_comments.js', 'script/review.js', 'script/jquery.inputmask.bundle.js',
-            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js', 'script/trello_integration.js',
-
+            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js', 'script/producers_list.js', 'script/trello_integration.js',
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)

@@ -47,6 +47,8 @@ $(document).ready(function () {
             $('.invalid-feedback').css("display", "block");
         }
         else {
+            $('#loadingSpinner').css('display', 'block');
+
             $.post("/api/v1/consumers",
                 {
                     email: email_registration,
@@ -65,16 +67,14 @@ $(document).ready(function () {
                                     localStorage.setItem("globalUserId", globalUserId);
                                     var globalUserEntity = data.entity;
                                     localStorage.setItem("globalUserEntity", globalUserEntity);
-                                    $('#singUpUser').removeClass('show');
-                                    $('#singUpUser').css("display", "none");
-                                    $('.modal-backdrop').css("display", "none");
                                     location.reload();
                                 }
                             });
 
                     }
-                }).fail(function (data, textStatus, xhr) {
+                }).fail(function (data) {
                 if (data.status == 406) {
+                    $('#loadingSpinner').css('display', 'none');
                     $('#errorRegistrationConsumer').css('display', 'block');
                     $('#errorRegistrationConsumer').text(data.responseJSON.message);
                 }

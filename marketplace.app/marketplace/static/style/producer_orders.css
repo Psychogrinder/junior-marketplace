@@ -153,3 +153,31 @@
 .item_order a {
     color: #5a5a5a;
 }
+
+.filter-form {
+    margin: 0;
+}
+
+.select-order-status {
+    margin-bottom: .5rem;
+}
+
+.filter-form-search--orders {
+    max-width: 200px;
+    margin-right: 1rem;
+}
+
+@media (max-width: 1000px) {
+    .change-view-dropdown {
+        display: none;
+    }
+
+    .producer-orders .common_global_container {
+        display: none;
+    }
+
+    .producer-orders .table_container.hidden {
+        display: block;
+    }
+}
+    

@@ -73,7 +73,7 @@ api.add_resource(SubcategoryNamesByParentSlugAndProducerName,
                  '/categories/<string:parent_category_slug>/producer/<string:producer_name>')
 api.add_resource(ProducerNamesByCategoryName, '/producers/<string:category_name>')
 api.add_resource(Subcategories, '/categories/<int:category_id>/subcategories/')
-api.add_resource(SubcategoriesBySlug, '/categories/slug/<string:category_slug>/subcategories/')
+api.add_resource(SubcategoriesBySlug, '/categories/slug/<string:category_slug>/subcategories')
 
 # Producers
 api.add_resource(GlobalProducers, '/producers')

@@ -12,9 +12,10 @@
     {% endassets %}
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}">
 </head>
+
 <body>
 {% include 'inc/header.html' %}
-
+{% include 'inc/loading_spinner.html' %}
 {% block body %}{% endblock %}
 
 {% include 'inc/footer.html' %}
