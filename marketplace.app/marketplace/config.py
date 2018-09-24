@@ -64,6 +64,8 @@ class Development(Base):
 class Production(Base):
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
 
+    SERVER_NAME = 'xtramarket.ru'
+
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
