@@ -18,3 +18,18 @@ def login(driver, email, pw):
 def logout(driver):
     driver.find_element_by_css_selector("button.btn:nth-child(1)").click()
     driver.find_element_by_id("logoutButton").click()
+
+
+def getEditArgs(driver):
+    first_name = driver.find_element_by_id("consumer_first_name")
+    last_name = driver.find_element_by_id("consumer_last_name")
+    patronymic = driver.find_element_by_id("consumer_patronymic")
+    phone = driver.find_element_by_id("consumer_phone")
+    address = driver.find_element_by_id("consumer_address")
+    elements = [first_name, last_name, patronymic, phone, address]
+
+    edited_data = []
+    for element in elements:
+        edited_data.append(element.get_attribute('value'))
+
+    return elements, edited_data
