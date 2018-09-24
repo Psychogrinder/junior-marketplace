@@ -43,7 +43,7 @@ def send_confirmation_email(user_email, contact):
     _send_email.delay(user_email, html, subject)
 
 
-def send_password_recovery_email(user_email):
+def send_password_recovery_email(user_email, contact):
     expires_on = datetime.utcnow()+timedelta(seconds=app.config['RECOVERY_PASSWORD_URL_EXPIRES'])
     payload = {'email': user_email, 'expires': expires_on.timestamp()}
     token = generate_confirmation_token(payload)
@@ -51,4 +51,4 @@ def send_password_recovery_email(user_email):
     data = datetime.now().strftime("%d.%m.%y")
     confirm_url = url_for('.password_recovery', token=token, _external=True)
     html = render_template('email_recovery_password.html', confirm_url=confirm_url, data=data)
-    # _send_email.delay(user_email, html, subject)
+    _send_email.delay(user_email, html, subject)
