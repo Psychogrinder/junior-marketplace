@@ -53,6 +53,8 @@ COMMENTS_PER_PAGE = app.config['COMMENTS_PER_PAGE']
 PRODUCTS_PER_PAGE = app.config['PRODUCTS_PER_PAGE']
 ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
+SITE_DOMAIN = app.config['SITE_DOMAIN']
+
 influx_client = InfluxDBClient(
     host=app.config['INFLUXDB_HOST'],
     database=app.config['INFLUXDB_DATABASE'],

@@ -5,7 +5,7 @@ import os
 from marketplace.forms import ResetPasswordForm
 import time
 from flask_restful import reqparse
-from marketplace import app, email_tools, db
+from marketplace import app, email_tools, db, SITE_DOMAIN
 from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils, \
     comment_utils
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
@@ -45,16 +45,16 @@ def sitemap():
             if not str(rule).startswith('/api/v1/'):
                 if len(rule.arguments) == 0:
                     pages.append(
-                        [rule, ten_days_ago]
+                        ['{}/{}'.format(SITE_DOMAIN, rule), ten_days_ago]
                     )
                 if str(rule) == '/producer/<int:producer_id>':
                     producers = producer_utils.get_all_producers()
                     for producer in producers:
-                        pages.append(['/producer/{}'.format(producer.id), ten_days_ago])
+                        pages.append(['{}/producer/{}'.format(SITE_DOMAIN, producer.id), ten_days_ago])
                 if str(rule) == '/products/<int:product_id>':
                     products = product_utils.get_all_products()
                     for product in products:
-                        pages.append(['/products/{}'.format(product.id), ten_days_ago])
+                        pages.append(['{}/products/{}'.format(SITE_DOMAIN, product.id), ten_days_ago])
     sitemap_xml = render_template('sitemap.xml', pages=pages)
     response = make_response(sitemap_xml)
     response.headers["Content-Type"] = "application/xml"
