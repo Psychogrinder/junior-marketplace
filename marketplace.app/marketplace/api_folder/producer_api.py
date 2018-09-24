@@ -9,7 +9,7 @@ from marketplace.api_folder.schemas import producer_schema_list, producer_schema
 from marketplace.api_folder.utils import caching_utils
 from marketplace.api_folder.utils.caching_utils import get_cache
 from marketplace.api_folder.utils.login_utils import account_access_required
-from marketplace.trello_integrations import create_new_board
+from marketplace.trello_integrations import create_new_board, commit_change
 
 producer_args = ['email', 'name', 'password', 'person_to_contact', 'description', 'phone_number', 'address']
 
@@ -109,6 +109,13 @@ class ProducerRating(Resource):
         return {'rating': producer_utils.get_producer_rating_by_id(kwargs['producer_id'])}, 200
 
 
+def create_new_trello_board_and_commit(board_name, trello_token, current_user):
+    create_new_board.apply_async(
+        (board_name, trello_token),
+        link=commit_change.s(trello_token, current_user.id)
+    )
+
+
 class ProducerLinkTrelloAccount(Resource):
 
     parser = reqparse.RequestParser()
@@ -118,8 +125,14 @@ class ProducerLinkTrelloAccount(Resource):
     @account_access_required
     def post(self, **kwargs):
         args = self.parser.parse_args()
-        board_id = create_new_board(args['board_name'], args['trello_token'])
-        current_user.link_trello_account(args['trello_token'], board_id)
-        db.session.commit()
-        
-        return {'new board': args['board_name']}, 200
+        create_new_trello_board_and_commit(
+            args['board_name'],
+            args['trello_token'],
+            current_user
+        )
+        # board_id = create_new_board(args['board_name'], args['trello_token'])
+        # current_user.link_trello_account(args['trello_token'], board_id)
+        # db.session.commit()
+
+
+        return {}, 200

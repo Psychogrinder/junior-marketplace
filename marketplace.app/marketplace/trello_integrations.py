@@ -5,7 +5,6 @@ from flask import url_for
 import requests
 from marketplace.models import Producer, Product, Order
 from marketplace import app, db, celery
-from marketplace.error_reports import send_report
 
 
 @contextmanager
@@ -17,6 +16,14 @@ def authenticated(token):
         pass
 
 
+@celery.task
+def commit_change(board_id, trello_token, producer_id):
+    producer = Producer.query.get(producer_id)
+    producer.link_trello_account(trello_token, board_id)
+    db.session.commit()
+
+
+@celery.task
 def create_new_board(name, token):
     with authenticated(token) as client:
         new_board = client.add_board(name, default_lists=False)
@@ -34,8 +41,10 @@ def _find_list(name, board_id, client):
     return all_lists[0]
 
 
-def create_card_if_producer_linked_trello_account(producer_id, order, webhook=True):
+@celery.task
+def create_card_if_producer_linked_trello_account(producer_id, order_id, webhook=True):
     producer = Producer.query.get(producer_id)
+    order = Order.query.get(order_id)
     if producer is None or producer.trello_token is None:
         return
     with authenticated(producer.trello_token) as client:
@@ -43,9 +52,8 @@ def create_card_if_producer_linked_trello_account(producer_id, order, webhook=Tr
         list_new = board.all_lists()[0]
         _add_card(order, list_new, client)
         if webhook:
-            callback_url = 'https://xtramarket.ru' + url_for('.trellowebhook', _external=False)
+            callback_url = 'https://xtramarket.ru' + url_for('trellowebhook', _external=False)
             hook = _create_webhook(callback_url, board.id, client)
-            send_report('web-hook', 'trello-init-hook')
 
 
 def _create_webhook(callback_url, id_model, client):
@@ -95,6 +103,7 @@ def _is_order_of_this_producer(producer_id, order_id):
         return None
 
 
+@celery.task
 def change_order_status(response):
     if not _check_type_hook(response, 'updateCard'):
         return None
@@ -112,5 +121,4 @@ def change_order_status(response):
     if not _is_order_of_this_producer(producer.id, order_id):
         return None
     Order.query.get(order_id).change_status(new_status)
-    send_report('status', 'app')
     db.session.commit()
