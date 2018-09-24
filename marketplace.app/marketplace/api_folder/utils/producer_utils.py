@@ -46,8 +46,7 @@ def post_producer(args: dict) -> Producer:
     db.session.commit()
     # make directory to store this producer's images
     os.mkdir(os.path.join(os.getcwd(), 'marketplace/static/img/user_images/' + str(new_producer.id) + '/'))
-    # временно закоменчено, потому-что иначе ломает
-    # email_tools.send_confirmation_email(new_producer.email, new_producer.person_to_contact)
+    email_tools.send_confirmation_email(new_producer.email, new_producer.person_to_contact)
     return new_producer
 
 
