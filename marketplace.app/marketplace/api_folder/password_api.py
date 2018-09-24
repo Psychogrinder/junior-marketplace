@@ -10,7 +10,9 @@ class PasswordRecovery(Resource):
 
     def post(self):
         email = self.parser.parse_args()['email']
-        if user_utils.get_user_by_email(email) is None:
+        user = user_utils.get_user_by_email(email)
+        if user is None:
             return False, 400
-        email_tools.send_password_recovery_email(email)
+        contact = user.first_name if user.entity == 'consumer' else user.person_to_contact
+        email_tools.send_password_recovery_email(email, contact)
         return True, 200
