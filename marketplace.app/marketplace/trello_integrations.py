@@ -17,7 +17,6 @@ def authenticated(token):
         pass
 
 
-@celery.task
 def create_new_board(name, token):
     with authenticated(token) as client:
         new_board = client.add_board(name, default_lists=False)
@@ -35,7 +34,6 @@ def _find_list(name, board_id, client):
     return all_lists[0]
 
 
-@celery.task
 def create_card_if_producer_linked_trello_account(producer_id, order, webhook=True):
     producer = Producer.query.get(producer_id)
     if producer is None or producer.trello_token is None:
