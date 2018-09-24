@@ -124,7 +124,7 @@ if ($('#producerProducts').length > 0) {
                 )
             }
 
-            if (localStorage.getItem("globalUserEntity") === 'producer') {
+            if (localStorage.getItem("globalUserId") === producer_id) {
                 $('#producerItemDescription' + products[i].id).append(
                     '<p class="edit-product"><a href="/producer/' + producer_id + '/products/' + products[i].id + '/edit">' +
                     "<img src='/static/img/edit-regular.svg'>Редактировать</a>" +

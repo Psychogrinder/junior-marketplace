@@ -66,9 +66,10 @@ def product_card(product_id):
 @app.route('/producer/<int:producer_id>/products')
 def producer_products(producer_id):
     meta_description = 'все товары производителя Маркетплейс'
+    producer = producer_utils.get_producer_by_id(producer_id)
     producer_has_products = product_utils.producer_has_products(producer_id)
     return render_template('producer_products.html', meta_description=meta_description,
-                           producer_has_products=producer_has_products)
+                           producer_has_products=producer_has_products, producer=producer)
 
 
 # Продумать что делать с неиспользованными id в методах

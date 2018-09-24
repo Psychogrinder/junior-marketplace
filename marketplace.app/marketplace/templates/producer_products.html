@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}Товары производителя {{ current_user.name }} {% endblock %}
+{% block meta_title %}Товары производителя {{ producer.name }} {% endblock %}
 
 {% block meta_description %}
-    <meta name="description" content='{{ current_user.name }} - {{ meta_description }}'>
+    <meta name="description" content='{{ producer.name }} - {{ meta_description }}'>
 {% endblock %}
 
 {% block body %}
 
     <main>
+        {% if not current_user.id == producer.id %}
+            <div class="container">
+                <h1>{{ producer.name }}</h1>
+            </div>
+        {% endif %}
         <div class="container products">
             {% if producer_has_products %}
                 <section class="product-filter container">
@@ -33,11 +38,11 @@
                                 </label>
                             </div>
                         </div>
-                        {% if current_user.entity =='producer' %}
+                        {% if current_user.id == producer.id %}
                             <div class="col-12 col-sm-6 col-md-3 filter-block">
-                                {% if current_user.email_auth_status == True %}
+                                {% if producer.email_auth_status == True %}
                                     <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
-                                current_user.id ) }}"> Добавить товар</a>
+                                producer.id ) }}"> Добавить товар</a>
                                 {% else %}
                                     <button class="btn btn-secondary add-product" disabled>Добавить товар</button>
                                     <p>Вы не можете добавлять товар, пока не подтвердите email</p>
@@ -50,11 +55,17 @@
 
                 </section>
             {% else %}
-                <section class="producer_products_empty">
-                    <h2>У вас нет товаров</h2>
-                    <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
-            current_user.id ) }}"> Добавить товар</a>
-                </section>
+                {% if current_user.id == producer.id %}
+                    <section class="producer_products_empty">
+                        <h2>У вас нет товаров</h2>
+                        <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
+                producer.id ) }}"> Добавить товар</a>
+                    </section>
+                {% else %}
+                    <section class="producer_products_empty">
+                        <h2>У производителя нет товаров</h2>
+                    </section>
+                {% endif %}
             {% endif %}
         </div>
     </main>
