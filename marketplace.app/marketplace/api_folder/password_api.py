@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from .utils import user_utils
+from marketplace.models import Producer, User, Consumer
 from marketplace import email_tools
 
 
@@ -10,9 +10,12 @@ class PasswordRecovery(Resource):
 
     def post(self):
         email = self.parser.parse_args()['email']
-        user = user_utils.get_user_by_email(email)
-        if user is None:
+        try:
+            if User.query.filter_by(email=email).first().entity == 'producer':
+                contact = Producer.query.filter_by(email=email).first().person_to_contact
+            else:
+                contact = Consumer.query.filter_by(email=email).first().first_name
+        except AttributeError:
             return False, 400
-        contact = user.first_name if user.entity == 'consumer' else user.person_to_contact
         email_tools.send_password_recovery_email(email, contact)
         return True, 200
