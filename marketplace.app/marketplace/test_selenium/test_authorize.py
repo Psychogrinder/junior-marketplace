@@ -9,12 +9,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from marketplace.models import User
 
 
-
 email_unique = uniqueEmail()
 driver = webdriver.Firefox()
 
 
-class TestCaseAuthorization(unittest.TestCase):
+class Authorization(unittest.TestCase):
 
     def setUp(self):
         self.url = 'http://127.0.0.1:8000'
@@ -36,23 +35,30 @@ class TestCaseAuthorization(unittest.TestCase):
         driver.find_element_by_id("re_passwordRegistration").send_keys(pw)
 
         driver.find_element_by_id("reg_button").click()
+
+
+    def test_02_logout(self):
         logout(driver)
 
-    def test_02_login(self):
+
+    def test_03_login_consumer(self):
         pw = self.password
+        email = self.consumer.email
 
-        login(driver, self.consumer.email, pw)
+        login(driver, email, pw)
         logout(driver)
-        login(driver, self.producer.email, pw)
 
 
-    def test_03_logout(self):
-        logout(driver)
+    def test_04_login_producer(self):
+        pw = self.password
+        email = self.producer.email
+
+        login(driver, email, pw)
+        driver.close()
+
+
 
 
     # def tearDown(self):
     #     self.driver.close()
 
-if __name__ == "__main__":
-    unittest.main()
-    driver.close()
