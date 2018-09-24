@@ -110,7 +110,13 @@ if ($('main.order-history').length > 0) {
                         // third row finish
                         '<div id="orderButtonSection' +
                         data.orders[i].id +
-                        '"></div>' +
+                        '" class="order-button-section">' +
+                        '<div class="row order-history-btn-block">' +
+                            '<div class="col-12-right">' +
+                        '<button class="btn btn-primary">Открыть диалог с производителем</button>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
                         '</div>' +
                         '<div class="modal fade" id="showOrderCancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
                         '<div class="modal-dialog modal-min-dialog" role="document">' +
@@ -181,7 +187,7 @@ if ($('main.order-history').length > 0) {
                         $('#orderButtonSection' + data.orders[i].id).append(
                             '<div class="row order-history-btn-block">' +
                             '<div class="col-12-right">' +
-                            '<button class="btn btn-primary btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
+                            '<button class="btn btn-danger btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
                             'ОТМЕНИТЬ ЗАКАЗ' +
                             '</button>' +
                             '</div>' +
