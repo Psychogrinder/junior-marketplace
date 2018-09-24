@@ -18,7 +18,7 @@ class Order(unittest.TestCase):
         self.producer = User.query.filter_by(entity='producer').order_by(User.id.desc()).first()
         self.users = [self.consumer, self.producer]
         self.password = "123123"
-        print(self.consumer.id, self.producer.id)
+
 
     def test_01_check_auth_status(self):
 
@@ -32,7 +32,11 @@ class Order(unittest.TestCase):
         product.click()
         p = driver.find_element_by_xpath("/html/body/main/div[2]/div[1]/div[2]/p")
 
-        self.assertIn('Авторизуйтесь для добавления товара в корзину', p.text)
+        if not driver.find_element_by_css_selector(".header-login"):
+            self.assertIn('Авторизуйтесь для добавления товара в корзину', p.text)
+        else:
+            add_to_cart = driver.find_element_by_class_name("btn-success")
+            self.assertIsNotNone(add_to_cart)
 
         driver.close()
 
