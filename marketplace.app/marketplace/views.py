@@ -1,4 +1,6 @@
-from flask import render_template, jsonify, redirect, url_for, flash, abort, request
+from datetime import datetime, timedelta
+
+from flask import render_template, jsonify, redirect, url_for, flash, abort, request, make_response
 import os
 from marketplace.forms import ResetPasswordForm
 import time
@@ -13,6 +15,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 # каталог
 @app.route('/')
 def index():
+    print(app.url_map)
     categories = Category.query.filter_by(parent_id=0).all()
     popular_products = product_utils.get_popular_products()
     meta_description = 'Маркетплейс фермерских товаров'
@@ -31,6 +34,31 @@ def index():
         meta_description=meta_description,
         stars=stars
     )
+
+
+@app.route('/sitemap.xml', methods=['GET'])
+def sitemap():
+    pages = []
+    ten_days_ago = datetime.now() - timedelta(days=10)
+    for rule in app.url_map.iter_rules():
+        if "GET" in rule.methods:
+            if not str(rule).startswith('/api/v1/'):
+                if len(rule.arguments) == 0:
+                    pages.append(
+                        [rule, ten_days_ago]
+                    )
+                if str(rule) == '/producer/<int:producer_id>':
+                    producers = producer_utils.get_all_producers()
+                    for producer in producers:
+                        pages.append(['/producer/{}'.format(producer.id), ten_days_ago])
+                if str(rule) == '/products/<int:product_id>':
+                    products = product_utils.get_all_products()
+                    for product in products:
+                        pages.append(['/products/{}'.format(product.id), ten_days_ago])
+    sitemap_xml = render_template('sitemap.xml', pages=pages)
+    response = make_response(sitemap_xml)
+    response.headers["Content-Type"] = "application/xml"
+    return response
 
 
 @app.route('/category/<category_name>')
