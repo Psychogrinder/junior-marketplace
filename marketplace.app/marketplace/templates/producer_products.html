@@ -35,8 +35,13 @@
                         </div>
                         {% if current_user.entity =='producer' %}
                             <div class="col-12 col-sm-6 col-md-3 filter-block">
-                                <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
+                                {% if current_user.email_auth_status == True %}
+                                    <a class="btn btn-secondary add-product" href="{{ url_for( 'create_product', producer_id =
                                 current_user.id ) }}"> Добавить товар</a>
+                                {% else %}
+                                    <button class="btn btn-secondary add-product" disabled>Добавить товар</button>
+                                    <p>Вы не можете добавлять товар, пока не подтвердите email</p>
+                                {% endif %}
                             </div>
                         {% endif %}
                     </form>
