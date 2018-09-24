@@ -44,7 +44,6 @@ class Orders(Resource):
             order = order_schema.dump(order_utils.get_order_by_id(kwargs['order_id'])).data
             return caching_utils.cache_json_and_get(path=path, response=order), 200
         else:
-            print("cahced")
             return cache, 200
 
     @order_access_required
@@ -55,7 +54,7 @@ class Orders(Resource):
     @order_access_required
     def delete(self, **kwargs):
         cart_utils.increase_products_quantity_and_decrease_times_ordered(kwargs['order_id'])
-        return order_utils.delete_order_by_id(kwargs['order_id']), 202
+        return order_utils.delete_order_by_id(kwargs['order_id']), 201
 
 
 class UnprocessedOrdersByProducerId(Resource):
