@@ -113,3 +113,8 @@
 .btn-order-history-cancel{
     margin-right: 15px;
 }
+
+
+.order-block-separator .order_history_info div {
+    padding: 0;
+}
