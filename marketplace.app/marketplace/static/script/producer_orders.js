@@ -73,10 +73,7 @@ if ($('main.producer-orders').length > 0) {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
 
-    socket.on('response', function (data) {
-        console.log('GOT A RESPONSE s');
-        console.log(data);
-        console.log('GOT A RESPONSE e');
+     function appendMessage(data) {
         $('#chat' + data['room']).append(
             '<div class="order-dialog__item">' +
             '<div class="row order-dialog__header">' +
@@ -91,11 +88,28 @@ if ($('main.producer-orders').length > 0) {
             '</div>' +
             '</div>' +
             '<div class="order-dialog__content main-text">' +
-            data['message'] +
+            data['body'] +
             '</div>' +
             '</div>'
         );
+    }
+
+    socket.on('response', function (data) {
+        console.log('GOT A RESPONSE s');
+        console.log(data);
+        console.log('GOT A RESPONSE e');
+        appendMessage(data);
     });
+
+    function load_message_history(order_id) {
+        $.get("/api/v1/chat/" + order_id,
+            function (data) {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
+                    appendMessage(data[i]);
+                }
+            })
+    }
 
     function joinRoom(order_id) {
         socket.emit('join', {
@@ -106,6 +120,7 @@ if ($('main.producer-orders').length > 0) {
 
     function startDialog(order_id) {
         $("#orderDialog" + order_id).show();
+        load_message_history(order_id);
         joinRoom(order_id);
     }
 
@@ -113,7 +128,7 @@ if ($('main.producer-orders').length > 0) {
         let inputField = $("#orderDialogMessage" + order_id);
         socket.emit('send_to_room', {
             room: order_id,
-            message: inputField.val()
+            body: inputField.val()
         });
         inputField.val('').focus()
     }

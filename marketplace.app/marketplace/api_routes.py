@@ -38,6 +38,7 @@ from marketplace.api_folder.product_api import (
     ProductComments, ProductRating)
 
 from marketplace.api_folder.password_api import PasswordRecovery
+from marketplace.api_folder.chat_api import ChatHistory
 
 # Orders
 api.add_resource(GlobalOrders, '/orders')
@@ -100,3 +101,6 @@ api.add_resource(ProductsSortedAndFiltered, '/products/filter')
 
 # Password
 api.add_resource(PasswordRecovery, '/password/recovery')
+
+# Chat
+api.add_resource(ChatHistory, '/chat/<int:room>')

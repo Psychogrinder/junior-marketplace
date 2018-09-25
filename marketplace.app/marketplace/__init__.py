@@ -15,6 +15,7 @@ import jsmin
 from flask_mail import Mail
 from influxdb import InfluxDBClient
 from raven.contrib.flask import Sentry
+from pymongo import MongoClient
 
 
 app = Flask(__name__)
@@ -62,8 +63,9 @@ influx_client = InfluxDBClient(
     password=app.config['INFLUXDB_PASSWORD'],
 )
 
+mongo_client = MongoClient('localhost', 27017)
 
-from marketplace import models, views, api_routes, chat_utils
+from marketplace import models, views, chat, api_routes
 from marketplace.models import Admin
 
 css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'style/footer.css', 'style/catalog.css',
