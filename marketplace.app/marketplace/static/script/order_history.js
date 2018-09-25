@@ -160,21 +160,13 @@ if ($('main.order-history').length > 0) {
                             '</p>' +
                             '</a>' +
                             '<p>' +
-                            items[k].price +
+                            items[k].price + ' / ' + items[k].measurement_unit +
                             '</p>' +
                             '<p>#' +
                             items[k].id +
                             '</p>' +
-                            '</div> <div class="col-5 col-lg-2">' +
-                            '<span>Вес:</span>' +
-                            '<span class="main-text"> ' +
-                            items[k].weight +
-                            '</span>' +
-                            '<span class="main-text"> ' +
-                            items[k].measurement_unit +
-                            '</span>' +
                             '</div>' +
-                            '<div class="col-7 col-lg-4 quantity_container">' +
+                            '<div class="col-7 col-lg-4 px-lg-0 quantity_container">' +
                             '<span>Количество: </span>' +
                             '<span class="main-text">' +
                             items[k].quantity +
