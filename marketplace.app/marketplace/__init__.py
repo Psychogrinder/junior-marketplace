@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
+from flask_socketio import SocketIO
 import os
 import logging
 import redis
@@ -17,6 +18,7 @@ from raven.contrib.flask import Sentry
 
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 assets = Environment(app)
 app.config.from_object(
     Development if os.getenv('FLASK_ENV') == 'development' else Production
@@ -61,7 +63,7 @@ influx_client = InfluxDBClient(
 )
 
 
-from marketplace import models, views, api_routes
+from marketplace import models, views, api_routes, chat_utils
 from marketplace.models import Admin
 
 css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'style/footer.css', 'style/catalog.css',
@@ -89,4 +91,4 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
 assets.register('js_all', js)
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    socketio.run(app)

@@ -1,4 +1,72 @@
 if ($('main.order-history').length > 0) {
+
+    // ========= Chat functionality start =========
+
+    // Use a "/test" namespace.
+    // An application can open a connection on multiple namespaces, and
+    // Socket.IO will multiplex all those connections on a single
+    // physical channel. If you don't care about multiple channels, you
+    // can set the namespace to an empty string.
+    namespace = '/chat';
+    // Connect to the Socket.IO server.
+    // The connection URL has the following format:
+    //     http[s]://<domain>:<port>[/<namespace>]
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+    // Event handler for new connections.
+    // The callback function is invoked when a connection with the
+    // server is established.
+    socket.on('connect', function () {
+        socket.emit('connected', {data: 'I\'m connected!'});
+    });
+
+    socket.on('response', function (data) {
+        console.log('GOT A RESPONSE s');
+        console.log(data);
+        console.log('GOT A RESPONSE e');
+        $('#chat' + data['room']).append(
+            '<div class="order-dialog__item">' +
+            '<div class="row order-dialog__header">' +
+            '<div class="col-4 col-sm-2 order-dialog__photo">' +
+            '<img src="/static/img/userpic.svg" alt="">' +
+            '</div>' +
+            '<div class="col-8 col-sm-7 order-dialog__name">' +
+            '<p class="main-text">' + data['username'] + '</p>' +
+            '</div>' +
+            '<div class="col-8 col-sm-3 order-dialog__date">' +
+            '<p>' + data['timestamp'] + '</p>' +
+            '</div>' +
+            '</div>' +
+            '<div class="order-dialog__content main-text">' +
+            data['message'] +
+            '</div>' +
+            '</div>'
+        );
+    });
+
+    function joinRoom(order_id) {
+        socket.emit('join', {
+            room: order_id
+        });
+        return false;
+    }
+
+    function startDialog(order_id) {
+        $("#orderDialog" + order_id).show();
+        joinRoom(order_id);
+    }
+
+    function sendToRoom(order_id) {
+        let inputField = $("#orderDialogMessage" + order_id);
+        socket.emit('send_to_room', {
+            room: order_id,
+            message: inputField.val()
+        });
+        inputField.val('').focus()
+    }
+
+    // ========= Chat functionality end =========
+
+
     function cancelOrder(order_id) {
         $.ajax({
             url: '/api/v1/orders/' + order_id,
@@ -112,6 +180,9 @@ if ($('main.order-history').length > 0) {
                         data.orders[i].id +
                         '"></div>' +
                         '</div>' +
+                        '<button type="button" class="btn btn-primary" onclick="startDialog(' +
+                        data.orders[i].id +
+                        ')"> Связаться с производителем </button>' +
                         '<div class="modal fade" id="showOrderCancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
                         '<div class="modal-dialog modal-min-dialog" role="document">' +
                         '<div class="modal-content">' +
@@ -133,6 +204,23 @@ if ($('main.order-history').length > 0) {
                         '</div>' +
                         '</div>' +
                         '</div>' +
+
+                        // chat window interface start
+                        '<section class="container order-dialog" id="orderDialog' + data.orders[i].id + '">' +
+                        '<div id="message' + data.orders[i].id + '">' +
+                        '</div>' +
+                        '<div class="messageHistory" id="chat' + data.orders[i].id + '">' +
+
+                        '</div>' +
+                        '<div class="order-dialog__form col-12 col-lg-10">' +
+                        '<textarea type="text" class="form-control" rows="4" id="orderDialogMessage' + data.orders[i].id + '" name="orderDialogMessage">' +
+                        '</textarea>' +
+                        '<div class="order-dialog__btn-block">' +
+                        '<button class="btn btn-secondary" onclick="sendToRoom(' + data.orders[i].id + ')">Отправить</button>' +
+                        '</div>' +
+                        '</div>' +
+                        '</section>' +
+                        // chat window interface end
                         '</div>'
                     );
                     let items = data.orders[i].items;
@@ -153,7 +241,7 @@ if ($('main.order-history').length > 0) {
                             '</div>' +
                             '<div class="col-7 col-lg-3 cart_product_stock_info">' +
                             '<a href="/products/' +
-                             items[k].id +
+                            items[k].id +
                             '">' +
                             '<p>' +
                             items[k].name +
@@ -200,7 +288,6 @@ if ($('main.order-history').length > 0) {
                             '</div>'
                         )
                     }
-
 
 
                     let next_page_number = data.page;

@@ -54,6 +54,72 @@ if ($('main.producer-orders').length > 0) {
         });
     }
 
+    // ========= Chat functionality start =========
+
+    // Use a "/test" namespace.
+    // An application can open a connection on multiple namespaces, and
+    // Socket.IO will multiplex all those connections on a single
+    // physical channel. If you don't care about multiple channels, you
+    // can set the namespace to an empty string.
+    namespace = '/chat';
+    // Connect to the Socket.IO server.
+    // The connection URL has the following format:
+    //     http[s]://<domain>:<port>[/<namespace>]
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+    // Event handler for new connections.
+    // The callback function is invoked when a connection with the
+    // server is established.
+    socket.on('connect', function () {
+        socket.emit('connected', {data: 'I\'m connected!'});
+    });
+
+    socket.on('response', function (data) {
+        console.log('GOT A RESPONSE s');
+        console.log(data);
+        console.log('GOT A RESPONSE e');
+        $('#chat' + data['room']).append(
+            '<div class="order-dialog__item">' +
+            '<div class="row order-dialog__header">' +
+            '<div class="col-4 col-sm-2 order-dialog__photo">' +
+            '<img src="/static/img/userpic.svg" alt="">' +
+            '</div>' +
+            '<div class="col-8 col-sm-7 order-dialog__name">' +
+            '<p class="main-text">' + data['username'] + '</p>' +
+            '</div>' +
+            '<div class="col-8 col-sm-3 order-dialog__date">' +
+            '<p>' + data['timestamp'] + '</p>' +
+            '</div>' +
+            '</div>' +
+            '<div class="order-dialog__content main-text">' +
+            data['message'] +
+            '</div>' +
+            '</div>'
+        );
+    });
+
+    function joinRoom(order_id) {
+        socket.emit('join', {
+            room: order_id
+        });
+        return false;
+    }
+
+    function startDialog(order_id) {
+        $("#orderDialog" + order_id).show();
+        joinRoom(order_id);
+    }
+
+    function sendToRoom(order_id) {
+        let inputField = $("#orderDialogMessage" + order_id);
+        socket.emit('send_to_room', {
+            room: order_id,
+            message: inputField.val()
+        });
+        inputField.val('').focus()
+    }
+
+    // ========= Chat functionality end =========
+
     // ===============================   AJAX   ===============================
 
     let currentOrders;
@@ -160,6 +226,25 @@ if ($('main.producer-orders').length > 0) {
                 '</div>' +
                 '</div>' +
                 '</div>' +
+                '<button type="button" class="btn btn-primary" onclick="startDialog(' +
+                orders[i].id +
+                ')"> Связаться с покупателем </button>' +
+                // chat window interface start
+                '<section class="container order-dialog" id="orderDialog' + orders[i].id + '">' +
+                '<div id="message' + orders[i].id + '">' +
+                '</div>' +
+                '<div class="messageHistory" id="chat' + orders[i].id + '">' +
+
+                '</div>' +
+                '<div class="order-dialog__form col-12 col-lg-10">' +
+                '<textarea type="text" class="form-control" rows="4" id="orderDialogMessage' + orders[i].id + '" name="orderDialogMessage">' +
+                '</textarea>' +
+                '<div class="order-dialog__btn-block">' +
+                '<button class="btn btn-secondary" onclick="sendToRoom(' + orders[i].id + ')">Отправить</button>' +
+                '</div>' +
+                '</div>' +
+                '</section>' +
+                // chat window interface end
                 '</div>'
             );
             let items = orders[i]['items'];
@@ -188,7 +273,7 @@ if ($('main.producer-orders').length > 0) {
                     '<div class="col-2">' +
                     '<div class="row">' +
                     '<span class="col-6">Единицы измерения </span>' +
-                    '<span class="main-text col-6">'+ items[p].measurement_unit + '</span>' +
+                    '<span class="main-text col-6">' + items[p].measurement_unit + '</span>' +
                     '</div>' +
                     '</div>' +
                     '<div class="col-2">Количество:</div>' +
@@ -279,12 +364,12 @@ if ($('main.producer-orders').length > 0) {
                     '<div class="main-text">' + items[p].name + '</div>'
                 );
                 $("#innerTableProductPrice" + orders[i].id).append(
-                    '<div class="main-text">' + items[p].price +'/' + items[p].measurement_unit + '</div>'
+                    '<div class="main-text">' + items[p].price + '/' + items[p].measurement_unit + '</div>'
                 );
                 $("#innerTableProductId" + orders[i].id).append(
                     '<div class="main-text">' + items[p].id + '</div>'
                 );
-                 $("#innerTableProductQuantity" + orders[i].id).append(
+                $("#innerTableProductQuantity" + orders[i].id).append(
                     '<div class="main-text">' + items[p].quantity + '</div>'
                 );
             }
