@@ -81,7 +81,7 @@ if ($('main.producer-orders').length > 0) {
             '<div class="order-dialog__item">' +
             '<div class="row order-dialog__header">' +
             '<div class="col-4 col-sm-2 order-dialog__photo">' +
-            '<img src="/static/img/userpic.svg" alt="">' +
+            '<img src="/' + data['photo_url'] + '" alt="">' +
             '</div>' +
             '<div class="col-8 col-sm-7 order-dialog__name">' +
             '<p class="main-text">' + data['username'] + '</p>' +

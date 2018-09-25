@@ -35,9 +35,14 @@ def send_room_message(data):
     print(f'New message -  {message} in room {room}')
     print('_____GOT A NEW message_END____')
 
+    if current_user.entity == 'producer':
+        username = current_user.person_to_contact
+    elif current_user.entity == 'consumer':
+        username = f'{current_user.first_name} {current_user.last_name}'
     emit('response',
          {'message': data['message'],
+          'photo_url': current_user.photo_url,
           'room': data['room'],
-          'username': 'TEMP_NAME',
+          'username': username,
           'timestamp': datetime.now().strftime('%d.%m.%y')},
          room=data['room'])
