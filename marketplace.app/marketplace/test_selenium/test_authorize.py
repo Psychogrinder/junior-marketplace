@@ -1,11 +1,9 @@
 from append_path import *
-from testing_utils import uniqueEmail, login, logout
+from testing_utils import login, logout
 import unittest
 from selenium import webdriver
 from marketplace.models import User
 
-
-email_unique = uniqueEmail()
 driver = webdriver.Firefox()
 
 class Authorization(unittest.TestCase):

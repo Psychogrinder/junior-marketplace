@@ -1,10 +1,11 @@
 from append_path import *
-from testing_utils import login, logout, getPhoneMask, getEditElements, setDictValues, \
+from testing_utils import uniqueEmail, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements
 import unittest
 from selenium import webdriver
 from marketplace.models import Category, User
 
+email_unique = uniqueEmail()
 driver = webdriver.Firefox()
 
 class TestConsumer(unittest.TestCase):
@@ -32,6 +33,7 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_id("passwordRegistration").send_keys(pw)
         driver.find_element_by_id("re_passwordRegistration").send_keys(pw)
         driver.find_element_by_id("reg_button").click()
+        logout(driver)
 
 
     def test_02_edit_consumer(self):
@@ -69,9 +71,6 @@ class TestConsumer(unittest.TestCase):
     def test_03_delete_consumer(self):
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
-        # driver.find_element_by_xpath("/html/body/div[5]/div/div/div[3]/button[1]").click() #cancel btn
-        # driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # again Delete profile btn
         driver.find_element_by_id("deleteConsumerBtn").click()
-
         self.assertIsNone(User.query.filter_by(id=self.consumer.id).first())
         driver.close()
