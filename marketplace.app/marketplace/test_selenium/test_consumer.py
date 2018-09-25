@@ -1,5 +1,4 @@
 from append_path import *
-
 from testing_utils import login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements
 import unittest
@@ -7,7 +6,6 @@ from selenium import webdriver
 from marketplace.models import Category, User
 
 driver = webdriver.Firefox()
-
 
 class TestConsumer(unittest.TestCase):
 
@@ -17,14 +15,12 @@ class TestConsumer(unittest.TestCase):
         self.producer = User.query.filter_by(entity='producer').order_by(User.id.desc()).first()
         self.users = [self.consumer, self.producer]
         self.password = "123123"
-
         self.load_data = {"first_name": "",
                           "last_name": "",
                           "patronymic": "",
                           "phone": "",
                           "address": "",
                           }
-
 
     def test_01_edit_consumer(self):
         login(driver, self.consumer.email, self.password)
@@ -56,3 +52,5 @@ class TestConsumer(unittest.TestCase):
                 self.assertEqual(phone_number, edited_data[arg])
             else:
                 self.assertEqual(load_data[key], edited_data[arg])
+
+        driver.close()

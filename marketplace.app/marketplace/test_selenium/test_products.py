@@ -1,5 +1,4 @@
 from append_path import *
-
 from testing_utils import login, logout
 import unittest
 from random import randint, choice
@@ -21,7 +20,6 @@ class TestOrder(unittest.TestCase):
 
     def test_01_check_auth_status(self):
         driver.get(self.url)
-
         login(driver, self.consumer.email, self.password)
 
         # select random category and product
@@ -38,13 +36,7 @@ class TestOrder(unittest.TestCase):
             btn_to_cart = driver.find_element_by_xpath("/html/body/main/div[2]/div[1]/div[2]/div/button")
             self.assertEqual('в корзину', btn_to_cart.text.lower())
 
-
+        driver.close()
     # def test_02_cart(self):
     #     login(driver, self.consumer.email, self.password)
     #     driver.find_element_by_class_name("header-card").click()
-    #     driver.close()
-
-
-
-
-

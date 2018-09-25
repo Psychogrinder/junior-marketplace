@@ -3,15 +3,11 @@ from testing_utils import uniqueEmail, login, logout
 import unittest
 
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from marketplace.models import User
 
 
 email_unique = uniqueEmail()
 driver = webdriver.Firefox()
-
 
 class Authorization(unittest.TestCase):
 
@@ -25,7 +21,6 @@ class Authorization(unittest.TestCase):
 
     def test_01_registration(self):
         url, pw = self.url, self.password
-
         driver.get(url)
         driver.find_element_by_css_selector(".header-login").click()
         driver.find_element_by_css_selector(
@@ -33,7 +28,6 @@ class Authorization(unittest.TestCase):
         driver.find_element_by_id("emailRegistration").send_keys(email_unique)
         driver.find_element_by_id("passwordRegistration").send_keys(pw)
         driver.find_element_by_id("re_passwordRegistration").send_keys(pw)
-
         driver.find_element_by_id("reg_button").click()
 
 
@@ -44,7 +38,6 @@ class Authorization(unittest.TestCase):
     def test_03_login_consumer(self):
         pw = self.password
         email = self.consumer.email
-
         login(driver, email, pw)
         logout(driver)
 
@@ -52,13 +45,7 @@ class Authorization(unittest.TestCase):
     def test_04_login_producer(self):
         pw = self.password
         email = self.producer.email
-
         login(driver, email, pw)
+        logout(driver)
+
         driver.close()
-
-
-
-
-    # def tearDown(self):
-    #     self.driver.close()
-
