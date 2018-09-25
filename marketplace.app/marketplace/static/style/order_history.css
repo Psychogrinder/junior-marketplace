@@ -167,6 +167,11 @@
     margin-left: auto;
 }
 
+.message-history {
+    overflow-y:scroll;
+    height:400px;
+}
+
 @media (max-width: 576px) {
     .order-dialog__header img {
         margin-bottom: 1rem;

@@ -224,7 +224,7 @@ if ($('main.order-history').length > 0) {
                         '<section class="container order-dialog" id="orderDialog' + data.orders[i].id + '">' +
                         '<div id="message' + data.orders[i].id + '">' +
                         '</div>' +
-                        '<div class="messageHistory" id="chat' + data.orders[i].id + '">' +
+                        '<div class="message-history" id="chat' + data.orders[i].id + '">' +
 
                         '</div>' +
                         '<div class="order-dialog__form col-12 col-lg-10">' +
