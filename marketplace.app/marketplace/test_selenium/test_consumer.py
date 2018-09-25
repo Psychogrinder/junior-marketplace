@@ -22,7 +22,19 @@ class TestConsumer(unittest.TestCase):
                           "address": "",
                           }
 
-    def test_01_edit_consumer(self):
+    def test_01_register_consumer(self):
+        url, pw = self.url, self.password
+        driver.get(url)
+        driver.find_element_by_css_selector(".header-login").click()
+        driver.find_element_by_css_selector(
+            "p.registration-link:nth-child(4) > a:nth-child(1)").click()
+        driver.find_element_by_id("emailRegistration").send_keys(email_unique)
+        driver.find_element_by_id("passwordRegistration").send_keys(pw)
+        driver.find_element_by_id("re_passwordRegistration").send_keys(pw)
+        driver.find_element_by_id("reg_button").click()
+
+
+    def test_02_edit_consumer(self):
         login(driver, self.consumer.email, self.password)
         driver.find_element_by_css_selector("button.btn:nth-child(1)").click() # User menu btn
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click() # Profile btn
@@ -53,7 +65,8 @@ class TestConsumer(unittest.TestCase):
             else:
                 self.assertEqual(load_data[key], edited_data[arg])
 
-    def test_02_delete_consumer(self):
+
+    def test_03_delete_consumer(self):
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
         # driver.find_element_by_xpath("/html/body/div[5]/div/div/div[3]/button[1]").click() #cancel btn
