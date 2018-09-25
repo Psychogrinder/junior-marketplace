@@ -1,7 +1,7 @@
 from append_path import *
 
 from testing_utils import login, logout, getPhoneMask, getEditElements, setDictValues, \
-    getCurrentDataFromElements
+    getDataFromElements
 import unittest
 from selenium import webdriver
 from marketplace.models import Category, User
@@ -33,7 +33,7 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click()  # Edit profile btn
 
         elements_to_edit = getEditElements(driver)
-        data_to_edit = getCurrentDataFromElements(elements_to_edit)
+        data_to_edit = getDataFromElements(elements_to_edit)
         save_profile = driver.find_element_by_id("save_consumer_profile")
         delete_profile = driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)") # Delete profile btn
 
@@ -44,11 +44,11 @@ class TestConsumer(unittest.TestCase):
             key = keys[arg]
             elements_to_edit[arg].clear()
             elements_to_edit[arg].send_keys(load_data[key])
-        edited_data = getCurrentDataFromElements(elements_to_edit)
+        edited_data = getDataFromElements(elements_to_edit)
         save_profile.click()
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click() # Edit profile btn
 
-        # verification that saved values corresponds to loading data
+        # verification that saved values corresponds loading data
         for arg in range(len(edited_data)):
             key = keys[arg]
             if key == "phone":
@@ -56,8 +56,3 @@ class TestConsumer(unittest.TestCase):
                 self.assertEqual(phone_number, edited_data[arg])
             else:
                 self.assertEqual(load_data[key], edited_data[arg])
-
-
-    # def tearDown(self):
-    #     self.driver.close()
-

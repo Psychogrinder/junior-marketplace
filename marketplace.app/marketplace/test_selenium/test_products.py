@@ -18,12 +18,6 @@ class TestOrder(unittest.TestCase):
         self.users = [self.consumer, self.producer]
         self.password = "123123"
 
-        self.load_data = {"first_name": "",
-                          "last_name": "",
-                          "patronymic": "",
-                          "phone": "",
-                          "address": "",
-                          }
 
     def test_01_check_auth_status(self):
         driver.get(self.url)
@@ -47,14 +41,10 @@ class TestOrder(unittest.TestCase):
 
     # def test_02_cart(self):
     #     login(driver, self.consumer.email, self.password)
-    #
     #     driver.find_element_by_class_name("header-card").click()
-    #
     #     driver.close()
 
 
 
 
-    # def tearDown(self):
-    #     self.driver.close()
 

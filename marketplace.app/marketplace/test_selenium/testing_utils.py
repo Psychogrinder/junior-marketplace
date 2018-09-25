@@ -34,7 +34,7 @@ def getPhoneMask(nums):
     return "+7({}){}-{}-{}".format(nums[:3], nums[3:6], nums[6:8], nums[8:10])
 
 
-def getCurrentDataFromElements(elements):
+def getDataFromElements(elements):
     edited_data = []
     for element in elements:
         edited_data.append(element.get_attribute('value'))
