@@ -42,6 +42,8 @@ class Base(object):
     INFLUXDB_HOST = 'influx'
     INFLUXDB_DATABASE = 'marketplace'
 
+    SITE_DOMAIN = 'https://xtramarket.ru'
+
 
 class Development(Base):
     SQLALCHEMY_DATABASE_URI = (

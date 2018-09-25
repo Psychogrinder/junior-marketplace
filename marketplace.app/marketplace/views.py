@@ -1,9 +1,11 @@
-from flask import render_template, jsonify, redirect, url_for, flash, abort, request
+from datetime import datetime, timedelta
+
+from flask import render_template, jsonify, redirect, url_for, flash, abort, request, make_response
 import os
 from marketplace.forms import ResetPasswordForm
 import time
 from flask_restful import reqparse
-from marketplace import app, email_tools, db
+from marketplace import app, email_tools, db, SITE_DOMAIN
 from marketplace.api_folder.utils import product_utils, category_utils, producer_utils, cart_utils, order_utils, \
     comment_utils
 from marketplace.models import Category, Product, Producer, Consumer, Order, User, Cart
@@ -11,8 +13,10 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 
 # каталог
+
 @app.route('/')
 def index():
+    # generate_sitemap.delay()
     categories = Category.query.filter_by(parent_id=0).all()
     popular_products = product_utils.get_popular_products()
     meta_description = 'Маркетплейс фермерских товаров'

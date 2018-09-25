@@ -1,6 +1,10 @@
+from datetime import timedelta
+
 from celery import Celery
 from celery.schedules import crontab
 from celery.signals import task_failure, worker_shutting_down
+from celery.task import periodic_task
+
 from marketplace.error_reports import send_report
 
 
@@ -30,6 +34,10 @@ def setup_periodic_tasks():
         'collect-stat-every-three-hours': {
             'task': 'marketplace.collect_statistics.send_orders_stat',
             'schedule': crontab(hour='*/3')
+        },
+        'generate-sitemap-every-day': {
+            'task': 'marketplace.sitemap_tools.generate_sitemap',
+            'schedule': crontab(hour='*/24')
         }
     }
 
