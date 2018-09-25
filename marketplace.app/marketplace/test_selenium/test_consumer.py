@@ -26,12 +26,12 @@ class TestConsumer(unittest.TestCase):
         login(driver, self.consumer.email, self.password)
         driver.find_element_by_css_selector("button.btn:nth-child(1)").click() # User menu btn
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click() # Profile btn
-        driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click()  # Edit profile btn
+        driver.find_element_by_css_selector(
+            ".edit-profile > a:nth-child(1)").click()  # Edit profile btn
 
         elements_to_edit = getEditElements(driver)
         data_to_edit = getDataFromElements(elements_to_edit)
         save_profile = driver.find_element_by_id("save_consumer_profile")
-        delete_profile = driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)") # Delete profile btn
 
         # filling new data in the fields on the Edit User Page
         load_data = setDictValues(self.load_data)
@@ -42,8 +42,8 @@ class TestConsumer(unittest.TestCase):
             elements_to_edit[arg].send_keys(load_data[key])
         edited_data = getDataFromElements(elements_to_edit)
         save_profile.click()
-        driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click() # Edit profile btn
 
+        driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click() # Edit profile btn
         # verification that saved values corresponds loading data
         for arg in range(len(edited_data)):
             key = keys[arg]
@@ -53,4 +53,12 @@ class TestConsumer(unittest.TestCase):
             else:
                 self.assertEqual(load_data[key], edited_data[arg])
 
+    def test_02_delete_consumer(self):
+        driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
+        driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
+        # driver.find_element_by_xpath("/html/body/div[5]/div/div/div[3]/button[1]").click() #cancel btn
+        # driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # again Delete profile btn
+        driver.find_element_by_id("deleteConsumerBtn").click()
+
+        self.assertIsNone(User.query.filter_by(id=self.consumer.id).first())
         driver.close()
