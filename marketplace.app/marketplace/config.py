@@ -39,6 +39,8 @@ class Base(object):
     PRODUCTS_PER_PAGE = 16
     ORDERS_PER_PAGE = 10
 
+    FIND_IN_XML_PREFIX = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
+
     INFLUXDB_HOST = 'influx'
     INFLUXDB_DATABASE = 'marketplace'
 
