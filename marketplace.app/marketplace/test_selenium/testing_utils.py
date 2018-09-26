@@ -6,20 +6,22 @@ from random import choice
 def uniqueEmail():
     return "mail_" + datetime.now().strftime('%f') + "@ya.ua"
 
+
 def uniqueShopName():
     return "Shop_name_" + datetime.now().strftime('%f')
+
 
 def login(driver, email, pw):
     url = 'http://127.0.0.1:8000'
     driver.get(url)
-    driver.find_element_by_xpath("/html/body/header/nav/div/div/a").click()
+    driver.find_element_by_css_selector("#navbarColor01 > a > img").click()
     driver.find_element_by_id("emailAuthorisation").send_keys(email)
     driver.find_element_by_id("passwordAuthorisation").send_keys(pw)
     driver.find_element_by_id("authButton").click()
 
 
 def logout(driver):
-    driver.find_element_by_xpath("/html/body/header/nav/div/div/div/button").click()
+    driver.find_element_by_css_selector(".dropdown-toggle").click()
     driver.find_element_by_id("logoutButton").click()
 
 

@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 unique_email = uniqueEmail()
 unique_shop_name = uniqueShopName()
 driver = webdriver.Firefox()
+driver.maximize_window()
 
 class TestProducer(unittest.TestCase):
 
@@ -28,8 +29,8 @@ class TestProducer(unittest.TestCase):
         driver.get(self.url)
         data = self.reg_data
 
-        driver.find_element_by_xpath(
-            "/html/body/footer/div/div/div[2]/p[1]/a").click() #reg Producer
+        driver.find_element_by_css_selector(
+            "div.col-12:nth-child(2) > p:nth-child(2) > a:nth-child(1)").click() #reg Producer
         driver.find_element_by_id("emailRegProducer").send_keys(data["email"])
         driver.find_element_by_id("passwordRegProducer").send_keys(data["password"])
         driver.find_element_by_id("rePasswordRegProducer").send_keys(data["password"])
@@ -39,7 +40,7 @@ class TestProducer(unittest.TestCase):
         driver.find_element_by_id("addressRegProducer").send_keys(data["address"])
         driver.find_element_by_id("descriptionRegProducer").send_keys(data["desc"])
         driver.find_element_by_id("registrationProducer").click()
-
+        driver.implicitly_wait(2)
 
     def test_02_producer_logout(self):
         logout(driver)
@@ -52,8 +53,8 @@ class TestProducer(unittest.TestCase):
 
     def test_04_producer_go_to_edit_profile(self):
         driver.implicitly_wait(2)
-        driver.find_element_by_xpath("/html/body/header/nav/div/div/div/button").click()  # user menu
-        driver.find_element_by_xpath("/html/body/header/nav/div/div/div/div/a[1]").click()  # go to profile
+        driver.find_element_by_css_selector(".dropdown-toggle").click()  # user menu
+        driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click()  # go to profile
 
 
     def test_05_producer_profile_is_data_correct(self):
@@ -73,21 +74,24 @@ class TestProducer(unittest.TestCase):
             else:
                 self.assertEqual(profile_data[key], self.reg_data[key])
 
-        driver.close()
-
-
-
-
-
 
     # def test_05_producer_edit_profile(self):
     #     pass
 
 
-    # def test_06_delete_producer(self):
-    #     driver.find_element_by_xpath("/html/body/header/nav/div/div/div/button").click() # user menu
-    #     driver.find_element_by_xpath("/html/body/header/nav/div/div/div/div/a[1]").click() # go to profile
+    def test_06_delete_producer(self):
+        driver.implicitly_wait(2)
+        driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click() #edit profile
+        driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click() # go to modal delete
+        driver.find_element_by_id("deleteProducerBtn").click()  # delete profile
+
+        #TODO cancel button click; attach id to the button
+        # driver.find_element_by_xpath("/html/body/div[5]/div/div/div[3]/button[1]").click()
+        # driver.find_element_by_css_selector(
+        #     "deleteProfileProducer > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)")\
+        #     .click()
 
 
+        # driver.close()
 
 
