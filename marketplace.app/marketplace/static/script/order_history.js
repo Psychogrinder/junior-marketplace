@@ -19,6 +19,7 @@ if ($('main.order-history').length > 0) {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
 
+
     function appendMessage(data) {
         // Если сообщения относятся к разным дням, то прикрепляем разделитель формата 02.07.2018
         let message_date = data.timestamp.split(' ')[1].split('.');

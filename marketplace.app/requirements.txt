@@ -28,5 +28,6 @@ Flask-WTF
 pyscss
 influxdb
 raven[flask]
+py-trello
 eventlet
 pymongo

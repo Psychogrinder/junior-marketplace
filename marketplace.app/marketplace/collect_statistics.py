@@ -58,7 +58,7 @@ def collect_orders_stat():
     return points
 
 
-@celery.task
+@celery.task(name='collect_statistics.send_orders_stat')
 def send_orders_stat():
     points = []
     timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -68,7 +68,7 @@ def send_orders_stat():
         influx_client.write_points(points)
 
 
-@celery.task
+@celery.task(name='collect_statistics.send_users_count_stat')
 def send_users_count_stat():
     points = []
     timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
