@@ -36,21 +36,19 @@ class TestConsumer(unittest.TestCase):
         logout(driver)
 
 
-    def test_02_go_to_edit_consumer_profile(self):
+    def test_02_edit_consumer(self):
         login(driver, self.consumer.email, self.password)
         driver.find_element_by_css_selector("button.btn:nth-child(1)").click() # User menu btn
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click() # Profile btn
         driver.find_element_by_css_selector(
             ".edit-profile > a:nth-child(1)").click()  # Edit profile btn
 
-    
-    def test_03_edit_consumer_profile(self):
         elements_to_edit = getEditElements(driver)
         data_to_edit = getDataFromElements(elements_to_edit)
         save_profile = driver.find_element_by_id("save_consumer_profile")
 
         # filling new data in the fields on the Edit User Page
-        load_data = setDictValues(self.load_data) #set random user data to edit
+        load_data = setDictValues(self.load_data)
         keys = list(load_data.keys())
         for arg in range(len(data_to_edit)):
             key = keys[arg]
