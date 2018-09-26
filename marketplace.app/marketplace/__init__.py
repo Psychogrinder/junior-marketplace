@@ -56,6 +56,9 @@ COMMENTS_PER_PAGE = app.config['COMMENTS_PER_PAGE']
 PRODUCTS_PER_PAGE = app.config['PRODUCTS_PER_PAGE']
 ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
+SITE_DOMAIN = app.config['SITE_DOMAIN']
+FIND_IN_XML_PREFIX = app.config['FIND_IN_XML_PREFIX']
+
 influx_client = InfluxDBClient(
     host=app.config['INFLUXDB_HOST'],
     database=app.config['INFLUXDB_DATABASE'],
@@ -64,9 +67,11 @@ influx_client = InfluxDBClient(
 )
 
 
+
+
 from marketplace import models, views, api_routes
 from marketplace.models import Admin
-from marketplace import collect_statistics
+from marketplace import collect_statistics, sitemap_tools
 
 css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'style/footer.css', 'style/catalog.css',
              'style/modal.css', 'style/category.scss', 'style/breadcrumbs.css', 'style/card.scss', 'style/cart.scss',
