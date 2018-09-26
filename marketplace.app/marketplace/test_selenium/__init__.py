@@ -5,13 +5,12 @@ from test_producer import TestProducer
 import unittest
 
 
-auth = unittest.TestLoader().loadTestsFromTestCase(Authorization)
-order = unittest.TestLoader().loadTestsFromTestCase(TestProducts)
+products = unittest.TestLoader().loadTestsFromTestCase(TestProducts)
 consumer = unittest.TestLoader().loadTestsFromTestCase(TestConsumer)
 producer = unittest.TestLoader().loadTestsFromTestCase(TestProducer)
 
 
-test_suite = unittest.TestSuite([auth, order, consumer, producer])
+test_suite = unittest.TestSuite([products, consumer, producer])
 
 
 unittest.TextTestRunner(verbosity=2).run(test_suite)

@@ -3,7 +3,7 @@ from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMa
     getDataFromElements
 import unittest
 from selenium import webdriver
-from marketplace.models import Category, User
+from marketplace.models import User
 
 unique_email = uniqueEmail()
 unique_shop_name = uniqueShopName()
@@ -14,8 +14,6 @@ class TestConsumer(unittest.TestCase):
     def setUp(self):
         self.url = 'http://127.0.0.1:8000'
         self.consumer = User.query.filter_by(entity='consumer').order_by(User.id.desc()).first()
-        self.producer = User.query.filter_by(entity='producer').order_by(User.id.desc()).first()
-        self.users = [self.consumer, self.producer]
         self.password = "123123"
         self.load_data = {"first_name": "",
                           "last_name": "",
@@ -24,7 +22,7 @@ class TestConsumer(unittest.TestCase):
                           "address": "",
                           }
 
-    def test_01_register_consumer(self):
+    def test_01_consumer_register(self):
         url, pw = self.url, self.password
         driver.get(url)
         driver.find_element_by_css_selector(".header-login").click()
@@ -34,18 +32,24 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_id("passwordRegistration").send_keys(pw)
         driver.find_element_by_id("re_passwordRegistration").send_keys(pw)
         driver.find_element_by_id("reg_button").click()
+
+
+    def test_02_consumer_logout(self):
         logout(driver)
 
 
-    def test_02_go_to_edit_consumer_profile(self):
+    def test_03_consumer_login(self):
         login(driver, self.consumer.email, self.password)
+
+
+    def test_04_consumer_go_to_edit_profile(self):
         driver.find_element_by_css_selector("button.btn:nth-child(1)").click() # User menu btn
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click() # Profile btn
         driver.find_element_by_css_selector(
             ".edit-profile > a:nth-child(1)").click()  # Edit profile btn
 
 
-    def test_03_edit_consumer_profile(self):
+    def test_05_consumer_edit_profile(self):
         elements_to_edit = getEditElements(driver)
         data_to_edit = getDataFromElements(elements_to_edit)
         save_profile = driver.find_element_by_id("save_consumer_profile")
@@ -71,7 +75,7 @@ class TestConsumer(unittest.TestCase):
                 self.assertEqual(load_data[key], edited_data[arg])
 
 
-    def test_04_delete_consumer(self):
+    def test_06_delete_consumer(self):
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
         driver.find_element_by_id("deleteConsumerBtn").click()
