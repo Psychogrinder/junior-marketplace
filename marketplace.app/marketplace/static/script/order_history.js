@@ -81,7 +81,7 @@ if ($('main.order-history').length > 0) {
 
     function startDialog(order_id) {
         $("#orderDialog" + order_id).show();
-        $("#connectCustomer" + order_id).css('display', 'none');
+        $("#talkToProducer" + order_id).css('display', 'none');
         load_message_history(order_id);
         joinRoom(order_id);
     }
@@ -141,6 +141,10 @@ if ($('main.order-history').length > 0) {
             let lastElement = $('#chat' + id + ' div:last-child');
             if (lastElement.length > 0) {
                 if (isInViewport(lastElement)) {
+                    // Сразу удаляем из сэта, чтобы по следующему скроллу не включать его в цикл
+                    orders_with_unread_messages.delete(id);
+                    // Удаляям бадж с кнопки "Связаться с производителем
+                    $('#talkToProducer' + id).html(' Связаться с производителем ');
                     console.log('YAY');
                     // В данном случае entity - это человек, чьи сообщения были непрочитаны.
                     $.post('/api/v1/chat',
@@ -149,7 +153,7 @@ if ($('main.order-history').length > 0) {
                             entity: 'producer'
                         },
                         function (data) {
-                            console.log
+                            console.log(data);
                         })
                 }
             }
@@ -230,11 +234,11 @@ if ($('main.order-history').length > 0) {
                         '<div class="order-buttons-section" id="orderButtonSection' +
                         data.orders[i].id +
                         '">' +
-                        '<button type="button" class="btn btn-primary" id="connectCustomer' +
+                        '<button type="button" class="btn btn-primary" id="talkToProducer' +
                         data.orders[i].id +
                         '" onclick="startDialog(' +
                         data.orders[i].id +
-                        ')"> Связаться с производителем <span class="badge badge-pill badge-secondary">1</span></button>' +
+                        ')"> Связаться с производителем </button>' +
                         '</div>' +
                         '</div>' +
                         '<div class="modal fade" id="showOrderCancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
@@ -340,9 +344,12 @@ if ($('main.order-history').length > 0) {
                             '</div>'
                         )
                     }
-                    // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
+
                     if (data.orders[i].has_unread_messages) {
+                        // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
                         orders_with_unread_messages.add(data.orders[i].id);
+                        // Отображаем бадж на кнопках "Связаться с производителем".
+                        $('#talkToProducer' + data.orders[i].id).html(' Связаться с производителем <span id="messageBadge' + data.orders[i].id + '" class="badge badge-pill badge-secondary">1</span> ')
                     }
                 }
                 let next_page_number = data.page;

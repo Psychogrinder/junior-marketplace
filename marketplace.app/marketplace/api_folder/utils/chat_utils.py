@@ -1,6 +1,7 @@
 # messages - то коллекция всех сообщений в базе данных message-history
 from marketplace.chat import messages
 from marketplace.models import Order
+from marketplace import db
 
 
 def get_messages_by_room(room: int) -> list:
