@@ -57,3 +57,19 @@ def setDictValues(data):
         else:
             data[key] = choice(names)
     return data
+
+
+def setNewKeysForDict(text_arr):
+    keys, values = text_arr[0], text_arr[1]
+    eng_keys = []
+    for k in keys:
+        if k == 'Контактное лицо:':
+            eng_keys.append('contact')
+        elif k == 'E-mail:':
+            eng_keys.append('email')
+        elif k == 'Телефон:':
+            eng_keys.append('phone')
+        elif k == 'Адрес:':
+            eng_keys.append('address')
+
+    return dict(zip(eng_keys, values))
