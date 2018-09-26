@@ -130,9 +130,4 @@ class ProducerLinkTrelloAccount(Resource):
             args['trello_token'],
             current_user
         )
-        # board_id = create_new_board(args['board_name'], args['trello_token'])
-        # current_user.link_trello_account(args['trello_token'], board_id)
-        # db.session.commit()
-
-
         return {}, 200
