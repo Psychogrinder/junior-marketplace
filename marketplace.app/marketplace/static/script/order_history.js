@@ -222,8 +222,6 @@ if ($('main.order-history').length > 0) {
 
                         // chat window interface start
                         '<section class="container order-dialog" id="orderDialog' + data.orders[i].id + '">' +
-                        '<div id="message' + data.orders[i].id + '">' +
-                        '</div>' +
                         '<div class="message-history" id="chat' + data.orders[i].id + '">' +
 
                         '</div>' +

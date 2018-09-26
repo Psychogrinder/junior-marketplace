@@ -29,3 +29,4 @@ pyscss
 influxdb
 raven[flask]
 eventlet
+pymongo

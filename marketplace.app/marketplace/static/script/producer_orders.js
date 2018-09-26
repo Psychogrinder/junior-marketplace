@@ -246,8 +246,6 @@ if ($('main.producer-orders').length > 0) {
                 ')"> Связаться с покупателем </button>' +
                 // chat window interface start
                 '<section class="container order-dialog" id="orderDialog' + orders[i].id + '">' +
-                '<div id="message' + orders[i].id + '">' +
-                '</div>' +
                 '<div class="messageHistory" id="chat' + orders[i].id + '">' +
 
                 '</div>' +
