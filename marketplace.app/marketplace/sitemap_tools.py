@@ -1,22 +1,36 @@
+import os
 from datetime import datetime
 
 from flask import render_template
+import xml.etree.ElementTree as ET
 
-from marketplace import app, SITE_DOMAIN, celery
+from marketplace import app, SITE_DOMAIN, celery, FIND_IN_XML_PREFIX
 from marketplace.api_folder.utils import product_utils, producer_utils
 
 
 @celery.task(name='sitemap_tools.update_global_sitemap')
 def update_global_sitemap():
     pages = []
-    cur_date = datetime.now()
     producers = producer_utils.get_all_producers()
-    pages.append(['{}/static_sitemap.xml'.format(SITE_DOMAIN), cur_date])
+    if os.path.isfile('static_sitemap.xml'):
+        static_mod_data = get_modification_date('static_sitemap.xml')
+        pages.append(['{}/static_sitemap.xml'.format(SITE_DOMAIN), static_mod_data])
     for producer in producers:
-        pages.append(['{}/producer_sitemap{}.xml'.format(SITE_DOMAIN, producer.id), cur_date])
+        path = 'producer_sitemap{}.xml'.format(producer.id)
+        if os.path.isfile(path):
+            mod_date = get_modification_date(path)
+            pages.append(['{}/{}'.format(SITE_DOMAIN, path), mod_date])
     sitemap_xml = render_template('global_sitemap.xml', pages=pages)
     with open('sitemap.xml', 'w+') as sitemap:
         sitemap.write(sitemap_xml)
+
+
+def get_modification_date(path):
+    tree = ET.parse(path)
+    root = tree.getroot()
+    mod_date = root.find('{}url'.format(FIND_IN_XML_PREFIX)).find(
+        '{}lastmod'.format(FIND_IN_XML_PREFIX)).text
+    return mod_date
 
 
 @celery.task(name='sitemap_tools.update_static_sitemap')
