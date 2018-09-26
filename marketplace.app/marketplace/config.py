@@ -43,7 +43,7 @@ class Base(object):
     INFLUXDB_DATABASE = 'marketplace'
 
     TRELLO_API_KEY = '15ff34e4152f835730b1ad59f830448a'
-    TRELLO_BOARD_LISTS = ['Новый', 'Обработка', 'Сбор заказа', 'Доставка', 'Выполнено']
+    TRELLO_BOARD_LISTS = ['Не обработан', 'Обрабатывается', 'Отправлен', 'Готов к самовывозу', 'Завершен']
 
 
 class Development(Base):
@@ -63,8 +63,6 @@ class Development(Base):
 
 class Production(Base):
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
-
-    SERVER_NAME = 'xtramarket.ru'
 
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
