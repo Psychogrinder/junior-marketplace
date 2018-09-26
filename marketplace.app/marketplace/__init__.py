@@ -22,6 +22,9 @@ app.config.from_object(
     Development if os.getenv('FLASK_ENV') == 'development' else Production
 )
 
+if os.getenv('CELERY_APP'):
+    app.config['SERVER_NAME'] = 'xtramarket.ru'
+
 if app.config.get('SENTRY_DSN'):
     if os.getenv('CELERY_APP'):
         from raven import Client
