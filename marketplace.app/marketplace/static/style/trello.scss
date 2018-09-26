@@ -1,0 +1,34 @@
+// .trelloIntegration{
+//     width: 100px;
+//     height: 30px;
+//     margin-left: 10px;
+//     display: flex;
+// }
+
+.trello-init{
+    background-image: url('img/trello.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
+}
+
+.trello-card-done{
+    background-image: url('img/trello_done.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
+    width: 100%;
+}
+
+.trellointegration-button{
+    height: 20px;
+    width: 60px;
+    background-image: url('img/trello.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.trellointegration-input{
+    height: 20px;
+    width: 150px;
+}

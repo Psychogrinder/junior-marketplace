@@ -43,6 +43,10 @@ class Base(object):
     INFLUXDB_DATABASE = 'marketplace'
 
     SITE_DOMAIN = 'https://xtramarket.ru'
+  
+    TRELLO_API_KEY = '15ff34e4152f835730b1ad59f830448a'
+    TRELLO_BOARD_LISTS = ['Не обработан', 'Обрабатывается', 'Отправлен', 'Готов к самовывозу', 'Завершён']
+
 
 
 class Development(Base):

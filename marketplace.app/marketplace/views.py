@@ -70,9 +70,10 @@ def product_card(product_id):
 @app.route('/producer/<int:producer_id>/products')
 def producer_products(producer_id):
     meta_description = 'все товары производителя Маркетплейс'
+    producer = producer_utils.get_producer_by_id(producer_id)
     producer_has_products = product_utils.producer_has_products(producer_id)
     return render_template('producer_products.html', meta_description=meta_description,
-                           producer_has_products=producer_has_products)
+                           producer_has_products=producer_has_products, producer=producer)
 
 
 # Продумать что делать с неиспользованными id в методах
@@ -182,6 +183,7 @@ def order_history(user_id):
 def producer_profile(producer_id):
     producer = Producer.query.filter_by(id=producer_id).first()
     meta_description = 'Профиль производителя Маркетплейс'
+    is_trello_linked = True if producer.trello_token else False
     stars = product_utils.get_formatted_rating(producer.rating)
     if producer is not None and producer.entity == 'producer':
         return render_template(
@@ -189,7 +191,8 @@ def producer_profile(producer_id):
             producer=producer,
             current_user=current_user,
             meta_description=meta_description,
-            stars=stars
+            stars=stars,
+            is_trello_linked=is_trello_linked
         )
     else:
         return abort(404)

@@ -1,9 +1,16 @@
 $green: #78c2ad;
 
-.error_container{
-    text-align: center;
+.error_container {
+  text-align: center;
 }
 
-.error_page_link{
-    color: $green;
+.error_page_link {
+  color: $green;
+}
+
+.error-index-link {
+    max-width: 500px;
+  img {
+    width: 100%;
+  }
 }

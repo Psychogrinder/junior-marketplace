@@ -1,6 +1,6 @@
 import json
 from collections import defaultdict
-
+from marketplace.trello_integrations import create_card_if_producer_linked_trello_account
 from marketplace import db
 from marketplace.api_folder.utils.abortions import abort_if_consumer_doesnt_exist_or_get, \
     abort_if_product_doesnt_exist_or_get, abort_if_not_enough_products_or_get, less_than_zero_items_in_carts
@@ -128,6 +128,7 @@ def post_orders(args: dict):
     phone = args['phone']
     email = args['email']
     orders = args['orders']
+    new_trello_card = []
     items = get_cart_by_consumer_id(consumer_id).items
     orders = json.loads(orders)
     for order in orders:
@@ -146,5 +147,8 @@ def post_orders(args: dict):
                               phone, email, consumer_id, order['producer_id'], first_name=first_name,
                               last_name=last_name)
             db.session.add(new_order)
+            new_trello_card.append((new_order, order['producer_id']))
     clear_cart_by_consumer_id(consumer_id)
     db.session.commit()
+    for (order_card, producer_id) in new_trello_card:
+        create_card_if_producer_linked_trello_account.delay(producer_id, order_card.id)

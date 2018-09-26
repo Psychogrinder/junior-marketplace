@@ -6,6 +6,7 @@ from celery.signals import task_failure, worker_shutting_down
 from celery.task import periodic_task
 
 from marketplace.error_reports import send_report
+# from marketplace.collect_statistics import collect_orders_stat, collect_users_count_stat
 
 
 def make_celery(app):
@@ -28,11 +29,11 @@ def make_celery(app):
 def setup_periodic_tasks():
     return {
         'collect-stat-every-two-hours': {
-            'task': 'marketplace.collect_statistics.send_users_count_stat',
+            'task': 'collect_statistics.send_users_count_stat',
             'schedule': crontab(hour='*/2')
         },
         'collect-stat-every-three-hours': {
-            'task': 'marketplace.collect_statistics.send_orders_stat',
+            'task': 'collect_statistics.send_orders_stat',
             'schedule': crontab(hour='*/3')
         },
         'generate-sitemap-every-day': {
