@@ -36,6 +36,12 @@
                             Редактировать
                         </a>
                     </p>
+                    {% if not is_trello_linked %}
+                    <div class="trellointegration">
+                        <button class="trellointegration-button" onclick="linkTrelloAccount({{current_user.id}})"></button>
+                        <input class="trellointegration-input" placeholder="название доски" type="text">
+                    </div>
+                     {% endif %}
                 {% endif %}
             </div>
         </div>

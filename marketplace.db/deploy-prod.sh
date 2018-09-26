@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source ../DOCKER_ENV_PRODUCTION
+source ../.env.prod
 
 docker volume create marketplacedb
 

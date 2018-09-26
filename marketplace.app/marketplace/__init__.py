@@ -22,6 +22,9 @@ app.config.from_object(
     Development if os.getenv('FLASK_ENV') == 'development' else Production
 )
 
+if os.getenv('CELERY_APP'):
+    app.config['SERVER_NAME'] = 'xtramarket.ru'
+
 if app.config.get('SENTRY_DSN'):
     if os.getenv('CELERY_APP'):
         from raven import Client
@@ -69,7 +72,7 @@ css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'styl
              'style/edit_profile.scss', 'style/profile.css', 'style/order_history.css', 'style/edit_product.scss',
              'style/producer_products.scss', 'style/producer_orders.css', 'style/order_registration.css',
              'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/croppie.css', 'style/image_crop.css',
-             'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/producers_list.css',
+             'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/producers_list.css', 'style/trello.scss',
              filters=['pyscss', 'cssmin'], output='bundle.min.css')
 
 assets.register('css_all', css)
@@ -82,8 +85,7 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             'script/category.js', 'script/orders_badge.js', 'script/hullabaloo.js', 'script/producer_products.js',
             'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js', 'script/croppie.js',
             'script/image_crop.js', 'script/get_comments.js', 'script/review.js', 'script/jquery.inputmask.bundle.js',
-            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js', 'script/producers_list.js',
-
+            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js', 'script/producers_list.js', 'script/trello_integration.js',
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)
