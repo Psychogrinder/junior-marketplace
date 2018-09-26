@@ -1,4 +1,5 @@
-from marketplace import socketio, mongo_client
+from marketplace import socketio, mongo_client, db
+from marketplace.models import Order
 from flask_socketio import emit, join_room, rooms
 from flask_login import current_user
 from datetime import datetime
@@ -28,10 +29,18 @@ def on_join(data):
     join_room(data['room'])
 
 
-def save_message(message):
-    """Сохраняет сообщение в базу данных message-history"""
+def handle_message(message, entity, order_id):
+    # Сохраняем сообщение в базу данных message-history
     message_id = messages.insert_one(message).inserted_id
     print(f'its id {message_id}')
+    # Указываем в заказе, что есть непрочитанные сообщения от производителя...
+    order = Order.query.get(order_id)
+    if entity == 'producer':
+        order.has_unread_producer_messages = True
+    # ... или покупателя
+    elif entity == 'consumer':
+        order.has_unread_consumer_messages = True
+    db.session.commit()
 
 
 @socketio.on('send_to_room', namespace='/chat')
@@ -52,11 +61,12 @@ def send_room_message(data):
         'username': username,
         'photo_url': current_user.photo_url,
         'timestamp': datetime.now().strftime('%H:%M %d.%m.%Y'),
-        'body': data['body']
+        'body': data['body'],
+        'read': False
     }
     emit('response',
          message,
          room=data['room']
          )
     print('_____GOT A NEW message_END____')
-    save_message(message)
+    handle_message(message, data['entity'], data['room'])

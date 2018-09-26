@@ -65,12 +65,13 @@ def get_filtered_orders(args: dict):
     order_status = args['order_status']
     page = int(args['page'])
     if order_status == 'Все':
-        orders = Order.query.filter_by(producer_id=int(args['producer_id'])).paginate(page, ORDERS_PER_PAGE)
+        orders = Order.query.filter_by(producer_id=int(args['producer_id'])).order_by(
+            Order.has_unread_consumer_messages.desc()).paginate(page, ORDERS_PER_PAGE)
         next_page = orders.next_num
         orders = order_schema_list.dump(orders.items).data
     else:
-        orders = Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).paginate(
-            page, ORDERS_PER_PAGE)
+        orders = Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).order_by(
+            Order.has_unread_consumer_messages.desc()).paginate(page, ORDERS_PER_PAGE)
         next_page = orders.next_num
         orders = order_schema_list.dump(orders.items).data
     for order in orders:
@@ -98,11 +99,13 @@ def get_formatted_orders_by_consumer_id(consumer_id: int, page: int) -> dict:
     """
     query = db.session.query(Order.id, Order.status, Order.delivery_method, Order.order_timestamp, Order.total_cost,
                              Order.order_items_json, Order.reviewed, Order.producer_id,
+                             Order.has_unread_producer_messages,
                              Producer.name.label('producer_name')).filter(
-        Order.producer_id == Producer.id).filter_by(consumer_id=consumer_id).paginate(page, ORDERS_PER_PAGE)
+        Order.producer_id == Producer.id).filter_by(consumer_id=consumer_id).order_by(
+        Order.has_unread_producer_messages.desc()).paginate(page, ORDERS_PER_PAGE)
     next_num = query.next_num
     order_schema = ("id", "status", "delivery_method", "placement_date", "cost", "items", "reviewed", "producer_id",
-                    "producer_name")
+                    "has_unread_messages", "producer_name")
     item_schema = ('name', 'price', 'id', 'weight', 'measurement_unit', 'photo_url')
     orders = []
     for order in query.items:

@@ -2,6 +2,7 @@ if ($('main.order-history').length > 0) {
 
     // ========= Chat functionality start =========
     var current_date = null;
+    var orders_with_unread_messages = new Set();
     // Use a "/test" namespace.
     // An application can open a connection on multiple namespaces, and
     // Socket.IO will multiplex all those connections on a single
@@ -51,35 +52,23 @@ if ($('main.order-history').length > 0) {
             '</div>' +
             '</div>'
         );
-        $('#lastMessage').remove();
-        $('.message-history').append(
-            '<div id="lastMessage">' +
-            '</div>'
-        );
 
     }
 
     socket.on('response', function (data) {
-        console.log('GOT A RESPONSE s');
+        console.log('GOT A RESPONSE start');
         console.log(data);
-        console.log('GOT A RESPONSE e');
+        console.log('GOT A RESPONSE end');
         appendMessage(data);
     });
 
     function load_message_history(order_id) {
-        $('.message-history').append(
-            '<div id="lastMessage">' +
-            '</div>'
-        );
         $.get("/api/v1/chat/" + order_id,
             function (data) {
                 console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     appendMessage(data[i]);
                 }
-                $('html, body').animate({
-                    scrollTop: $("#lastMessage").offset().top
-                }, 500);
             })
     }
 
@@ -101,7 +90,8 @@ if ($('main.order-history').length > 0) {
         let inputField = $("#orderDialogMessage" + order_id);
         socket.emit('send_to_room', {
             room: order_id,
-            body: inputField.val()
+            body: inputField.val(),
+            entity: 'consumer'
         });
         inputField.val('').focus()
     }
@@ -146,13 +136,32 @@ if ($('main.order-history').length > 0) {
             order_data['page'] = element.attr("data-page-number");
             addOrders();
         }
+
+        for (let id of orders_with_unread_messages.keys()) {
+            let lastElement = $('#chat' + id + ' div:last-child');
+            if (lastElement.length > 0) {
+                if (isInViewport(lastElement)) {
+                    console.log('YAY');
+                    // В данном случае entity - это человек, чьи сообщения были непрочитаны.
+                    $.post('/api/v1/chat',
+                        {
+                            order_id: id,
+                            entity: 'producer'
+                        },
+                        function (data) {
+                            console.log
+                        })
+                }
+            }
+        }
+
     });
 
     function addOrders() {
         $.post("/api/v1/consumers/formatted_orders",
             order_data,
             function (data, status) {
-                if (data.orders.length == 0) {
+                if (data.orders.length === 0) {
                     $('#consumerOrderHistory').append(
                         '<div class="container">' +
                         '<h3>У вас нет заказов</h3>' +
@@ -331,14 +340,16 @@ if ($('main.order-history').length > 0) {
                             '</div>'
                         )
                     }
-
-
-                    let next_page_number = data.page;
-                    if (next_page_number) {
-                        $("#consumerOrderHistory").append(
-                            '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
-                        );
+                    // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
+                    if (data.orders[i].has_unread_messages) {
+                        orders_with_unread_messages.add(data.orders[i].id);
                     }
+                }
+                let next_page_number = data.page;
+                if (next_page_number) {
+                    $("#consumerOrderHistory").append(
+                        '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                    );
                 }
             })
     }

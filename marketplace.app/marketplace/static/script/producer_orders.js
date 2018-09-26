@@ -146,7 +146,8 @@ if ($('main.producer-orders').length > 0) {
         let inputField = $("#orderDialogMessage" + order_id);
         socket.emit('send_to_room', {
             room: order_id,
-            body: inputField.val()
+            body: inputField.val(),
+            entity: 'producer'
         });
         inputField.val('').focus();
     }
