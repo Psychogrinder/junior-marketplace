@@ -51,7 +51,7 @@ def send_room_message(data):
         'room': data['room'],
         'username': username,
         'photo_url': current_user.photo_url,
-        'timestamp': datetime.now().strftime('%H:%M %d.%m.%y'),
+        'timestamp': datetime.now().strftime('%H:%M %d.%m.%Y'),
         'body': data['body']
     }
     emit('response',

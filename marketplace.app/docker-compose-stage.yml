@@ -10,37 +10,39 @@ services:
       dockerfile: Dockerfile
       context: .
       args:
-        - CELERY_BROKER_URL
-        - CELERY_BACKEND_URL
-        - FLASK_ENV
-        - SQLALCHEMY_DATABASE_URI
-        - SECRET_KEY
-        - SECURITY_PASSWORD_SALT
-        - FLASK_DEBUG
-        - UPLOAD_FOLDER
+      - CELERY_BROKER_URL
+      - CELERY_BACKEND_URL
+      - FLASK_ENV
+      - SQLALCHEMY_DATABASE_URI
+      - SECRET_KEY
+      - SECURITY_PASSWORD_SALT
+      - FLASK_DEBUG
+      - UPLOAD_FOLDER
+      - MONGO_DATABASE_URI
     environment:
-      - FLASK_DEBUG=${FLASK_DEBUG}
-      - FLASK_ENV=${FLASK_ENV}
-      - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
-      - SECRET_KEY=#{SECRET_KEY}
-      - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
-      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+    - FLASK_DEBUG=${FLASK_DEBUG}
+    - FLASK_ENV=${FLASK_ENV}
+    - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+    - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
+    - SECRET_KEY=#{SECRET_KEY}
+    - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
+    - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+    - MONGO_DATABASE_URI=${MONGO_DATABASE_URI}
     ports:
-      - "8000:8000"
+    - "8000:8000"
     command:
       "flask run --port=8000 --host=0.0.0.0"
     networks:
-      - marketplace
+    - marketplace
     volumes:
-      - "./marketplace/:/app/marketplace"
+    - "./marketplace/:/app/marketplace"
 
 
   redis:
     image: redislabs/rejson:latest
     networks:
-      - marketplace
+    - marketplace
 
 
   celery:
@@ -49,32 +51,58 @@ services:
       dockerfile: Dockerfile
       context: .
       args:
-        - FLASK_DEBUG
-        - FLASK_ENV
-        - CELERY_BROKER_URL
-        - CELERY_BACKEND_URL
-        - SQLALCHEMY_DATABASE_URI
-        - SECRET_KEY
-        - SECURITY_PASSWORD_SALT
-        - UPLOAD_FOLDER
-        - CELERY_APP
-        - SENTRY_DSN
+      - FLASK_DEBUG
+      - FLASK_ENV
+      - CELERY_BROKER_URL
+      - CELERY_BACKEND_URL
+      - SQLALCHEMY_DATABASE_URI
+      - SECRET_KEY
+      - SECURITY_PASSWORD_SALT
+      - UPLOAD_FOLDER
+      - CELERY_APP
+      - SENTRY_DSN
+      - MONGO_DATABASE_URI
     command:
       "celery -A marketplace.celery --loglevel=info worker -B"
     networks:
-      - marketplace
+    - marketplace
     environment:
-      - FLASK_DEBUG=${FLASK_DEBUG}
-      - FLASK_ENV=${FLASK_ENV}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
-      - SECRET_KEY=#{SECRET_KEY}
-      - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
-      - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
-      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
-      - CELERY_APP=True
-      - SENTRY_DSN=${SENTRY_DSN}
+    - FLASK_DEBUG=${FLASK_DEBUG}
+    - FLASK_ENV=${FLASK_ENV}
+    - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
+    - SECRET_KEY=#{SECRET_KEY}
+    - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
+    - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+    - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+    - CELERY_APP=True
+    - SENTRY_DSN=${SENTRY_DSN}
+    - MONGO_DATABASE_URI=${MONGO_DATABASE_URI}
     volumes:
-      - "./marketplace/:/app/marketplace"
+    - "./marketplace/:/app/marketplace"
     depends_on:
-      - redis
+    - redis
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_DATABASE_URI: ${MONGO_DATABASE_URI}
+    networks:
+    - marketplace
+    ports:
+    - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    networks:
+    - marketplace
+    ports:
+    - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      MONGO_DATABASE_URI: ${MONGO_DATABASE_URI}

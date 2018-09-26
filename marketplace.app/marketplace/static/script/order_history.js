@@ -1,7 +1,7 @@
 if ($('main.order-history').length > 0) {
 
     // ========= Chat functionality start =========
-
+    var current_date = null;
     // Use a "/test" namespace.
     // An application can open a connection on multiple namespaces, and
     // Socket.IO will multiplex all those connections on a single
@@ -20,6 +20,20 @@ if ($('main.order-history').length > 0) {
     });
 
     function appendMessage(data) {
+        // Если сообщения относятся к разным дням, то прикрепляем разделитель формата 02.07.2018
+        let message_date = data.timestamp.split(' ')[1].split('.');
+        let day = parseInt(message_date[0]);
+        let month = parseInt(message_date[1]);
+        let year = parseInt(message_date[2]);
+        // month-1 потому что Date принимает индекс месяца, а отсчёт начинается с нуля
+        let new_date = new Date(year, month - 1, day);
+        if ((current_date - new_date) !== 0) {
+            $('#chat' + data['room']).append(
+                '<div>' + day + "." + month + "." + year + '</div>'
+            );
+            current_date = new_date;
+        }
+        // прикрепляем сообщение
         $('#chat' + data['room']).append(
             '<div class="order-dialog__item">' +
             '<div class="row order-dialog__header">' +
@@ -30,7 +44,7 @@ if ($('main.order-history').length > 0) {
             '<p class="main-text">' + data['username'] + '</p>' +
             '</div>' +
             '<div class="col-8 col-sm-3 order-dialog__date">' +
-            '<p>' + data['timestamp'] + '</p>' +
+            '<p>' + data['timestamp'].split(' ')[0] + '</p>' +
             '</div>' +
             '</div>' +
             '<div class="order-dialog__content main-text">' +
