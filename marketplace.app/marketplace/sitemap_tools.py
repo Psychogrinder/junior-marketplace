@@ -31,6 +31,18 @@ def generate_sitemap():
 
 
 @celery.task()
+def update_global_sitemap():
+    pages = []
+    cur_date = datetime.now()
+    producers = producer_utils.get_all_producers()
+    for producer in producers:
+        pages.append(['{}/producer_sitemap{}.xml'.format(SITE_DOMAIN, producer.id), cur_date])
+    sitemap_xml = render_template('global_sitemap.xml', pages=pages)
+    with open('sitemap.xml', 'w+') as sitemap:
+        sitemap.write(sitemap_xml)
+
+
+@celery.task()
 def create_producer_sitemap(producer_id):
     pages = []
     cur_date = datetime.now()
