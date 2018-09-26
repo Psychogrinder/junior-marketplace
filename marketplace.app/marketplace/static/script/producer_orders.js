@@ -187,8 +187,8 @@ if ($('main.producer-orders').length > 0) {
                     '</div>' +
                     '<div class="col-2">' +
                     '<div class="row">' +
-                    '<span class="col-6">Вес: </span>' +
-                    '<span class="main-text col-6">' + items[p].weight + ' ' + items[p].measurement_unit + '</span>' +
+                    '<span class="col-6">Единицы измерения </span>' +
+                    '<span class="main-text col-6">'+ items[p].measurement_unit + '</span>' +
                     '</div>' +
                     '</div>' +
                     '<div class="col-2">Количество:</div>' +
@@ -228,15 +228,19 @@ if ($('main.producer-orders').length > 0) {
                 '<div class="table_global_row">' +
                 '<div class="table_global_cell">' +
                 '<div>Товар</div>' +
+                '<div id="innerTableProductName' + orders[i].id + '"></div>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<div>Цена</div>' +
+                '<div id="innerTableProductPrice' + orders[i].id + '"></div>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<div>Артикул</div>' +
+                '<div id="innerTableProductId' + orders[i].id + '"></div>' +
                 '</div>' +
                 '<div class="table_global_cell">' +
                 '<div>Количество</div>' +
+                '<div id="innerTableProductQuantity' + orders[i].id + '"></div>' +
                 '</div>' +
                 '</div>' +
                 '<div id="innerTableProductsSection' + orders[i].id + '"></div>' +
@@ -271,21 +275,17 @@ if ($('main.producer-orders').length > 0) {
             );
             let items = orders[i]['items'];
             for (let p = 0; p < items.length; p++) {
-                $("#innerTableProductsSection" + orders[i].id).append(
-                    '<div class="table_global_row">' +
-                    '<div class="table_global_cell producer-orders-item">' +
-                    '<div class="main-text">' + items[p].name + '</div>' +
-                    '</div>' +
-                    '<div class="table_global_cell producer-orders-item">' +
-                    '<div class="main-text">' + items[p].price + items[p].weight + items[p].measurement_unit + '</div>' +
-                    '</div>' +
-                    '<div class="table_global_cell producer-orders-item">' +
-                    '<div class="main-text">' + items[p].id + '</div>' +
-                    '</div>' +
-                    '<div class="table_global_cell producer-orders-item">' +
-                    '<div class="main-text">' + items[p].quantity + '</div>' +
-                    '</div>' +
-                    '</div>'
+                $("#innerTableProductName" + orders[i].id).append(
+                    '<div class="main-text">' + items[p].name + '</div>'
+                );
+                $("#innerTableProductPrice" + orders[i].id).append(
+                    '<div class="main-text">' + items[p].price +'/' + items[p].measurement_unit + '</div>'
+                );
+                $("#innerTableProductId" + orders[i].id).append(
+                    '<div class="main-text">' + items[p].id + '</div>'
+                );
+                 $("#innerTableProductQuantity" + orders[i].id).append(
+                    '<div class="main-text">' + items[p].quantity + '</div>'
                 );
             }
         }

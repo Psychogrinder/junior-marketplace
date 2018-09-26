@@ -4,16 +4,16 @@
         <div class="row">
             <div class="col-12 col-sm-6 col-lg-3 footer-item">
                 <h3>ПОКУПАТЕЛЯМ</h3>
-                <p><a href={{ url_for( 'index' ) }}>Каталог товаров</a></p>
-                <p><a href={{ url_for('consumer_help') }}>Помощь</a></p>
-                <p><a href={{ url_for('about_us') }}>О нас</a></p>
+                <p><a href="{{ url_for( 'index' ) }}">Каталог товаров</a></p>
+                <p><a href="{{ url_for('consumer_help') }}">Помощь</a></p>
+                <p><a href="{{ url_for('about_us') }}">О нас</a></p>
             </div>
             <div class="col-12 col-sm-6 col-lg-3 footer-item">
                 <h3>ПРОИЗВОДИТЕЛЯМ</h3>
-                {% if current_user.entity !='producer' %}
+                {% if not current_user.entity %}
                 <p><a href="#" data-toggle="modal" data-target="#regProducer">Подключение к маркетплейс </a></p>
                 {% endif %}
-                <p><a href={{ url_for('producer_help') }}>Помощь для производителей</a></p>
+                <p><a href="{{ url_for('producer_help') }}">Помощь для производителей</a></p>
             </div>
             <div class="col-12 col-sm-6 col-lg-3 footer-item">
                 <h3>КОНТАКТЫ</h3>
@@ -25,18 +25,18 @@
                 <div class="footer-social-icon">
                     <div class="fb-icon">
                         <a href="https://www.facebook.com/allcontext/">
-                            <img src={{ url_for('static', filename ="img/fb.svg") }} alt="Фейсбук">
+                            <img src="{{ url_for('static', filename ='img/fb.svg') }}" alt="Фейсбук">
                         </a>
                     </div>
                     <div class="insta-icon">
                         <a href="https://www.instagram.com/elamainside/">
-                            <img src={{ url_for('static', filename ="img/insta.svg") }}
+                            <img src="{{ url_for('static', filename ='img/insta.svg') }}"
                             alt="Инстаграмм">
                         </a>
                     </div>
                     <div class="vk-icon">
                         <a href="https://vk.com/juniorlab">
-                            <img src={{ url_for('static', filename ="img/vk.svg") }} alt="Вконтакте">
+                            <img src="{{ url_for('static', filename ='img/vk.svg') }}" alt="Вконтакте">
                         </a>
                     </div>
                 </div>

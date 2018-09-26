@@ -2,6 +2,7 @@ from flask_login import login_user, logout_user, current_user
 
 from marketplace.api_folder.utils.abortions import invalid_email_or_password, \
     admin_rights_required, account_access_denied
+from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.user_utils import get_user_by_email
 
 
@@ -40,6 +41,21 @@ def login_as_admin_required(rest_function):
             admin_rights_required()
 
     return admin_required_wrapper
+
+
+def order_access_required(rest_function):
+    """Prohibit access to order without loggining as excepted user"""
+
+    def order_access_access_wrapper(self, *args, **kwargs):
+        id = kwargs['order_id']
+        order = get_order_by_id(id)
+        if current_user.is_authenticated and (
+                current_user.id == order.producer_id or current_user.id == order.consumer_id):
+            return rest_function(self, *args, **kwargs)
+        else:
+            account_access_denied()
+
+    return order_access_access_wrapper
 
 
 def account_access_required(rest_function):

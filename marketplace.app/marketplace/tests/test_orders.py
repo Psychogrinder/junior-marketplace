@@ -1,16 +1,12 @@
-
-from path_file import *
-from testing_utils import login, logout, parseRoutes, get_route_by_name, getCategorySlugs,  getProductIds, getUserIds, \
-    replaceCategoryName, replaceUserId, replaceProductId, getCookiesFromResponse, getLoginResponse
+from testing_utils import login, logout, parseRoutes, get_route_by_name,  getCookiesFromResponse
 
 from marketplace.models import Order, User
 
 import unittest
-from urllib.request import urlopen
 import requests
 import json
 
-class TestSmoke(unittest.TestCase):
+class TestOrders(unittest.TestCase):
 
     def setUp(self):
         self.url = 'http://127.0.0.1:8000/api/v1'
@@ -25,27 +21,8 @@ class TestSmoke(unittest.TestCase):
 
         self.orders = Order.query.limit(5).all()
 
-    def test_01_connection(self):
-        self.assertEqual(200, urlopen('http://127.0.0.1:8000').getcode(),
-                         'Website does not response')
 
-
-    def test_02_login(self):
-        for user in self.users:
-            response = login(user.email, self.password)
-            self.assertEqual(201, response.status_code,
-                             'unexpected status code after login')
-
-
-    def test_03_logout(self):
-        response = logout()
-        content = json.loads(response.content)
-        self.assertEqual(201, response.status_code,
-                         'unexpected status code after logout')
-        self.assertIn('logout', content.lower())
-
-
-    def test_04_get_global_orders(self):
+    def test_01_get_global_orders(self):
         """only admin has permission to get global orders"""
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders')
@@ -70,7 +47,7 @@ class TestSmoke(unittest.TestCase):
                       'unauthorized user must not have ability to GET global orders')
 
 
-    def test_05_post_global_orders(self):
+    def test_02_post_global_orders(self):
         routes = self.routes['Orders']
         url = self.url + get_route_by_name(routes, '/orders')
 
@@ -105,7 +82,7 @@ class TestSmoke(unittest.TestCase):
                             'unauthorized user must not have ability to POST global order')
 
 
-    def test_06_get_orders(self):
+    def test_03_get_orders(self):
         routes = self.routes['Orders']
         url_route = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
 
@@ -118,17 +95,26 @@ class TestSmoke(unittest.TestCase):
                 content = json.loads(response_login.text)
 
                 response_get = requests.Session().get(url, cookies=cookie)
+
                 if user.id == order.consumer_id:
-                    self.assertEqual(user.email, order.consumer_email,
-                                    'order #{} (consumer_id: {}) must be visible consumer with id {}'
-                                     .format(order.id, order.consumer_id, user.id))
                     self.assertEqual(content['id'], order.consumer_id)
-                else:
+
+                elif user.id == order.producer_id:
+                    self.assertEqual(content['id'], order.producer_id)
+
+                elif user.id != order.consumer_id:
                     self.assertIn('reject access', response_get.text.lower(),
-                                  'order #{} with consumer_id: {} must not be visible consumer with id {}'
+                                  'order #{} with consumer id: {} must not be visible user with id {}'
                                   .format(order.id, order.consumer_id, content['id']))
                     self.assertNotEqual(user.email, order.consumer_email)
                     self.assertNotEqual(content['id'], order.consumer_id)
+
+                else:
+                    self.assertIn('reject access', response_get.text.lower(),
+                                  'order #{} with producer_id: {} must not be visible user with id {}'
+                                  .format(order.id, order.producer_id, content['id']))
+                    self.assertNotEqual(user.email, order.producer_email)
+                    self.assertNotEqual(content['id'], order.producer_id)
 
             logout()
             response = requests.get(url)
@@ -136,9 +122,12 @@ class TestSmoke(unittest.TestCase):
                           'unauthorized user must not browse order #{}'.format(order.id))
 
 
-    def test_07_put_orders(self):
+    def test_04_put_orders(self):
         routes = self.routes['Orders']
         url_route = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
+
+        if not self.orders:
+            print('There is no orders to test PUT method. Please add orders to the Database.')
 
         for order in self.orders:
             url = url_route.replace('<int:order_id>', str(order.id))
@@ -150,9 +139,10 @@ class TestSmoke(unittest.TestCase):
 
                 response_put = requests.Session().put(url, data={}, cookies=cookie)
                 if order.producer_id == user.id:
+
                     try:
+                        self.assertEqual(201, response_put.status_code)
                         self.assertNotIn('reject access', response_put.text.lower())
-                        print(response_put.text)
                         
                     except AssertionError:
                         print('producer with id {} must have ability to PUT order #{}'
@@ -160,18 +150,56 @@ class TestSmoke(unittest.TestCase):
                               )
                 else:
                     try:
+                        self.assertNotEqual(201, response_put.status_code)
                         self.assertIn('reject access', response_put.text.lower())
 
                     except AssertionError:
-                        pass
                         print('{} with id {} must not have ability to PUT order #{}'
                               .format(user.entity, user.id, order.id)
                               )
 
 
-    def test_08_delete_orders(self):
-        pass
+    def test_05_delete_orders(self):
+        routes = self.routes['Orders']
+        url_route = self.url + get_route_by_name(routes, '/orders/<int:order_id>')
 
+        if not self.orders:
+            print('There is no orders to test DELETE method. Please add orders to the Database.')
+
+        for order in self.orders:
+
+            url = url_route.replace('<int:order_id>', str(order.id))
+
+            for user in self.users:
+                logout()
+                response_login = login(email=user.email, password=self.password)
+                cookie = getCookiesFromResponse(response_login)
+
+                response_delete = requests.Session().delete(url, cookies=cookie)
+
+                if order.producer_id == user.id:
+                    if 'reject access' not in response_delete.text.lower():
+                        break
+
+                    try:
+                        self.assertEqual(202, response_delete.status_code)
+
+
+                    except AssertionError:
+                        print('producer with id {} must have ability to DELETE order #{}'
+                              .format(order.producer_id, order.id)
+                              )
+                else:
+                    try:
+                        self.assertNotEqual(202, response_delete.status_code,
+                                         'producer with id {} must not have ability to DELETE order #{}'
+                                         .format(order.producer_id, order.id)
+                                         )
+
+                    except AssertionError:
+                        print('{} with id {} must not have ability to DELETE order #{}'
+                              .format(user.entity, user.id, order.id)
+                              )
 
 if __name__ == '__main__':
    unittest.TestLoader.sortTestMethodsUsing = None

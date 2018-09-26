@@ -1,5 +1,3 @@
-from path_file import *
-
 import json
 from testing_utils import getLoginResponse, getCookiesFromResponse, parseViews, replaceUserId, replaceProductId, login, logout
 
@@ -97,38 +95,6 @@ class TestCase(unittest.TestCase):
         self.assertEqual(len(User.query.filter_by(entity='consumer').all()),
                          len(get_all_consumers()))
 
-
-
-    def test_03_response_auth_pages(self):
-
-        login_url = 'http://127.0.0.1:8000/api/v1/login?email=10mail.ru&password=123123'
-        s = requests.Session()
-
-        data = json.loads(s.post(login_url).content)
-        user_id, entity = data['id'], data['entity']
-
-        response = getResponse(login_url, self.consumer.email, self.pw)
-        cookie = getCookiesFromResponse(response)
-
-        routes = parseViews()
-
-        for route in routes['auth']:
-
-            if 'order_registration' in route:
-                continue
-
-            if entity == 'producer' and '<producer_id>' in route:
-                test_url = replaceUserId(self.base_url + route, user_id)
-                test_url = replaceProductId(test_url, self.product_id)
-                req = requests.session().get(test_url, cookies=cookie)
-                self.assertEqual(200, req.status_code,
-                                 'Page not available for auth producer: {}'.format(test_url))
-
-            elif entity == 'consumer' and '<user_id>' in route:
-                test_url = replaceUserId(self.base_url + route, user_id)
-                req = requests.session().get(test_url, cookies=cookie)
-                self.assertEqual(200, req.status_code,
-                                 'Page not available for auth consumer: {}'.format(test_url))
 
 
 if __name__ == '__main__':

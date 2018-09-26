@@ -1,6 +1,3 @@
-from path_file import *
-
-
 from testing_utils import getCategorySlugs, is_price_sorted, check_price, parseRoutes, \
     get_route_by_name
 
