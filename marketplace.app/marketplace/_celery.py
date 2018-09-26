@@ -37,7 +37,7 @@ def setup_periodic_tasks():
             'schedule': crontab(hour='*/3')
         },
         'generate-sitemap-every-day': {
-            'task': 'marketplace.sitemap_tools.generate_sitemap',
+            'task': 'sitemap_tools.generate_sitemap',
             'schedule': crontab(hour='*/24')
         }
     }
