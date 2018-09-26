@@ -168,12 +168,21 @@
 }
 
 .message-history {
-    overflow-y:scroll;
-    height:400px;
+    overflow-y: scroll;
+    max-height: 400px;
+    overflow-x: hidden;
+    margin-bottom: 2rem;
 }
 
 @media (max-width: 576px) {
     .order-dialog__header img {
         margin-bottom: 1rem;
     }
+}
+
+.order-buttons-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
 }
