@@ -1,11 +1,12 @@
 from append_path import *
-from testing_utils import uniqueEmail, login, logout, getPhoneMask, getEditElements, setDictValues, \
+from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements
 import unittest
 from selenium import webdriver
 from marketplace.models import Category, User
 
-email_unique = uniqueEmail()
+unique_email = uniqueEmail()
+unique_shop_name = uniqueShopName()
 driver = webdriver.Firefox()
 
 class TestConsumer(unittest.TestCase):
@@ -29,7 +30,7 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector(".header-login").click()
         driver.find_element_by_css_selector(
             "p.registration-link:nth-child(4) > a:nth-child(1)").click()
-        driver.find_element_by_id("emailRegistration").send_keys(email_unique)
+        driver.find_element_by_id("emailRegistration").send_keys(unique_email)
         driver.find_element_by_id("passwordRegistration").send_keys(pw)
         driver.find_element_by_id("re_passwordRegistration").send_keys(pw)
         driver.find_element_by_id("reg_button").click()
@@ -43,7 +44,7 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector(
             ".edit-profile > a:nth-child(1)").click()  # Edit profile btn
 
-    
+
     def test_03_edit_consumer_profile(self):
         elements_to_edit = getEditElements(driver)
         data_to_edit = getDataFromElements(elements_to_edit)
@@ -70,7 +71,7 @@ class TestConsumer(unittest.TestCase):
                 self.assertEqual(load_data[key], edited_data[arg])
 
 
-    def test_03_delete_consumer(self):
+    def test_04_delete_consumer(self):
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
         driver.find_element_by_id("deleteConsumerBtn").click()
