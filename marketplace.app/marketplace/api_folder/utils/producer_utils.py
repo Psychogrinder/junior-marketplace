@@ -2,7 +2,7 @@ import os
 import shutil
 from sqlalchemy import update
 
-from marketplace import db, email_tools, app
+from marketplace import db, email_tools, app, sitemap_tools
 from marketplace.api_folder.schemas import producer_sign_up_schema
 from marketplace.api_folder.utils.abortions import abort_if_producer_doesnt_exist_or_get, abort_if_invalid_rating_value
 from marketplace.api_folder.utils.checkers import check_email_uniqueness, check_producer_name_uniqueness
@@ -47,6 +47,7 @@ def post_producer(args: dict) -> Producer:
     # make directory to store this producer's images
     os.mkdir(os.path.join(os.getcwd(), 'marketplace/static/img/user_images/' + str(new_producer.id) + '/'))
     email_tools.send_confirmation_email(new_producer.email, new_producer.person_to_contact)
+    sitemap_tools.create_producer_sitemap.delay(new_producer.id)
     return new_producer
 
 
