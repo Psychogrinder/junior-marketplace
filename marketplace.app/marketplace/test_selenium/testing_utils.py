@@ -19,7 +19,7 @@ def login(driver, email, pw):
 
 
 def logout(driver):
-    driver.find_element_by_css_selector("button.btn:nth-child(1)").click()
+    driver.find_element_by_xpath("/html/body/header/nav/div/div/div/button").click()
     driver.find_element_by_id("logoutButton").click()
 
 
