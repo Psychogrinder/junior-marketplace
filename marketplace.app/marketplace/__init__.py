@@ -57,6 +57,7 @@ PRODUCTS_PER_PAGE = app.config['PRODUCTS_PER_PAGE']
 ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
 SITE_DOMAIN = app.config['SITE_DOMAIN']
+FIND_IN_XML_PREFIX = app.config['FIND_IN_XML_PREFIX']
 
 influx_client = InfluxDBClient(
     host=app.config['INFLUXDB_HOST'],
@@ -64,6 +65,8 @@ influx_client = InfluxDBClient(
     username=app.config['INFLUXDB_USER'],
     password=app.config['INFLUXDB_PASSWORD'],
 )
+
+
 
 
 from marketplace import models, views, api_routes
