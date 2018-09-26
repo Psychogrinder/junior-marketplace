@@ -80,7 +80,7 @@ services:
         - INFLUXDB_WRITE_USER
         - INFLUXDB_WRITE_USER_PASSWORD
     command:
-      "celery -A marketplace.celery --loglevel=info worker"
+      "celery -A marketplace.celery --loglevel=info worker -B"
     networks:
       - marketplace
     environment:
