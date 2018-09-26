@@ -273,7 +273,7 @@ if ($('main.producer-orders').length > 0) {
                 orders[i].id +
                 '" class="btn btn-primary" onclick="startDialog(' +
                 orders[i].id +
-                ')"> Связаться с покупателем </button>' +
+                ')"> Связаться с покупателем <span class="badge badge-pill badge-secondary">1</span></button>' +
                 // chat window interface start
                 '<section class="container order-dialog" id="orderDialog' + orders[i].id + '">' +
                 '<div class="message-history" id="chat' + orders[i].id + '">' +
@@ -403,7 +403,7 @@ if ($('main.producer-orders').length > 0) {
                 orders[i].id +
                 '" onclick="startDialog(' +
                 orders[i].id +
-                ')"> Связаться с покупателем </button>' +
+                ')"> Связаться с покупателем <span class="badge badge-pill badge-secondary">1</span></button>' +
                 // chat window interface start
                 '<section class="container order-dialog" id="orderDialogTable' + orders[i].id + '">' +
                 '<div class="message-history" id="chatTable' + orders[i].id + '">' +

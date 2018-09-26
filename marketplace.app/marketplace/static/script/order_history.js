@@ -234,7 +234,7 @@ if ($('main.order-history').length > 0) {
                         data.orders[i].id +
                         '" onclick="startDialog(' +
                         data.orders[i].id +
-                        ')"> Связаться с производителем </button>' +
+                        ')"> Связаться с производителем <span class="badge badge-pill badge-secondary">1</span></button>' +
                         '</div>' +
                         '</div>' +
                         '<div class="modal fade" id="showOrderCancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +

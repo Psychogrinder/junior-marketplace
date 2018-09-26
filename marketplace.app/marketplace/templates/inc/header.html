@@ -29,6 +29,7 @@
                         'producer_orders', producer_id =
                         current_user.id ) }}">
                                 ЗАКАЗЫ
+                                <span class="badge badge-pill badge-secondary">1</span>
                             </a>
                         </li>
                         <li class="nav-item backlighting_nav_item">
@@ -44,9 +45,10 @@
                     <div class="backlighting_nav_item cart_nav_container mr-2">
                         <a href="{{ url_for('cart', user_id = current_user.id) }}" class="header-card header_card_badge
                            cart_nav_link_container">
-                        <img src="{{ url_for('static', filename ='img/shopping-cart-solid.svg') }}" class="header-cart"
-                             alt="Корзина">
-                        <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
+                            <img src="{{ url_for('static', filename ='img/shopping-cart-solid.svg') }}"
+                                 class="header-cart"
+                                 alt="Корзина">
+                            <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
                         </a>
                     </div>
                 {% endif %}
