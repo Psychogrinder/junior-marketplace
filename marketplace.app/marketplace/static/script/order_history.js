@@ -28,16 +28,20 @@ if ($('main.order-history').length > 0) {
             '</div>' +
             '<div class="col-8 col-sm-7 order-dialog__name">' +
             '<p class="main-text">' + data['username'] + '</p>' +
+            '<p class="main-text">' + data['body'] +'</p>' +
             '</div>' +
             '<div class="col-8 col-sm-3 order-dialog__date">' +
             '<p>' + data['timestamp'] + '</p>' +
             '</div>' +
             '</div>' +
-            '<div class="order-dialog__content main-text">' +
-            data['body'] +
-            '</div>' +
             '</div>'
         );
+        $('#lastMessage').remove();
+        $('.message-history').append(
+            '<div id="lastMessage">' +
+            '</div>'
+        );
+
     }
 
     socket.on('response', function (data) {
@@ -48,12 +52,19 @@ if ($('main.order-history').length > 0) {
     });
 
     function load_message_history(order_id) {
+        $('.message-history').append(
+            '<div id="lastMessage">' +
+            '</div>'
+        );
         $.get("/api/v1/chat/" + order_id,
             function (data) {
                 console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     appendMessage(data[i]);
                 }
+                $('html, body').animate({
+                    scrollTop: $("#lastMessage").offset().top
+                }, 500);
             })
     }
 
@@ -191,13 +202,14 @@ if ($('main.order-history').length > 0) {
                         '</div>' +
                         '</div>' +
                         // third row finish
-                        '<div id="orderButtonSection' +
+                        '<div class="order-buttons-section" id="orderButtonSection' +
                         data.orders[i].id +
-                        '"></div>' +
-                        '</div>' +
+                        '">' +
                         '<button type="button" class="btn btn-primary" onclick="startDialog(' +
                         data.orders[i].id +
                         ')"> Связаться с производителем </button>' +
+                        '</div>' +
+                        '</div>' +
                         '<div class="modal fade" id="showOrderCancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
                         '<div class="modal-dialog modal-min-dialog" role="document">' +
                         '<div class="modal-content">' +
@@ -278,11 +290,12 @@ if ($('main.order-history').length > 0) {
                             // second row finish
                         )
                     }
+
                     if (data.orders[i].status === 'Не обработан') {
                         $('#orderButtonSection' + data.orders[i].id).append(
-                            '<div class="row order-history-btn-block">' +
+                            '<div class="order-history-btn-block">' +
                             '<div class="col-12-right">' +
-                            '<button class="btn btn-primary btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
+                            '<button class="btn btn-danger btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
                             'ОТМЕНИТЬ ЗАКАЗ' +
                             '</button>' +
                             '</div>' +
@@ -290,7 +303,7 @@ if ($('main.order-history').length > 0) {
                         )
                     } else if ((data.orders[i].status === 'Завершён') && (data.orders[i].reviewed !== true)) {
                         $('#orderButtonSection' + data.orders[i].id).append(
-                            '<div class="row order-history-btn-block"> ' +
+                            '<div class="order-history-btn-block"> ' +
                             '<div class="col-4">' +
                             '<a href="/review/' +
                             data.orders[i].id +
