@@ -30,7 +30,7 @@ def generate_sitemap():
         sitemap.write(sitemap_xml)
 
 
-@celery.task()
+@celery.task(name='sitemap_tools.update_global_sitemap')
 def update_global_sitemap():
     pages = []
     cur_date = datetime.now()
