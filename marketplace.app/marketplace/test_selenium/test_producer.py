@@ -3,12 +3,15 @@ from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMa
     getDataFromElements, setNewKeysForDict
 import unittest
 from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
+
+
+firefox_opts = webdriver.FirefoxOptions()
+firefox_opts.add_argument('--headless')
+driver = webdriver.Firefox(firefox_options=firefox_opts)
 
 unique_email = uniqueEmail()
 unique_shop_name = uniqueShopName()
-driver = webdriver.Firefox()
-driver.maximize_window()
+
 
 class TestProducer(unittest.TestCase):
 
@@ -92,6 +95,6 @@ class TestProducer(unittest.TestCase):
         #     .click()
 
 
-        # driver.close()
+        driver.close()
 
 

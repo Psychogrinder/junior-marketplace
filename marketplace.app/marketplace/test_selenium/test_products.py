@@ -6,7 +6,11 @@ from selenium import webdriver
 from marketplace.models import Category, User
 from selenium.common import exceptions as ex
 
-driver = webdriver.Firefox()
+
+firefox_opts = webdriver.FirefoxOptions()
+firefox_opts.add_argument('--headless')
+driver = webdriver.Firefox(firefox_options=firefox_opts)
+
 
 class TestProducts(unittest.TestCase):
 

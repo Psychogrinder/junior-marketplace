@@ -1,4 +1,3 @@
-from test_authorize import Authorization
 from test_products import TestProducts
 from test_consumer import TestConsumer
 from test_producer import TestProducer

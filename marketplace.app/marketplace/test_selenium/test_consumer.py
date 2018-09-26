@@ -5,9 +5,14 @@ import unittest
 from selenium import webdriver
 from marketplace.models import User
 
+
+firefox_opts = webdriver.FirefoxOptions()
+firefox_opts.add_argument('--headless')
+driver = webdriver.Firefox(firefox_options=firefox_opts)
+
 unique_email = uniqueEmail()
 unique_shop_name = uniqueShopName()
-driver = webdriver.Firefox()
+
 
 class TestConsumer(unittest.TestCase):
 
