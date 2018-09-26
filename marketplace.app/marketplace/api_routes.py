@@ -24,7 +24,8 @@ from marketplace.api_folder.producer_api import (
     UploadImageProducer,
     ProducerNamesByCategoryName,
     ProducerNameById,
-    ProducerRating)
+    ProducerRating,
+    ProducerLinkTrelloAccount)
 from marketplace.api_folder.product_api import (
     GlobalProducts,
     ProductRest,
@@ -38,6 +39,7 @@ from marketplace.api_folder.product_api import (
     ProductComments, ProductRating)
 
 from marketplace.api_folder.password_api import PasswordRecovery
+from marketplace.api_folder.trello_api import TrelloWebHook
 
 # Orders
 api.add_resource(GlobalOrders, '/orders')
@@ -78,6 +80,7 @@ api.add_resource(GlobalProducers, '/producers')
 api.add_resource(ProducerRest, '/producers/<int:producer_id>')
 api.add_resource(ProducerRating, '/producers/<int:producer_id>/rating')
 api.add_resource(ProducerNameById, '/producers/<int:producer_id>/name')
+api.add_resource(ProducerLinkTrelloAccount, '/producers/<int:producer_id>/trello-link')
 
 # Consumers
 api.add_resource(GlobalConsumers, '/consumers')
@@ -100,3 +103,6 @@ api.add_resource(ProductsSortedAndFiltered, '/products/filter')
 
 # Password
 api.add_resource(PasswordRecovery, '/password/recovery')
+
+# Trello
+api.add_resource(TrelloWebHook, '/trello/webhook')
