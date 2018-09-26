@@ -35,11 +35,24 @@ def update_global_sitemap():
     pages = []
     cur_date = datetime.now()
     producers = producer_utils.get_all_producers()
+    pages.append(['{}/static_sitemap.xml'.format(SITE_DOMAIN), cur_date])
     for producer in producers:
         pages.append(['{}/producer_sitemap{}.xml'.format(SITE_DOMAIN, producer.id), cur_date])
     sitemap_xml = render_template('global_sitemap.xml', pages=pages)
     with open('sitemap.xml', 'w+') as sitemap:
         sitemap.write(sitemap_xml)
+
+
+@celery.task(name='sitemap_tools.update_static_sitemap')
+def update_static_sitemap():
+    pages = []
+    cur_date = datetime.now()
+    for rule in app.url_map.iter_rules():
+        if "GET" in rule.methods and not str(rule).startswith('/api/v1/') and len(rule.arguments) == 0:
+            pages.append(['{}{}'.format(SITE_DOMAIN, rule), cur_date])
+    static_sitemap = render_template('sitemap.xml', pages=pages)
+    with open('static_sitemap.xml', 'w+') as sitemap:
+        sitemap.write(static_sitemap)
 
 
 @celery.task()
