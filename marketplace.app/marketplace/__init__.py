@@ -63,7 +63,7 @@ influx_client = InfluxDBClient(
     password=app.config['INFLUXDB_PASSWORD'],
 )
 
-mongo_client = MongoClient('localhost', 27017)
+mongo_client = MongoClient('mongodb://root:example@127.0.0.1')
 
 from marketplace import models, views, chat, api_routes
 from marketplace.models import Admin
