@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from flask import render_template
 
@@ -28,3 +28,26 @@ def generate_sitemap():
     sitemap_xml = render_template('sitemap.xml', pages=pages)
     with open('sitemap.xml', 'w+') as sitemap:
         sitemap.write(sitemap_xml)
+
+
+@celery.task()
+def create_producer_sitemap(producer_id):
+    pages = []
+    cur_date = datetime.now()
+    pages.append(['{}/producer/{}'.format(SITE_DOMAIN, producer_id), cur_date])
+    producer_sitemap = render_template('sitemap.xml', pages=pages)
+    with open('producer_sitemap{}.xml'.format(producer_id), 'w+') as sitemap:
+        sitemap.write(producer_sitemap)
+
+
+@celery.task()
+def update_producer_sitemap(producer_id):
+    pages = []
+    cur_date = datetime.now()
+    pages.append(['{}/producer/{}'.format(SITE_DOMAIN, producer_id), cur_date])
+    producer_products = product_utils.get_products_by_producer_id(producer_id)
+    for product in producer_products:
+        pages.append(['{}/products/{}'.format(SITE_DOMAIN, product.id), cur_date])
+    producer_sitemap = render_template('sitemap.xml', pages=pages)
+    with open('producer_sitemap{}.xml'.format(producer_id), 'w+') as sitemap:
+        sitemap.write(producer_sitemap)
