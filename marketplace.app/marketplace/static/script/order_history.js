@@ -19,6 +19,7 @@ if ($('main.order-history').length > 0) {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
 
+
     function appendMessage(data) {
         $('#chat' + data['room']).append(
             '<div class="order-dialog__item">' +

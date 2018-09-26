@@ -152,6 +152,8 @@ class Producer(RatedMixin, User):
     description = db.Column(db.String(256))
     rating = db.Column(db.Float, default=0)
     votes = db.Column(db.Integer, default=0)
+    trello_token = db.Column(db.String(256), nullable=True)
+    trello_board_id = db.Column(db.String(256), nullable=True)
     categories = db.relationship(
         "Category",
         secondary=producer_category_association_table,
@@ -174,6 +176,10 @@ class Producer(RatedMixin, User):
 
     def set_description(self, description):
         self.description = description
+
+    def link_trello_account(self, token, board_id):
+        self.trello_token = token
+        self.trello_board_id = board_id
 
 
 class Order(db.Model):
