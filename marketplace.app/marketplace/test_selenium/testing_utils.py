@@ -1,9 +1,13 @@
 from append_path import *
 from datetime import datetime
 from random import choice
-def uniqueEmail():
-    return "mail" + datetime.now().strftime('%f') + "@ya.ua"
 
+
+def uniqueEmail():
+    return "mail_" + datetime.now().strftime('%f') + "@ya.ua"
+
+def uniqueShopName():
+    return "Shop_name_" + datetime.now().strftime('%f')
 
 def login(driver, email, pw):
     url = 'http://127.0.0.1:8000'
