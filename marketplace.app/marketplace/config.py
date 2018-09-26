@@ -49,6 +49,10 @@ class Development(Base):
             or 'postgresql://postgres:1234@localhost/marketplace.db'
     )
 
+    MONGO_DATABASE_URI = (
+            os.getenv('SQLALCHEMY_DATABASE_URI')
+            or 'postgresql://postgres:1234@localhost/marketplace.db'
+    )
     SECRET_KEY = 'secret-key'
     SECURITY_PASSWORD_SALT = 'secret-salt'
 
