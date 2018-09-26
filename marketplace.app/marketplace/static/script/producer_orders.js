@@ -73,7 +73,7 @@ if ($('main.producer-orders').length > 0) {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
 
-     function appendMessage(data) {
+    function appendMessage(data) {
         $('#chat' + data['room']).append(
             '<div class="order-dialog__item">' +
             '<div class="row order-dialog__header">' +
@@ -82,13 +82,28 @@ if ($('main.producer-orders').length > 0) {
             '</div>' +
             '<div class="col-8 col-sm-7 order-dialog__name">' +
             '<p class="main-text">' + data['username'] + '</p>' +
+            '<p class="main-text">' + data['body'] + '</p>' +
             '</div>' +
             '<div class="col-8 col-sm-3 order-dialog__date">' +
             '<p>' + data['timestamp'] + '</p>' +
             '</div>' +
             '</div>' +
-            '<div class="order-dialog__content main-text">' +
-            data['body'] +
+            '</div>'
+        );
+
+        $('#chatTable' + data['room']).append(
+            '<div class="order-dialog__item">' +
+            '<div class="row order-dialog__header">' +
+            '<div class="col-4 col-sm-2 order-dialog__photo">' +
+            '<img src="/' + data['photo_url'] + '" alt="">' +
+            '</div>' +
+            '<div class="col-8 col-sm-7 order-dialog__name">' +
+            '<p class="main-text">' + data['username'] + '</p>' +
+            '<p class="main-text">' + data['body'] + '</p>' +
+            '</div>' +
+            '<div class="col-8 col-sm-3 order-dialog__date">' +
+            '<p>' + data['timestamp'] + '</p>' +
+            '</div>' +
             '</div>' +
             '</div>'
         );
@@ -120,6 +135,9 @@ if ($('main.producer-orders').length > 0) {
 
     function startDialog(order_id) {
         $("#orderDialog" + order_id).show();
+        $("#orderDialogTable" + order_id).show();
+        $("#connectCustomer" + order_id).css('display', 'none');
+        $("#connectCustomerTable" + order_id).css('display', 'none');
         load_message_history(order_id);
         joinRoom(order_id);
     }
@@ -130,7 +148,16 @@ if ($('main.producer-orders').length > 0) {
             room: order_id,
             body: inputField.val()
         });
-        inputField.val('').focus()
+        inputField.val('').focus();
+    }
+
+    function sendToRoomTable(order_id) {
+        let inputField = $("#orderDialogMessageTable" + order_id);
+        socket.emit('send_to_room', {
+            room: order_id,
+            body: inputField.val()
+        });
+        inputField.val('').focus();
     }
 
     // ========= Chat functionality end =========
@@ -241,12 +268,14 @@ if ($('main.producer-orders').length > 0) {
                 '</div>' +
                 '</div>' +
                 '</div>' +
-                '<button type="button" class="btn btn-primary" onclick="startDialog(' +
+                '<button type="button" id="connectCustomer' +
+                orders[i].id +
+                '" class="btn btn-primary" onclick="startDialog(' +
                 orders[i].id +
                 ')"> Связаться с покупателем </button>' +
                 // chat window interface start
                 '<section class="container order-dialog" id="orderDialog' + orders[i].id + '">' +
-                '<div class="messageHistory" id="chat' + orders[i].id + '">' +
+                '<div class="message-history" id="chat' + orders[i].id + '">' +
 
                 '</div>' +
                 '<div class="order-dialog__form col-12 col-lg-10">' +
@@ -369,6 +398,24 @@ if ($('main.producer-orders').length > 0) {
                 '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtnTable' + orders[i].id + '" onclick="saveOrderStatusClicked(' + orders[i].id + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
+                '<button type="button" class="btn btn-primary connect-customer-table" id="connectCustomerTable'+
+                orders[i].id +
+                '" onclick="startDialog(' +
+                orders[i].id +
+                ')"> Связаться с покупателем </button>' +
+                // chat window interface start
+                '<section class="container order-dialog" id="orderDialogTable' + orders[i].id + '">' +
+                '<div class="message-history" id="chatTable' + orders[i].id + '">' +
+                '</div>' +
+                '<div class="order-dialog__form col-12 col-lg-10">' +
+                '<textarea type="text" class="form-control" rows="4" id="orderDialogMessageTable' + orders[i].id + '" name="orderDialogMessageTable">' +
+                '</textarea>' +
+                '<div class="order-dialog__btn-block">' +
+                '<button class="btn btn-secondary" onclick="sendToRoomTable(' + orders[i].id + ')">Отправить</button>' +
+                '</div>' +
+                '</div>' +
+                '</section>' +
+                // chat window interface end
                 '</div>'
             );
             let items = orders[i]['items'];

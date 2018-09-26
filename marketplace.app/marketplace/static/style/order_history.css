@@ -169,7 +169,7 @@
 
 .message-history {
     overflow-y: scroll;
-    height: 400px;
+    max-height: 400px;
     overflow-x: hidden;
     margin-bottom: 2rem;
 }

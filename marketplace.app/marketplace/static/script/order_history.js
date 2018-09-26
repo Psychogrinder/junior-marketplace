@@ -28,7 +28,7 @@ if ($('main.order-history').length > 0) {
             '</div>' +
             '<div class="col-8 col-sm-7 order-dialog__name">' +
             '<p class="main-text">' + data['username'] + '</p>' +
-            '<p class="main-text">' + data['body'] +'</p>' +
+            '<p class="main-text">' + data['body'] + '</p>' +
             '</div>' +
             '<div class="col-8 col-sm-3 order-dialog__date">' +
             '<p>' + data['timestamp'] + '</p>' +
@@ -77,6 +77,7 @@ if ($('main.order-history').length > 0) {
 
     function startDialog(order_id) {
         $("#orderDialog" + order_id).show();
+        $("#connectCustomer" + order_id).css('display', 'none');
         load_message_history(order_id);
         joinRoom(order_id);
     }
@@ -205,7 +206,9 @@ if ($('main.order-history').length > 0) {
                         '<div class="order-buttons-section" id="orderButtonSection' +
                         data.orders[i].id +
                         '">' +
-                        '<button type="button" class="btn btn-primary" onclick="startDialog(' +
+                        '<button type="button" class="btn btn-primary" id="connectCustomer' +
+                        data.orders[i].id +
+                        '" onclick="startDialog(' +
                         data.orders[i].id +
                         ')"> Связаться с производителем </button>' +
                         '</div>' +
@@ -235,7 +238,6 @@ if ($('main.order-history').length > 0) {
                         // chat window interface start
                         '<section class="container order-dialog" id="orderDialog' + data.orders[i].id + '">' +
                         '<div class="message-history" id="chat' + data.orders[i].id + '">' +
-
                         '</div>' +
                         '<div class="order-dialog__form col-12 col-lg-10">' +
                         '<textarea type="text" class="form-control" rows="4" id="orderDialogMessage' + data.orders[i].id + '" name="orderDialogMessage">' +
