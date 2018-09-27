@@ -8,7 +8,7 @@ from selenium.common import exceptions as ex
 
 
 firefox_opts = webdriver.FirefoxOptions()
-firefox_opts.add_argument('--headless')
+# firefox_opts.add_argument('--headless')
 driver = webdriver.Firefox(firefox_options=firefox_opts)
 
 

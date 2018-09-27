@@ -7,7 +7,7 @@ from marketplace.models import User
 
 
 firefox_opts = webdriver.FirefoxOptions()
-firefox_opts.add_argument('--headless')
+# firefox_opts.add_argument('--headless')
 driver = webdriver.Firefox(firefox_options=firefox_opts)
 
 unique_email = uniqueEmail()
@@ -38,6 +38,7 @@ class TestProducer(unittest.TestCase):
         driver.find_element_by_css_selector(
             "div.col-12:nth-child(2) > p:nth-child(2) > a:nth-child(1)").click()
 
+
     def test_03_producer_enter_registrtion_data(self):
         data = self.reg_data
         driver.find_element_by_id("emailRegProducer").send_keys(data["email"])
@@ -55,24 +56,24 @@ class TestProducer(unittest.TestCase):
         driver.implicitly_wait(2)
 
 
-    def test_02_producer_logout(self):
+    def test_05_producer_logout(self):
         logout(driver)
         driver.implicitly_wait(2)
 
 
-    def test_03_producer_login(self):
+    def test_06_producer_login(self):
         email, pw = self.reg_data["email"], self.reg_data["password"]
         login(driver, email, pw)
         driver.implicitly_wait(2)
 
 
-    def test_04_producer_open_edit_profile(self):
+    def test_07_producer_open_edit_profile(self):
         driver.find_element_by_css_selector(".dropdown-toggle").click()  # user menu
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click()  # go to profile
         driver.implicitly_wait(2)
 
 
-    def test_05_producer_profile_is_data_correct(self):
+    def test_08_producer_profile_is_data_correct(self):
         shop_name = driver.find_element_by_css_selector(".col-md-8 > h1:nth-child(1)").text
         keys = driver.find_elements_by_class_name("profile-keys")
         values = driver.find_elements_by_class_name("profile-values")
@@ -93,12 +94,12 @@ class TestProducer(unittest.TestCase):
         #TODO add edit case
 
 
-    def test_06_producer_open_the_delete_page(self):
+    def test_09_producer_open_the_delete_page(self):
         driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click() #edit profile
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click() # go to modal delete
 
 
-    def test_07_producer_delete_confirm(self):
+    def test_10_producer_delete_confirm(self):
         driver.find_element_by_id("deleteProducerBtn").click()
         driver.implicitly_wait(2)
 
@@ -110,7 +111,7 @@ class TestProducer(unittest.TestCase):
         #     .click()
 
 
-    def test_08_is_consumer_deleted(self):
+    def test_11_is_consumer_deleted(self):
         self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
 
         driver.close()
