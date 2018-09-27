@@ -72,8 +72,11 @@ def update_producer_sitemap(producer_id):
 def add_new_product_to_sitemap(producer_id, product_id):
     path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
+        ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
         tree = ET.parse(path)
         root = tree.getroot()
+        for child in root:
+            print(child.tag, child.attrib, sep=' ')
         url_elem = ET.Element('url')
         loc = ET.SubElement(url_elem, 'loc')
         lastmod = ET.SubElement(url_elem, 'lastmod')
@@ -81,4 +84,5 @@ def add_new_product_to_sitemap(producer_id, product_id):
         lastmod.text = str(datetime.now())
         root.append(url_elem)
         tree.write(path)
+
 
