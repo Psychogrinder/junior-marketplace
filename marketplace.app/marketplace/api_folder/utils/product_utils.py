@@ -2,7 +2,7 @@ import string
 
 from sqlalchemy import desc, func, exc
 from sqlalchemy_searchable import inspect_search_vectors
-
+from flask import url_for
 from marketplace import db, app, PRODUCTS_PER_PAGE, sitemap_tools
 from marketplace.api_folder.schemas import product_schema, product_schema_list
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
@@ -13,6 +13,7 @@ from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.producer_utils import get_producer_by_id
 from marketplace.api_folder.utils.uploaders import upload_image
 from marketplace.models import Product, Producer, Category
+from marketplace.email_tools import send_notify_about_products_supply
 
 
 def get_product_by_id(product_id: int) -> Product:
@@ -229,7 +230,7 @@ def post_product(args: dict) -> Product:
 def put_product(args: dict, product_id: int) -> Product:
     """Change product"""
     product = get_product_by_id(product_id)
-
+    product_quantity_before = product.quantity
     if args['category_id']:
         args['category_id'] = Category.query.filter_by(slug=args['category_id']).first().id
         check_producer_categories(args['category_id'], product)
@@ -240,6 +241,8 @@ def put_product(args: dict, product_id: int) -> Product:
         if v:
             setattr(product, k, v)
     db.session.commit()
+    if 0 == product_quantity_before < product.quantity:
+        notify_subscribers_about_products_supply(product)
     sitemap_tools.update_producer_sitemap.delay(product.producer_id)
     return product
 
@@ -276,3 +279,21 @@ def get_formatted_rating(rating_value):
     for i in range(5 - len(rating)):
         rating.append(stars['empty'])
     return rating
+
+
+def subscribe_consumer(product, consumer):
+    product.subscribers.append(consumer)
+    db.session.commit()
+
+
+def notify_subscribers_about_products_supply(product):
+    while any(product.subscribers):
+        subscriber = product.subscribers.pop()
+        product_url = url_for('product_card', product_id=product.id, _external=True)
+        send_notify_about_products_supply(
+            subscriber.email,
+            subscriber.first_name,
+            product_url,
+            product.name
+        )
+    db.session.commit()
