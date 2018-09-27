@@ -81,8 +81,11 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
     if args['producer_name']:
         query = query.filter(Producer.name == args['producer_name'])
 
-    if args['in_stock'] == 1:
+    if args['in_stock'] == 'true':
         query = query.filter(Product.quantity > 0)
+
+    if not args['in_stock'] == 'false':
+        query = query.filter(Product.quantity >= 0)
 
     if args['search']:
         query = query.filter(Product.name.ilike('%' + args['search'] + '%'))
