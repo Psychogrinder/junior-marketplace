@@ -229,7 +229,7 @@ def post_product(args: dict) -> Product:
 def put_product(args: dict, product_id: int) -> Product:
     """Change product"""
     product = get_product_by_id(product_id)
-
+    product_quantity_before = product.quantity
     if args['category_id']:
         args['category_id'] = Category.query.filter_by(slug=args['category_id']).first().id
         check_producer_categories(args['category_id'], product)
@@ -240,6 +240,8 @@ def put_product(args: dict, product_id: int) -> Product:
         if v:
             setattr(product, k, v)
     db.session.commit()
+    if 0 == product_quantity_before < product.quantity:
+        notify_subscribers_about_products_supply(product)
     return product
 
 
@@ -291,3 +293,4 @@ def notify_subscribers_about_products_supply(product):
             product_url,
             product.name
         )
+    db.session.commit()
