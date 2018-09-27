@@ -3,6 +3,7 @@ from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMa
     getDataFromElements, setNewKeysForDict
 import unittest
 from selenium import webdriver
+from marketplace.models import User
 
 
 firefox_opts = webdriver.FirefoxOptions()
@@ -17,6 +18,7 @@ class TestProducer(unittest.TestCase):
 
     def setUp(self):
         self.url = 'http://127.0.0.1:8000'
+        self.producer = User.query.filter_by(entity='producer').order_by(User.id.desc()).first()
 
         self.password = "123123"
         self.reg_data = {"email": unique_email,
@@ -55,6 +57,7 @@ class TestProducer(unittest.TestCase):
 
     def test_02_producer_logout(self):
         logout(driver)
+        driver.implicitly_wait(2)
 
 
     def test_03_producer_login(self):
@@ -84,19 +87,20 @@ class TestProducer(unittest.TestCase):
             else:
                 self.assertEqual(profile_data[key], self.reg_data[key])
 
+        driver.implicitly_wait(2)
 
-    # def test_05_producer_edit_profile(self):
-    #     pass
+
+        #TODO add edit case
 
 
     def test_06_producer_open_the_delete_page(self):
-        driver.implicitly_wait(2)
         driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click() #edit profile
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click() # go to modal delete
 
 
     def test_07_producer_delete_confirm(self):
-        driver.find_element_by_id("deleteProducerBtn").click()  # delete profile
+        driver.find_element_by_id("deleteProducerBtn").click()
+        driver.implicitly_wait(2)
 
 
         #TODO cancel button click; attach id to the button
@@ -105,6 +109,9 @@ class TestProducer(unittest.TestCase):
         #     "deleteProfileProducer > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)")\
         #     .click()
 
+
+    def test_08_is_consumer_deleted(self):
+        self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
 
         driver.close()
 

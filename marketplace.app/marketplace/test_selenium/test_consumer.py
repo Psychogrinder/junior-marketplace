@@ -28,7 +28,7 @@ class TestConsumer(unittest.TestCase):
                           }
 
 
-    def test_01_get_url(self):
+    def test_01_get_home_page(self):
         driver.get(self.url)
 
 
@@ -36,21 +36,28 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector(".header-login").click()
         driver.find_element_by_css_selector(
             "p.registration-link:nth-child(4) > a:nth-child(1)").click()
+        driver.implicitly_wait(2)
 
 
     def test_03_consumer_enter_registrtion_data(self):
         driver.find_element_by_id("emailRegistration").send_keys(unique_email)
         driver.find_element_by_id("passwordRegistration").send_keys(self.password)
         driver.find_element_by_id("re_passwordRegistration").send_keys(self.password)
+
+
+    def test_04_consumer_submit_form(self):
         driver.find_element_by_id("reg_button").click()
+        driver.implicitly_wait(2)
 
 
     def test_04_consumer_logout(self):
         logout(driver)
+        driver.implicitly_wait(2)
 
 
     def test_05_consumer_login(self):
         login(driver, self.consumer.email, self.password)
+        driver.implicitly_wait(2)
 
 
     def test_04_consumer_open_edit_profile(self):
@@ -58,6 +65,7 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click() # Profile btn
         driver.find_element_by_css_selector(
             ".edit-profile > a:nth-child(1)").click()  # Edit profile btn
+        driver.implicitly_wait(2)
 
 
     def test_05_consumer_edit_profile(self):
@@ -86,9 +94,18 @@ class TestConsumer(unittest.TestCase):
                 self.assertEqual(load_data[key], edited_data[arg])
 
 
-    def test_06_delete_consumer(self):
+    def test_06_consumer_open_the_delete_page(self):
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
+        driver.implicitly_wait(2)
+
+
+    def test_07_consumer_confirm_delete(self):
         driver.find_element_by_id("deleteConsumerBtn").click()
+        driver.implicitly_wait(2)
+
+
+    def test_08_is_consumer_deleted(self):
         self.assertIsNone(User.query.filter_by(id=self.consumer.id).first())
+
         driver.close()
