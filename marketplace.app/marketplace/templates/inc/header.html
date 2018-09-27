@@ -64,11 +64,11 @@
                     <div class="dropdown-menu">
                         {% if current_user.entity=='consumer' %}
                         <a class="dropdown-item"
-                           href={{ url_for( 'consumer_profile', user_id = current_user.id ) }}>Профиль</a>
+                           href="{{ url_for( 'consumer_profile', user_id = current_user.id ) }}">Профиль</a>
                         {% endif %}
                         {% if current_user.entity=='producer' %}
                         <a class="dropdown-item"
-                           href={{ url_for( 'producer_profile', producer_id = current_user.id ) }}>Профиль</a>
+                           href="{{ url_for( 'producer_profile', producer_id = current_user.id ) }}">Профиль</a>
                         {% endif %}
                         <a class="dropdown-item btn btn-secondary" id="logoutButton" href="#">Выход</a>
                     </div>
