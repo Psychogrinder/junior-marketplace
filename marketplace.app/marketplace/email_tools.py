@@ -23,12 +23,14 @@ def confirm_token(token):
 
 
 @celery.task()
-def _send_email(to, template, subject):
+def _send_email(to, template, subject, headers=None):
+    headers = headers or {}
     msg = Message(
         subject=subject,
         recipients=[to],
         html=template,
-        sender='customers@xtramarket.ru'
+        sender='customers@xtramarket.ru',
+        extra_headers=headers
     )
     mail.connect()
     mail.send(msg)
@@ -52,3 +54,17 @@ def send_password_recovery_email(user_email, contact):
     confirm_url = url_for('.password_recovery', token=token, _external=True)
     html = render_template('email_recovery_password.html', confirm_url=confirm_url, data=data)
     _send_email.delay(user_email, html, subject)
+
+
+def send_notify_about_products_supply(email, contact, product_url, product_name):
+    subject = 'MARKETPLACE. Оповещение о поступлении товара'
+    data = datetime.now().strftime("%d.%m.%y")
+    html = render_template(
+        'email_report_admission.html',
+        contact=contact,
+        product_url=product_url,
+        product_name=product_name,
+        data=data
+    )
+    headers = {'Precedence': 'bulk'}
+    _send_email.delay(email, html, subject, headers)
