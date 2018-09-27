@@ -28,31 +28,14 @@
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
                 </form>
             </div>
-            <div class="col-12 col-sm-6 col-md-3 change-view-dropdown">
-                <div class="dropdown">
-                    <button class="btn btn-info dropdown-toggle" type="button" id="tableSelect"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Вид
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#" id="common_mode" onclick="showCommon()">Обычный</a>
-                        <a class="dropdown-item" href="#" id="table_mode" onclick="showTable()">Таблица</a>
-                    </div>
-                </div>
-            </div>
         </div>
         {% else %}
         <h2>У Вас нет заказов</h2>
         {% endif %}
     </div>
 
-    <!-- Common view -->
+
     <div id="mainProducerOrderSection">
-        <div class="common_global_container" id="producerOrderSection">
-
-        </div>
-
-        <!-- Table view -->
-
         <div class="table_global_container" id="producerOrderSectionTable">
 
         </div>

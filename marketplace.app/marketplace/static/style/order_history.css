@@ -128,8 +128,7 @@
 }
 
 .order-dialog__item {
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #eceeef;
+    margin-bottom: 1.3rem;
 }
 
 .order-dialog__header {
@@ -185,4 +184,10 @@
     justify-content: space-between;
     align-items: flex-end;
     flex-wrap: wrap;
+}
+
+.date-divider {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
 }

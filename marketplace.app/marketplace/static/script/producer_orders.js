@@ -1,33 +1,6 @@
 if ($('main.producer-orders').length > 0) {
 
 
-    $('#changeOrderStatusBtn').click(function () {
-        let change_status_btn = $('#changeOrderStatusBtn');
-        $('#changeOrderStatusSelect').removeAttr('disabled');
-        change_status_btn.css('display', 'none');
-        $('#saveStatusOrderBtn').css('display', 'block');
-    });
-
-
-    function changeOrderStatus(order_id) {
-        let order_status = {
-            status: $('#changeOrderStatusSelect option:selected').val(),
-        };
-        $.ajax({
-            url: "/api/v1/orders/" + order_id,
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(order_status),
-            success: function (data, status) {
-                $('#saveStatusOrderBtn').css('display', 'none');
-                $('#changeOrderStatusBtn').css('display', 'block');
-                $('#changeOrderStatusSelect').attr('disabled', 'disabled');
-                var hulla = new hullabaloo();
-                hulla.send("Статус заказа изменен", "secondary");
-            }
-        });
-    }
-
     $('#changeOrderStatusBtnTable').click(function () {
         let change_status_btn = $('#changeOrderStatusBtnTable');
         $('#changeOrderStatusSelectTable').removeAttr('disabled');
@@ -35,46 +8,34 @@ if ($('main.producer-orders').length > 0) {
         $('#saveStatusOrderBtnTable').css('display', 'block');
     });
 
-    function changeOrderStatusTable(order_id) {
-        let order_status = {
-            status: $('#changeOrderStatusSelectTable option:selected').val(),
-        };
-        $.ajax({
-            url: "/api/v1/orders/" + order_id,
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(order_status),
-            success: function (data, status) {
-                $('#saveStatusOrderBtnTable').css('display', 'none');
-                $('#changeOrderStatusBtnTable').css('display', 'block');
-                $('#changeOrderStatusSelectTable').attr('disabled', 'disabled');
-                var hulla = new hullabaloo();
-                hulla.send("Статус заказа изменен", "secondary");
-            }
-        });
-    }
-
     // ========= Chat functionality start =========
+    var current_date = null;
+    var orders_with_unread_messages = new Set();
 
-    // Use a "/test" namespace.
-    // An application can open a connection on multiple namespaces, and
-    // Socket.IO will multiplex all those connections on a single
-    // physical channel. If you don't care about multiple channels, you
-    // can set the namespace to an empty string.
     namespace = '/chat';
     // Connect to the Socket.IO server.
     // The connection URL has the following format:
     //     http[s]://<domain>:<port>[/<namespace>]
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
-    // Event handler for new connections.
-    // The callback function is invoked when a connection with the
-    // server is established.
+
     socket.on('connect', function () {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
 
     function appendMessage(data) {
-        $('#chat' + data['room']).append(
+        let chatWindow = $('#chat' + data['room']);
+        // Если сообщения относятся к разным дням, то прикрепляем разделитель формата 02.07.2018
+        let message_date = data.timestamp.split(' ')[1].split('.');
+        // parseInt(message_date[1])-1 потому что Date принимает индекс месяца, а отсчёт начинается с нуля
+        let new_date = new Date(parseInt(message_date[2]), parseInt(message_date[1]) - 1, parseInt(message_date[0]));
+        if ((current_date - new_date) !== 0) {
+            chatWindow.append(
+                '<div class="date-divider">' + message_date[0] + "." + message_date[1] + "." + message_date[2] + '</div>'
+            );
+            current_date = new_date;
+        }
+        // прикрепляем сообщение
+        chatWindow.append(
             '<div class="order-dialog__item">' +
             '<div class="row order-dialog__header">' +
             '<div class="col-4 col-sm-2 order-dialog__photo">' +
@@ -85,43 +46,40 @@ if ($('main.producer-orders').length > 0) {
             '<p class="main-text">' + data['body'] + '</p>' +
             '</div>' +
             '<div class="col-8 col-sm-3 order-dialog__date">' +
-            '<p>' + data['timestamp'] + '</p>' +
+            '<p>' + data['timestamp'].split(' ')[0] + '</p>' +
             '</div>' +
             '</div>' +
             '</div>'
         );
-
-        $('#chatTable' + data['room']).append(
-            '<div class="order-dialog__item">' +
-            '<div class="row order-dialog__header">' +
-            '<div class="col-4 col-sm-2 order-dialog__photo">' +
-            '<img src="/' + data['photo_url'] + '" alt="">' +
-            '</div>' +
-            '<div class="col-8 col-sm-7 order-dialog__name">' +
-            '<p class="main-text">' + data['username'] + '</p>' +
-            '<p class="main-text">' + data['body'] + '</p>' +
-            '</div>' +
-            '<div class="col-8 col-sm-3 order-dialog__date">' +
-            '<p>' + data['timestamp'] + '</p>' +
-            '</div>' +
-            '</div>' +
-            '</div>'
-        );
+        // скроллим до дна окна с сообщениями
+        chatWindow.scrollTop(1E10);
     }
 
     socket.on('response', function (data) {
-        console.log('GOT A RESPONSE s');
-        console.log(data);
-        console.log('GOT A RESPONSE e');
         appendMessage(data);
     });
 
     function load_message_history(order_id) {
         $.get("/api/v1/chat/" + order_id,
-            function (data) {
-                console.log(data);
-                for (let i = 0; i < data.length; i++) {
-                    appendMessage(data[i]);
+            function (messages) {
+                console.log(messages);
+                for (let i = 0; i < messages.length; i++) {
+                    appendMessage(messages[i]);
+                }
+                // Если в этом заказе есть непрочитанные сообщения от покупателя
+                if (orders_with_unread_messages.has(order_id)) {
+                    orders_with_unread_messages.delete(order_id);
+                    // Удаляем бадж с кнопки "Связаться с покупателем"
+                    $('#talkToConsumer' + order_id).html(' Связаться с покупателем ');
+                    // В данном случае entity - это человек, чьи сообщения были непрочитаны.
+                    $.post('/api/v1/chat',
+                        {
+                            order_id: order_id,
+                            entity: 'consumer'
+                        },
+                        function (data) {
+                            console.log("Сообщения прочитаны: " + data);
+                        })
                 }
             })
     }
@@ -134,10 +92,8 @@ if ($('main.producer-orders').length > 0) {
     }
 
     function startDialog(order_id) {
+        $('#talkToConsumer' + order_id).hide();
         $("#orderDialog" + order_id).show();
-        $("#orderDialogTable" + order_id).show();
-        $("#connectCustomer" + order_id).css('display', 'none');
-        $("#connectCustomerTable" + order_id).css('display', 'none');
         load_message_history(order_id);
         joinRoom(order_id);
     }
@@ -149,20 +105,10 @@ if ($('main.producer-orders').length > 0) {
             body: inputField.val(),
             entity: 'producer'
         });
-        inputField.val('').focus();
-    }
-
-    function sendToRoomTable(order_id) {
-        let inputField = $("#orderDialogMessageTable" + order_id);
-        socket.emit('send_to_room', {
-            room: order_id,
-            body: inputField.val()
-        });
-        inputField.val('').focus();
+        inputField.val('').focus()
     }
 
     // ========= Chat functionality end =========
-
     // ===============================   AJAX   ===============================
 
     let currentOrders;
@@ -205,132 +151,17 @@ if ($('main.producer-orders').length > 0) {
     }
 
     function delete_current_orders() {
-        let producerOrderSection = document.getElementById("producerOrderSection");
-        while (producerOrderSection.firstChild) {
-            producerOrderSection.removeChild(producerOrderSection.firstChild);
-        }
         let producerOrderSectionTable = document.getElementById("producerOrderSectionTable");
         while (producerOrderSectionTable.firstChild) {
             producerOrderSectionTable.removeChild(producerOrderSectionTable.firstChild);
         }
     }
 
-    function add_new_orders_common_view(orders, page) {
-        for (var i = 0; i < orders.length; i++) {
-            $("#producerOrderSection").append(
-                '<div class="container item_order">' +
-                '<div class="row order_history_info">' +
-                '<div class="col-6">' +
-                '<span>№ </span>' +
-                '<span id="orderId' + orders[i].id + '">' + orders[i].id + '</span>' +
-                '</div>' +
-                '<div class="col-2">' + orders[i].order_timestamp + '</div>' +
-                '<div class="col-3">' +
-                '<span> СУММА ЗАКАЗА: ' + orders[i].total_cost + '</span>' +
-                '</div>' +
-                '</div>' +
-                '<div id="orderProducts' + orders[i].id + '"></div>' +
-                '<div class="row">' +
-                '<div class="col-6">' +
-                '<div class="row producer-order-delivery">' +
-                '<div class="col-4">Доставка:</div>' +
-                '<div class="col-4 main-text">' + orders[i].delivery_method + '</div>' +
-                '</div>' +
-                '<div class="row producer-order-delivery">' +
-                '<div class="col-4">Адрес:</div>' +
-                '<div class="col-4 main-text">' + orders[i].delivery_address + '</div>' +
-                '</div>' +
-                '</div>' +
-                '<div class="col-6">' +
-                '<div class="row">' +
-                '<div class="col-4">Покупатель:</div>' +
-                '<div class="col-8 main-text">' + orders[i].first_name + ' ' + orders[i].last_name + '</div>' +
-                '</div>' +
-                '<div class="row">' +
-                '<div class="col-4">Телефон:</div>' +
-                '<div class="col-8 main-text">' + orders[i].consumer_phone + '</div>' +
-                '</div>' +
-                '<div class="row">' +
-                '<div class="col-4">E-mail:</div>' +
-                '<div class="col-8 main-text">' + orders[i].consumer_email + '</div>' +
-                '</div>' +
-                '<div class="row">' +
-                '<div class="col-4">Статус заказа:</div>' +
-                '<div class="col-8">' +
-                '<select class="form-control select-order-status" name="subcategory" id="changeOrderStatusSelect' + orders[i].id + '" onchange="orderStatusOnChange(' + orders[i].id + ')">' +
-                '<option value="Не обработан">Не обработан</option>' +
-                '<option value="Обрабатывается">Обрабатывается</option>' +
-                '<option value="Отправлен">Отправлен</option>' +
-                '<option value="Готов к самовывозу">Готов к самовывозу</option>' +
-                '<option value="Завершён">Завершён</option>' +
-                '</select>' +
-                '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtn' + orders[i].id + '" onclick="saveOrderStatusClicked(' + orders[i].id + ')">Сохранить</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '<button type="button" id="connectCustomer' +
-                orders[i].id +
-                '" class="btn btn-primary" onclick="startDialog(' +
-                orders[i].id +
-                ')"> Связаться с покупателем <span class="badge badge-pill badge-secondary">1</span></button>' +
-                // chat window interface start
-                '<section class="container order-dialog" id="orderDialog' + orders[i].id + '">' +
-                '<div class="message-history" id="chat' + orders[i].id + '">' +
-
-                '</div>' +
-                '<div class="order-dialog__form col-12 col-lg-10">' +
-                '<textarea type="text" class="form-control" rows="4" id="orderDialogMessage' + orders[i].id + '" name="orderDialogMessage">' +
-                '</textarea>' +
-                '<div class="order-dialog__btn-block">' +
-                '<button class="btn btn-secondary" onclick="sendToRoom(' + orders[i].id + ')">Отправить</button>' +
-                '</div>' +
-                '</div>' +
-                '</section>' +
-                // chat window interface end
-                '</div>'
-            );
-            let items = orders[i]['items'];
-            for (let p = 0; p < items.length; p++) {
-                $("#orderProducts" + orders[i].id).append(
-                    '<div class="row">' +
-                    '<div class="col-2">' +
-                    '<img class="order-product-photo" src="/' + items[p].photo_url + '" alt="" width="150px">' +
-                    '</div>' +
-                    '<div class="col-4">' +
-                    '<div class="row">' +
-                    '<p class="col-6">Название</p>' +
-                    '<a href="/products/' + items[p].id + '">' +
-                    '<p class="col-12 main-text">' + items[p].name + '</p>' +
-                    '</a>' +
-                    '</div>' +
-                    '<div class="row">' +
-                    '<p class="col-6">Цена</p>' +
-                    '<p class="col-6 main-text">' + items[p].price + '</p>' +
-                    '</div>' +
-                    '<div class="row">' +
-                    '<p class="col-6">Артикул</p>' +
-                    '<p class="col-6 main-text">' + items[p].id + '</p>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="col-2">' +
-                    '<div class="row">' +
-                    '<span class="col-6">Единицы измерения </span>' +
-                    '<span class="main-text col-6">' + items[p].measurement_unit + '</span>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="col-2">Количество:</div>' +
-                    '<div class="col-1 main-text">' + items[p].quantity + '</div>' +
-                    '</div>'
-                )
-            }
-        }
-    }
-
     function add_new_orders_table_view(orders, page) {
+        console.log('adding now...');
         for (var i = 0; i < orders.length; i++) {
             $("#producerOrderSectionTable").append(
-                '<div class="container table_container hidden">' +
+                '<div class="container table_container">' +
                 '<div class="table_global_row">' +
                 '<div class="table_global_cell">' +
                 '<div>Номер заказа</div>' +
@@ -399,20 +230,20 @@ if ($('main.producer-orders').length > 0) {
                 '<button class="btn btn-success common-view-btn save-status-order-btn" id="saveStatusOrderBtnTable' + orders[i].id + '" onclick="saveOrderStatusClicked(' + orders[i].id + ')">Сохранить</button>' +
                 '</div>' +
                 '</div>' +
-                '<button type="button" class="btn btn-primary connect-customer-table" id="connectCustomerTable'+
+                '<button type="button" class="btn btn-primary connect-customer-table" id="talkToConsumer' +
                 orders[i].id +
                 '" onclick="startDialog(' +
                 orders[i].id +
-                ')"> Связаться с покупателем <span class="badge badge-pill badge-secondary">1</span></button>' +
+                ')"> Связаться с покупателем </button>' +
                 // chat window interface start
-                '<section class="container order-dialog" id="orderDialogTable' + orders[i].id + '">' +
-                '<div class="message-history" id="chatTable' + orders[i].id + '">' +
+                '<section class="container order-dialog" id="orderDialog' + orders[i].id + '">' +
+                '<div class="message-history" id="chat' + orders[i].id + '">' +
                 '</div>' +
                 '<div class="order-dialog__form col-12 col-lg-10">' +
-                '<textarea type="text" class="form-control" rows="4" id="orderDialogMessageTable' + orders[i].id + '" name="orderDialogMessageTable">' +
+                '<textarea type="text" class="form-control" rows="4" id="orderDialogMessage' + orders[i].id + '" name="orderDialogMessage">' +
                 '</textarea>' +
                 '<div class="order-dialog__btn-block">' +
-                '<button class="btn btn-secondary" onclick="sendToRoomTable(' + orders[i].id + ')">Отправить</button>' +
+                '<button class="btn btn-secondary" onclick="sendToRoom(' + orders[i].id + ')">Отправить</button>' +
                 '</div>' +
                 '</div>' +
                 '</section>' +
@@ -434,6 +265,15 @@ if ($('main.producer-orders').length > 0) {
                     '<div class="main-text">' + items[p].quantity + '</div>'
                 );
             }
+
+            if (orders[i].unread_consumer_messages) {
+                // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
+                orders_with_unread_messages.add(orders[i].id);
+                // Отображаем бадж на кнопках "Связаться с производителем".
+                $('#talkToConsumer' + orders[i].id).html(' Связаться с покупателем <span id="messageBadge' +
+                    orders[i].id + '" class="badge badge-pill badge-secondary message-badge">' +
+                    orders[i].unread_consumer_messages + '</span> ')
+            }
         }
         let next_page_number = page;
         if (next_page_number) {
@@ -446,12 +286,6 @@ if ($('main.producer-orders').length > 0) {
     // Set the right status of each order
     function set_selected_options(orders) {
         for (let i = 0; i < orders.length; i++) {
-            let currentSelect = document.getElementById('changeOrderStatusSelect' + orders[i].id);
-            for (var o = 0; o < currentSelect.options.length; o++) {
-                if (currentSelect.options[o].value === currentOrders[i].status) {
-                    currentSelect.options[o].selected = 'selected'
-                }
-            }
             let currentSelectTable = document.getElementById('changeOrderStatusSelectTable' + orders[i].id);
             for (var o = 0; o < currentSelectTable.options.length; o++) {
                 if (currentSelectTable.options[o].value === currentOrders[i].status) {
@@ -465,11 +299,7 @@ if ($('main.producer-orders').length > 0) {
     function orderStatusOnChange(i) {
         console.log('i: ' + i);
         console.log($('#saveStatusOrderBtn' + i));
-        if (currentOrdersView === 'common') {
-            $('#saveStatusOrderBtn' + i).show();
-        } else if (currentOrdersView === 'table') {
-            $('#saveStatusOrderBtnTable' + i).show();
-        }
+        $('#saveStatusOrderBtnTable' + i).show();
     }
 
 
@@ -480,8 +310,6 @@ if ($('main.producer-orders').length > 0) {
             contentType: 'application/json',
             data: JSON.stringify({status: order_status}),
             success: function (data, status) {
-                // hide "save" buttons until a different status is selected
-                $('#saveStatusOrderBtn' + i).hide();
                 $('#saveStatusOrderBtnTable' + i).hide();
                 var hulla = new hullabaloo();
                 hulla.send("Статус заказа изменен", "secondary");
@@ -491,18 +319,10 @@ if ($('main.producer-orders').length > 0) {
 
     // on click of "save" button: get the new selected status, order id and send a request
     function saveOrderStatusClicked(i) {
-        if (currentOrdersView === 'common') {
-            var select = document.getElementById("changeOrderStatusSelect" + i);
-            var order_status = select.options[select.selectedIndex].value;
-            var order_id = document.getElementById("orderId" + i).innerHTML;
-            changeOrderStatusInDB(order_id, order_status, i)
-        } else if (currentOrdersView === 'table') {
-            var select = document.getElementById("changeOrderStatusSelectTable" + i);
-            var order_status = select.options[select.selectedIndex].value;
-            var order_id = document.getElementById("orderIdTable" + i).innerHTML;
-            changeOrderStatusInDB(order_id, order_status, i)
-        }
-
+        let select = document.getElementById("changeOrderStatusSelectTable" + i);
+        let order_status = select.options[select.selectedIndex].value;
+        let order_id = document.getElementById("orderIdTable" + i).innerHTML;
+        changeOrderStatusInDB(order_id, order_status, i)
     }
 
 
@@ -510,22 +330,12 @@ if ($('main.producer-orders').length > 0) {
         $.post('/api/v1/producers/filtered_orders',
             orderFilter,
             function (orders, status) {
-                console.log(orders.page);
                 currentOrders = orders.orders;
-                add_new_orders_common_view(orders.orders, orders.page);
                 add_new_orders_table_view(orders.orders, orders.page);
                 set_selected_options(orders.orders);
-                if (currentOrdersView === 'table') {
-                    showTable()
-                } else {
-                    currentOrdersView = 'common';
-                    showCommon();
-                }
-
                 // hide all "save" buttons until a new status is selected
                 let items = orders.orders;
                 for (let i = 0; i < items.length; i++) {
-                    $("#saveStatusOrderBtn" + items[i].id).hide();
                     $("#saveStatusOrderBtnTable" + items[i].id).hide();
                 }
             });

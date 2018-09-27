@@ -22,21 +22,19 @@ if ($('main.order-history').length > 0) {
 
 
     function appendMessage(data) {
+        let chatWindow = $('#chat' + data['room']);
         // Если сообщения относятся к разным дням, то прикрепляем разделитель формата 02.07.2018
         let message_date = data.timestamp.split(' ')[1].split('.');
-        let day = parseInt(message_date[0]);
-        let month = parseInt(message_date[1]);
-        let year = parseInt(message_date[2]);
-        // month-1 потому что Date принимает индекс месяца, а отсчёт начинается с нуля
-        let new_date = new Date(year, month - 1, day);
+        // parseInt(message_date[1])-1 потому что Date принимает индекс месяца, а отсчёт начинается с нуля
+        let new_date = new Date(parseInt(message_date[2]), parseInt(message_date[1]) - 1, parseInt(message_date[0]));
         if ((current_date - new_date) !== 0) {
-            $('#chat' + data['room']).append(
-                '<div>' + day + "." + month + "." + year + '</div>'
+            chatWindow.append(
+                '<div class="date-divider">' + message_date[0] + "." + message_date[1] + "." + message_date[2] + '</div>'
             );
             current_date = new_date;
         }
         // прикрепляем сообщение
-        $('#chat' + data['room']).append(
+        chatWindow.append(
             '<div class="order-dialog__item">' +
             '<div class="row order-dialog__header">' +
             '<div class="col-4 col-sm-2 order-dialog__photo">' +
@@ -52,22 +50,37 @@ if ($('main.order-history').length > 0) {
             '</div>' +
             '</div>'
         );
-
+        // скроллим до дна окна с сообщениями
+        chatWindow.scrollTop(1E10);
     }
 
     socket.on('response', function (data) {
-        console.log('GOT A RESPONSE start');
-        console.log(data);
-        console.log('GOT A RESPONSE end');
         appendMessage(data);
     });
 
     function load_message_history(order_id) {
         $.get("/api/v1/chat/" + order_id,
-            function (data) {
-                console.log(data);
-                for (let i = 0; i < data.length; i++) {
-                    appendMessage(data[i]);
+            function (messages) {
+                console.log(messages);
+                for (let i = 0; i < messages.length; i++) {
+                    appendMessage(messages[i]);
+                }
+                // скроллим до дна окна с сообщениями
+                $('#chat' + order_id).scrollTop(1E10);
+                // Если в этом заказе есть непрочитынне сообщения от производителя
+                if (orders_with_unread_messages.has(order_id)) {
+                    orders_with_unread_messages.delete(order_id);
+                    // Удаляем бадж с кнопки "Связаться с производителем
+                    $('#talkToProducer' + id).html(' Связаться с производителем ');
+                    // В данном случае entity - это человек, чьи сообщения были непрочитаны.
+                    $.post('/api/v1/chat',
+                        {
+                            order_id: order_id,
+                            entity: 'producer'
+                        },
+                        function (data) {
+                            console.log("Сообщения прочитаны: " + data);
+                        })
                 }
             })
     }
@@ -87,6 +100,7 @@ if ($('main.order-history').length > 0) {
     }
 
     function sendToRoom(order_id) {
+        console.log('Whaat');
         let inputField = $("#orderDialogMessage" + order_id);
         socket.emit('send_to_room', {
             room: order_id,
@@ -135,28 +149,6 @@ if ($('main.order-history').length > 0) {
             element.remove();
             order_data['page'] = element.attr("data-page-number");
             addOrders();
-        }
-
-        for (let id of orders_with_unread_messages.keys()) {
-            let lastElement = $('#chat' + id + ' div:last-child');
-            if (lastElement.length > 0) {
-                if (isInViewport(lastElement)) {
-                    // Сразу удаляем из сэта, чтобы по следующему скроллу не включать его в цикл
-                    orders_with_unread_messages.delete(id);
-                    // Удаляям бадж с кнопки "Связаться с производителем
-                    $('#talkToProducer' + id).html(' Связаться с производителем ');
-                    console.log('YAY');
-                    // В данном случае entity - это человек, чьи сообщения были непрочитаны.
-                    $.post('/api/v1/chat',
-                        {
-                            order_id: id,
-                            entity: 'producer'
-                        },
-                        function (data) {
-                            console.log(data);
-                        })
-                }
-            }
         }
 
     });
@@ -345,11 +337,11 @@ if ($('main.order-history').length > 0) {
                         )
                     }
 
-                    if (data.orders[i].has_unread_messages) {
+                    if (data.orders[i].unread_producer_messages !== 0) {
                         // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
                         orders_with_unread_messages.add(data.orders[i].id);
                         // Отображаем бадж на кнопках "Связаться с производителем".
-                        $('#talkToProducer' + data.orders[i].id).html(' Связаться с производителем <span id="messageBadge' + data.orders[i].id + '" class="badge badge-pill badge-secondary">1</span> ')
+                        $('#talkToProducer' + data.orders[i].id).html(' Связаться с производителем <span id="messageBadge' + data.orders[i].id + '" class="badge badge-pill badge-secondary message-badge">' + data.orders[i].unread_producer_messages + '</span> ')
                     }
                 }
                 let next_page_number = data.page;
