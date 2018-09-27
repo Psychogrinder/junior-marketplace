@@ -27,27 +27,33 @@ class TestConsumer(unittest.TestCase):
                           "address": "",
                           }
 
-    def test_01_consumer_register(self):
-        url, pw = self.url, self.password
-        driver.get(url)
+
+    def test_01_get_url(self):
+        driver.get(self.url)
+
+
+    def test_02_consumer_open_registration_page(self):
         driver.find_element_by_css_selector(".header-login").click()
         driver.find_element_by_css_selector(
             "p.registration-link:nth-child(4) > a:nth-child(1)").click()
+
+
+    def test_03_consumer_enter_registrtion_data(self):
         driver.find_element_by_id("emailRegistration").send_keys(unique_email)
-        driver.find_element_by_id("passwordRegistration").send_keys(pw)
-        driver.find_element_by_id("re_passwordRegistration").send_keys(pw)
+        driver.find_element_by_id("passwordRegistration").send_keys(self.password)
+        driver.find_element_by_id("re_passwordRegistration").send_keys(self.password)
         driver.find_element_by_id("reg_button").click()
 
 
-    def test_02_consumer_logout(self):
+    def test_04_consumer_logout(self):
         logout(driver)
 
 
-    def test_03_consumer_login(self):
+    def test_05_consumer_login(self):
         login(driver, self.consumer.email, self.password)
 
 
-    def test_04_consumer_go_to_edit_profile(self):
+    def test_04_consumer_open_edit_profile(self):
         driver.find_element_by_css_selector("button.btn:nth-child(1)").click() # User menu btn
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click() # Profile btn
         driver.find_element_by_css_selector(
