@@ -60,13 +60,14 @@ class User(SetPhotoUrlMixin, UserMixin, db.Model):
     photo_url = db.Column(db.String(256))
     entity = db.Column(db.String(16))
 
-    def __init__(self, email, password, entity, phone_number='', address=''):
+    def __init__(self, email, password, entity, phone_number='', address='', photo_url='static/img/userpic.svg'):
         self.email = email
         self.email_auth_status = False
         self.phone_number = get_string_or_default(phone_number)
         self.password_hash = generate_password_hash(password)
         self.address = get_string_or_default(address)
         self.entity = entity
+        self.photo_url = photo_url
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -203,6 +204,8 @@ class Order(db.Model):
     first_name = db.Column(db.String(128))
     last_name = db.Column(db.String(128))
     reviewed = db.Column(db.Boolean, default=False)
+    unread_consumer_messages = db.Column(db.Integer, default=0)
+    unread_producer_messages = db.Column(db.Integer, default=0)
 
     def __init__(self, total_cost, order_items_json, delivery_method, delivery_address, consumer_phone, consumer_email,
                  consumer_id, producer_id, status='Не обработан', first_name='', last_name=''):

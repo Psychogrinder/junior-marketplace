@@ -7,6 +7,7 @@ Flask-Script
 Flask-Migrate
 Flask-Session
 Flask-Login
+flask_socketio
 marshmallow
 marshmallow-sqlalchemy
 psycopg2-binary
@@ -28,3 +29,5 @@ pyscss
 influxdb
 raven[flask]
 py-trello
+eventlet
+pymongo

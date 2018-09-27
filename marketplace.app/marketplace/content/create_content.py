@@ -25,8 +25,8 @@ with urllib.request.urlopen("https://randomuser.me/api/?results={}".format(len(p
                             context=context) as response:
     data = response.read()
     data = json.loads(data)
-    for company in data["results"]:
-        producer = Producer('123123', company['email'], 'Совхоз ' + producer_names.pop().title(),
+    for i, company in enumerate(data["results"]):
+        producer = Producer('123123', f'pro{i+1}.ru', 'Совхоз ' + producer_names.pop().title(),
                             company['phone'], company['location']['street'],
                             "{} {}".format(company['name']['first'], company['name']['last']), description)
         db.session.add(producer)

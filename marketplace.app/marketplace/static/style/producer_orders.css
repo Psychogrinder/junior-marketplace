@@ -167,6 +167,10 @@
     margin-right: 1rem;
 }
 
+.connect-customer-table {
+    width: fit-content;
+}
+
 @media (max-width: 1000px) {
     .change-view-dropdown {
         display: none;

@@ -18,65 +18,70 @@
                         <a class="nav-link" href="{{ url_for( 'index' ) }}">КАТАЛОГ</a>
                     </li>
                     {% if current_user.entity == 'consumer' %}
-                        <li class="nav-item backlighting_nav_item">
-                            <a class="nav-link" href="{{ url_for( 'order_history', user_id = current_user.id ) }}">ИСТОРИЯ
-                                ЗАКАЗОВ</a>
-                        </li>
+                    <li class="nav-item backlighting_nav_item">
+                        <a class="nav-link" href="{{ url_for( 'order_history', user_id = current_user.id ) }}">ИСТОРИЯ
+                            ЗАКАЗОВ
+                            <span class="badge badge-pill badge-secondary" id="numberOfUnreadMessagesBadge">1</span>
+                        </a>
+
+                    </li>
                     {% endif %}
                     {% if current_user.entity == 'producer' %}
-                        <li class="nav-item backlighting_nav_item">
-                            <a class="nav-link nav-link-producer_orders" id="producerOrders" href="{{ url_for(
+                    <li class="nav-item backlighting_nav_item">
+                        <a class="nav-link nav-link-producer_orders" id="producerOrders" href="{{ url_for(
                         'producer_orders', producer_id =
                         current_user.id ) }}">
-                                ЗАКАЗЫ
-                            </a>
-                        </li>
-                        <li class="nav-item backlighting_nav_item">
-                            <a class="nav-link"
-                               href="{{ url_for('producer_products', producer_id = current_user.id) }}">ТОВАРЫ</a>
-                        </li>
+                            ЗАКАЗЫ
+                            <span class="badge badge-pill badge-secondary">1</span>
+                        </a>
+                    </li>
+                    <li class="nav-item backlighting_nav_item">
+                        <a class="nav-link"
+                           href="{{ url_for('producer_products', producer_id = current_user.id) }}">ТОВАРЫ</a>
+                    </li>
                     {% endif %}
                 </ul>
                 <form action="{{ url_for( 'global_search' ) }}" class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" name='find' type="text" placeholder="Поиск" id="globalSearch">
                 </form>
                 {% if current_user.entity=='consumer' %}
-                    <div class="backlighting_nav_item cart_nav_container mr-2">
-                        <a href="{{ url_for('cart', user_id = current_user.id) }}" class="header-card header_card_badge
+                <div class="backlighting_nav_item cart_nav_container mr-2">
+                    <a href="{{ url_for('cart', user_id = current_user.id) }}" class="header-card header_card_badge
                            cart_nav_link_container">
-                        <img src="{{ url_for('static', filename ='img/shopping-cart-solid.svg') }}" class="header-cart"
+                        <img src="{{ url_for('static', filename ='img/shopping-cart-solid.svg') }}"
+                             class="header-cart"
                              alt="Корзина">
                         <span id="numberOfProductsInCart" class="badge badge-pill badge-secondary"></span>
-                        </a>
-                    </div>
+                    </a>
+                </div>
                 {% endif %}
                 {% if current_user.entity=='producer' or current_user.entity=='consumer' %}
-                    <div class="btn-group px-0 mr-2 header-dropdown-toggle">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                            <img src="{{ url_for('static', filename ='img/user-regular.svg') }}" alt="">
-                        </button>
-                        <div class="dropdown-menu">
-                            {% if current_user.entity=='consumer' %}
-                                <a class="dropdown-item"
-                                   href={{ url_for( 'consumer_profile', user_id = current_user.id ) }}>Профиль</a>
-                            {% endif %}
-                            {% if current_user.entity=='producer' %}
-                                <a class="dropdown-item"
-                                   href={{ url_for( 'producer_profile', producer_id = current_user.id ) }}>Профиль</a>
-                            {% endif %}
-                            <a class="dropdown-item btn btn-secondary" id="logoutButton" href="#">Выход</a>
-                        </div>
+                <div class="btn-group px-0 mr-2 header-dropdown-toggle">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ url_for('static', filename ='img/user-regular.svg') }}" alt="">
+                    </button>
+                    <div class="dropdown-menu">
+                        {% if current_user.entity=='consumer' %}
+                        <a class="dropdown-item"
+                           href="{{ url_for( 'consumer_profile', user_id = current_user.id ) }}">Профиль</a>
+                        {% endif %}
+                        {% if current_user.entity=='producer' %}
+                        <a class="dropdown-item"
+                           href="{{ url_for( 'producer_profile', producer_id = current_user.id ) }}">Профиль</a>
+                        {% endif %}
+                        <a class="dropdown-item btn btn-secondary" id="logoutButton" href="#">Выход</a>
                     </div>
-                    </div>
-                {% endif %}
+                </div>
+            </div>
+            {% endif %}
             {% if current_user.entity!='producer' %}
-                {% if current_user.entity!='consumer' %}
-                    <a href="#" class="header-login px-2" data-toggle="modal" data-target="#singInUser">
-                        <img src="{{ url_for('static', filename ='img/sign-in-alt-solid.svg') }}" class="header-logo">
-                        <span class="visually-hidden-login">ВХОД</span>
-                    </a>
-                {% endif %}
+            {% if current_user.entity!='consumer' %}
+            <a href="#" class="header-login px-2" data-toggle="modal" data-target="#singInUser">
+                <img src="{{ url_for('static', filename ='img/sign-in-alt-solid.svg') }}" class="header-logo">
+                <span class="visually-hidden-login">ВХОД</span>
+            </a>
+            {% endif %}
             {% endif %}
         </div>
     </nav>

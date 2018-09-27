@@ -1,4 +1,139 @@
 if ($('main.order-history').length > 0) {
+    let isInViewport = function (element) {
+        let elementTop = element.offset().top;
+        let elementBottom = elementTop + element.outerHeight();
+
+        let viewportTop = $(window).scrollTop();
+        let viewportBottom = viewportTop + $(window).height();
+
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
+    // ========= Chat functionality start =========
+    var current_date = null;
+    var orders_with_unread_messages = new Set();
+    // Use a "/test" namespace.
+    // An application can open a connection on multiple namespaces, and
+    // Socket.IO will multiplex all those connections on a single
+    // physical channel. If you don't care about multiple channels, you
+    // can set the namespace to an empty string.
+    namespace = '/chat';
+    // Connect to the Socket.IO server.
+    // The connection URL has the following format:
+    //     http[s]://<domain>:<port>[/<namespace>]
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+    // Event handler for new connections.
+    // The callback function is invoked when a connection with the
+    // server is established.
+    socket.on('connect', function () {
+        socket.emit('connected', {data: 'I\'m connected!'});
+    });
+
+    function adjustHeaderMessageBadge() {
+        $.get("/api/v1/chat/unread/" + localStorage.getItem("globalUserId"),
+            function (numberOfMessages, status) {
+                $('#numberOfUnreadMessagesBadge').html(numberOfMessages);
+            });
+    }
+
+    function setUnreadMessagesToZero(id) {
+        if (orders_with_unread_messages.has(id)) {
+            orders_with_unread_messages.delete(id);
+            // Удаляем бадж с кнопки "Связаться с производителем
+            $('#talkToProducer' + id).html(' Связаться с производителем ');
+            // В данном случае entity - это человек, чьи сообщения были непрочитаны.
+            $.post('/api/v1/chat',
+                {
+                    order_id: id,
+                    entity: 'producer'
+                },
+                function (data) {
+                    adjustHeaderMessageBadge();
+                })
+        }
+    }
+
+    function appendMessage(data) {
+        let chatWindow = $('#chat' + data['room']);
+        // Если сообщения относятся к разным дням, то прикрепляем разделитель формата 02.07.2018
+        let message_date = data.timestamp.split(' ')[1].split('.');
+        // parseInt(message_date[1])-1 потому что Date принимает индекс месяца, а отсчёт начинается с нуля
+        let new_date = new Date(parseInt(message_date[2]), parseInt(message_date[1]) - 1, parseInt(message_date[0]));
+        if ((current_date - new_date) !== 0) {
+            chatWindow.append(
+                '<div class="date-divider">' + message_date[0] + "." + message_date[1] + "." + message_date[2] + '</div>'
+            );
+            current_date = new_date;
+        }
+        // прикрепляем сообщение
+        chatWindow.append(
+            '<div class="order-dialog__item">' +
+            '<div class="row order-dialog__header">' +
+            '<div class="col-4 col-sm-2 order-dialog__photo">' +
+            '<img src="/' + data['photo_url'] + '" alt="">' +
+            '</div>' +
+            '<div class="col-8 col-sm-7 order-dialog__name">' +
+            '<p class="main-text">' + data['username'] + '</p>' +
+            '<p class="main-text">' + data['body'] + '</p>' +
+            '</div>' +
+            '<div class="col-8 col-sm-3 order-dialog__date">' +
+            '<p>' + data['timestamp'].split(' ')[0] + '</p>' +
+            '</div>' +
+            '</div>' +
+            '</div>'
+        );
+        // скроллим до дна окна с сообщениями
+        chatWindow.scrollTop(1E10);
+
+    }
+
+    socket.on('response', function (data) {
+        appendMessage(data);
+        // добавляем id заказа в нерпочитанные сообщения
+        orders_with_unread_messages.add(data['room']);
+        // Если окно чата видно на экране, то сразу удаляем сообщение из непрочитанных. Если нет, то удалим по скроллу.
+        // Если нет, то удалим при следующем открытии чата.
+        if (isInViewport($('#chat' + data['room']))) {
+            setUnreadMessagesToZero(data['room'])
+        }
+    });
+
+    function load_message_history(order_id) {
+        $.get("/api/v1/chat/" + order_id,
+            function (messages) {
+                for (let i = 0; i < messages.length; i++) {
+                    appendMessage(messages[i]);
+                }
+                setUnreadMessagesToZero(order_id);
+            })
+    }
+
+    function joinRoom(order_id) {
+        socket.emit('join', {
+            room: order_id
+        });
+        return false;
+    }
+
+    function startDialog(order_id) {
+        $("#orderDialog" + order_id).show();
+        $("#talkToProducer" + order_id).css('display', 'none');
+        load_message_history(order_id);
+        joinRoom(order_id);
+    }
+
+    function sendToRoom(order_id) {
+        let inputField = $("#orderDialogMessage" + order_id);
+        socket.emit('send_to_room', {
+            room: order_id,
+            body: inputField.val(),
+            entity: 'consumer'
+        });
+        inputField.val('').focus()
+    }
+
+    // ========= Chat functionality end =========
+
+
     function cancelOrder(order_id) {
         $.ajax({
             url: '/api/v1/orders/' + order_id,
@@ -19,30 +154,41 @@ if ($('main.order-history').length > 0) {
         page: 1
     };
 
-    let isInViewport = function (element) {
-        let elementTop = element.offset().top;
-        let elementBottom = elementTop + element.outerHeight();
-
-        let viewportTop = $(window).scrollTop();
-        let viewportBottom = viewportTop + $(window).height();
-
-        return elementBottom > viewportTop && elementTop < viewportBottom;
-    };
-
     $(window).on('resize scroll', function () {
-        let element = $('.pageNumber');
-        if (element.length > 0 && isInViewport(element)) {
-            element.remove();
-            order_data['page'] = element.attr("data-page-number");
-            addOrders();
+            let element = $('.pageNumber');
+            if (element.length > 0 && isInViewport(element)) {
+                element.remove();
+                order_data['page'] = element.attr("data-page-number");
+                addOrders();
+            }
+
+            // Здесь это необходимо для того, чтобы новые сообщения не добавлялись, когда пользователь онлайн
+            for (let id of orders_with_unread_messages.keys()) {
+                let chatWindow = $('#chat' + id);
+                if (chatWindow.length > 0) {
+                    if (isInViewport(chatWindow)) {
+                        // Сразу удаляем из сэта, чтобы по следующему скроллу не включать его в цикл
+                        orders_with_unread_messages.delete(id);
+                        // В данном случае entity - это человек, чьи сообщения были непрочитаны.
+                        $.post('/api/v1/chat',
+                            {
+                                order_id: id,
+                                entity: 'producer'
+                            },
+                            function (data) {
+                                adjustHeaderMessageBadge();
+                            })
+                    }
+                }
+            }
         }
-    });
+    );
 
     function addOrders() {
         $.post("/api/v1/consumers/formatted_orders",
             order_data,
             function (data, status) {
-                if (data.orders.length == 0) {
+                if (data.orders.length === 0) {
                     $('#consumerOrderHistory').append(
                         '<div class="container">' +
                         '<h3>У вас нет заказов</h3>' +
@@ -108,9 +254,15 @@ if ($('main.order-history').length > 0) {
                         '</div>' +
                         '</div>' +
                         // third row finish
-                        '<div id="orderButtonSection' +
+                        '<div class="order-buttons-section" id="orderButtonSection' +
                         data.orders[i].id +
-                        '"></div>' +
+                        '">' +
+                        '<button type="button" class="btn btn-primary" id="talkToProducer' +
+                        data.orders[i].id +
+                        '" onclick="startDialog(' +
+                        data.orders[i].id +
+                        ')"> Связаться с производителем </button>' +
+                        '</div>' +
                         '</div>' +
                         '<div class="modal fade" id="showOrderCancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
                         '<div class="modal-dialog modal-min-dialog" role="document">' +
@@ -133,6 +285,20 @@ if ($('main.order-history').length > 0) {
                         '</div>' +
                         '</div>' +
                         '</div>' +
+
+                        // chat window interface start
+                        '<section class="container order-dialog" id="orderDialog' + data.orders[i].id + '">' +
+                        '<div class="message-history" id="chat' + data.orders[i].id + '">' +
+                        '</div>' +
+                        '<div class="order-dialog__form col-12 col-lg-10">' +
+                        '<textarea type="text" class="form-control" rows="4" id="orderDialogMessage' + data.orders[i].id + '" name="orderDialogMessage">' +
+                        '</textarea>' +
+                        '<div class="order-dialog__btn-block">' +
+                        '<button class="btn btn-secondary" onclick="sendToRoom(' + data.orders[i].id + ')">Отправить</button>' +
+                        '</div>' +
+                        '</div>' +
+                        '</section>' +
+                        // chat window interface end
                         '</div>'
                     );
                     let items = data.orders[i].items;
@@ -153,7 +319,7 @@ if ($('main.order-history').length > 0) {
                             '</div>' +
                             '<div class="col-7 col-lg-3 cart_product_stock_info">' +
                             '<a href="/products/' +
-                             items[k].id +
+                            items[k].id +
                             '">' +
                             '<p>' +
                             items[k].name +
@@ -177,11 +343,12 @@ if ($('main.order-history').length > 0) {
                             // second row finish
                         )
                     }
+
                     if (data.orders[i].status === 'Не обработан') {
                         $('#orderButtonSection' + data.orders[i].id).append(
-                            '<div class="row order-history-btn-block">' +
+                            '<div class="order-history-btn-block">' +
                             '<div class="col-12-right">' +
-                            '<button class="btn btn-primary btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
+                            '<button class="btn btn-danger btn-order-history-cancel" type="button" data-toggle="modal" data-target="#showOrderCancelModal">' +
                             'ОТМЕНИТЬ ЗАКАЗ' +
                             '</button>' +
                             '</div>' +
@@ -189,7 +356,7 @@ if ($('main.order-history').length > 0) {
                         )
                     } else if ((data.orders[i].status === 'Завершён') && (data.orders[i].reviewed !== true)) {
                         $('#orderButtonSection' + data.orders[i].id).append(
-                            '<div class="row order-history-btn-block"> ' +
+                            '<div class="order-history-btn-block"> ' +
                             '<div class="col-4">' +
                             '<a href="/review/' +
                             data.orders[i].id +
@@ -201,14 +368,18 @@ if ($('main.order-history').length > 0) {
                         )
                     }
 
-
-
-                    let next_page_number = data.page;
-                    if (next_page_number) {
-                        $("#consumerOrderHistory").append(
-                            '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
-                        );
+                    if (data.orders[i].unread_producer_messages !== 0) {
+                        // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
+                        orders_with_unread_messages.add(data.orders[i].id);
+                        // Отображаем бадж на кнопках "Связаться с производителем".
+                        $('#talkToProducer' + data.orders[i].id).html(' Связаться с производителем <span id="messageBadge' + data.orders[i].id + '" class="badge badge-pill badge-secondary message-badge">' + data.orders[i].unread_producer_messages + '</span> ')
                     }
+                }
+                let next_page_number = data.page;
+                if (next_page_number) {
+                    $("#consumerOrderHistory").append(
+                        '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
+                    );
                 }
             })
     }
