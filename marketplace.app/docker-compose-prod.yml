@@ -29,6 +29,7 @@ services:
         - MAIL_PASSWORD
         - INFLUXDB_WRITE_USER
         - INFLUXDB_WRITE_USER_PASSWORD
+        - CACHE_STORAGE_HOST
     environment:
       - FLASK_ENV=production
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
@@ -41,6 +42,7 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
       - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
+      - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
     ports:
       - "10.100.1.39:8000:8000"
     command:
@@ -79,6 +81,7 @@ services:
         - MAIL_PASSWORD
         - INFLUXDB_WRITE_USER
         - INFLUXDB_WRITE_USER_PASSWORD
+        - CACHE_STORAGE_HOST
     command:
       "celery -A marketplace.celery --loglevel=info worker -B"
     networks:
@@ -95,6 +98,7 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
       - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
+      - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
     volumes:
       - "marketplace_user_image:${UPLOAD_FOLDER}"
     depends_on:

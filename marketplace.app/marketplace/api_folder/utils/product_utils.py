@@ -3,7 +3,7 @@ import string
 from sqlalchemy import desc, func, exc
 from sqlalchemy_searchable import inspect_search_vectors
 from flask import url_for
-from marketplace import db, app, PRODUCTS_PER_PAGE
+from marketplace import db, app, PRODUCTS_PER_PAGE, sitemap_tools
 from marketplace.api_folder.schemas import product_schema, product_schema_list
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
     abort_if_producer_doesnt_exist_or_get, abort_if_category_doesnt_exist_or_get, abort_if_invalid_rating_value
@@ -223,6 +223,7 @@ def post_product(args: dict) -> Product:
         if category not in producer.categories:
             producer.categories.append(category)
     db.session.commit()
+    sitemap_tools.update_producer_sitemap.delay(new_product.producer_id)
     return new_product
 
 
@@ -242,6 +243,7 @@ def put_product(args: dict, product_id: int) -> Product:
     db.session.commit()
     if 0 == product_quantity_before < product.quantity:
         notify_subscribers_about_products_supply(product)
+    sitemap_tools.update_producer_sitemap.delay(product.producer_id)
     return product
 
 
@@ -251,6 +253,7 @@ def delete_product_by_id(product_id: int) -> dict:
     delete_categories_if_it_was_the_last_product(product)
     db.session.delete(product)
     db.session.commit()
+    sitemap_tools.update_producer_sitemap.delay(product.producer_id)
     return {"message": "Product with id {} has been deleted successfully".format(product_id)}
 
 

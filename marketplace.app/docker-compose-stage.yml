@@ -18,6 +18,7 @@ services:
         - SECURITY_PASSWORD_SALT
         - FLASK_DEBUG
         - UPLOAD_FOLDER
+        - CACHE_STORAGE_HOST
     environment:
       - FLASK_DEBUG=${FLASK_DEBUG}
       - FLASK_ENV=${FLASK_ENV}
@@ -27,6 +28,7 @@ services:
       - SECRET_KEY=#{SECRET_KEY}
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+      - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
     ports:
       - "8000:8000"
     command:
@@ -59,6 +61,7 @@ services:
         - UPLOAD_FOLDER
         - CELERY_APP
         - SENTRY_DSN
+        - CACHE_STORAGE_HOST
     command:
       "celery -A marketplace.celery --loglevel=info worker -B"
     networks:
@@ -74,6 +77,7 @@ services:
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
       - CELERY_APP=True
       - SENTRY_DSN=${SENTRY_DSN}
+      - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
     volumes:
       - "./marketplace/:/app/marketplace"
     depends_on:
