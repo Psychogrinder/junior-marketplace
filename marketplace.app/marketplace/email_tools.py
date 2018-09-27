@@ -58,13 +58,13 @@ def send_password_recovery_email(user_email, contact):
 
 def send_notify_about_products_supply(email, contact, product_url, product_name):
     subject = 'MARKETPLACE. Оповещение о поступлении товара'
-    data = datetime.now().strftime("%d.%m.%y")
+    date = datetime.now().strftime("%d.%m.%y")
     html = render_template(
         'email_report_admission.html',
         contact=contact,
         product_url=product_url,
         product_name=product_name,
-        data=data
+        date=date
     )
     headers = {'Precedence': 'bulk'}
     _send_email.delay(email, html, subject, headers)
