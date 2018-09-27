@@ -50,10 +50,18 @@
                         </p>
                     {% endif %}
                     {% if product.quantity == 0 %}
-                        <p class="goods-ended">
-                            <img src="{{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}">
-                            Нет в наличии
-                        </p>
+                        <div class="product-not-available">
+                            <p class="goods-ended">
+                                <img src="{{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}">
+                                Нет в наличии
+                            </p>
+                            {% if current_user.email_auth_status%}
+                            <button class="btn btn-secondary" data-toggle="modal" data-target="#reportAdmissionModal">
+                                Сообщить о поступлении
+                            </button>
+                            {% endif %}
+                        </div>
+                        {% include 'inc/report_on_admission.html' %}
                     {% endif %}
                     <span class="producer_title">ПРОДАВЕЦ</span>
                     <span class="producer_title_name"><a
@@ -63,7 +71,8 @@
                     <span class="product_price_title">ЦЕНА</span>
                     <span class="product_price_value">{{ product.price }}</span>
                     <span class="product_balance_title">ОСТАТОК</span>
-                    <span class="product_balance_value" id="allProductsInStock">{{ product.quantity }} {{ product.measurement_unit }}</span>
+                    <span class="product_balance_value"
+                          id="allProductsInStock">{{ product.quantity }} {{ product.measurement_unit }}</span>
                     {% if current_user.entity == 'consumer' and product.quantity != 0 %}
                         <div>
                             <form class="product_quantity">

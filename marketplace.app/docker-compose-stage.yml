@@ -19,31 +19,32 @@ services:
       - FLASK_DEBUG
       - UPLOAD_FOLDER
       - MONGO_DATABASE_URI
+      - CACHE_STORAGE_HOST
     environment:
-    - PYTHONUNBUFFERED=0
-    - FLASK_DEBUG=${FLASK_DEBUG}
-    - FLASK_ENV=${FLASK_ENV}
-    - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
-    - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-    - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
-    - SECRET_KEY=#{SECRET_KEY}
-    - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
-    - UPLOAD_FOLDER=${UPLOAD_FOLDER}
-    - MONGO_DATABASE_URI=${MONGO_DATABASE_URI}
+      - PYTHONUNBUFFERED=0
+      - FLASK_DEBUG=${FLASK_DEBUG}
+      - FLASK_ENV=${FLASK_ENV}
+      - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
+      - SECRET_KEY=#{SECRET_KEY}
+      - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
+      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+      - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
     ports:
-    - "8000:8000"
+      - "8000:8000"
     command:
       "flask run --port=8000 --host=0.0.0.0"
     networks:
-    - marketplace
+      - marketplace
     volumes:
-    - "./marketplace/:/app/marketplace"
+      - "./marketplace/:/app/marketplace"
 
 
   redis:
     image: redislabs/rejson:latest
     networks:
-    - marketplace
+      - marketplace
 
 
   celery:
@@ -63,10 +64,11 @@ services:
       - CELERY_APP
       - SENTRY_DSN
       - MONGO_DATABASE_URI
+      - CACHE_STORAGE_HOST
     command:
       "celery -A marketplace.celery --loglevel=info worker -B"
     networks:
-    - marketplace
+      - marketplace
     environment:
     - FLASK_DEBUG=${FLASK_DEBUG}
     - FLASK_ENV=${FLASK_ENV}
@@ -79,10 +81,11 @@ services:
     - CELERY_APP=True
     - SENTRY_DSN=${SENTRY_DSN}
     - MONGO_DATABASE_URI=${MONGO_DATABASE_URI}
+    - CACHE_STORAGE_HOST=${CACHE_STORAGE_HOST}
     volumes:
-    - "./marketplace/:/app/marketplace"
+      - "./marketplace/:/app/marketplace"
     depends_on:
-    - redis
+      - redis
 
   mongo:
     image: mongo

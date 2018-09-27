@@ -204,3 +204,13 @@
     max-height: 10px;
   }
 }
+
+.product-not-available {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  button {
+    height: 38px;
+  }
+}

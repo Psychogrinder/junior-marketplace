@@ -24,6 +24,12 @@ producer_category_association_table = db.Table('producers_categories',
                                                          primary_key=True)
                                                )
 
+subscribe_consumer_product = db.Table('subscribe_consumer_product',
+    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True),
+    db.Column('consumer_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+)
+
+
 
 class RatedMixin():
     def update_rating(self, rating):
@@ -246,6 +252,11 @@ class Product(SetPhotoUrlMixin, RatedMixin, db.Model):
     weight = db.Column(db.Float)
     rating = db.Column(db.Float, default=0)
     votes = db.Column(db.Integer, default=0)
+    subscribers = db.relationship(
+        "Consumer",
+        secondary=subscribe_consumer_product,
+        backref=db.backref('subscribe', lazy=True))
+
     search_vector = db.Column(TSVectorType(
         'name',
         'description',
