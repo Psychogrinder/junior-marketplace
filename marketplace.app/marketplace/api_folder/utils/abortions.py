@@ -1,6 +1,6 @@
 from flask_restful import abort
 
-from marketplace.models import Order, Consumer, Producer, Category, Product, Comment, User
+from marketplace.models import Order, Consumer, Producer, Category, Product, Comment
 
 
 def abort_if_order_doesnt_exist_or_get(order_id: int) -> Order:
