@@ -7,7 +7,7 @@ from marketplace.models import User
 
 
 firefox_opts = webdriver.FirefoxOptions()
-# firefox_opts.add_argument('--headless')
+firefox_opts.add_argument('--headless')
 driver = webdriver.Firefox(firefox_options=firefox_opts)
 
 unique_email = uniqueEmail()
@@ -103,9 +103,6 @@ class TestConsumer(unittest.TestCase):
     def test_10_consumer_confirm_delete(self):
         driver.find_element_by_css_selector("#deleteConsumerBtn").click()
         driver.implicitly_wait(2)
-
-
-    def test_11_is_consumer_deleted(self):
         self.assertIsNone(User.query.filter_by(id=self.consumer.id).first())
 
         driver.close()

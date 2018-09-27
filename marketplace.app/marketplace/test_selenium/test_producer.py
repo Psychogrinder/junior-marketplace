@@ -7,7 +7,7 @@ from marketplace.models import User
 
 
 firefox_opts = webdriver.FirefoxOptions()
-# firefox_opts.add_argument('--headless')
+firefox_opts.add_argument('--headless')
 driver = webdriver.Firefox(firefox_options=firefox_opts)
 
 unique_email = uniqueEmail()
@@ -99,21 +99,16 @@ class TestProducer(unittest.TestCase):
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click() # go to modal delete
 
 
-    def test_10_producer_delete_confirm(self):
-        driver.find_element_by_id("deleteProducerBtn").click()
-        driver.implicitly_wait(2)
-
-
-        #TODO cancel button click; attach id to the button
+        # TODO cancel button click; attach id to the button
         # driver.find_element_by_xpath("/html/body/div[5]/div/div/div[3]/button[1]").click()
         # driver.find_element_by_css_selector(
         #     "deleteProfileProducer > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)")\
         #     .click()
 
 
-    def test_11_is_consumer_deleted(self):
+    def test_10_producer_delete_confirm(self):
+        driver.find_element_by_id("deleteProducerBtn").click()
+        driver.implicitly_wait(2)
         self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
 
         driver.close()
-
-
