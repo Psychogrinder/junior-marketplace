@@ -1,34 +1,81 @@
-// .trelloIntegration{
-//     width: 100px;
-//     height: 30px;
-//     margin-left: 10px;
-//     display: flex;
-// }
-
-.trello-init{
-    background-image: url('img/trello.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 100%;
+.trellointegration {
+  margin-top: 1rem;
+  display: flex;
+  padding: 0px 15px;
+  align-items: center;
 }
 
-.trello-card-done{
-    background-image: url('img/trello_done.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 100%;
-    width: 100%;
+.trello-init {
+  background-image: url('img/trello.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100%;
 }
 
-.trellointegration-button{
-    height: 20px;
-    width: 60px;
-    background-image: url('img/trello.png');
-    background-repeat: no-repeat;
-    background-size: contain;
+.trello-card-done {
+  background-image: url('img/trello_done.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100%;
+  width: 100%;
 }
 
-.trellointegration-input{
-    height: 20px;
-    width: 150px;
+.trellointegration-button {
+  height: 25px;
+  width: 70px;
+  background-image: url(img/trello.png);
+  background-repeat: no-repeat;
+  margin-right: 1rem;
+  background-size: contain;
+  border: none;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(44, 45, 48, .3);
+  background-size: 55px 15px;
+  background-position: center;
+}
+
+.trellointegration-input {
+  height: 25px;
+  width: 150px;
+  &::-webkit-input-placeholder {
+    color: #c2cfd4;
+  }
+  &:-moz-placeholder {
+    color: #c2cfd4;
+  }
+}
+
+.trellointegration-input:focus {
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(162, 208, 237, 0.8);
+  box-shadow: 0 0 0 0.2rem rgba(162, 208, 237, 0.8);
+  border-color: #90C8E8;
+}
+
+.trellointegration__icon {
+  width: 50px;
+  color: #338ee3;
+}
+
+.trellointegration__icon-wrapper {
+  margin-right: .5rem;
+  position: relative;
+}
+
+.trellointegration__icon-wrapper:hover::after {
+  content: attr(data-title);
+  position: absolute; /* Абсолютное позиционирование */
+  right: 20%;
+  top: 30%; /* Положение подсказки */
+  z-index: 1; /* Отображаем подсказку поверх других элементов */
+  background: rgba(77, 173, 233, 0.9); /* Полупрозрачный цвет фона */
+  font-family: Arial, sans-serif; /* Гарнитура шрифта */
+  font-size: 12px; /* Размер текста подсказки */
+  padding: 5px 10px; /* Поля */
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  width: 150px;
+  //border: 1px solid #333; /* Параметры рамки */
 }
