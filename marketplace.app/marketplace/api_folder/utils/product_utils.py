@@ -223,7 +223,8 @@ def post_product(args: dict) -> Product:
         if category not in producer.categories:
             producer.categories.append(category)
     db.session.commit()
-    sitemap_tools.update_producer_sitemap.delay(new_product.producer_id)
+    # sitemap_tools.update_producer_sitemap.delay(new_product.producer_id)
+    sitemap_tools.add_new_product_to_sitemap.delay(new_product.producer_id, new_product.id)
     return new_product
 
 
