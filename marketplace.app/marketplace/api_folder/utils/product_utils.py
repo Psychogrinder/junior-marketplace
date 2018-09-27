@@ -2,7 +2,7 @@ import string
 
 from sqlalchemy import desc, func, exc
 from sqlalchemy_searchable import inspect_search_vectors
-
+from flask import url_for
 from marketplace import db, app, PRODUCTS_PER_PAGE
 from marketplace.api_folder.schemas import product_schema, product_schema_list
 from marketplace.api_folder.utils.abortions import abort_if_product_doesnt_exist_or_get, \
@@ -13,6 +13,7 @@ from marketplace.api_folder.utils.order_utils import get_order_by_id
 from marketplace.api_folder.utils.producer_utils import get_producer_by_id
 from marketplace.api_folder.utils.uploaders import upload_image
 from marketplace.models import Product, Producer, Category
+from marketplace.email_tools import send_notify_about_products_supply
 
 
 def get_product_by_id(product_id: int) -> Product:
@@ -273,3 +274,20 @@ def get_formatted_rating(rating_value):
     for i in range(5 - len(rating)):
         rating.append(stars['empty'])
     return rating
+
+
+def subscribe_consumer(product, consumer):
+    product.subscribers.append(consumer)
+    db.session.commit()
+
+
+def notify_subscribers_about_products_supply(product):
+    while any(product.subscribers):
+        subscriber = product.subscribers.pop()
+        product_url = url_for('product_card', product_id=product.id, _external=True)
+        send_notify_about_products_supply(
+            subscriber.email,
+            subscriber.first_name,
+            product_url,
+            product.name
+        )
