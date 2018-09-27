@@ -1,7 +1,8 @@
 from flask import request
 from flask_restful import Resource, reqparse
-from marketplace.api_folder.utils import consumer_utils, comment_utils, pagination_utils
-from marketplace.api_folder.utils import order_utils
+from flask_login import current_user
+from marketplace.api_folder.utils import consumer_utils, comment_utils, pagination_utils, product_utils
+from marketplace.api_folder.utils import order_utils, abortions
 from marketplace.api_folder.schemas import (
     consumer_schema_list,
     consumer_schema,
@@ -92,3 +93,14 @@ class UploadImageConsumer(Resource):
     @account_access_required
     def post(self, **kwargs):
         return consumer_utils.upload_consumer_image(kwargs['consumer_id'], request.files), 201
+
+
+class ProductSubscription(Resource):
+
+    @account_access_required
+    def get(self, **kwargs):
+        product = abortions.abort_if_product_doesnt_exist_or_get(kwargs['product_id'])
+        if current_user.id == kwargs['consumer_id']:
+            product_utils.subscribe_consumer(product, current_user)
+            return {'message': 'ok'}, 200
+        return {'message': 'invalid user'}, 403
