@@ -74,11 +74,11 @@ def add_new_product_to_sitemap(producer_id, product_id):
     if os.path.isfile(path):
         tree = ET.parse(path)
         root = tree.getroot()
-        url_elem = ET.SubElement(root, 'url')
+        url_elem = ET.Element('url')
         loc = ET.SubElement(url_elem, 'loc')
         lastmod = ET.SubElement(url_elem, 'lastmod')
         loc.text = '{}/products/{}'.format(SITE_DOMAIN, product_id)
         lastmod.text = str(datetime.now())
-        ET.dump(root)
+        root.append(url_elem)
         tree.write(path)
 
