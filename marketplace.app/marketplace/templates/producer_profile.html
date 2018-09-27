@@ -37,11 +37,17 @@
                         </a>
                     </p>
                     {% if not is_trello_linked %}
-                    <div class="trellointegration">
-                        <button class="trellointegration-button" onclick="linkTrelloAccount({{current_user.id}})"></button>
-                        <input class="trellointegration-input" placeholder="название доски" type="text">
-                    </div>
-                     {% endif %}
+                        <div class="trellointegration col-12 col-lg-4">
+                            <div class="trellointegration__icon-wrapper"
+                                 data-title="Введите имя новой доски в трелло для интеграции данных о заказах">
+                                <i class="far fa-question-circle trellointegration__icon" aria-hidden="true"></i>
+                            </div>
+                            <button class="trellointegration-button"
+                                    onclick="linkTrelloAccount({{ current_user.id }})"></button>
+                            <input class="trellointegration-input form-control" placeholder="Название доски"
+                                   type="text">
+                        </div>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
