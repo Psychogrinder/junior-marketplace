@@ -1,5 +1,13 @@
 if ($('main.order-history').length > 0) {
+    let isInViewport = function (element) {
+        let elementTop = element.offset().top;
+        let elementBottom = elementTop + element.outerHeight();
 
+        let viewportTop = $(window).scrollTop();
+        let viewportBottom = viewportTop + $(window).height();
+
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
     // ========= Chat functionality start =========
     var current_date = null;
     var orders_with_unread_messages = new Set();
@@ -20,6 +28,29 @@ if ($('main.order-history').length > 0) {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
 
+    function adjustHeaderMessageBadge() {
+        $.get("/api/v1/chat/unread/" + localStorage.getItem("globalUserId"),
+            function (numberOfMessages, status) {
+                $('#numberOfUnreadMessagesBadge').html(numberOfMessages);
+            });
+    }
+
+    function setUnreadMessagesToZero(id) {
+        if (orders_with_unread_messages.has(id)) {
+            orders_with_unread_messages.delete(id);
+            // Удаляем бадж с кнопки "Связаться с производителем
+            $('#talkToProducer' + id).html(' Связаться с производителем ');
+            // В данном случае entity - это человек, чьи сообщения были непрочитаны.
+            $.post('/api/v1/chat',
+                {
+                    order_id: id,
+                    entity: 'producer'
+                },
+                function (data) {
+                    adjustHeaderMessageBadge();
+                })
+        }
+    }
 
     function appendMessage(data) {
         let chatWindow = $('#chat' + data['room']);
@@ -52,36 +83,27 @@ if ($('main.order-history').length > 0) {
         );
         // скроллим до дна окна с сообщениями
         chatWindow.scrollTop(1E10);
+
     }
 
     socket.on('response', function (data) {
         appendMessage(data);
+        // добавляем id заказа в нерпочитанные сообщения
+        orders_with_unread_messages.add(data['room']);
+        // Если окно чата видно на экране, то сразу удаляем сообщение из непрочитанных. Если нет, то удалим по скроллу.
+        // Если нет, то удалим при следующем открытии чата.
+        if (isInViewport($('#chat' + data['room']))) {
+            setUnreadMessagesToZero(data['room'])
+        }
     });
 
     function load_message_history(order_id) {
         $.get("/api/v1/chat/" + order_id,
             function (messages) {
-                console.log(messages);
                 for (let i = 0; i < messages.length; i++) {
                     appendMessage(messages[i]);
                 }
-                // скроллим до дна окна с сообщениями
-                $('#chat' + order_id).scrollTop(1E10);
-                // Если в этом заказе есть непрочитынне сообщения от производителя
-                if (orders_with_unread_messages.has(order_id)) {
-                    orders_with_unread_messages.delete(order_id);
-                    // Удаляем бадж с кнопки "Связаться с производителем
-                    $('#talkToProducer' + id).html(' Связаться с производителем ');
-                    // В данном случае entity - это человек, чьи сообщения были непрочитаны.
-                    $.post('/api/v1/chat',
-                        {
-                            order_id: order_id,
-                            entity: 'producer'
-                        },
-                        function (data) {
-                            console.log("Сообщения прочитаны: " + data);
-                        })
-                }
+                setUnreadMessagesToZero(order_id);
             })
     }
 
@@ -100,7 +122,6 @@ if ($('main.order-history').length > 0) {
     }
 
     function sendToRoom(order_id) {
-        console.log('Whaat');
         let inputField = $("#orderDialogMessage" + order_id);
         socket.emit('send_to_room', {
             room: order_id,
@@ -133,25 +154,35 @@ if ($('main.order-history').length > 0) {
         page: 1
     };
 
-    let isInViewport = function (element) {
-        let elementTop = element.offset().top;
-        let elementBottom = elementTop + element.outerHeight();
-
-        let viewportTop = $(window).scrollTop();
-        let viewportBottom = viewportTop + $(window).height();
-
-        return elementBottom > viewportTop && elementTop < viewportBottom;
-    };
-
     $(window).on('resize scroll', function () {
-        let element = $('.pageNumber');
-        if (element.length > 0 && isInViewport(element)) {
-            element.remove();
-            order_data['page'] = element.attr("data-page-number");
-            addOrders();
-        }
+            let element = $('.pageNumber');
+            if (element.length > 0 && isInViewport(element)) {
+                element.remove();
+                order_data['page'] = element.attr("data-page-number");
+                addOrders();
+            }
 
-    });
+            // Здесь это необходимо для того, чтобы новые сообщения не добавлялись, когда пользователь онлайн
+            for (let id of orders_with_unread_messages.keys()) {
+                let chatWindow = $('#chat' + id);
+                if (chatWindow.length > 0) {
+                    if (isInViewport(chatWindow)) {
+                        // Сразу удаляем из сэта, чтобы по следующему скроллу не включать его в цикл
+                        orders_with_unread_messages.delete(id);
+                        // В данном случае entity - это человек, чьи сообщения были непрочитаны.
+                        $.post('/api/v1/chat',
+                            {
+                                order_id: id,
+                                entity: 'producer'
+                            },
+                            function (data) {
+                                adjustHeaderMessageBadge();
+                            })
+                    }
+                }
+            }
+        }
+    );
 
     function addOrders() {
         $.post("/api/v1/consumers/formatted_orders",

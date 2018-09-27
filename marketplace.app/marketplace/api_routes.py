@@ -39,7 +39,7 @@ from marketplace.api_folder.product_api import (
     ProductComments, ProductRating)
 
 from marketplace.api_folder.password_api import PasswordRecovery
-from marketplace.api_folder.chat_api import ChatHistory, MessageStatus
+from marketplace.api_folder.chat_api import ChatHistory, MessageStatus, NumberOfMessages
 from marketplace.api_folder.trello_api import TrelloWebHook
 
 # Orders
@@ -110,4 +110,5 @@ api.add_resource(TrelloWebHook, '/trello/webhook')
 
 # Chat
 api.add_resource(ChatHistory, '/chat/<int:room>')
+api.add_resource(NumberOfMessages, '/chat/unread/<int:user_id>')
 api.add_resource(MessageStatus, '/chat')

@@ -17,7 +17,6 @@ from influxdb import InfluxDBClient
 from raven.contrib.flask import Sentry
 from pymongo import MongoClient
 
-
 app = Flask(__name__)
 socketio = SocketIO(app)
 assets = Environment(app)
@@ -32,12 +31,14 @@ if app.config.get('SENTRY_DSN'):
     if os.getenv('CELERY_APP'):
         from raven import Client
         from raven.contrib.celery import register_signal, register_logger_signal
+
         sentry = Client(app.config['SENTRY_DSN'])
         register_logger_signal(sentry)
         register_signal(sentry)
     else:
         sentry = Sentry(app, dsn=app.config['SENTRY_DSN'], logging=True, level=logging.ERROR)
 from marketplace import _celery
+
 celery = _celery.make_celery(app)
 celery.conf.beat_schedule = _celery.setup_periodic_tasks()
 celery.conf.timezone = 'Europe/Moscow'
@@ -50,7 +51,6 @@ api = Api(app, prefix='/api/v1')
 db = SQLAlchemy(app)
 login = LoginManager(app)
 migrate = Migrate(app, db)
-
 
 cache = redis.Redis(host=app.config['CACHE_STORAGE_HOST'], port=app.config['CACHE_STORAGE_PORT'],
                     db=app.config['CACHE_STORAGE_DB'])
@@ -68,7 +68,7 @@ influx_client = InfluxDBClient(
 
 mongo_client = MongoClient(app.config['MONGO_DATABASE_URI'])
 
-from marketplace import models, views, chat, api_routes
+from marketplace import models, views, api_routes
 from marketplace.models import Admin
 from marketplace import collect_statistics
 
@@ -77,7 +77,8 @@ css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'styl
              'style/edit_profile.scss', 'style/profile.css', 'style/order_history.css', 'style/edit_product.scss',
              'style/producer_products.scss', 'style/producer_orders.css', 'style/order_registration.css',
              'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/croppie.css', 'style/image_crop.css',
-             'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/producers_list.css', 'style/trello.scss',
+             'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/producers_list.css',
+             'style/trello.scss',
              filters=['pyscss', 'cssmin'], output='bundle.min.css')
 
 assets.register('css_all', css)
@@ -90,7 +91,8 @@ js = Bundle('script/quantity.js', 'script/table_view.js', 'script/edit_product.j
             'script/category.js', 'script/orders_badge.js', 'script/hullabaloo.js', 'script/producer_products.js',
             'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js', 'script/croppie.js',
             'script/image_crop.js', 'script/get_comments.js', 'script/review.js', 'script/jquery.inputmask.bundle.js',
-            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js', 'script/producers_list.js', 'script/trello_integration.js',
+            'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js',
+            'script/producers_list.js', 'script/trello_integration.js', 'script/number_of_messages.js',
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)
