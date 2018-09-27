@@ -16,7 +16,9 @@ $(document).ready(function () {
         });
     }
 
-    $('#save_product_data').click(function () {
+    $('#editProductForm').submit(function (event) {
+        event.preventDefault();
+
         function submitEditProductForm(){
             var addr = window.location + '';
             addr = addr.split('/');
@@ -37,7 +39,6 @@ $(document).ready(function () {
                 return productObject;
             }
 
-
             $.ajax({
                 url: '/api/v1/products/' + product_id,
                 type: 'PUT',
@@ -51,11 +52,6 @@ $(document).ready(function () {
             hulla.send("Информация о товаре сохранена", "secondary");
         }
 
-
-
-        $('#editProductForm').submit(function (event) {
-            event.preventDefault();
-            submitEditProductForm();
-        });
+        submitEditProductForm();
     });
 });

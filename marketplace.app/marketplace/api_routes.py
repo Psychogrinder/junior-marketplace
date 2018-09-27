@@ -11,7 +11,8 @@ from marketplace.api_folder.consumer_api import (
     ConsumerRest,
     ConsumerOrders,
     UploadImageConsumer,
-    ConsumerComments)
+    ConsumerComments,
+    ProductSubscription)
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders, UnprocessedOrdersByProducerId, \
@@ -86,6 +87,7 @@ api.add_resource(ProducerLinkTrelloAccount, '/producers/<int:producer_id>/trello
 api.add_resource(GlobalConsumers, '/consumers')
 api.add_resource(ConsumerRest, '/consumers/<int:consumer_id>')
 api.add_resource(ConsumerComments, '/consumers/<int:consumer_id>/comments')
+api.add_resource(ProductSubscription, '/consumers/<int:consumer_id>/subscribe/products/<int:product_id>')
 
 # Products
 api.add_resource(GlobalProducts, '/products')
