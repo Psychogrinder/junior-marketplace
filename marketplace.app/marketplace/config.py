@@ -56,6 +56,11 @@ class Development(Base):
             or 'postgresql://postgres:1234@localhost/marketplace.db'
     )
 
+    MONGO_DATABASE_URI = (
+            os.getenv('MONGO_DATABASE_URI')
+            or 'mongodb://root:example@localhost'
+    )
+
     SECRET_KEY = 'secret-key'
     SECURITY_PASSWORD_SALT = 'secret-salt'
 
@@ -69,7 +74,7 @@ class Production(Base):
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
 
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
-
+    MONGO_DATABASE_URI = os.getenv('MONGO_DATABASE_URI')
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL')
 

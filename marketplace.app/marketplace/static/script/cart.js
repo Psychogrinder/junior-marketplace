@@ -55,7 +55,6 @@ if ((localStorage.getItem("globalUserId") > 0) && (localStorage.getItem("globalU
         };
         getNumberOfProductsInCart(user_id);
     });
-
 }
 
 
