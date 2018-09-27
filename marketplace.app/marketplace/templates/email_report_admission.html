@@ -134,8 +134,8 @@
 			padding-top: 25px;
 			color: #000000;
 			font-family: sans-serif;" class="paragraph">
-                        {% if contact %} {{ contact }}, {% endif %}  товар __ТУТ ИМЯ ТОВАРА__ снова в наличии!
-                        <a href="#">Перейти к товару</a>
+                        {% if contact %} {{ contact }}, {% endif %}  товар {{ product_name }} снова в наличии!
+                        <a href="{{ product_url }}">Перейти к товару</a>
                     </td>
                 </tr>
                 <tr>
