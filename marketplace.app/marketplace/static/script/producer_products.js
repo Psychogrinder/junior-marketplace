@@ -19,7 +19,7 @@ if ($('#producerProducts').length > 0) {
         producer_name: null,
         quantity: null,
         search: null,
-        in_stock: 0,
+        in_stock: false,
         page: 1
     };
 
@@ -183,12 +183,8 @@ if ($('#producerProducts').length > 0) {
 
     $('#in_stock').click(function () {
         producer_sorts_and_filters['page'] = 1;
+        producer_sorts_and_filters['in_stock'] = $(this).is(":checked");
         delete_current_producer_products();
-        if ($(this).is(":checked")) {
-            producer_sorts_and_filters['in_stock'] = 1;
-        } else {
-            producer_sorts_and_filters['in_stock'] = 0;
-        }
         updateProducerProductsPage(producer_sorts_and_filters);
     });
 

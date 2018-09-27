@@ -215,11 +215,7 @@ $(document).ready(function () {
             $('#in_stock_catalog_products').click(function () {
                 delete_current_products();
                 sorts_and_filters['page'] = 1;
-                if ($(this).is(":checked")) {
-                    sorts_and_filters['in_stock'] = 1;
-                } else {
-                    sorts_and_filters['in_stock'] = 0;
-                }
+                sorts_and_filters['in_stock'] = $(this).is(":checked");
                 update_page(sorts_and_filters, base_category);
             });
 
