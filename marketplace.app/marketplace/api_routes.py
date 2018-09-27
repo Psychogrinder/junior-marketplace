@@ -11,7 +11,8 @@ from marketplace.api_folder.consumer_api import (
     ConsumerRest,
     ConsumerOrders,
     UploadImageConsumer,
-    ConsumerComments)
+    ConsumerComments,
+    ProductSubscription)
 from marketplace.api_folder.login_api import Login
 from marketplace.api_folder.logout_api import Logout
 from marketplace.api_folder.order_api import GlobalOrders, Orders, UnprocessedOrdersByProducerId, \
