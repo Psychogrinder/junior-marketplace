@@ -66,3 +66,19 @@ def update_producer_sitemap(producer_id):
     producer_sitemap = render_template('sitemap.xml', pages=pages)
     with open('producer_sitemap{}.xml'.format(producer_id), 'w+') as sitemap:
         sitemap.write(producer_sitemap)
+
+
+@celery.task()
+def add_new_product_to_sitemap(producer_id, product_id):
+    path = 'producer_sitemap{}.xml'.format(producer_id)
+    if os.path.isfile(path):
+        tree = ET.parse(path)
+        root = tree.getroot()
+        url_elem = ET.SubElement(root, 'url')
+        loc = ET.SubElement(url_elem, 'loc')
+        lastmod = ET.SubElement(url_elem, 'lastmod')
+        loc.text = '{}/products/{}'.format(SITE_DOMAIN, product_id)
+        lastmod.text = str(datetime.now())
+        ET.dump(root)
+        tree.write(path)
+
