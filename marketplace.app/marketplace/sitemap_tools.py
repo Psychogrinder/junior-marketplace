@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import render_template
 import xml.etree.ElementTree as ET
 
-from marketplace import app, SITE_DOMAIN, celery, FIND_IN_XML_PREFIX
+from marketplace import app, SITE_DOMAIN, celery, FIND_IN_XML_PREFIX, DEFAULT_XML_NAMESPACE
 from marketplace.api_folder.utils import product_utils, producer_utils
 
 
@@ -89,7 +89,7 @@ def update_product_info_in_sitemap(producer_id, product_id):
 
 
 def init_tree_and_update_date(path):
-    ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
+    ET.register_namespace('', DEFAULT_XML_NAMESPACE)
     tree = ET.parse(path)
     root = tree.getroot()
     cur_date = str(datetime.now())
