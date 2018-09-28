@@ -25,36 +25,6 @@ def update_global_sitemap():
         sitemap.write(sitemap_xml)
 
 
-def get_modification_date(path):
-    tree = ET.parse(path)
-    root = tree.getroot()
-    mod_date = root.find('{}url'.format(FIND_IN_XML_PREFIX)).find(
-        '{}lastmod'.format(FIND_IN_XML_PREFIX)).text
-    return mod_date
-
-
-def get_first_elem(root):
-    return root.find('{}url'.format(FIND_IN_XML_PREFIX)).find(
-        '{}lastmod'.format(FIND_IN_XML_PREFIX))
-
-
-def build_new_xml_elem(product_id):
-    url_elem = ET.Element('url')
-    loc = ET.SubElement(url_elem, 'loc')
-    lastmod = ET.SubElement(url_elem, 'lastmod')
-    loc.text = '{}/products/{}'.format(SITE_DOMAIN, product_id)
-    lastmod.text = str(datetime.now())
-    return url_elem
-
-
-def find_xml_elem_with_given_loc_value(root, loc):
-    for url in root.findall('{}url'.format(FIND_IN_XML_PREFIX)):
-        cur_loc = url.find(
-            '{}loc'.format(FIND_IN_XML_PREFIX)).text
-        if cur_loc == loc:
-            return url
-
-
 @celery.task(name='sitemap_tools.update_static_sitemap')
 def update_static_sitemap():
     pages = []
@@ -97,9 +67,9 @@ def add_new_product_to_sitemap(producer_id, product_id):
         ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
         tree = ET.parse(path)
         root = tree.getroot()
-        sitemap_agent = get_first_elem(root)
-        sitemap_agent.text = str(datetime.now())
-        root.append(build_new_xml_elem(product_id))
+        cur_date = str(datetime.now())
+        update_sitemap_time(root, cur_date)
+        root.append(build_new_xml_elem(product_id, cur_date))
         tree.write(path)
 
 
@@ -110,10 +80,65 @@ def delete_product_from_sitemap(producer_id, product_id):
         ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
         tree = ET.parse(path)
         root = tree.getroot()
-        sitemap_agent = get_first_elem(root)
-        sitemap_agent.text = str(datetime.now)
-        to_remove = find_xml_elem_with_given_loc_value(root, '{}/products/{}'.format(SITE_DOMAIN, product_id))
-        root.remove(to_remove)
+        cur_date = str(datetime.now())
+        update_sitemap_time(root, cur_date)
+        root.remove(find_xml_elem_with_given_loc_value(root, '{}/products/{}'.format(SITE_DOMAIN, product_id)))
         tree.write(path)
 
-# TODO Добавить взаимодействие при удаление товара и продукта
+
+@celery.task()
+def update_product_info_in_sitemap(producer_id, product_id):
+    path = 'producer_sitemap{}.xml'.format(producer_id)
+    if os.path.isfile(path):
+        ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
+        tree = ET.parse(path)
+        root = tree.getroot()
+        cur_date = str(datetime.now())
+        update_sitemap_time(root, cur_date)
+        update_xml_elem_date(root, '{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date)
+        tree.write(path)
+
+
+def update_xml_elem_date(root, loc, date):
+    for url in root:
+        cur_loc = url.find(
+            '{}loc'.format(FIND_IN_XML_PREFIX)).text
+        if cur_loc == loc:
+            mod_date = url.find('{}lastmod'.format(FIND_IN_XML_PREFIX))
+            mod_date.text = date
+            return
+
+
+def update_sitemap_time(root, date):
+    sitemap_agent = get_first_elem(root)
+    sitemap_agent.text = date
+
+
+def get_modification_date(path):
+    tree = ET.parse(path)
+    root = tree.getroot()
+    mod_date = root.find('{}url'.format(FIND_IN_XML_PREFIX)).find(
+        '{}lastmod'.format(FIND_IN_XML_PREFIX)).text
+    return mod_date
+
+
+def get_first_elem(root):
+    return root.find('{}url'.format(FIND_IN_XML_PREFIX)).find(
+        '{}lastmod'.format(FIND_IN_XML_PREFIX))
+
+
+def build_new_xml_elem(product_id, date):
+    url_elem = ET.Element('url')
+    loc = ET.SubElement(url_elem, 'loc')
+    lastmod = ET.SubElement(url_elem, 'lastmod')
+    loc.text = '{}/products/{}'.format(SITE_DOMAIN, product_id)
+    lastmod.text = date
+    return url_elem
+
+
+def find_xml_elem_with_given_loc_value(root, loc):
+    for url in root:
+        cur_loc = url.find(
+            '{}loc'.format(FIND_IN_XML_PREFIX)).text
+        if cur_loc == loc:
+            return url
