@@ -35,13 +35,32 @@ $(document).ready(function () {
     });
 
     $('#nameRegProducer').change(function () {
-        $('#nameRegProducer').css("border-color", "#ced4da");
-        $('#errorRegistrationProducer').css('display', 'none');
+        let nameRegular = /^[A-zА-яЁё]+$/i;
+        let name = $('#nameRegProducer').val();
+        if (!name) {
+            $('#nameRegProducer').css("border-color", "#FF7851");
+            $('#NotValidName').css('display', 'none');
+        } else if (!(nameRegular.test(name))) {
+            $('#NotValidName').css('display', 'block');
+        } else {
+            $('#nameRegProducer').css("border-color", "#ced4da");
+            $('#NotValidName').css('display', 'none');
+        }
     });
 
 
     $('#contactPersonRegProducer').change(function () {
-        $('#contactPersonRegProducer').css("border-color", "#ced4da");
+        let personRegular = /^[А-Я]+$/i;
+        let person = $('#contactPersonRegProducer').val();
+        if (!person) {
+            $('#contactPersonRegProducer').css("border-color", "#FF7851");
+            $('#NotValidPersonRegProducer').css('display', 'none');
+        } else if (!(personRegular.test(person))) {
+            $('#NotValidPersonRegProducer').css('display', 'block');
+        } else {
+            $('#contactPersonRegProducer').css("border-color", "#ced4da");
+            $('#NotValidPersonRegProducer').css('display', 'none');
+        }
     });
 
 
@@ -65,6 +84,8 @@ $(document).ready(function () {
         var address_producer = $("#addressRegProducer").val();
         var description_producer = $("#descriptionRegProducer").val();
         var emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        var nameRegular = /^[A-zА-яЁё]+$/i;
+        let personRegular = /^[А-Я]+$/i;
 
         if (!email_producer || (!(emailRegular.test(email_producer)))) {
             $('#emailRegProducer').css("border-color", "#FF7851");
@@ -77,9 +98,13 @@ $(document).ready(function () {
         }
         else if (!name_producer) {
             $('#nameRegProducer').css("border-color", "#FF7851");
+        } else if (!(nameRegular.test(name_producer))) {
+            $('#NotValidName').css('display', 'block');
         }
         else if (!contact_producer) {
             $('#contactPersonRegProducer').css("border-color", "#FF7851");
+        } else if (!(personRegular.test(contact_producer))) {
+            $('#NotValidPersonRegProducer').css('display', 'block');
         }
         else if (!phone_producer) {
             $('#phoneRegProducer').css("border-color", "#FF7851");

@@ -12,3 +12,8 @@
     margin-top: -15px;
     display: none;
 }
+
+.error-valid-item {
+    color: #FF7851;
+    display: none;
+}
