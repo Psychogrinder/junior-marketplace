@@ -35,7 +35,7 @@ $(document).ready(function () {
     });
 
     $('#nameRegProducer').change(function () {
-        let nameRegular = /^[A-zА-яЁё]+$/i;
+        let nameRegular = /^[A-zА-яЁё]*[\s]*[A-zА-яЁё]+$/i;
         let name = $('#nameRegProducer').val();
         if (!name) {
             $('#nameRegProducer').css("border-color", "#FF7851");
@@ -50,7 +50,7 @@ $(document).ready(function () {
 
 
     $('#contactPersonRegProducer').change(function () {
-        let personRegular = /^[А-Я]+$/i;
+        let personRegular = /^([А-Я]*[\s]*[А-Я])+$/i;
         let person = $('#contactPersonRegProducer').val();
         if (!person) {
             $('#contactPersonRegProducer').css("border-color", "#FF7851");
@@ -84,8 +84,8 @@ $(document).ready(function () {
         var address_producer = $("#addressRegProducer").val();
         var description_producer = $("#descriptionRegProducer").val();
         var emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-        var nameRegular = /^[A-zА-яЁё]+$/i;
-        let personRegular = /^[А-Я]+$/i;
+        var nameRegular = /^[A-zА-яЁё]*[\s]*[A-zА-яЁё]+$/i;
+        let personRegular = /^([А-Я]*[\s]*[А-Я])+$/i;
 
         if (!email_producer || (!(emailRegular.test(email_producer)))) {
             $('#emailRegProducer').css("border-color", "#FF7851");
