@@ -47,6 +47,14 @@ def build_new_xml_elem(product_id):
     return url_elem
 
 
+def find_xml_elem_with_given_loc_value(root, loc):
+    for url in root.findall('{}url'.format(FIND_IN_XML_PREFIX)):
+        cur_loc = url.find(
+            '{}loc'.format(FIND_IN_XML_PREFIX)).text
+        if cur_loc == loc:
+            return url
+
+
 @celery.task(name='sitemap_tools.update_static_sitemap')
 def update_static_sitemap():
     pages = []
@@ -92,6 +100,20 @@ def add_new_product_to_sitemap(producer_id, product_id):
         sitemap_agent = get_first_elem(root)
         sitemap_agent.text = str(datetime.now())
         root.append(build_new_xml_elem(product_id))
+        tree.write(path)
+
+
+@celery.task()
+def delete_product_from_sitemap(producer_id, product_id):
+    path = 'producer_sitemap{}.xml'.format(producer_id)
+    if os.path.isfile(path):
+        ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
+        tree = ET.parse(path)
+        root = tree.getroot()
+        sitemap_agent = get_first_elem(root)
+        sitemap_agent.text = str(datetime.now)
+        to_remove = find_xml_elem_with_given_loc_value(root, '{}/products/{}'.format(SITE_DOMAIN, product_id))
+        root.remove(to_remove)
         tree.write(path)
 
 # TODO Добавить взаимодействие при удаление товара и продукта
