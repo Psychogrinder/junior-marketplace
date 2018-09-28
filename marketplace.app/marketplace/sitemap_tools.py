@@ -38,6 +38,15 @@ def get_first_elem(root):
         '{}lastmod'.format(FIND_IN_XML_PREFIX))
 
 
+def build_new_xml_elem(product_id):
+    url_elem = ET.Element('url')
+    loc = ET.SubElement(url_elem, 'loc')
+    lastmod = ET.SubElement(url_elem, 'lastmod')
+    loc.text = '{}/products/{}'.format(SITE_DOMAIN, product_id)
+    lastmod.text = str(datetime.now())
+    return url_elem
+
+
 @celery.task(name='sitemap_tools.update_static_sitemap')
 def update_static_sitemap():
     pages = []
@@ -80,14 +89,9 @@ def add_new_product_to_sitemap(producer_id, product_id):
         ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
         tree = ET.parse(path)
         root = tree.getroot()
-        prod_url = get_first_elem(root)
-        prod_url.text = str(datetime.now())
-        url_elem = ET.Element('url')
-        loc = ET.SubElement(url_elem, 'loc')
-        lastmod = ET.SubElement(url_elem, 'lastmod')
-        loc.text = '{}/products/{}'.format(SITE_DOMAIN, product_id)
-        lastmod.text = str(datetime.now())
-        root.append(url_elem)
+        sitemap_agent = get_first_elem(root)
+        sitemap_agent.text = str(datetime.now())
+        root.append(build_new_xml_elem(product_id))
         tree.write(path)
 
 # TODO Добавить взаимодействие при удаление товара и продукта
