@@ -30,15 +30,15 @@ def setup_periodic_tasks():
     return {
         'collect-stat-every-two-hours': {
             'task': 'collect_statistics.send_users_count_stat',
-            'schedule': crontab(hour='*/2')
+            'schedule': crontab(minute='0', hour='*/2')
         },
         'collect-stat-every-three-hours': {
             'task': 'collect_statistics.send_orders_stat',
-            'schedule': crontab(hour='*/3')
+            'schedule': crontab(minute='0', hour='*/3')
         },
         'update-static-sitemap-every-day': {
             'task': 'sitemap_tools.update_static_sitemap',
-            'schedule': crontab(hour='*/24')
+            'schedule': crontab(minute='0', hour='*/24')
         }
     }
 

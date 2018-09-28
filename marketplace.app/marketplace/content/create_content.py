@@ -141,8 +141,6 @@ for cat, subcats in product_names.items():
             parent_category = Category.query.filter_by(id=category.parent_id).first()
             producer.categories.append(parent_category)
 
-for i in range(200):
-    db.session.add(Product(100, f'Product{i}', 5, 1, 2, 'кг', 12, 'whaaaat'))
 
 for i, cat in enumerate(Category.query.all()):
     cat.name = cat.name.title()
@@ -154,11 +152,6 @@ for i in range(1, 10):
     except FileExistsError:
         pass
 
-comments = ['GOOOOOOD', 'GREAAAT', 'Maaaah nigga, its fucking aaawesome', 'I want more', "Where do they do that at?"]
-
-for i, comment in enumerate(comments):
-    new_comment = Comment(1, i + 10, comment, 3, consumer_name='Покупатель')
-    db.session.add(new_comment)
 
 for _ in range(100):
     db.session.add(Order(500, {'1': 5}, 'Самовывоз', 'Baker Street', '911585456', '10mail.ru',

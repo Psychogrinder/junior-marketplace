@@ -191,3 +191,20 @@ if ($('#cartMain').length > 0) {
     }
 
 }
+
+if ($('#reportAdmissionModal').length > 0) {
+    reportAdmission = (product_id, user_id) => {
+        $.get("/api/v1/consumers/" + user_id + "/subscribe/products/" + product_id,
+            function (items, status) {
+                if (status) {
+                    var hulla = new hullabaloo();
+                    hulla.send("Подписка оформлена", "default");
+                    $('#reportAdmissionModal').css('display', 'none');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').css('display','none');
+                    $('#reportAdmissionButton').css('display','none');
+                }
+            })
+    }
+}
+
