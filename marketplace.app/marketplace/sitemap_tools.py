@@ -33,6 +33,11 @@ def get_modification_date(path):
     return mod_date
 
 
+def get_first_elem(root):
+    return root.find('{}url'.format(FIND_IN_XML_PREFIX)).find(
+        '{}lastmod'.format(FIND_IN_XML_PREFIX))
+
+
 @celery.task(name='sitemap_tools.update_static_sitemap')
 def update_static_sitemap():
     pages = []
@@ -75,8 +80,8 @@ def add_new_product_to_sitemap(producer_id, product_id):
         ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
         tree = ET.parse(path)
         root = tree.getroot()
-        for child in root:
-            print(child.tag, child.attrib, sep=' ')
+        prod_url = get_first_elem(root)
+        prod_url.text = str(datetime.now())
         url_elem = ET.Element('url')
         loc = ET.SubElement(url_elem, 'loc')
         lastmod = ET.SubElement(url_elem, 'lastmod')
@@ -85,4 +90,4 @@ def add_new_product_to_sitemap(producer_id, product_id):
         root.append(url_elem)
         tree.write(path)
 
-
+# TODO Добавить взаимодействие при удаление товара и продукта
