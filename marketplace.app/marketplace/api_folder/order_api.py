@@ -84,3 +84,8 @@ class FormattedConsumerOrders(Resource):
     def post(self):
         args = consumer_order_parser.parse_args()
         return order_utils.get_formatted_orders_by_consumer_id(args['consumer_id'], int(args['page']))
+
+
+class NewOrders(Resource):
+    def get(self, producer_id: int):
+        return order_utils.get_number_of_new_orders_by_producer_id(producer_id)

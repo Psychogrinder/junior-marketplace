@@ -98,6 +98,7 @@ js = Bundle('script/quantity.js', 'script/edit_product.js', 'script/registration
             'script/image_crop.js', 'script/get_comments.js', 'script/review.js', 'script/jquery.inputmask.bundle.js',
             'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js',
             'script/producers_list.js', 'script/trello_integration.js', 'script/number_of_messages.js',
+            'script/number_of_new_orders.js',
             filters=['jsmin'], output='app.min.js')
 
 assets.register('js_all', js)

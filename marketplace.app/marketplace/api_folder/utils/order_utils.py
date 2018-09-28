@@ -126,3 +126,7 @@ def get_formatted_orders_by_consumer_id(consumer_id: int, page: int) -> dict:
 
     return {'orders': orders,
             'page': next_num}
+
+
+def get_number_of_new_orders_by_producer_id(producer_id: int) -> int:
+    return Order.query.filter_by(producer_id=producer_id).filter_by(status='Не обработан').count()
