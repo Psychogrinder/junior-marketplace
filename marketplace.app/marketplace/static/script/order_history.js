@@ -28,6 +28,19 @@ if ($('main.order-history').length > 0) {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
 
+    socket.on('update_msg_badge', function (data) {
+        console.log(data);
+        if (Number(localStorage.getItem('globalUserId')) === data.user_id) {
+            // Обновляем баджи в хэдере...
+            let header_message_badge = $('#numberOfUnreadMessagesBadge');
+            let current_total_number_of_new_messages = parseInt(header_message_badge.html());
+            header_message_badge.html(current_total_number_of_new_messages + 1);
+            //... и на кнопках "Связаться с производителем"
+            let button_message_badge = $('#messageBadge' + data.room);
+            button_message_badge.text(Number(button_message_badge.text()) + 1);
+        }
+    });
+
     function adjustHeaderMessageBadge() {
         $.get("/api/v1/chat/unread/" + localStorage.getItem("globalUserId"),
             function (numberOfMessages, status) {
@@ -85,6 +98,18 @@ if ($('main.order-history').length > 0) {
         chatWindow.scrollTop(1E10);
 
     }
+
+    socket.on('update_msg_badge', function (data) {
+        if (Number(localStorage.getItem('globalUserId')) === data.user_id) {
+            // Обновляем баджи в хэдере...
+            let header_message_badge = $('#numberOfUnreadMessagesBadge');
+            let current_total_number_of_new_messages = parseInt(header_message_badge.html());
+            header_message_badge.html(current_total_number_of_new_messages + 1);
+            //... и на кнопках "Связаться с покупателем"
+            let button_message_badge = $('#messageBadge' + data.room);
+            button_message_badge.text(Number(button_message_badge.text()) + 1);
+        }
+    });
 
     socket.on('response', function (data) {
         appendMessage(data);
@@ -367,12 +392,16 @@ if ($('main.order-history').length > 0) {
                             '</div>'
                         )
                     }
-
-                    if (data.orders[i].unread_producer_messages !== 0) {
+                    console.log(data.orders[i]);
+                    if (data.orders[i].unread_producer_messages != 0) {
+                        console.log('123321');
                         // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
                         orders_with_unread_messages.add(data.orders[i].id);
                         // Отображаем бадж на кнопках "Связаться с производителем".
-                        $('#talkToProducer' + data.orders[i].id).html(' Связаться с производителем <span id="messageBadge' + data.orders[i].id + '" class="badge badge-pill badge-secondary message-badge">' + data.orders[i].unread_producer_messages + '</span> ')
+                        $('#talkToProducer' + data.orders[i].id).html(' Связаться с производителем ' +
+                            '<span id="messageBadge' + data.orders[i].id + '"' +
+                            'class="badge badge-pill badge-secondary message-badge">' +
+                            data.orders[i].unread_producer_messages + '</span> ')
                     }
                 }
                 let next_page_number = data.page;

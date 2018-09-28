@@ -89,10 +89,24 @@ if ($('main.producer-orders').length > 0) {
         chatWindow.scrollTop(1E10);
     }
 
+    socket.on('update_msg_badge', function (data) {
+        if (Number(localStorage.getItem('globalUserId')) === data.user_id) {
+            // Обновляем баджи в хэдере...
+            let header_message_badge = $('#numberOfUnreadMessagesBadge');
+            let current_total_number_of_new_messages = parseInt(header_message_badge.html());
+            header_message_badge.html(current_total_number_of_new_messages + 1);
+            //... и на кнопках "Связаться с покупателем"
+            let button_message_badge = $('#messageBadge' + data.room);
+            button_message_badge.text(Number(button_message_badge.text()) + 1);
+        }
+    });
+
     socket.on('response', function (data) {
+
         appendMessage(data);
         // добавляем id заказа в нерпочитанные сообщения
         orders_with_unread_messages.add(data['room']);
+
         // Если окно чата видно на экране, то сразу удаляем сообщение из непрочитанных. Если нет, то удалим по скроллу.
         // Если нет, то удалим при следующем открытии чата.
         if (isInViewport($('#chat' + data['room']))) {
