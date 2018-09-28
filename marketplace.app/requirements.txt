@@ -31,3 +31,4 @@ raven[flask]
 py-trello
 eventlet
 pymongo
+selenium

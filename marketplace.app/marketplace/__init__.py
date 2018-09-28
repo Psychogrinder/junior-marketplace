@@ -61,6 +61,7 @@ ORDERS_PER_PAGE = app.config['ORDERS_PER_PAGE']
 
 SITE_DOMAIN = app.config['SITE_DOMAIN']
 FIND_IN_XML_PREFIX = app.config['FIND_IN_XML_PREFIX']
+DEFAULT_XML_NAMESPACE = app.config['DEFAULT_XML_NAMESPACE']
 
 influx_client = InfluxDBClient(
     host=app.config['INFLUXDB_HOST'],

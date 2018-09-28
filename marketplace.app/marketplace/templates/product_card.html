@@ -55,7 +55,7 @@
                                 <img src="{{ url_for( 'static', filename = 'img/exclamation-circle-solid.svg') }}">
                                 Нет в наличии
                             </p>
-                            {% if current_user.email_auth_status %}
+                            {% if current_user.email_auth_status and not user_is_subscribed %}
                                 <button class="btn btn-secondary" data-toggle="modal"
                                         data-target="#reportAdmissionModal" id="reportAdmissionButton">
                                     Сообщить о поступлении
