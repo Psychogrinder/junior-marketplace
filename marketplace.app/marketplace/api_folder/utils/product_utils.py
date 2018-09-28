@@ -224,6 +224,7 @@ def post_product(args: dict) -> Product:
             producer.categories.append(category)
     db.session.commit()
     sitemap_tools.add_new_product_to_sitemap.delay(new_product.producer_id, new_product.id)
+    sitemap_tools.update_producer_info_in_global_sitemap.delay(new_product.producer_id)
     return new_product
 
 
@@ -243,8 +244,8 @@ def put_product(args: dict, product_id: int) -> Product:
     db.session.commit()
     if 0 == product_quantity_before < product.quantity:
         notify_subscribers_about_products_supply(product)
-    # sitemap_tools.update_producer_sitemap.delay(product.producer_id)
     sitemap_tools.update_product_info_in_sitemap.delay(product.producer_id, product_id)
+    sitemap_tools.update_producer_info_in_global_sitemap.delay(product.producer_id)
     return product
 
 
@@ -255,6 +256,7 @@ def delete_product_by_id(product_id: int) -> dict:
     db.session.delete(product)
     db.session.commit()
     sitemap_tools.delete_product_from_sitemap.delay(product.producer_id, product_id)
+    sitemap_tools.update_producer_info_in_global_sitemap.delay(product.producer_id)
     return {"message": "Product with id {} has been deleted successfully".format(product_id)}
 
 
