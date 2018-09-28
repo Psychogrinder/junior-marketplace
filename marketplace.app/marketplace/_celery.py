@@ -36,10 +36,6 @@ def setup_periodic_tasks():
             'task': 'collect_statistics.send_orders_stat',
             'schedule': crontab(hour='*/3')
         },
-        'update-global-sitemap-every-hour': {
-            'task': 'sitemap_tools.update_global_sitemap',
-            'schedule': crontab(hour='*/1')
-        },
         'update-static-sitemap-every-day': {
             'task': 'sitemap_tools.update_static_sitemap',
             'schedule': crontab(hour='*/24')
