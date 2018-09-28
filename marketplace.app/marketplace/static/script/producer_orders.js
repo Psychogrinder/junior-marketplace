@@ -34,13 +34,6 @@ if ($('main.producer-orders').length > 0) {
     // ========= Chat functionality start =========
     var current_date = null;
     var orders_with_unread_messages = new Set();
-
-    // namespace = '/chat';
-    // Connect to the Socket.IO server.
-    // The connection URL has the following format:
-    //     http[s]://<domain>:<port>[/<namespace>]
-    // var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
-
     socket.on('connect', function () {
         socket.emit('connected', {data: 'I\'m connected!'});
     });

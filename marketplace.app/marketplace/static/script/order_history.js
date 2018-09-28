@@ -12,19 +12,6 @@ if ($('main.order-history').length > 0) {
     // ========= Chat functionality start =========
     var current_date = null;
     var orders_with_unread_messages = new Set();
-    // Use a "/test" namespace.
-    // An application can open a connection on multiple namespaces, and
-    // Socket.IO will multiplex all those connections on a single
-    // physical channel. If you don't care about multiple channels, you
-    // can set the namespace to an empty string.
-    // namespace = '/chat';
-    // Connect to the Socket.IO server.
-    // The connection URL has the following format:
-    //     http[s]://<domain>:<port>[/<namespace>]
-    // var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
-    // Event handler for new connections.
-    // The callback function is invoked when a connection with the
-    // server is established.
     socket.on('connect', function () {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
@@ -371,16 +358,9 @@ if ($('main.order-history').length > 0) {
                             '</div>'
                         )
                     }
-                    console.log(data.orders[i]);
-                    if (data.orders[i].unread_producer_messages != 0) {
-                        console.log('123321');
+                    if (data.orders[i].unread_producer_messages !== 0) {
                         // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
                         orders_with_unread_messages.add(data.orders[i].id);
-                        // Отображаем бадж на кнопках "Связаться с производителем".
-                        $('#talkToProducer' + data.orders[i].id).html(' Связаться с производителем ' +
-                            '<span id="messageBadge' + data.orders[i].id + '"' +
-                            'class="badge badge-pill badge-secondary message-badge">' +
-                            data.orders[i].unread_producer_messages + '</span> ')
                     }
                 }
                 let next_page_number = data.page;
