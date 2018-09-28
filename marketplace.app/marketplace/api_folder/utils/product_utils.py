@@ -243,7 +243,8 @@ def put_product(args: dict, product_id: int) -> Product:
     db.session.commit()
     if 0 == product_quantity_before < product.quantity:
         notify_subscribers_about_products_supply(product)
-    sitemap_tools.update_producer_sitemap.delay(product.producer_id)
+    # sitemap_tools.update_producer_sitemap.delay(product.producer_id)
+    sitemap_tools.update_product_info_in_sitemap.delay(product.producer_id, product_id)
     return product
 
 
