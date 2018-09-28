@@ -46,16 +46,20 @@ class TestProducts(unittest.TestCase):
                 break
 
             login(driver, self.consumer.email, self.password)
+            driver.implicitly_wait(2)
             logged = True
 
 
-    def test_02_add_all_products_to_cart(self):
+    def test_02_enter_all_in_stock_products(self):
         in_stock = driver.find_element_by_id("allProductsInStock").text # get num of prods in stock
         driver.find_element_by_id("number").send_keys(in_stock) #input num of products to buy
-        driver.find_element_by_css_selector("button.btn:nth-child(2)").click() # Add to cart
 
 
+    def test_03_add_products_to_cart(self):
+        driver.find_element_by_css_selector("button.btn:nth-child(2)").click()
 
+
+    def test_04_go_to_shopping_cart(self):
         driver.find_element_by_class_name("header-cart").click()
 
         driver.close()
