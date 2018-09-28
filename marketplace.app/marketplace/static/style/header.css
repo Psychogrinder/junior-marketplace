@@ -74,6 +74,14 @@
     margin-left: 5px;
 }
 
+.number-of-new-orders {
+    margin-right: 7px;
+}
+
+.messages-badge {
+    
+}
+
 @media (max-width: 990px) {
     .navbar-collapse .header-card,
     .navbar-collapse .header-login {
