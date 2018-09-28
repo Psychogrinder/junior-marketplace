@@ -48,7 +48,7 @@ def post_producer(args: dict) -> Producer:
     os.mkdir(os.path.join(os.getcwd(), 'marketplace/static/img/user_images/' + str(new_producer.id) + '/'))
     email_tools.send_confirmation_email(new_producer.email, new_producer.person_to_contact)
     sitemap_tools.create_producer_sitemap.delay(new_producer.id)
-    sitemap_tools.update_global_sitemap.delay()
+    sitemap_tools.add_producer_to_global_sitemap.delay(new_producer.id)
     return new_producer
 
 
@@ -60,6 +60,7 @@ def put_producer(args: dict, producer_id: int) -> Producer:
         if v:
             setattr(producer, k, v)
     db.session.commit()
+    sitemap_tools.update_producer_info_in_global_sitemap.delay(producer_id)
     return producer
 
 
@@ -75,6 +76,7 @@ def delete_producer_by_id(producer_id: int) -> dict:
     shutil.rmtree(image_directory_path)
     db.session.delete(producer)
     db.session.commit()
+    sitemap_tools.delete_producer_from_global_sitemap.delay(producer.id)
     return {"message": "Producer with id {} has been deleted successfully".format(producer_id)}
 
 
