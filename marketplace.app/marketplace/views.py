@@ -62,14 +62,14 @@ def product_card(product_id):
     try:
         product.subscribers.index(current_user)
     except ValueError:
-        is_user_subscribe = False
+        user_is_subscribed = False
     else:
-        is_user_subscribe = True
+        user_is_subscribed = True
     meta_description = 'каталог фермерских товаров Маркетплейс'
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
                            comments=comments.items, next_page=next_page, meta_description=meta_description,
-                           base_category=base_category, stars=stars, is_user_subscribe=is_user_subscribe)
+                           base_category=base_category, stars=stars, user_is_subscribed=user_is_subscribed)
 
 
 # товары производителя
