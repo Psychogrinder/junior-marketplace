@@ -1,10 +1,10 @@
 from flask_socketio import emit, join_room
 from flask_login import current_user
 from datetime import datetime
-from sqlalchemy.sql import func
 
 from marketplace import socketio, mongo_client, db
 from marketplace.models import Order, User
+from marketplace.api_folder.utils.order_utils import get_order_by_id
 
 chat_db = mongo_client['message-history']
 messages = chat_db['messages']
@@ -70,11 +70,23 @@ def handle_message(message, entity, order_id):
 
 @socketio.on('send_to_room', namespace='/chat')
 def send_room_message(data):
-    # Добавляем в сообщение нужные параметры: имя, ссылку на фото, время
+    # Сначала убедимся, что
+    # 1) пользователь авторизован;
+    if not current_user.is_authenticated:
+        return "User is not authorized"
+
+    # 2) он является участником комнаты (заодно сразу определяем имя)
+    order = get_order_by_id(data['room'])
     if current_user.entity == 'producer':
+        if not order.producer_id == current_user.id:
+            return f"User with id {current_user.id} has no access to order {order.id}"
         username = current_user.person_to_contact
     elif current_user.entity == 'consumer':
+        if not order.consumer_id == current_user.id:
+            return f"User with id {current_user.id} has no access to order {order.id}"
         username = f'{current_user.first_name} {current_user.last_name}'
+
+    # Добавляем в сообщение нужные параметры: имя, ссылку на фото, время.
     message = {
         'room': data['room'],
         'username': username,
@@ -82,12 +94,9 @@ def send_room_message(data):
         'timestamp': datetime.now().strftime('%H:%M %d.%m.%Y'),
         'body': data['body'],
     }
-    # отсылаем сообщение в указанную комнату
-    if current_user.is_authenticated:
-        emit('response',
-             message,
-             room=data['room']
-             )
-        handle_message(message, data['entity'], data['room'])
-    else:
-        return False
+    # Отсылаем сообщение в указанную комнату.
+    emit('response',
+         message,
+         room=data['room']
+         )
+    handle_message(message, data['entity'], data['room'])
