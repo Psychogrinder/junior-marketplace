@@ -1,3 +1,17 @@
+$(document).ready(function () {
+    socket.on('update_msg_badge', function (data) {
+        if (Number(localStorage.getItem('globalUserId')) === data.user_id) {
+            // Обновляем баджи в хэдере...
+            let header_message_badge = $('#numberOfUnreadMessagesBadge');
+            let current_total_number_of_new_messages = Number(header_message_badge.html());
+            header_message_badge.html(current_total_number_of_new_messages + 1);
+            //... и на кнопках "Связаться с покупателем"
+            let button_message_badge = $('#messageBadge' + data.room);
+            button_message_badge.text(Number(button_message_badge.text()) + 1);
+        }
+    });
+});
+
 if ($('main.producer-orders').length > 0) {
 
     let isInViewport = function (element) {
@@ -20,13 +34,6 @@ if ($('main.producer-orders').length > 0) {
     // ========= Chat functionality start =========
     var current_date = null;
     var orders_with_unread_messages = new Set();
-
-    namespace = '/chat';
-    // Connect to the Socket.IO server.
-    // The connection URL has the following format:
-    //     http[s]://<domain>:<port>[/<namespace>]
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
-
     socket.on('connect', function () {
         socket.emit('connected', {data: 'I\'m connected!'});
     });
@@ -90,9 +97,11 @@ if ($('main.producer-orders').length > 0) {
     }
 
     socket.on('response', function (data) {
+
         appendMessage(data);
         // добавляем id заказа в нерпочитанные сообщения
         orders_with_unread_messages.add(data['room']);
+
         // Если окно чата видно на экране, то сразу удаляем сообщение из непрочитанных. Если нет, то удалим по скроллу.
         // Если нет, то удалим при следующем открытии чата.
         if (isInViewport($('#chat' + data['room']))) {
@@ -270,7 +279,10 @@ if ($('main.producer-orders').length > 0) {
                 orders[i].id +
                 '" onclick="startDialog(' +
                 orders[i].id +
-                ')"> Связаться с покупателем </button>' +
+                ')">Связаться с покупателем ' +
+                '<span id="messageBadge' +
+                orders[i].id + '" class="badge badge-pill badge-secondary message-badge">' + orders[i].unread_consumer_messages + '</span>' +
+                '</button>' +
                 // chat window interface start
                 '<section class="container order-dialog" id="orderDialog' + orders[i].id + '">' +
                 '<div class="message-history" id="chat' + orders[i].id + '">' +
@@ -305,10 +317,6 @@ if ($('main.producer-orders').length > 0) {
             if (orders[i].unread_consumer_messages) {
                 // Это нужно для того, чтобы отправлять запросы для определённых заказов, а не всех.
                 orders_with_unread_messages.add(orders[i].id);
-                // Отображаем бадж на кнопках "Связаться с производителем".
-                $('#talkToConsumer' + orders[i].id).html(' Связаться с покупателем <span id="messageBadge' +
-                    orders[i].id + '" class="badge badge-pill badge-secondary message-badge">' +
-                    orders[i].unread_consumer_messages + '</span> ')
             }
         }
         let next_page_number = page;
@@ -391,3 +399,5 @@ if ($('main.producer-orders').length > 0) {
     update_orders_page(orderFilter);
 
 }
+
+

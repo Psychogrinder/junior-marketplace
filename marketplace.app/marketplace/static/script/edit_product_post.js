@@ -49,7 +49,7 @@ $(document).ready(function () {
                 }
             });
             var hulla = new hullabaloo();
-            hulla.send("Информация о товаре сохранена", "secondary");
+            hulla.send("Информация о товаре сохранена", "default");
         }
 
         submitEditProductForm();

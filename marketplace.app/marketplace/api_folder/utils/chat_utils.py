@@ -99,4 +99,10 @@ def send_room_message(data):
          message,
          room=data['room']
          )
+
     handle_message(message, data['entity'], data['room'])
+
+    if current_user.entity == 'producer':
+        emit('update_msg_badge', {'user_id': order.consumer_id, 'room': data['room']}, broadcast=True, namespace='/chat')
+    elif current_user.entity == 'consumer':
+        emit('update_msg_badge', {'user_id': order.producer_id, 'room': data['room']}, broadcast=True, namespace='/chat')
