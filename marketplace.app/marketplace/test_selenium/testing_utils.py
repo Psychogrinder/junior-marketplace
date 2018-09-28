@@ -1,21 +1,27 @@
 from append_path import *
 from datetime import datetime
 from random import choice
+
+
 def uniqueEmail():
-    return "mail" + datetime.now().strftime('%f') + "@ya.ua"
+    return "mail_" + datetime.now().strftime('%f') + "@ya.ua"
+
+
+def uniqueShopName():
+    return "Shop_name_" + datetime.now().strftime('%f')
 
 
 def login(driver, email, pw):
     url = 'http://127.0.0.1:8000'
     driver.get(url)
-    driver.find_element_by_xpath("/html/body/header/nav/div/div/a").click()
+    driver.find_element_by_css_selector("#navbarColor01 > a > img").click()
     driver.find_element_by_id("emailAuthorisation").send_keys(email)
     driver.find_element_by_id("passwordAuthorisation").send_keys(pw)
     driver.find_element_by_id("authButton").click()
 
 
 def logout(driver):
-    driver.find_element_by_css_selector("button.btn:nth-child(1)").click()
+    driver.find_element_by_css_selector(".dropdown-toggle").click()
     driver.find_element_by_id("logoutButton").click()
 
 
@@ -53,3 +59,19 @@ def setDictValues(data):
         else:
             data[key] = choice(names)
     return data
+
+
+def setNewKeysForDict(text_arr):
+    keys, values = text_arr[0], text_arr[1]
+    eng_keys = []
+    for k in keys:
+        if k == 'Контактное лицо:':
+            eng_keys.append('contact')
+        elif k == 'E-mail:':
+            eng_keys.append('email')
+        elif k == 'Телефон:':
+            eng_keys.append('phone')
+        elif k == 'Адрес:':
+            eng_keys.append('address')
+
+    return dict(zip(eng_keys, values))
