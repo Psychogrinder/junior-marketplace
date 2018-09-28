@@ -59,11 +59,17 @@ def product_card(product_id):
     comments = comment_utils.get_comments_by_product_id(product_id)
     next_page = comments.next_num
     stars = product_utils.get_formatted_rating(product.rating)
+    try:
+        product.subscribers.index(current_user)
+    except ValueError:
+        is_user_subscribe = False
+    else:
+        is_user_subscribe = True
     meta_description = 'каталог фермерских товаров Маркетплейс'
     return render_template('product_card.html', category_name=category.name.title(), product=product,
                            producer_name=producer.name.title(), category=category, current_user=current_user,
                            comments=comments.items, next_page=next_page, meta_description=meta_description,
-                           base_category=base_category, stars=stars)
+                           base_category=base_category, stars=stars, is_user_subscribe=is_user_subscribe)
 
 
 # товары производителя
