@@ -64,12 +64,8 @@ def update_producer_sitemap(producer_id):
 def add_new_product_to_sitemap(producer_id, product_id):
     path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
-        ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
-        tree = ET.parse(path)
-        root = tree.getroot()
-        cur_date = str(datetime.now())
-        update_sitemap_time(root, cur_date)
-        root.append(build_new_xml_elem(product_id, cur_date))
+        tree, cur_date = init_tree_and_update_date(path)
+        tree.getroot().append(build_new_xml_elem(product_id, cur_date))
         tree.write(path)
 
 
@@ -77,12 +73,9 @@ def add_new_product_to_sitemap(producer_id, product_id):
 def delete_product_from_sitemap(producer_id, product_id):
     path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
-        ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
-        tree = ET.parse(path)
-        root = tree.getroot()
-        cur_date = str(datetime.now())
-        update_sitemap_time(root, cur_date)
-        root.remove(find_xml_elem_with_given_loc_value(root, '{}/products/{}'.format(SITE_DOMAIN, product_id)))
+        tree, cur_date = init_tree_and_update_date(path)
+        tree.getroot().remove(
+            find_xml_elem_with_given_loc_value(tree.getroot(), '{}/products/{}'.format(SITE_DOMAIN, product_id)))
         tree.write(path)
 
 
@@ -90,13 +83,18 @@ def delete_product_from_sitemap(producer_id, product_id):
 def update_product_info_in_sitemap(producer_id, product_id):
     path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
-        ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
-        tree = ET.parse(path)
-        root = tree.getroot()
-        cur_date = str(datetime.now())
-        update_sitemap_time(root, cur_date)
-        update_xml_elem_date(root, '{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date)
+        tree, cur_date = init_tree_and_update_date(path)
+        update_xml_elem_date(tree.getroot(), '{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date)
         tree.write(path)
+
+
+def init_tree_and_update_date(path):
+    ET.register_namespace('', "http://www.sitemaps.org/schemas/sitemap/0.9")
+    tree = ET.parse(path)
+    root = tree.getroot()
+    cur_date = str(datetime.now())
+    update_sitemap_time(root, cur_date)
+    return tree, cur_date
 
 
 def update_xml_elem_date(root, loc, date):
