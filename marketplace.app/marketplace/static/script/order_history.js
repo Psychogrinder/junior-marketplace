@@ -10,9 +10,6 @@ if ($('main.order-history').length > 0) {
         return elementBottom > viewportTop && elementTop < viewportBottom;
     };
 
-    // ========= Chat functionality end =========
-
-
     function cancelOrder(order_id) {
         $.ajax({
             url: '/api/v1/orders/' + order_id,
