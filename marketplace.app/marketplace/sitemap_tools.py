@@ -71,19 +71,23 @@ def create_producer_sitemap(producer_id):
     producer_sitemap = render_template('sitemap.xml', pages=pages)
     with open('producer_sitemap{}.xml'.format(producer_id), 'w+') as sitemap:
         sitemap.write(producer_sitemap)
+    return producer_id
 
 
 @celery.task()
 def update_producer_sitemap(producer_id):
-    pages = []
-    cur_date = datetime.now()
-    pages.append(['{}/producer/{}'.format(SITE_DOMAIN, producer_id), cur_date])
-    producer_products = product_utils.get_products_by_producer_id(producer_id)
-    for product in producer_products:
-        pages.append(['{}/products/{}'.format(SITE_DOMAIN, product.id), cur_date])
-    producer_sitemap = render_template('sitemap.xml', pages=pages)
-    with open('producer_sitemap{}.xml'.format(producer_id), 'w+') as sitemap:
-        sitemap.write(producer_sitemap)
+    path = 'producer_sitemap{}.xml'.format(producer_id)
+    if os.path.isfile(path):
+        tree, cur_date = init_tree_and_update_date(path, True)
+        tree.write(path)
+    return producer_id
+
+
+@celery.task()
+def delete_producer_sitemap(producer_id):
+    path = 'producer_sitemap{}.xml'.format(producer_id)
+    os.remove(path)
+    return producer_id
 
 
 @celery.task()
@@ -93,6 +97,7 @@ def add_new_product_to_sitemap(producer_id, product_id):
         tree, cur_date = init_tree_and_update_date(path, True)
         tree.getroot().append(build_new_xml_elem('{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date, 'url'))
         tree.write(path)
+    return producer_id
 
 
 @celery.task()
@@ -103,6 +108,7 @@ def delete_product_from_sitemap(producer_id, product_id):
         tree.getroot().remove(
             find_xml_elem_with_given_loc_value(tree.getroot(), '{}/products/{}'.format(SITE_DOMAIN, product_id)))
         tree.write(path)
+    return producer_id
 
 
 @celery.task()
@@ -112,6 +118,7 @@ def update_product_info_in_sitemap(producer_id, product_id):
         tree, cur_date = init_tree_and_update_date(path, True)
         update_xml_elem_date(tree.getroot(), '{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date)
         tree.write(path)
+    return producer_id
 
 
 def init_tree_and_update_date(path, need_update_date):
