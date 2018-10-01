@@ -103,6 +103,19 @@ def send_room_message(data):
     handle_message(message, data['entity'], data['room'])
 
     if current_user.entity == 'producer':
-        emit('update_msg_badge', {'user_id': order.consumer_id, 'room': data['room']}, broadcast=True, namespace='/chat')
+        emit('update_msg_badge', {'user_id': order.consumer_id, 'room': data['room']}, broadcast=True,
+             namespace='/chat')
     elif current_user.entity == 'consumer':
-        emit('update_msg_badge', {'user_id': order.producer_id, 'room': data['room']}, broadcast=True, namespace='/chat')
+        emit('update_msg_badge', {'user_id': order.producer_id, 'room': data['room']}, broadcast=True,
+             namespace='/chat')
+
+
+# Не относится к чату, но открывать на клиенте отдельный сокет для одной редко ипользуемой функции не экономично
+# (наверно).
+@socketio.on('new_order', namespace='/chat')
+def send_order_notification(data):
+    """ При оформлении покупателем нового заказа все подкючённые к серверу пользователи получат это сообщение.
+    На фронте сравним: если id производителя совпадает, то обновляем бадж заказов и вызываем уведомление
+    о новом заказе.
+    """
+    emit('new_order_notification', {'producer_id': data['producer_id']}, broadcast=True, namespace='/chat')
