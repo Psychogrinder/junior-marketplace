@@ -8,21 +8,21 @@ networks:
   sonar_newtwork:
     external: false
 
-services: 
+services:
   db:
-    build: 
+    build:
       dockerfile: Dockerfile
       context: .
     volumes:
       - sonarqube_db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5431:5432"
     networks:
       - sonar_newtwork
-    environment: 
+    environment:
       - POSTGRES_PASSWORD=qwerty
-    
-    
+
+
   sonar:
     image: sonarqube:7.1
     ports:
@@ -30,7 +30,15 @@ services:
       - "9092:9092"
     networks:
       - sonar_newtwork
-    environment: 
+    environment:
       - SONARQUBE_JDBC_USERNAME=sonarqube
       - SONARQUBE_JDBC_PASSWORD=qwerty
       - SONARQUBE_JDBC_URL=jdbc:postgresql://db/sonarqube
+
+
+  adminer:
+    image: adminer
+    ports:
+      - 8088:8080
+    networks:
+      - sonar_newtwork
