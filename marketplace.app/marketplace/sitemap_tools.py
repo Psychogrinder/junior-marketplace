@@ -9,7 +9,8 @@ from marketplace.api_folder.utils import product_utils
 
 
 @celery.task()
-def add_producer_to_global_sitemap(producer_id):
+def add_producer_to_global_sitemap(data_tuple):
+    producer_id, producer_update_date = data_tuple
     if not os.path.isfile('sitemap.xml'):
         init_global_sitemap()
     path = 'sitemap.xml'
@@ -21,12 +22,13 @@ def add_producer_to_global_sitemap(producer_id):
 
 
 @celery.task()
-def update_producer_info_in_global_sitemap(producer_id):
+def update_producer_info_in_global_sitemap(data_tuple):
+    producer_id, producer_update_date = data_tuple
     path = 'sitemap.xml'
     producer_path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, False)
-        update_xml_elem_date(tree.getroot(), '{}/{}'.format(SITE_DOMAIN, producer_path), cur_date)
+        update_xml_elem_date(tree.getroot(), '{}/{}'.format(SITE_DOMAIN, producer_path), producer_update_date)
         tree.write(path)
 
 
@@ -71,7 +73,7 @@ def create_producer_sitemap(producer_id):
     producer_sitemap = render_template('sitemap.xml', pages=pages)
     with open('producer_sitemap{}.xml'.format(producer_id), 'w+') as sitemap:
         sitemap.write(producer_sitemap)
-    return producer_id
+    return producer_id, cur_date
 
 
 @celery.task()
@@ -80,7 +82,7 @@ def update_producer_sitemap(producer_id):
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, True)
         tree.write(path)
-    return producer_id
+        return producer_id, cur_date
 
 
 @celery.task()
@@ -97,7 +99,7 @@ def add_new_product_to_sitemap(producer_id, product_id):
         tree, cur_date = init_tree_and_update_date(path, True)
         tree.getroot().append(build_new_xml_elem('{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date, 'url'))
         tree.write(path)
-    return producer_id
+        return producer_id, cur_date
 
 
 @celery.task()
@@ -108,7 +110,7 @@ def delete_product_from_sitemap(producer_id, product_id):
         tree.getroot().remove(
             find_xml_elem_with_given_loc_value(tree.getroot(), '{}/products/{}'.format(SITE_DOMAIN, product_id)))
         tree.write(path)
-    return producer_id
+        return producer_id, cur_date
 
 
 @celery.task()
@@ -118,7 +120,7 @@ def update_product_info_in_sitemap(producer_id, product_id):
         tree, cur_date = init_tree_and_update_date(path, True)
         update_xml_elem_date(tree.getroot(), '{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date)
         tree.write(path)
-    return producer_id
+        return producer_id, cur_date
 
 
 def init_tree_and_update_date(path, need_update_date):
