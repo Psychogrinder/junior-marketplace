@@ -115,7 +115,7 @@ class GrafanaRunScript(ScriptInterface):
         if r_code != 0:
             proc = self._make_proc(['docker', 'container', 'start', 'grafana'])
             r_code = proc.wait()
-            return self.dialog.msgbox('grafana запущена\nhttp://localhost:3000')
+        return self.dialog.msgbox('grafana запущена\nhttp://localhost:3000')
 
 
 class DeployScript(ScriptInterface):
@@ -154,8 +154,8 @@ class App:
     def run(self):
         loop_code = self.dialog.OK
         while loop_code == self.dialog.OK:
-            menu_tasks_names = [(str(index), task.get_name()) for index, task in enumerate(self.tasks)]
-            code, tag = self.dialog.menu('Выберите что нужно сделать', choices=menu_tasks_names)
+            menu_tasks = [(str(index), task.get_name()) for index, task in enumerate(self.tasks)]
+            code, tag = self.dialog.menu('Выберите что нужно сделать', choices=menu_tasks)
             if code == Dialog.OK:
                 chosen_task = self.tasks[int(tag)]
                 loop_code = chosen_task.execute()
