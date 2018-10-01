@@ -40,6 +40,7 @@ if ($('main.producer-orders').length > 0) {
     let orderFilter = {
         producer_id: null,
         order_status: null,
+        keyword: null,
         page: 1,
     };
 
@@ -82,6 +83,7 @@ if ($('main.producer-orders').length > 0) {
 
     function fill_order_filter(orderFilter) {
         orderFilter['order_status'] = $('#statuses option:selected').text();
+        orderFilter['keyword'] = $('#producerOrdersSearchInput').val();
     }
 
     function delete_current_orders() {
@@ -267,7 +269,8 @@ if ($('main.producer-orders').length > 0) {
                 let items = orders.orders;
                 for (let i = 0; i < items.length; i++) {
                     $("#saveStatusOrderBtnTable" + items[i].id).hide();
-                };
+                }
+                ;
                 $('#loadingSpinner2').css('display', 'none');
             });
     }
@@ -280,12 +283,21 @@ if ($('main.producer-orders').length > 0) {
     }
 
 
-// update orders on change of the main select
-    $('#statuses').change(function () {
+    function renew_page() {
         delete_current_orders();
         orderFilter['page'] = 1;
         update_orders_page(orderFilter);
+    }
+
+    $('#statuses').change(function () {
+        renew_page();
     });
+
+    $('#producerOrdersSearch').click(function (e) {
+        e.preventDefault();
+        renew_page();
+    });
+
     update_orders_page(orderFilter);
 
 }

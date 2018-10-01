@@ -310,7 +310,6 @@ def global_search():
     products = product_utils.get_products_for_global_search(request.args.get('find'))
     stars = {}
     for product in products:
-        print(product)
         stars[product['id']] = product_utils.get_formatted_rating(product['rating'])
     return render_template(
         'global_search_results.html',
