@@ -14,7 +14,6 @@ class MyDialog:
     def check_exit_request(self, code, ignore_Cancel=False):
         if code == self.CANCEL and ignore_Cancel:
             return True
-
         if code in (self.CANCEL, self.ESC):
             msg = "Закрыть?"
             if self.dlg.yesno(msg) == self.OK:
@@ -29,17 +28,14 @@ class MyDialog:
         def wrapper(*args, **kwargs):
             while True:
                 res = method(*args, **kwargs)
-
                 if hasattr(method, "retval_is_code") \
                         and getattr(method, "retval_is_code"):
                     code = res
                 else:
                     code = res[0]
-
                 if self.check_exit_request(code):
                     break
             return res
-
         return wrapper
 
     def __getattr__(self, name):
@@ -73,7 +69,6 @@ class MyDialog:
 
     def Yesno(self, *args, **kwargs):
         return self._Yesno(*args, **kwargs) == self.dlg.OK
-
 
 
 class ScriptInterface(ABC):
@@ -164,7 +159,11 @@ class App:
             if code == Dialog.OK:
                 chosen_task = self.tasks[int(tag)]
                 loop_code = chosen_task.execute()
-                del self.tasks[int(tag)]
+
+                if len(self.tasks) > 1:
+                    del self.tasks[int(tag)]
+                else:
+                    break
 
         self.dialog.clear_screen()
 
