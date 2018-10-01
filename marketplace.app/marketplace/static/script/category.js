@@ -1,7 +1,6 @@
 $(document).ready(function () {
         if ($('#sortByPriceOrPopularity').length > 0) {
 
-
             $(window).on('resize scroll', function () {
                 let element = $('.pageNumber');
                 if (element.length > 0 && isInViewport(element)) {
@@ -232,5 +231,25 @@ $(document).ready(function () {
 
             return elementBottom > viewportTop && elementTop < viewportBottom;
         };
+
+
     }
 );
+if ($('#priceSlider').length > 0) {
+    $("#priceSlider").slider({
+        animate: "slow",
+        min: 0,
+        max: 1000,
+        values: [0, 1000],
+        range: true,
+        value: 50,
+        stop: function (event, ui) {
+            $("input#minCost").val($("#priceSlider").slider("values", 0));
+            $("input#maxCost").val($("#priceSlider").slider("values", 1));
+        },
+        slide: function (event, ui) {
+            $("input#minCost").val($("#priceSlider").slider("values", 0));
+            $("input#maxCost").val($("#priceSlider").slider("values", 1));
+        }
+    });
+}
