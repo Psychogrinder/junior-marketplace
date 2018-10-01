@@ -64,7 +64,6 @@ if ($('main .order_registration').length > 0) {
         // Это нужно для того, чтобы у каждого производителя без перезагрузки страницы обновлися бадж заказов
         // в хэдэре и появилось уведомление "У вас новый заказ".
         for (let i = 0; i < producer_ids.length; i++) {
-            console.log(producer_ids[i]);
             socket.emit('new_order', {producer_id: producer_ids[i]});
         }
     });
