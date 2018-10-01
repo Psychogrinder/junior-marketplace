@@ -8,8 +8,13 @@ manager = Manager(app)
 
 @manager.command
 def make_migrations():
-    migrate()
-    upgrade()
+    try:
+        init()
+    except:
+        pass
+    with app.app_context():
+        migrate()
+        upgrade()
 
 
 @manager.command
