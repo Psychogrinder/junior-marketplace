@@ -267,13 +267,15 @@ if ($('main.producer-orders').length > 0) {
                 let items = orders.orders;
                 for (let i = 0; i < items.length; i++) {
                     $("#saveStatusOrderBtnTable" + items[i].id).hide();
-                }
+                };
+                $('#loadingSpinner2').css('display', 'none');
             });
     }
 
 
     function update_orders_page(orderFilter) {
         fill_order_filter(orderFilter);
+        $('#loadingSpinner2').css('display', 'flex');
         display_new_orders(orderFilter);
     }
 

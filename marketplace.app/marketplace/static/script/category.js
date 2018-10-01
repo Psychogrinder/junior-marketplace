@@ -70,6 +70,7 @@ $(document).ready(function () {
                 $.post('/api/v1/products/filter',
                     sorts_and_filters,
                     function (products, status) {
+                        $('#loadingSpinner2').css('display', 'none');
                         add_new_products(products.products, products.next_page);
                         display_valid_options(sorts_and_filters, base_category)
                     });
@@ -203,6 +204,7 @@ $(document).ready(function () {
 
             function update_page(sorts_and_filters, base_category) {
                 fill_sorts_and_filters(sorts_and_filters, base_category);
+                $('#loadingSpinner2').css('display', 'flex');
                 display_filtered_and_sorted_products(sorts_and_filters, base_category);
             }
 

@@ -54,6 +54,7 @@
                 <section class="product-card row" id="producerProducts">
 
                 </section>
+                {% include 'inc/loading_spinner_pagination.html' %}
             {% else %}
                 {% if current_user.id == producer.id %}
                     <section class="producer_products_empty">

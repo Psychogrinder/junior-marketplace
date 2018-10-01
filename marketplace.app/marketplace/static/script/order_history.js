@@ -35,6 +35,7 @@ if ($('main.order-history').length > 0) {
             if (element.length > 0 && isInViewport(element)) {
                 element.remove();
                 order_data['page'] = element.attr("data-page-number");
+                $('#loadingSpinner2').css('display', 'flex');
                 addOrders();
             }
 
@@ -257,6 +258,7 @@ if ($('main.order-history').length > 0) {
                         '<div data-page-number="' + next_page_number + '" class="pageNumber" style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                     );
                 }
+                $('#loadingSpinner2').css('display', 'none');
             })
     }
 
