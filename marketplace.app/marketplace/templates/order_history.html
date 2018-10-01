@@ -3,11 +3,12 @@
 {% block meta_title %}Мои заказы{% endblock %}
 
 {% block meta_description %}
-    <meta name="description" content='{{ user.first_name }} {{ user.last_name }} - {{ meta_description }}'>
+<meta name="description" content='{{ user.first_name }} {{ user.last_name }} - {{ meta_description }}'>
 {% endblock %}
 
 {% block body %}
     <main class="order-history" id="consumerOrderHistory">
 
     </main>
+    {% include 'inc/loading_spinner_pagination.html' %}
 {% endblock %}

@@ -29,16 +29,15 @@
                 </form>
             </div>
         </div>
+        <div id="mainProducerOrderSection">
+            <div class="table_global_container" id="producerOrderSectionTable">
+
+            </div>
+        </div>
+        {% include 'inc/loading_spinner_pagination.html' %}
         {% else %}
         <h2>У Вас нет заказов</h2>
         {% endif %}
-    </div>
-
-
-    <div id="mainProducerOrderSection">
-        <div class="table_global_container" id="producerOrderSectionTable">
-
-        </div>
     </div>
 </main>
 {% endblock %}
