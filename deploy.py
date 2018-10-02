@@ -7,7 +7,6 @@ import subprocess
 
 
 class MyDialog:
-
     def __init__(self, Dialog_instance):
         self.dlg = Dialog_instance
 
@@ -27,14 +26,19 @@ class MyDialog:
     def widget_loop(self, method):
         def wrapper(*args, **kwargs):
             while True:
+                try:
+                    not_check = kwargs.pop('not_check_cancel')
+                except KeyError:
+                    not_check = False
                 res = method(*args, **kwargs)
                 if hasattr(method, "retval_is_code") \
                         and getattr(method, "retval_is_code"):
                     code = res
                 else:
                     code = res[0]
-                if self.check_exit_request(code):
-                    break
+                if not not_check:
+                    if self.check_exit_request(code):
+                        break
             return res
         return wrapper
 
@@ -72,7 +76,6 @@ class MyDialog:
 
 
 class ScriptInterface(ABC):
-
     def __init__(self, dialog, work_dir, name):
         self.wd = work_dir
         self.dialog = dialog
@@ -89,51 +92,7 @@ class ScriptInterface(ABC):
         self.name = '{} -({})'.format(self.name, status)
 
 
-class GrafanaRunScript(ScriptInterface):
-
-    SCRIPT_DIR = 'marketplace.monitoring'
-    SCRIPT_NAME = './grafana-run.sh'
-    URL = 'http://localhost:3000'
-
-    def _make_proc(self, cmd):
-        script_dir = os.path.join(self.wd, self.SCRIPT_DIR)
-        proc = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            cwd=script_dir
-        )
-        return proc
-
-    def _running(self, proc):
-        return self.dialog.infobox(text=self.get_name())
-
-    def _open_in_browser(self):
-        proc = subprocess.Popen(
-            ['sensible-browser', self.URL],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
-
-    def execute(self):
-        proc = self._make_proc([self.SCRIPT_NAME])
-        self._running(proc)
-        r_code = proc.wait()
-        if r_code != 0:
-            proc = self._make_proc(['docker', 'container', 'start', 'grafana'])
-            r_code = proc.wait()
-        code = self.dialog.msgbox('grafana запущена\n', extra_button=True, extra_label='Open')
-        if code == self.dialog.EXTRA:
-            self._open_in_browser()
-            return self.dialog.OK
-        return code
-
-# class DBScript(ScriptInterface):
-#
-#
-
-class DeployScript(ScriptInterface):
-
+class BaseScript(ScriptInterface):
     def __init__(self, dialog, work_dir, name, script_dir, script_name):
         super().__init__(dialog, work_dir, name)
         self.script_dir = script_dir
@@ -142,20 +101,65 @@ class DeployScript(ScriptInterface):
     def _running(self, proc):
         return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
 
-    def execute(self):
-        script_dir = os.path.join(self.wd, self.script_dir)
+    def _get_script_dir(self):
+        return os.path.join(self.wd, self.script_dir)
+
+    def _get_proc_cmd(self):
+        return [self.script_name, '-d']
+
+    def _make_proc(self, cmd):
         proc = subprocess.Popen(
-            [self.script_name, '-d'],
+            cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             close_fds=True,
-            cwd=script_dir
+            cwd=self._get_script_dir()
         )
+        return proc
+
+    def _before_proc(self):
+        return self.dialog.OK
+
+    def execute(self):
+        if self.dialog.OK != self._before_proc():
+            return self.dialog.OK
+        proc = self._make_proc(self._get_proc_cmd())
         return self._running(proc)
 
 
-class App:
+class GrafanaRunScript(BaseScript):
+    URL = 'http://localhost:3000'
 
+    def _running(self, proc):
+        code = self.dialog.infobox(text=self.get_name())
+        r_code = proc.wait()
+        if r_code != 0:
+            proc = self._make_proc(['docker', 'container', 'start', 'grafana'])
+            r_code = proc.wait()
+        code = self.dialog.msgbox('grafana запущена\n{}'.format(self.URL), extra_button=True, extra_label='Open')
+        if code == self.dialog.EXTRA:
+            self._open_in_browser()
+            return self.dialog.OK
+        return code
+
+    def _open_in_browser(self):
+        proc = subprocess.Popen(
+            ['sensible-browser', self.URL],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+
+
+class DBScript(BaseScript):
+
+    def _before_proc(self):
+        return self.dialog.yesno('Сделать дамп бд?', not_check_cancel=True)
+
+    def _running(self, proc):
+        return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
+
+
+class App:
     def __init__(self, dialog, tasks):
         self.dialog = dialog
         self._check_task_instance_class(tasks)
@@ -202,17 +206,15 @@ def main():
     work_dir = os.path.dirname(os.path.abspath(__file__))
     tasks = {
         'App': [
-            DeployScript(dialog, work_dir, 'Деплой приложения на продакшен',
-                         'marketplace.app', './deploy-prod.sh'),
-            DeployScript(dialog, work_dir, 'Деплой приложения на стейдж',
-                         'marketplace.app', './deploy-stage.sh'),
+            BaseScript(dialog, work_dir, 'Деплой приложения на продакшен', 'marketplace.app', './deploy-prod.sh'),
+            BaseScript(dialog, work_dir, 'Деплой приложения на стейдж', 'marketplace.app', './deploy-stage.sh'),
         ],
         'Monitoring': [
-            GrafanaRunScript(dialog, work_dir, 'Запуск grafana')
+            GrafanaRunScript(dialog, work_dir, 'Запуск grafana', 'marketplace.monitoring', './grafana-run.sh'),
         ],
         'DB': [
-            DeployScript(dialog, work_dir, 'Деплой бд на стейдж', 'marketplace.db',
-                         './deploy-stage.sh'),
+            BaseScript(dialog, work_dir, 'Деплой бд на стейдж', 'marketplace.db', './deploy-stage.sh'),
+            DBScript(dialog, work_dir, 'Дамп бд', 'marketplace.db', './db_dump.sh'),
         ],
     }
     App(dialog, tasks).run()
