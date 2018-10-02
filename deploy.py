@@ -7,6 +7,9 @@ import subprocess
 
 
 class MyDialog:
+
+    NOT_EXIT = 1000
+
     def __init__(self, Dialog_instance):
         self.dlg = Dialog_instance
 
@@ -31,14 +34,15 @@ class MyDialog:
                 except KeyError:
                     not_check = False
                 res = method(*args, **kwargs)
+                if method == 'Yesno' and not_check:
+                    return res
                 if hasattr(method, "retval_is_code") \
                         and getattr(method, "retval_is_code"):
                     code = res
                 else:
                     code = res[0]
-                if not not_check:
-                    if self.check_exit_request(code):
-                        break
+                if self.check_exit_request(code, not_check):
+                    break
             return res
         return wrapper
 
@@ -122,7 +126,7 @@ class BaseScript(ScriptInterface):
 
     def execute(self):
         if self.dialog.OK != self._before_proc():
-            return self.dialog.OK
+            return self.dialog.NOT_EXIT
         proc = self._make_proc(self._get_proc_cmd())
         return self._running(proc)
 
@@ -196,7 +200,10 @@ class App:
                 continue
             chosen_task = self.tasks[section_key][int(tag)]
             loop_code = chosen_task.execute()
-            chosen_task.set_status('выполнен')
+            if loop_code == self.dialog.OK:
+                chosen_task.set_status('выполнен')
+            elif loop_code == self.dialog.NOT_EXIT:
+                loop_code = self.dialog.OK
 
         self.dialog.clear_screen()
 
