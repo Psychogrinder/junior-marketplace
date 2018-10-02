@@ -10,8 +10,9 @@ firefox_opts = webdriver.FirefoxOptions()
 firefox_opts.add_argument('--headless')
 driver = webdriver.Firefox(firefox_options=firefox_opts)
 
+
 unique_email = uniqueEmail()
-unique_shop_name = uniqueShopName()
+unique_shop = uniqueShopName()
 
 
 class TestProducer(unittest.TestCase):
@@ -23,8 +24,8 @@ class TestProducer(unittest.TestCase):
         self.password = "123123"
         self.reg_data = {"email": unique_email,
                          "password": self.password,
-                         "shop_name": unique_shop_name,
-                         "contact": "contact",
+                         "shop_name": unique_shop,
+                         "contact": "АллА бОрисовна Дергачева",
                          "phone": "9991234455",
                          "address": "hahha ya tut zhivu 15",
                          "desc": ""}
@@ -56,24 +57,26 @@ class TestProducer(unittest.TestCase):
         driver.implicitly_wait(2)
 
 
-    def test_05_producer_logout(self):
+    def test_05_producer_open_catalog(self):
+        driver.find_element_by_css_selector(
+            "div.col-12:nth-child(1) > p:nth-child(2) > a:nth-child(1)").click()
+
+
+    def test_06_producer_logout(self):
         logout(driver)
-        driver.implicitly_wait(2)
 
 
-    def test_06_producer_login(self):
+    def test_07_producer_login(self):
         email, pw = self.reg_data["email"], self.reg_data["password"]
         login(driver, email, pw)
-        driver.implicitly_wait(2)
 
 
-    def test_07_producer_open_edit_profile(self):
+    def test_08_producer_open_edit_profile(self):
         driver.find_element_by_css_selector(".dropdown-toggle").click()  # user menu
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click()  # go to profile
-        driver.implicitly_wait(2)
 
 
-    def test_08_producer_profile_is_data_correct(self):
+    def test_09_producer_profile_is_data_correct(self):
         shop_name = driver.find_element_by_css_selector(".col-md-8 > h1:nth-child(1)").text
         keys = driver.find_elements_by_class_name("profile-keys")
         values = driver.find_elements_by_class_name("profile-values")
@@ -88,13 +91,11 @@ class TestProducer(unittest.TestCase):
             else:
                 self.assertEqual(profile_data[key], self.reg_data[key])
 
-        driver.implicitly_wait(2)
-
 
         #TODO add edit case
 
 
-    def test_09_producer_open_the_delete_page(self):
+    def test_10_producer_open_the_delete_page(self):
         driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click() #edit profile
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click() # go to modal delete
 
@@ -106,7 +107,7 @@ class TestProducer(unittest.TestCase):
         #     .click()
 
 
-    def test_10_producer_delete_confirm(self):
+    def test_11_producer_delete_confirm(self):
         driver.find_element_by_id("deleteProducerBtn").click()
         driver.implicitly_wait(2)
         self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
