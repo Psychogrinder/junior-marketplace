@@ -3,9 +3,9 @@
 if [[ $1 == 's' ]]
 then
   source ../DOCKER_ENV_STAGE
-else
-  source ../.env.stage
 fi
+
+source ../.env.stage
 
 docker volume create marketplaceapp
 
