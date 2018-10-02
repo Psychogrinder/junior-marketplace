@@ -82,7 +82,7 @@ css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'styl
              'style/modal.css', 'style/category.scss', 'style/breadcrumbs.css', 'style/card.scss', 'style/cart.scss',
              'style/edit_profile.scss', 'style/profile.css', 'style/order_history.css', 'style/edit_product.scss',
              'style/producer_products.scss', 'style/producer_orders.css', 'style/order_registration.css',
-             'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/croppie.css', 'style/image_crop.css',
+             'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/image_crop.css',
              'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/producers_list.css',
              'style/trello.scss', 'style/loading_spinner.css',
              filters=['pyscss', 'cssmin'], output='bundle.min.css')
@@ -95,7 +95,7 @@ js = Bundle('script/socket_connection.js', 'script/quantity.js', 'script/edit_pr
             'script/cart.js', 'script/create_product.js', 'script/order_placement.js', 'script/order_history.js',
             'script/i18n/ru.js', 'script/edit_product_post.js', 'script/producer_orders.js', 'script/phone_mask.js',
             'script/category.js', 'script/orders_badge.js', 'script/hullabaloo.js', 'script/producer_products.js',
-            'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js', 'script/croppie.js',
+            'script/delete_product.js', 'script/delete_producer.js', 'script/delete_consumer.js',
             'script/image_crop.js', 'script/get_comments.js', 'script/review.js', 'script/jquery.inputmask.bundle.js',
             'script/password_recovery.js', 'script/showdown.js', 'script/producer_profile.js',
             'script/producers_list.js', 'script/trello_integration.js', 'script/number_of_messages.js',
