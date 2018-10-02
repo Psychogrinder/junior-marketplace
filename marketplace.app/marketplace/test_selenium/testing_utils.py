@@ -8,7 +8,10 @@ def uniqueEmail():
 
 
 def uniqueShopName():
-    return "Shop_name_" + datetime.now().strftime('%f')
+    name, alphabet = '', 'qwertyuiopasdfghjklzxcvbnm'
+    for x in range(7):
+        name += choice(alphabet)
+    return "Shop_" + name
 
 
 def login(driver, email, pw):
@@ -21,7 +24,7 @@ def login(driver, email, pw):
 
 
 def logout(driver):
-    driver.find_element_by_css_selector(".dropdown-toggle").click()
+    driver.find_element_by_css_selector("button.btn:nth-child(1)").click()
     driver.find_element_by_id("logoutButton").click()
 
 
