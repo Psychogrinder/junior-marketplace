@@ -111,5 +111,3 @@ class TestProducer(unittest.TestCase):
         driver.find_element_by_id("deleteProducerBtn").click()
         driver.implicitly_wait(2)
         self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
-
-        driver.close()

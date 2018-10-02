@@ -104,5 +104,3 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector("#deleteConsumerBtn").click()
         driver.implicitly_wait(2)
         self.assertIsNone(User.query.filter_by(id=self.consumer.id).first())
-
-        driver.close()

@@ -61,5 +61,3 @@ class TestProducts(unittest.TestCase):
 
     def test_04_go_to_shopping_cart(self):
         driver.find_element_by_class_name("header-cart").click()
-
-        driver.close()
