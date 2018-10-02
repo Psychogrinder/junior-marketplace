@@ -93,6 +93,10 @@ class ScriptInterface(ABC):
 
 
 class BaseScript(ScriptInterface):
+
+    STDOUT = subprocess.PIPE
+    STDERR = subprocess.DEVNULL
+
     def __init__(self, dialog, work_dir, name, script_dir, script_name):
         super().__init__(dialog, work_dir, name)
         self.script_dir = script_dir
@@ -110,8 +114,8 @@ class BaseScript(ScriptInterface):
     def _make_proc(self, cmd):
         proc = subprocess.Popen(
             cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stdout=self.STDOUT,
+            stderr=self.STDERR,
             close_fds=True,
             cwd=self._get_script_dir()
         )
@@ -138,25 +142,21 @@ class GrafanaRunScript(BaseScript):
             r_code = proc.wait()
         code = self.dialog.msgbox('grafana запущена\n{}'.format(self.URL), extra_button=True, extra_label='Open')
         if code == self.dialog.EXTRA:
-            self._open_in_browser()
+            self.STDOUT = subprocess.DEVNULL
+            self._make_proc(['sensible-browser', self.URL])
             return self.dialog.OK
         return code
 
-    def _open_in_browser(self):
-        proc = subprocess.Popen(
-            ['sensible-browser', self.URL],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
-
 
 class DBScript(BaseScript):
+
+    STDERR = subprocess.PIPE
 
     def _before_proc(self):
         return self.dialog.yesno('Сделать дамп бд?', not_check_cancel=True)
 
     def _running(self, proc):
-        return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
+         return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
 
 
 class App:
