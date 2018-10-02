@@ -45,9 +45,10 @@ def category(category_name):
     producers = producer_utils.get_all_producers()
     products = product_utils.get_products_by_category_id(category.id)
     meta_description = 'каталог фермерских товаров маркетплейс'
+    min_price, max_price = product_utils.get_min_max_price_by_category_id(category.id)
     return render_template('category.html', products=products, subcategories=subcategories, category=category,
                            category_name=category_name, producers=producers, current_user=current_user,
-                           meta_description=meta_description)
+                           meta_description=meta_description, min_price=min_price, max_price=max_price)
 
 
 @app.route('/products/<int:product_id>')

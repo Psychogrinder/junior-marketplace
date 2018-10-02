@@ -84,12 +84,12 @@ css = Bundle('style/variable.scss', 'style/base.scss', 'style/header.css', 'styl
              'style/producer_products.scss', 'style/producer_orders.css', 'style/order_registration.css',
              'style/sing.css', 'style/validation.css', 'style/404.scss', 'style/image_crop.css',
              'style/input_file.css', 'style/reset_password.css', 'style/star_rating.scss', 'style/producers_list.css',
-             'style/trello.scss', 'style/loading_spinner.css',
+             'style/trello.scss', 'style/jquery-ui.min.css', 'style/loading_spinner.css',
              filters=['pyscss', 'cssmin'], output='bundle.min.css')
 
 assets.register('css_all', css)
 
-js = Bundle('script/socket_connection.js', 'script/quantity.js', 'script/edit_product.js', 'script/registration_consumer.js',
+js = Bundle('script/socket_connection.js', 'script/jquery-ui.min.js', 'script/quantity.js', 'script/edit_product.js', 'script/registration_consumer.js',
             'script/authorisation.js', 'script/registration_producer.js', 'script/menu_backlighting.js',
             'script/edit_consumer_profile.js', 'script/edit_producer_profile.js',
             'script/cart.js', 'script/create_product.js', 'script/order_placement.js', 'script/order_history.js',

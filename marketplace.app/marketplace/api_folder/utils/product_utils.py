@@ -1,6 +1,6 @@
 import string
 
-from sqlalchemy import desc, func, exc
+from sqlalchemy import desc, func, exc, and_, Numeric
 from sqlalchemy_searchable import inspect_search_vectors
 from flask import url_for
 from marketplace import db, app, PRODUCTS_PER_PAGE, sitemap_tools
@@ -97,10 +97,13 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
             subcategory_ids = [el[0] for el in
                                db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
             query = query.filter(Product.category_id.in_(subcategory_ids))
+
+            min_price, max_price = get_min_max_price_by_category_id(parent_category_id)
         # else it's a subcategory and the name is in Russian
         else:
             category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
             query = query.filter(Product.category_id == category_id)
+            min_price, max_price = get_min_max_price_by_category_id(category_id)
 
     if args['price']:
         if args['price'] == 'down':
@@ -108,14 +111,21 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
         elif args['price'] == 'up':
             query = query.order_by(Product.price.asc())
 
-    product_schema = ("id", "name", "price", "photo_url", "rating", "votes", "producer_name")
+    if args['min_price']:
+        query = query.filter(and_((int(args['min_price']) <= Product.price.cast(Numeric)),
+                                  (Product.price.cast(Numeric)) <= int(args['max_price'])))
+
     page_products = query.paginate(args['page'], PRODUCTS_PER_PAGE)
+
+    product_schema = ("id", "name", "price", "photo_url", "rating", "votes", "producer_name")
     for product in page_products.items:
         products.append(dict(zip(product_schema, product)))
     for product in products:
         product['stars'] = get_formatted_rating(product['rating'])
     return {"products": products,
-            "next_page": page_products.next_num}
+            "next_page": page_products.next_num,
+            "min_price": min_price,
+            "max_price": max_price, }
 
 
 def get_popular_products() -> list:
@@ -303,3 +313,16 @@ def notify_subscribers_about_products_supply(product):
             product.name
         )
     db.session.commit()
+
+
+def get_min_max_price_by_category_id(category_id: int) -> tuple:
+    category = get_category_by_id(category_id)
+    if category.parent_id != 0:
+        min_price = db.session.query(func.min(Product.price)).filter(Product.category_id == category_id).first()
+        max_price = db.session.query(func.max(Product.price)).filter(Product.category_id == category_id).first()
+    else:
+        subcategory_ids = [id_tuple[0] for id_tuple in
+                           db.session.query(Category.id).filter_by(parent_id=category.id).all()]
+        min_price = db.session.query(func.min(Product.price)).filter(Product.category_id.in_(subcategory_ids)).first()
+        max_price = db.session.query(func.max(Product.price)).filter(Product.category_id.in_(subcategory_ids)).first()
+    return int(float(min_price[0].split(' ')[0])), int(float(max_price[0].split(' ')[0]))

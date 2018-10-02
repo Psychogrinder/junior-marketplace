@@ -27,6 +27,38 @@ main .products .product-card {
   color: #56CC9D;
 }
 
+.product-filter {
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.price-filter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .price-filter__container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 30px;
+  }
+  .ui-slider {
+    width: 40%;
+    margin: 0 1.5rem;
+  }
+  input {
+    max-width: 100px;
+    height: 38px;
+  }
+}
+
+.ui-slider .ui-slider-handle:active {
+  background: $secondary;
+  border-color: $secondary;
+}
+
 @media (max-width: $media) {
   .products .product-filter .filter-block {
     margin-bottom: 1rem;
@@ -36,6 +68,19 @@ main .products .product-card {
 
 @media (max-width: $small) {
   .products .product-filter {
-     margin-left: 0;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .price-filter {
+    .price-filter__container {
+      margin-top: 1rem;
+      flex-direction: column;
+      .ui-slider {
+        width: 100%;
+        margin: 1rem 1.5rem;
+      }
+    }
   }
 }

@@ -1,7 +1,6 @@
 $(document).ready(function () {
         if ($('#sortByPriceOrPopularity').length > 0) {
 
-
             $(window).on('resize scroll', function () {
                 let element = $('.pageNumber');
                 if (element.length > 0 && isInViewport(element)) {
@@ -20,7 +19,9 @@ $(document).ready(function () {
                 producer_name: null,
                 quantity: null,
                 in_stock: 0,
-                page: 1
+                page: 1,
+                min_price: null,
+                max_price: null
             };
 
             // get base category name
@@ -72,6 +73,7 @@ $(document).ready(function () {
                     function (products, status) {
                         $('#loadingSpinner2').css('display', 'none');
                         add_new_products(products.products, products.next_page);
+                        set_slider_options(products.min_price, products.max_price);
                         display_valid_options(sorts_and_filters, base_category)
                     });
             }
@@ -146,6 +148,14 @@ $(document).ready(function () {
                         'style="width: 1px; height: 1px;" id="page' + next_page_number + '"></div>'
                     );
                 }
+            }
+
+            function set_slider_options(min_price, max_price) {
+                min_price = Number(min_price);
+                max_price = Number(max_price);
+                let slider = $("#priceSlider");
+                slider.slider("option", "min", min_price);
+                slider.slider("option", "max", max_price);
             }
 
             function display_producers_that_have_the_selected_category(sorts_and_filters, base_category) {
@@ -234,5 +244,26 @@ $(document).ready(function () {
 
             return elementBottom > viewportTop && elementTop < viewportBottom;
         };
+        if ($('#priceSlider').length > 0) {
+            $("#priceSlider").slider({
+                animate: "slow",
+                min: 0,
+                max: 1,
+                values: [0, 1E10],
+                range: true,
+                slide: function (event, ui) {
+                    $("input#minCost").val(ui.values[0]);
+                    $("input#maxCost").val(ui.values[1]);
+                },
+                stop: function (event, ui) {
+                    sorts_and_filters.min_price = ui.values[0];
+                    sorts_and_filters.max_price = ui.values[1];
+                    console.log(sorts_and_filters);
+                    delete_current_products();
+                    sorts_and_filters['page'] = 1;
+                    update_page(sorts_and_filters, base_category);
+                }
+            });
+        }
     }
 );
