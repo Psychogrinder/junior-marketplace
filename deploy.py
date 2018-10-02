@@ -85,6 +85,10 @@ class ScriptInterface(ABC):
     def execute(self):
         pass
 
+    @abstractclassmethod
+    def set_status(self, status):
+        pass
+
 
 class GrafanaRunScript(ScriptInterface):
 
@@ -105,8 +109,11 @@ class GrafanaRunScript(ScriptInterface):
         )
         return proc
 
+    def set_status(self, status):
+        self.NAME = '{} -({})'.format(self.NAME, status)
+
     def _running(self, proc):
-         return self.dialog.infobox(text=self.get_name())
+        return self.dialog.infobox(text=self.get_name())
 
     def execute(self):
         proc = self._make_proc([self.SCRIPT_NAME])
@@ -130,8 +137,11 @@ class DeployScript(ScriptInterface):
     def get_name(self):
         return self.name
 
+    def set_status(self, status):
+        self.name = '{} -({})'.format(self.name, status)
+
     def _running(self, proc):
-         return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
+        return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
 
     def execute(self):
         script_dir = os.path.join(self.wd, self.script_dir)
@@ -149,32 +159,63 @@ class App:
 
     def __init__(self, dialog, tasks):
         self.dialog = dialog
+        self._check_task_instance(tasks)
         self.tasks = tasks
+
+    def _check_task_instance(self, tasks):
+        for section, tasks in tasks.items():
+            for task in tasks:
+                if not issubclass(task.__class__, ScriptInterface):
+                    raise TypeError('{} не является наследником ScriptInterface'.format(task))
+
+    def show_menu_sections(self):
+        menu_sections = [(str(index), section) for index, section in enumerate(self.tasks.keys())]
+        code, tag = self.dialog.menu('Выберите раздел', choices=menu_sections)
+        section_id = menu_sections[int(tag)][1]
+        return code, section_id
+
+    def show_menu_tasks(self, section_key):
+        menu_tasks = [(str(index), task.get_name()) for index, task in enumerate(self.tasks[section_key])]
+        print(menu_tasks)
+        return self.dialog.menu(
+            'Выберите что нужно сделать',
+            choices=menu_tasks,
+            extra_button=True,
+            extra_label='Back'
+        )
 
     def run(self):
         loop_code = self.dialog.OK
         while loop_code == self.dialog.OK:
-            menu_tasks = [(str(index), task.get_name()) for index, task in enumerate(self.tasks)]
-            code, tag = self.dialog.menu('Выберите что нужно сделать', choices=menu_tasks)
-            if code == Dialog.OK:
-                chosen_task = self.tasks[int(tag)]
-                loop_code = chosen_task.execute()
-
-                if len(self.tasks) > 1:
-                    del self.tasks[int(tag)]
-                else:
-                    break
+            code, section_key = self.show_menu_sections()
+            code, tag = self.show_menu_tasks(section_key)
+            if code == self.dialog.EXTRA:
+                continue
+            chosen_task = self.tasks[section_key][int(tag)]
+            loop_code = chosen_task.execute()
+            chosen_task.set_status('выполнен')
 
         self.dialog.clear_screen()
+
 
 def main():
     dialog = MyDialog(Dialog())
     work_dir = os.path.dirname(os.path.abspath(__file__))
-    tasks = [
-        DeployScript(dialog, 'Деплой приложения на стейдж', 'marketplace.app', './deploy-stage.sh', work_dir),
-        DeployScript(dialog, 'Деплой бд на стейдж', 'marketplace.db', './deploy-stage.sh', work_dir),
-        GrafanaRunScript(dialog, work_dir)
-    ]
+    tasks = {
+        'App': [
+            DeployScript(dialog, 'Деплой приложения на продакшен',
+                         'marketplace.app', './deploy-prod.sh', work_dir),
+            DeployScript(dialog, 'Деплой приложения на стейдж',
+                         'marketplace.app', './deploy-stage.sh', work_dir),
+        ],
+        'Monitoring': [
+            GrafanaRunScript(dialog, work_dir)
+        ],
+        'DB': [
+            DeployScript(dialog, 'Деплой бд на стейдж', 'marketplace.db',
+                         './deploy-stage.sh', work_dir),
+        ],
+    }
     App(dialog, tasks).run()
 
 
