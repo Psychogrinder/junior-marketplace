@@ -73,31 +73,27 @@ class MyDialog:
 
 class ScriptInterface(ABC):
 
-    def __init__(self, dialog, work_dir):
+    def __init__(self, dialog, work_dir, name):
         self.wd = work_dir
         self.dialog = dialog
+        self.name = name
 
-    @abstractclassmethod
     def get_name(self):
-        pass
+        return self.name
 
     @abstractclassmethod
     def execute(self):
         pass
 
-    @abstractclassmethod
     def set_status(self, status):
-        pass
+        self.name = '{} -({})'.format(self.name, status)
 
 
 class GrafanaRunScript(ScriptInterface):
 
-    NAME = 'Запуск grafana'
     SCRIPT_DIR = 'marketplace.monitoring'
     SCRIPT_NAME = './grafana-run.sh'
-
-    def get_name(self):
-        return self.NAME
+    URL = 'http://localhost:3000'
 
     def _make_proc(self, cmd):
         script_dir = os.path.join(self.wd, self.SCRIPT_DIR)
@@ -109,11 +105,15 @@ class GrafanaRunScript(ScriptInterface):
         )
         return proc
 
-    def set_status(self, status):
-        self.NAME = '{} -({})'.format(self.NAME, status)
-
     def _running(self, proc):
         return self.dialog.infobox(text=self.get_name())
+
+    def _open_in_browser(self):
+        proc = subprocess.Popen(
+            ['sensible-browser', self.URL],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
 
     def execute(self):
         proc = self._make_proc([self.SCRIPT_NAME])
@@ -122,23 +122,22 @@ class GrafanaRunScript(ScriptInterface):
         if r_code != 0:
             proc = self._make_proc(['docker', 'container', 'start', 'grafana'])
             r_code = proc.wait()
-        return self.dialog.msgbox('grafana запущена\nhttp://localhost:3000')
+        code = self.dialog.msgbox('grafana запущена\n', extra_button=True, extra_label='Open')
+        if code == self.dialog.EXTRA:
+            self._open_in_browser()
+            return self.dialog.OK
+        return code
 
+# class DBScript(ScriptInterface):
+#
+#
 
 class DeployScript(ScriptInterface):
 
-    def __init__(self, dialog, name, script_dir, script_name, work_dir):
-        self.dialog = dialog
-        self.name = name
+    def __init__(self, dialog, work_dir, name, script_dir, script_name):
+        super().__init__(dialog, work_dir, name)
         self.script_dir = script_dir
         self.script_name = script_name
-        self.wd = work_dir
-
-    def get_name(self):
-        return self.name
-
-    def set_status(self, status):
-        self.name = '{} -({})'.format(self.name, status)
 
     def _running(self, proc):
         return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
@@ -159,10 +158,10 @@ class App:
 
     def __init__(self, dialog, tasks):
         self.dialog = dialog
-        self._check_task_instance(tasks)
+        self._check_task_instance_class(tasks)
         self.tasks = tasks
 
-    def _check_task_instance(self, tasks):
+    def _check_task_instance_class(self, tasks):
         for section, tasks in tasks.items():
             for task in tasks:
                 if not issubclass(task.__class__, ScriptInterface):
@@ -203,17 +202,17 @@ def main():
     work_dir = os.path.dirname(os.path.abspath(__file__))
     tasks = {
         'App': [
-            DeployScript(dialog, 'Деплой приложения на продакшен',
-                         'marketplace.app', './deploy-prod.sh', work_dir),
-            DeployScript(dialog, 'Деплой приложения на стейдж',
-                         'marketplace.app', './deploy-stage.sh', work_dir),
+            DeployScript(dialog, work_dir, 'Деплой приложения на продакшен',
+                         'marketplace.app', './deploy-prod.sh'),
+            DeployScript(dialog, work_dir, 'Деплой приложения на стейдж',
+                         'marketplace.app', './deploy-stage.sh'),
         ],
         'Monitoring': [
-            GrafanaRunScript(dialog, work_dir)
+            GrafanaRunScript(dialog, work_dir, 'Запуск grafana')
         ],
         'DB': [
-            DeployScript(dialog, 'Деплой бд на стейдж', 'marketplace.db',
-                         './deploy-stage.sh', work_dir),
+            DeployScript(dialog, work_dir, 'Деплой бд на стейдж', 'marketplace.db',
+                         './deploy-stage.sh'),
         ],
     }
     App(dialog, tasks).run()
