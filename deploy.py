@@ -105,15 +105,13 @@ class BaseScript(ScriptInterface):
         super().__init__(dialog, work_dir, name)
         self.script_dir = script_dir
         self.script_name = script_name
+        self.proc_cmd = [script_name, '-d']
 
     def _running(self, proc):
         return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
 
     def _get_script_dir(self):
-        return os.path.join(self.wd, self.script_dir)
-
-    def _get_proc_cmd(self):
-        return [self.script_name, '-d']
+        return os.path.join(self.wd, self.script_dir) + '/'
 
     def _make_proc(self, cmd):
         proc = subprocess.Popen(
@@ -134,7 +132,7 @@ class BaseScript(ScriptInterface):
     def execute(self):
         if self.dialog.OK != self._before_proc():
             return self.dialog.NOT_EXIT
-        proc = self._make_proc(self._get_proc_cmd())
+        proc = self._make_proc(self.proc_cmd)
         code = self._running(proc)
         return self._proc_done(code)
 
@@ -171,7 +169,7 @@ class DBScript(BaseScript):
             process_indication += '|'
             if len(process_indication) > 7:
                 process_indication = '|'
-        return proc.wait()
+        return proc.poll()
 
     def _running(self, proc):
         r_code = self._process_polling(proc)
@@ -184,6 +182,24 @@ class DBScript(BaseScript):
     def _proc_done(self, code):
         if code == self.dialog.OK:
             return self.dialog.msgbox('{} - выполнено'.format(self.get_name()))
+        return code
+
+
+class DBRestoreScript(DBScript):
+
+    def _before_proc(self):
+        super()._before_proc()
+        code, dump_file_path = self.dialog.fselect(
+            title='Выберите файл для восстановления БД',
+            filepath=self._get_script_dir(),
+            width=50,
+            height=20
+        )
+        if os.path.splitext(dump_file_path)[1] != '.gz':
+            self.dialog.msgbox('файл должен быть gzip формата')
+            return self.dialog.CANCEL
+        if code == self.dialog.OK:
+            self.proc_cmd = [self.script_name, dump_file_path, 'create']
         return code
 
 
@@ -207,7 +223,6 @@ class App:
 
     def show_menu_tasks(self, section_key):
         menu_tasks = [(str(index), task.get_name()) for index, task in enumerate(self.tasks[section_key])]
-        print(menu_tasks)
         return self.dialog.menu(
             'Выберите что нужно сделать',
             choices=menu_tasks,
@@ -244,9 +259,10 @@ def main():
             GrafanaRunScript(dialog, work_dir, 'Запуск grafana', 'marketplace.monitoring', './grafana-run.sh'),
         ],
         'DB': [
-            BaseScript(dialog, work_dir, 'Деплой бд на стейдж', 'marketplace.db', './deploy-stage.sh'),
-            DBScript(dialog, work_dir, 'Дамп бд', 'marketplace.db', './db_dump.sh'),
+            BaseScript(dialog, work_dir, 'Деплой БД на стейдж', 'marketplace.db', './deploy-stage.sh'),
+            DBScript(dialog, work_dir, 'Дамп БД', 'marketplace.db', './db_dump.sh'),
             DBScript(dialog, work_dir, 'Дамп пользовательских картинок', 'marketplace.db', './dump_user_images.sh'),
+            DBRestoreScript(dialog, work_dir, 'Восстановление БД', 'marketplace.db', './db_restore.sh'),
         ],
     }
     App(dialog, tasks).run()
