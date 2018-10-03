@@ -2,7 +2,7 @@
 
 from dialog import Dialog
 from abc import abstractclassmethod, ABC
-import os, sys
+import os, sys, time
 import subprocess
 
 
@@ -128,11 +128,15 @@ class BaseScript(ScriptInterface):
     def _before_proc(self):
         return self.dialog.OK
 
+    def _proc_done(self, code):
+        return code
+
     def execute(self):
         if self.dialog.OK != self._before_proc():
             return self.dialog.NOT_EXIT
         proc = self._make_proc(self._get_proc_cmd())
-        return self._running(proc)
+        code = self._running(proc)
+        return self._proc_done(code)
 
 
 class GrafanaRunScript(BaseScript):
@@ -157,10 +161,30 @@ class DBScript(BaseScript):
     STDERR = subprocess.PIPE
 
     def _before_proc(self):
-        return self.dialog.yesno('Сделать дамп бд?', not_check_cancel=True)
+        return self.dialog.yesno('Выполнить {}?'.format(self.get_name()), not_check_cancel=True)
+
+    def _process_polling(self, proc):
+        process_indication = '|'
+        while proc.poll() is None:
+            self.dialog.infobox(text='Выполняется\n{}'.format(process_indication))
+            time.sleep(0.2)
+            process_indication += '|'
+            if len(process_indication) > 7:
+                process_indication = '|'
+        return proc.wait()
 
     def _running(self, proc):
-         return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
+        r_code = self._process_polling(proc)
+        if r_code != 0:
+            err = proc.stderr.read().decode()
+            self.dialog.scrollbox(err, width=80, height=20)
+            return self.dialog.NOT_EXIT
+        return self.dialog.OK
+
+    def _proc_done(self, code):
+        if code == self.dialog.OK:
+            return self.dialog.msgbox('{} - выполнено'.format(self.get_name()))
+        return code
 
 
 class App:
@@ -222,6 +246,7 @@ def main():
         'DB': [
             BaseScript(dialog, work_dir, 'Деплой бд на стейдж', 'marketplace.db', './deploy-stage.sh'),
             DBScript(dialog, work_dir, 'Дамп бд', 'marketplace.db', './db_dump.sh'),
+            DBScript(dialog, work_dir, 'Дамп пользовательских картинок', 'marketplace.db', './dump_user_images.sh'),
         ],
     }
     App(dialog, tasks).run()
