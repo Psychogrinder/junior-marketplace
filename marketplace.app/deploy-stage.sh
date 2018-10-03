@@ -1,11 +1,12 @@
 #!/bin/bash
 
-
 if [[ $2 == 's' ]]
 then
   source ../DOCKER_ENV_STAGE
 fi
   source ../.env.stage
+
+source ../.env.stage
 
 docker volume create marketplaceapp
 

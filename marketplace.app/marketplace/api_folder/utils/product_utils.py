@@ -1,6 +1,6 @@
 import string
 
-from sqlalchemy import desc, func, exc
+from sqlalchemy import desc, func, exc, and_, Numeric
 from sqlalchemy_searchable import inspect_search_vectors
 from flask import url_for
 from marketplace import db, app, PRODUCTS_PER_PAGE, sitemap_tools
@@ -97,10 +97,13 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
             subcategory_ids = [el[0] for el in
                                db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
             query = query.filter(Product.category_id.in_(subcategory_ids))
+
+            min_price, max_price = get_min_max_price_by_category_id(parent_category_id)
         # else it's a subcategory and the name is in Russian
         else:
             category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
             query = query.filter(Product.category_id == category_id)
+            min_price, max_price = get_min_max_price_by_category_id(category_id)
 
     if args['price']:
         if args['price'] == 'down':
@@ -108,14 +111,21 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
         elif args['price'] == 'up':
             query = query.order_by(Product.price.asc())
 
-    product_schema = ("id", "name", "price", "photo_url", "rating", "votes", "producer_name")
+    if args['min_price']:
+        query = query.filter(and_((int(args['min_price']) <= Product.price.cast(Numeric)),
+                                  (Product.price.cast(Numeric)) <= int(args['max_price'])))
+
     page_products = query.paginate(args['page'], PRODUCTS_PER_PAGE)
+
+    product_schema = ("id", "name", "price", "photo_url", "rating", "votes", "producer_name")
     for product in page_products.items:
         products.append(dict(zip(product_schema, product)))
     for product in products:
         product['stars'] = get_formatted_rating(product['rating'])
     return {"products": products,
-            "next_page": page_products.next_num}
+            "next_page": page_products.next_num,
+            "min_price": min_price,
+            "max_price": max_price, }
 
 
 def get_popular_products() -> list:
@@ -226,8 +236,8 @@ def post_product(args: dict) -> Product:
         if category not in producer.categories:
             producer.categories.append(category)
     db.session.commit()
-    sitemap_tools.add_new_product_to_sitemap.delay(new_product.producer_id, new_product.id)
-    sitemap_tools.update_producer_info_in_global_sitemap.delay(new_product.producer_id)
+    sitemap_tools.add_new_product_to_sitemap.apply_async((new_product.producer_id, new_product.id),
+                                                         link=sitemap_tools.update_producer_info_in_global_sitemap.s())
     return new_product
 
 
@@ -247,8 +257,8 @@ def put_product(args: dict, product_id: int) -> Product:
     db.session.commit()
     if 0 == product_quantity_before < product.quantity:
         notify_subscribers_about_products_supply(product)
-    sitemap_tools.update_product_info_in_sitemap.delay(product.producer_id, product_id)
-    sitemap_tools.update_producer_info_in_global_sitemap.delay(product.producer_id)
+    sitemap_tools.update_product_info_in_sitemap.apply_async((product.producer_id, product_id),
+                                                             link=sitemap_tools.update_producer_info_in_global_sitemap.s())
     return product
 
 
@@ -258,8 +268,8 @@ def delete_product_by_id(product_id: int) -> dict:
     delete_categories_if_it_was_the_last_product(product)
     db.session.delete(product)
     db.session.commit()
-    sitemap_tools.delete_product_from_sitemap.delay(product.producer_id, product_id)
-    sitemap_tools.update_producer_info_in_global_sitemap.delay(product.producer_id)
+    sitemap_tools.delete_product_from_sitemap.apply_async((product.producer_id, product_id),
+                                                          link=sitemap_tools.update_producer_info_in_global_sitemap.s())
     return {"message": "Product with id {} has been deleted successfully".format(product_id)}
 
 
@@ -303,3 +313,16 @@ def notify_subscribers_about_products_supply(product):
             product.name
         )
     db.session.commit()
+
+
+def get_min_max_price_by_category_id(category_id: int) -> tuple:
+    category = get_category_by_id(category_id)
+    if category.parent_id != 0:
+        min_price = db.session.query(func.min(Product.price)).filter(Product.category_id == category_id).first()
+        max_price = db.session.query(func.max(Product.price)).filter(Product.category_id == category_id).first()
+    else:
+        subcategory_ids = [id_tuple[0] for id_tuple in
+                           db.session.query(Category.id).filter_by(parent_id=category.id).all()]
+        min_price = db.session.query(func.min(Product.price)).filter(Product.category_id.in_(subcategory_ids)).first()
+        max_price = db.session.query(func.max(Product.price)).filter(Product.category_id.in_(subcategory_ids)).first()
+    return int(float(min_price[0].split(' ')[0])), int(float(max_price[0].split(' ')[0]))

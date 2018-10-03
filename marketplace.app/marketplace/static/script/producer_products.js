@@ -166,12 +166,14 @@ if ($('#producerProducts').length > 0) {
             producer_sorts_and_filters,
             function (products, status) {
                 add_new_producer_products(products.products, products.next_page);
+                $('#loadingSpinner2').css('display', 'none');
             });
     }
 
 
     function updateProducerProductsPage(producer_sorts_and_filters) {
         producer_fill_sorts_and_filters(producer_sorts_and_filters);
+        $('#loadingSpinner2').css('display', 'flex');
         display_producer_filtered_and_sorted_products(producer_sorts_and_filters);
     }
 
