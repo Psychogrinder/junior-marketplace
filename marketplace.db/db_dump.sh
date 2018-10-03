@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+set -xe
 
 source ../DOCKER_ENV_PRODUCTION
 
