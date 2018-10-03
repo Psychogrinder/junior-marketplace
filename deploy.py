@@ -258,13 +258,18 @@ def main():
         'Monitoring': [
             GrafanaRunScript(dialog, work_dir, 'Запуск grafana', 'marketplace.monitoring', './grafana-run.sh'),
         ],
+        'Nginx': [
+            BaseScript(dialog, work_dir, 'Деплой nginx на продакшен', 'marketplace.nginx', './deploy-prod.sh'),
+        ],
         'DB': [
             BaseScript(dialog, work_dir, 'Деплой БД на стейдж', 'marketplace.db', './deploy-stage.sh'),
             DBScript(dialog, work_dir, 'Дамп БД', 'marketplace.db', './db_dump.sh'),
             DBScript(dialog, work_dir, 'Дамп пользовательских картинок', 'marketplace.db', './dump_user_images.sh'),
+            DBScript(dialog, work_dir, 'Применить миграции', 'marketplace.db', './make_migrations.sh'),
             DBRestoreScript(dialog, work_dir, 'Восстановление БД', 'marketplace.db', './db_restore.sh'),
         ],
     }
+
     App(dialog, tasks).run()
 
 
