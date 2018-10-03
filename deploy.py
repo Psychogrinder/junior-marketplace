@@ -97,9 +97,8 @@ class ScriptInterface(ABC):
 
 
 class BaseScript(ScriptInterface):
-
     STDOUT = subprocess.PIPE
-    STDERR = subprocess.DEVNULL
+    STDERR = subprocess.PIPE
 
     def __init__(self, dialog, work_dir, name, script_dir, script_name):
         super().__init__(dialog, work_dir, name)
@@ -108,7 +107,12 @@ class BaseScript(ScriptInterface):
         self.proc_cmd = [script_name, '-d']
 
     def _running(self, proc):
-        return self.dialog.programbox(fd=proc.stdout.fileno(), text=self.get_name())
+        code = self.dialog.progressbox(fd=proc.stdout.fileno(), text=self.get_name())
+        err = proc.stderr.read().decode()
+        if err:
+            self.dialog.msgbox(text=err, width=40, height=20)
+            return self.dialog.NOT_EXIT
+        return code
 
     def _get_script_dir(self):
         return os.path.join(self.wd, self.script_dir) + '/'
@@ -155,9 +159,6 @@ class GrafanaRunScript(BaseScript):
 
 
 class PollingProcessScript(BaseScript):
-
-    STDERR = subprocess.PIPE
-
     def _before_proc(self):
         return self.dialog.yesno('Выполнить {}?'.format(self.get_name()), not_check_cancel=True)
 
@@ -186,7 +187,6 @@ class PollingProcessScript(BaseScript):
 
 
 class DBRestoreScript(PollingProcessScript):
-
     def _before_proc(self):
         super()._before_proc()
         code, dump_file_path = self.dialog.fselect(
