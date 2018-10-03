@@ -1,0 +1,146 @@
+@keyframes lds-spinner {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes lds-spinner {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.lds-spinner {
+    position: relative;
+}
+
+#loadingSpinner2 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.lds-spinner div {
+    left: 94px;
+    top: 62px;
+    position: absolute;
+    -webkit-animation: lds-spinner linear 0.8s infinite;
+    animation: lds-spinner linear 0.8s infinite;
+    background: rgba(93.61290322580645%, 22.00786366402921%, 42.24206194019591%, 0.961);
+    width: 12px;
+    height: 36px;
+    border-radius: 100%;
+    -webkit-transform-origin: 6px 38px;
+    transform-origin: 6px 38px;
+}
+
+.lds-spinner div:nth-child(1) {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-animation-delay: -0.742857142857143s;
+    animation-delay: -0.742857142857143s;
+}
+
+.lds-spinner div:nth-child(2) {
+    -webkit-transform: rotate(25.714285714285715deg);
+    transform: rotate(25.714285714285715deg);
+    -webkit-animation-delay: -0.685714285714286s;
+    animation-delay: -0.685714285714286s;
+}
+
+.lds-spinner div:nth-child(3) {
+    -webkit-transform: rotate(51.42857142857143deg);
+    transform: rotate(51.42857142857143deg);
+    -webkit-animation-delay: -0.628571428571429s;
+    animation-delay: -0.628571428571429s;
+}
+
+.lds-spinner div:nth-child(4) {
+    -webkit-transform: rotate(77.14285714285714deg);
+    transform: rotate(77.14285714285714deg);
+    -webkit-animation-delay: -0.571428571428571s;
+    animation-delay: -0.571428571428571s;
+}
+
+.lds-spinner div:nth-child(5) {
+    -webkit-transform: rotate(102.85714285714286deg);
+    transform: rotate(102.85714285714286deg);
+    -webkit-animation-delay: -0.514285714285714s;
+    animation-delay: -0.514285714285714s;
+}
+
+.lds-spinner div:nth-child(6) {
+    -webkit-transform: rotate(128.57142857142858deg);
+    transform: rotate(128.57142857142858deg);
+    -webkit-animation-delay: -0.457142857142857s;
+    animation-delay: -0.457142857142857s;
+}
+
+.lds-spinner div:nth-child(7) {
+    -webkit-transform: rotate(154.28571428571428deg);
+    transform: rotate(154.28571428571428deg);
+    -webkit-animation-delay: -0.4s;
+    animation-delay: -0.4s;
+}
+
+.lds-spinner div:nth-child(8) {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    -webkit-animation-delay: -0.342857142857143s;
+    animation-delay: -0.342857142857143s;
+}
+
+.lds-spinner div:nth-child(9) {
+    -webkit-transform: rotate(205.71428571428572deg);
+    transform: rotate(205.71428571428572deg);
+    -webkit-animation-delay: -0.285714285714286s;
+    animation-delay: -0.285714285714286s;
+}
+
+.lds-spinner div:nth-child(10) {
+    -webkit-transform: rotate(231.42857142857142deg);
+    transform: rotate(231.42857142857142deg);
+    -webkit-animation-delay: -0.228571428571429s;
+    animation-delay: -0.228571428571429s;
+}
+
+.lds-spinner div:nth-child(11) {
+    -webkit-transform: rotate(257.14285714285717deg);
+    transform: rotate(257.14285714285717deg);
+    -webkit-animation-delay: -0.171428571428571s;
+    animation-delay: -0.171428571428571s;
+}
+
+.lds-spinner div:nth-child(12) {
+    -webkit-transform: rotate(282.85714285714283deg);
+    transform: rotate(282.85714285714283deg);
+    -webkit-animation-delay: -0.114285714285714s;
+    animation-delay: -0.114285714285714s;
+}
+
+.lds-spinner div:nth-child(13) {
+    -webkit-transform: rotate(308.57142857142856deg);
+    transform: rotate(308.57142857142856deg);
+    -webkit-animation-delay: -0.057142857142857s;
+    animation-delay: -0.057142857142857s;
+}
+
+.lds-spinner div:nth-child(14) {
+    -webkit-transform: rotate(334.2857142857143deg);
+    transform: rotate(334.2857142857143deg);
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+}
+
+.lds-spinner {
+    width: 200px !important;
+    height: 200px !important;
+    -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+    transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+}

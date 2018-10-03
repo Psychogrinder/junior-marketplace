@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set +x
 
-# source ../DOCKER_ENV_STAGE
+source ../DOCKER_ENV_STAGE
 source ../.env.stage
 
 docker volume create marketplacedb

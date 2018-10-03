@@ -1,3 +1,6 @@
+from sqlalchemy import or_, String
+from sqlalchemy.sql.expression import cast
+
 from marketplace import db, ORDERS_PER_PAGE
 from marketplace.api_folder.schemas import order_schema_list
 from marketplace.api_folder.utils import product_utils
@@ -63,17 +66,22 @@ def get_filtered_orders(args: dict):
     Функция для отображения заказов на странице истории заказов производителя.
     """
     order_status = args['order_status']
+    keyword = args['keyword']
     page = int(args['page'])
     if order_status == 'Все':
         orders = Order.query.filter_by(producer_id=int(args['producer_id'])).order_by(
-            Order.unread_consumer_messages.desc()).paginate(page, ORDERS_PER_PAGE)
-        next_page = orders.next_num
-        orders = order_schema_list.dump(orders.items).data
+            Order.unread_consumer_messages.desc())
     else:
         orders = Order.query.filter_by(producer_id=int(args['producer_id'])).filter_by(status=order_status).order_by(
-            Order.unread_consumer_messages.desc()).paginate(page, ORDERS_PER_PAGE)
-        next_page = orders.next_num
-        orders = order_schema_list.dump(orders.items).data
+            Order.unread_consumer_messages.desc())
+    if keyword:
+        orders = orders.filter(
+            or_(cast(Order.id, String).ilike(f'%{keyword}%'), Order.delivery_address.ilike(f'%{keyword}%'),
+                Order.delivery_method.ilike(f'%{keyword}%'), Order.consumer_phone.ilike(f'%{keyword}%'),
+                Order.first_name.ilike(f'%{keyword}%'), Order.last_name.ilike(f'%{keyword}%')))
+    orders = orders.paginate(page, ORDERS_PER_PAGE)
+    next_page = orders.next_num
+    orders = order_schema_list.dump(orders.items).data
     for order in orders:
         order['items'] = []
         order['order_timestamp'] = order['order_timestamp'].split('T')[0]
