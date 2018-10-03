@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set +x
+set +e
 
 source ../DOCKER_ENV_PRODUCTION
 source ../.env.prod
