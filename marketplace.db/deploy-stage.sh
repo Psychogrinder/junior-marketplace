@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set +x
+set -e
 
-source ../DOCKER_ENV_STAGE
+if [[ $2 == 's' ]]
+then
+  source ../DOCKER_ENV_STAGE
+fi
 source ../.env.stage
 
 docker volume create marketplacedb

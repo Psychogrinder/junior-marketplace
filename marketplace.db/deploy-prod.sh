@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 source ../DOCKER_ENV_PRODUCTION
 source ../.env.prod
