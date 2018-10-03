@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+set -e
 
 source ../DOCKER_ENV_PRODUCTION
 
@@ -16,4 +16,4 @@ tar zcf $USER_IMAGE_DIR_NAME.tar.gz $USER_IMAGE_DIR_NAME/
 
 source ../marketplace.app/.venv/bin/activate
 
-python ya_dump.py && rm $USER_IMAGE_DIR_NAME.tar.gz
+python ya_dump.py && rm $USER_IMAGE_DIR_NAME.tar.gz && rm -r $USER_IMAGE_DIR_NAME
