@@ -29,9 +29,9 @@ class TestProducts(unittest.TestCase):
 
             driver.get(self.url)
             # select random category and product
-            category = driver.find_element_by_css_selector(
-                "div.catalog-category-item:nth-child({}) > a:nth-child(1)".format(randint(1, 8)))
-            category.click()
+            categories = driver.find_elements_by_class_name("catalog-category-item")
+            choice(categories).click()
+
             product = choice(driver.find_elements_by_class_name("card-item"))
             product.click()
             try:
