@@ -50,7 +50,14 @@ class TestProducts(unittest.TestCase):
             logged = True
 
 
-    def test_02_enter_all_in_stock_products(self):
+    def test_02_goods_out_of_stock(self):
+        available = driver.find_element_by_class_name("goods-ended")
+        if not available:
+            add_to_cart = driver.find_element_by_class_name("btn-success")
+            self.assertIsNone(add_to_cart)
+
+
+    def test_03_enter_all_in_stock_products(self):
         in_stock = driver.find_element_by_id("allProductsInStock").text # get num of prods in stock
         quantity = int(in_stock[:in_stock.find(' ')]) # removing chars and getting int value
 
@@ -59,17 +66,17 @@ class TestProducts(unittest.TestCase):
         el.send_keys(quantity)  # input num of products
 
 
-    def test_03_add_products_to_cart(self):
+    def test_04_add_products_to_cart(self):
         driver.find_element_by_css_selector("button.btn:nth-child(2)").click()
         driver.implicitly_wait(2)
 
 
-    def test_04_is_product_added_to_cart(self):
+    def test_05_is_product_added_to_cart(self):
         is_added_to_cart = driver.find_element_by_css_selector(".hullabaloo")
         self.assertIsNotNone(is_added_to_cart, 'no message after product has been added to cart')
 
 
-    def test_05_is_cost_the_same_in_cart(self):
+    def test_06_is_cost_the_same_in_cart(self):
         cost_product = driver.find_element_by_class_name("product_price_value").text
         title_product = driver.find_element_by_class_name("product_title").text
 
@@ -78,12 +85,15 @@ class TestProducts(unittest.TestCase):
         # driver.find_element_by_link_text(title_product).text
         # driver.find_element_by_link_text().text
 
-    def test_06_place_order(self):
+    def test_07_place_order(self):
         driver.find_element_by_id("placeOrderButton").click()
 
 
-    def test_07_confirm_order(self):
+    def test_08_confirm_order(self):
         driver.find_element_by_id("orderPlacementBtn").click()
         order_status = driver.find_element_by_xpath("/html/body/main/section/h2").text
         self.assertIn("успешно оформлен", order_status.lower())
 
+
+    def test_09_orders_history(self):
+        driver.find_element_by_class_name("nav-link").click()
