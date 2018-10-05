@@ -65,6 +65,11 @@ def get_products_from_a_parent_category(parent_category_id: int) -> list:
 
 
 def get_sorted_and_filtered_products(args: dict) -> dict:
+    result = {"products": None,
+              "next_page": None,
+              "min_price": None,
+              "max_price": None, }
+
     products = []
     args['page'] = int(args['page'])
     query = db.session.query(Product.id, Product.name, Product.price, Product.photo_url, Product.rating, Product.votes,
@@ -97,13 +102,12 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
             subcategory_ids = [el[0] for el in
                                db.session.query(Category.id).filter(Category.parent_id == parent_category_id).all()]
             query = query.filter(Product.category_id.in_(subcategory_ids))
-
-            min_price, max_price = get_min_max_price_by_category_id(parent_category_id)
+            category_id = parent_category_id
         # else it's a subcategory and the name is in Russian
         else:
             category_id = db.session.query(Category.id).filter(Category.name == args['category_name']).first()
             query = query.filter(Product.category_id == category_id)
-            min_price, max_price = get_min_max_price_by_category_id(category_id)
+        result['min_price'], result['max_price'] = get_min_max_price_by_category_id(category_id)
 
     if args['price']:
         if args['price'] == 'down':
@@ -116,16 +120,15 @@ def get_sorted_and_filtered_products(args: dict) -> dict:
                                   (Product.price.cast(Numeric)) <= int(args['max_price'])))
 
     page_products = query.paginate(args['page'], PRODUCTS_PER_PAGE)
-
+    result['next_page'] = page_products.next_num
     product_schema = ("id", "name", "price", "photo_url", "rating", "votes", "producer_name")
     for product in page_products.items:
         products.append(dict(zip(product_schema, product)))
     for product in products:
         product['stars'] = get_formatted_rating(product['rating'])
-    return {"products": products,
-            "next_page": page_products.next_num,
-            "min_price": min_price,
-            "max_price": max_price, }
+
+    result['products'] = products
+    return result
 
 
 def get_popular_products() -> list:
