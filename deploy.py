@@ -10,11 +10,11 @@ class MyDialog:
 
     NOT_EXIT = 1000
 
-    def __init__(self, Dialog_instance):
-        self.dlg = Dialog_instance
+    def __init__(self, dialog):
+        self.dlg = dialog
 
-    def check_exit_request(self, code, ignore_Cancel=False):
-        if code == self.CANCEL and ignore_Cancel:
+    def check_exit_request(self, code, ignore_cancel=False):
+        if code == self.CANCEL and ignore_cancel:
             return True
         if code in (self.CANCEL, self.ESC):
             msg = "Закрыть?"
@@ -70,7 +70,7 @@ class MyDialog:
     def _Yesno(self, *args, **kwargs):
         while True:
             code = self.dlg.yesno(*args, **kwargs)
-            if self.check_exit_request(code, ignore_Cancel=True):
+            if self.check_exit_request(code, ignore_cancel=True):
                 break
 
         return code
@@ -84,16 +84,22 @@ class ScriptInterface(ABC):
         self.wd = work_dir
         self.dialog = dialog
         self.name = name
+        self._status = ''
 
     def get_name(self):
-        return self.name
+        return '{} - {}'.format(self.name, self.status) if self.status else self.name
 
     @abstractclassmethod
     def execute(self):
         pass
 
-    def set_status(self, status):
-        self.name = '{} -({})'.format(self.name, status)
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, new_status):
+        self._status = new_status
 
 
 class BaseScript(ScriptInterface):
@@ -240,7 +246,7 @@ class App:
             chosen_task = self.tasks[section_key][int(tag)]
             loop_code = chosen_task.execute()
             if loop_code == self.dialog.OK:
-                chosen_task.set_status('выполнен')
+                chosen_task.status = 'выполнен'
             elif loop_code == self.dialog.NOT_EXIT:
                 loop_code = self.dialog.OK
 
