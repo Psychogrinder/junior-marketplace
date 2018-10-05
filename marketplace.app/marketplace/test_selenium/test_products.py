@@ -51,11 +51,20 @@ class TestProducts(unittest.TestCase):
 
 
     def test_02_goods_out_of_stock(self):
-        available = driver.find_element_by_class_name("goods-ended")
-        if not available:
-            add_to_cart = driver.find_element_by_class_name("btn-success")
-            self.assertIsNone(add_to_cart)
+        try:
+            available = driver.find_element_by_class_name("goods-ended")
+            if not available:
+                self.assertIsNone(driver.find_element_by_class_name("btn-success"),
+                                  'product out of stock, but Add-to-cart-button is available') # add to cart button
 
+                driver.execute_script("window.history.go(-1)") # open previous page
+
+                driver.find_element_by_id("in_stock_catalog_products").click()
+                product = choice(driver.find_elements_by_class_name("card-item"))
+                product.click() # open product card
+
+        except ex.NoSuchElementException:
+            pass
 
     def test_03_enter_all_in_stock_products(self):
         in_stock = driver.find_element_by_id("allProductsInStock").text # get num of prods in stock
@@ -75,7 +84,7 @@ class TestProducts(unittest.TestCase):
         is_added_to_cart = driver.find_element_by_css_selector(".hullabaloo")
         self.assertIsNotNone(is_added_to_cart, 'no message after product has been added to cart')
 
-
+    #TODO
     def test_06_is_cost_the_same_in_cart(self):
         cost_product = driver.find_element_by_class_name("product_price_value").text
         title_product = driver.find_element_by_class_name("product_title").text
@@ -89,11 +98,17 @@ class TestProducts(unittest.TestCase):
         driver.find_element_by_id("placeOrderButton").click()
 
 
-    def test_08_confirm_order(self):
+    def test_08_register_order(self):
         driver.find_element_by_id("orderPlacementBtn").click()
         order_status = driver.find_element_by_xpath("/html/body/main/section/h2").text
-        self.assertIn("успешно оформлен", order_status.lower())
+        self.assertIn("успешно оформлен", order_status.lower(),
+                      "order-registration-button has been clicked, but no message to consumer")
 
 
     def test_09_orders_history(self):
-        driver.find_element_by_class_name("nav-link").click()
+        driver.find_element_by_xpath("/html/body/header/nav/div/div/ul/li[2]/a").click()
+        info = driver.find_elements_by_class_name("order_history_info")
+        card = driver.find_elements_by_class_name("cart_product_stock_info")
+        quantity = driver.find_elements_by_class_name("quantity_container")
+
+        
