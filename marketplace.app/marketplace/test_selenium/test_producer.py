@@ -6,6 +6,7 @@ from selenium import webdriver
 from marketplace.models import User
 
 
+
 firefox_opts = webdriver.FirefoxOptions()
 firefox_opts.add_argument('--headless')
 driver = webdriver.Firefox(firefox_options=firefox_opts)
@@ -58,8 +59,7 @@ class TestProducer(unittest.TestCase):
 
 
     def test_05_producer_open_catalog(self):
-        driver.find_element_by_css_selector(
-            "div.col-12:nth-child(1) > p:nth-child(2) > a:nth-child(1)").click()
+        driver.find_element_by_xpath("/html/body/footer/div/div/div[1]/p[1]/a").click()
 
 
     def test_06_producer_logout(self):
