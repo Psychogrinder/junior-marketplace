@@ -3,8 +3,10 @@ from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMa
     getDataFromElements, setNewKeysForDict
 import unittest
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait as Wait
 from marketplace.models import User
-
 
 
 firefox_opts = webdriver.FirefoxOptions()
@@ -34,11 +36,13 @@ class TestProducer(unittest.TestCase):
 
     def test_01_get_home_page(self):
         driver.get(self.url)
+        self.assertIn('маркетплейс', driver.title.lower(), 'no name of marketplace in the website title')
 
 
     def test_02_producer_open_registration_page(self):
         driver.find_element_by_css_selector(
             "div.col-12:nth-child(2) > p:nth-child(2) > a:nth-child(1)").click()
+        self.assertIsNotNone(driver.find_element_by_id("registrationProducer")) #button reg
 
 
     def test_03_producer_enter_registrtion_data(self):
@@ -53,27 +57,45 @@ class TestProducer(unittest.TestCase):
         driver.find_element_by_id("descriptionRegProducer").send_keys(data["desc"])
 
 
+
     def test_04_producer_submit_form(self):
         driver.find_element_by_id("registrationProducer").click()
-        driver.implicitly_wait(2)
+
+        user_menu = None
+        try:
+            user_menu = Wait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "/html/body/header/nav/div/div/div/button"))
+            )
+        finally:
+            self.assertIsNotNone(user_menu, "producer is not logged after registration")
 
 
-    def test_05_producer_open_catalog(self):
-        driver.find_element_by_xpath("/html/body/footer/div/div/div[1]/p[1]/a").click()
+    # def test_05_producer_open_catalog(self):
+    #     driver.find_element_by_xpath("/html/body/footer/div/div/div[1]/p[1]/a").click()
 
 
     def test_06_producer_logout(self):
         logout(driver)
+        btn_auth = None
+        try:
+            btn_auth = Wait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".header-login > img:nth-child(1)"))
+            )
+        finally:
+            self.assertIsNotNone(btn_auth, "no auth button after logout")
 
 
     def test_07_producer_login(self):
         email, pw = self.reg_data["email"], self.reg_data["password"]
         login(driver, email, pw)
+        self.assertIsNotNone(driver.find_element_by_css_selector("button.btn:nth-child(1)")) #user menu button
 
 
     def test_08_producer_open_edit_profile(self):
         driver.find_element_by_css_selector(".dropdown-toggle").click()  # user menu
         driver.find_element_by_css_selector("a.dropdown-item:nth-child(1)").click()  # go to profile
+        self.assertIn("редактировать", driver.find_element_by_xpath("/html/body/main/div[2]/div/p").text.lower())
+        self.assertIsNotNone(driver.find_element_by_css_selector("button.btn:nth-child(1)")) #is still logined
 
 
     def test_09_producer_profile_is_data_correct(self):
@@ -92,12 +114,21 @@ class TestProducer(unittest.TestCase):
                 self.assertEqual(profile_data[key], self.reg_data[key])
 
 
-        #TODO add edit case
+    #TODO add edit case
 
 
     def test_10_producer_open_the_delete_page(self):
-        driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click() #edit profile
+        driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click() #edit button
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click() # go to modal delete
+
+        btn_cancel = driver.find_element_by_xpath("/html/body/div[5]/div/div/div[3]/button[1]")
+        btn_delete = driver.find_element_by_id("deleteProducerBtn")
+
+        self.assertIsNotNone(btn_cancel, "can not find cancel button")
+        self.assertIn("отменить", btn_cancel.text.lower())
+
+        self.assertIsNotNone(btn_delete, "can not find delete button")
+        self.assertIn("удалить", btn_delete.text.lower())
 
 
         # TODO cancel button click; attach id to the button
@@ -109,5 +140,4 @@ class TestProducer(unittest.TestCase):
 
     def test_11_producer_delete_confirm(self):
         driver.find_element_by_id("deleteProducerBtn").click()
-        driver.implicitly_wait(2)
         self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
