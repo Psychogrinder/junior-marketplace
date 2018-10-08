@@ -7,13 +7,15 @@ import xml.etree.ElementTree as ET
 from marketplace import app, SITE_DOMAIN, celery, FIND_IN_XML_PREFIX, DEFAULT_XML_NAMESPACE
 from marketplace.api_folder.utils import product_utils
 
+sitemap_xml_dirr = app.config['SITEMAP_FOLDER']
+sitemap_xml_path = os.path.join(sitemap_xml_dirr, 'sitemap.xml')
 
 @celery.task()
 def add_producer_to_global_sitemap(data_tuple):
     producer_id, producer_update_date = data_tuple
-    if not os.path.isfile('sitemap.xml'):
+    if not os.path.isfile(sitemap_xml_path):
         init_global_sitemap()
-    path = 'sitemap.xml'
+    path = sitemap_xml_path
     producer_path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, False)
@@ -24,7 +26,7 @@ def add_producer_to_global_sitemap(data_tuple):
 @celery.task()
 def update_producer_info_in_global_sitemap(data_tuple):
     producer_id, producer_update_date = data_tuple
-    path = 'sitemap.xml'
+    path = sitemap_xml_path
     producer_path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, False)
@@ -34,7 +36,7 @@ def update_producer_info_in_global_sitemap(data_tuple):
 
 @celery.task()
 def delete_producer_from_global_sitemap(producer_id):
-    path = 'sitemap.xml'
+    path = sitemap_xml_path
     producer_path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, False)
@@ -45,11 +47,13 @@ def delete_producer_from_global_sitemap(producer_id):
 
 def init_global_sitemap():
     pages = []
+    if not os.path.isdir(sitemap_xml_dirr):
+        os.mkdir(sitemap_xml_dirr)
     if os.path.isfile('static_sitemap.xml'):
         static_mod_data = get_modification_date('static_sitemap.xml')
         pages.append(['{}/static_sitemap.xml'.format(SITE_DOMAIN), static_mod_data])
     sitemap_xml = render_template('global_sitemap.xml', pages=pages)
-    with open('sitemap.xml', 'w+') as sitemap:
+    with open(sitemap_xml_path, 'w+') as sitemap:
         sitemap.write(sitemap_xml)
 
 
