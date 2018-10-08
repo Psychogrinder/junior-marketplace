@@ -50,21 +50,19 @@ class TestProducts(unittest.TestCase):
             logged = True
 
 
-    def test_02_goods_out_of_stock(self):
+    def test_02_goods_out_of_stock_chec(self):
+
         try:
-            available = driver.find_element_by_class_name("goods-ended")
-            if not available:
-                self.assertIsNone(driver.find_element_by_class_name("btn-success"),
-                                  'product out of stock, but Add-to-cart-button is available') # add to cart button
+            driver.find_element_by_css_selector("button.btn:nth-child(2)") # add to cart btn
 
-                driver.execute_script("window.history.go(-1)") # open previous page
+        except Exception:
+            self.assertIn("нет в наличии", driver.find_element_by_class_name("goods-ended").text.lower())
 
-                driver.find_element_by_id("in_stock_catalog_products").click()
-                product = choice(driver.find_elements_by_class_name("card-item"))
-                product.click() # open product card
+            driver.execute_script("window.history.go(-1)")  # open previous page
+            driver.find_element_by_id("in_stock_catalog_products").click()
+            product = choice(driver.find_elements_by_class_name("card-item"))
+            product.click()  # open product card
 
-        except ex.NoSuchElementException:
-            pass
 
     def test_03_enter_all_in_stock_products(self):
         in_stock = driver.find_element_by_id("allProductsInStock").text # get num of prods in stock
@@ -95,6 +93,9 @@ class TestProducts(unittest.TestCase):
         # driver.find_element_by_link_text().text
 
     def test_07_place_order(self):
+        products = driver.find_elements_by_id("productIdCart") #get id of products
+        products_id = [i.text for i in products]
+        print('prod_id', products_id)
         driver.find_element_by_id("placeOrderButton").click()
 
 
@@ -111,4 +112,8 @@ class TestProducts(unittest.TestCase):
         card = driver.find_elements_by_class_name("cart_product_stock_info")
         quantity = driver.find_elements_by_class_name("quantity_container")
 
-        
+        print(info[0].text)
+        print(11111)
+        print(card[0].text)
+        print(11111)
+        print(quantity[0].text)
