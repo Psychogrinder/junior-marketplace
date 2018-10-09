@@ -10,7 +10,7 @@ from selenium.common import exceptions as ex
 
 
 firefox_opts = webdriver.FirefoxOptions()
-# firefox_opts.add_argument('--headless')
+firefox_opts.add_argument('--headless')
 driver = webdriver.Firefox(firefox_options=firefox_opts)
 
 
@@ -26,7 +26,7 @@ class TestProducts(unittest.TestCase):
 
     def test_01_check_auth_status_product_card(self):
         logged = False
-        while self.url: # for logged and non-logged states
+        while not logged: # for logged and non-logged states
             driver.get(self.url)
 
             # select random category and product
@@ -39,15 +39,11 @@ class TestProducts(unittest.TestCase):
                 self.assertIn('авторизуйтесь', p.text.lower())
 
             except ex.NoSuchElementException:
-                btn_to_cart = driver.find_element_by_xpath("/html/body/main/div[2]/div[1]/div[2]/div/button")
-                self.assertEqual('в корзину', btn_to_cart.text.lower())
+                logged = True
 
-            if logged == True:
-                break
+            else:
+                login(driver, self.consumer.email, self.password)
 
-            login(driver, self.consumer.email, self.password)
-            driver.implicitly_wait(2)
-            logged = True
 
 
     def test_02_goods_out_of_stock_chec(self):
@@ -70,7 +66,7 @@ class TestProducts(unittest.TestCase):
 
         el = driver.find_element_by_id("number")
         el.send_keys(Keys.CONTROL + "a")
-        el.send_keys(quantity)  # input num of products
+        el.send_keys(1)  # input num of products
 
 
     def test_04_add_products_to_cart(self):
@@ -99,14 +95,30 @@ class TestProducts(unittest.TestCase):
         driver.find_element_by_id("placeOrderButton").click()
 
 
-    def test_08_register_order(self):
+    def test_08_select_delivery_method(self):
+        deliveries = driver.find_elements_by_class_name("col-4 col-md-3")
+        print(len(deliveries))
+
+        delivery_methods = driver.find_elements_by_tag_name("option") # (курьер, самовывоз) * N {deliveries}
+
+        for product_delivery in deliveries:
+            product_delivery.click()
+
+            method_element = choice(delivery_methods[:3])
+            print(method_element.text)
+            method_element.click()
+            del delivery_methods[:3]
+
+
+
+    def test_09_register_order(self):
         driver.find_element_by_id("orderPlacementBtn").click()
         order_status = driver.find_element_by_xpath("/html/body/main/section/h2").text
         self.assertIn("успешно оформлен", order_status.lower(),
                       "order-registration-button has been clicked, but no message to consumer")
 
 
-    def test_09_orders_history(self):
+    def test_10_orders_history(self):
         driver.find_element_by_xpath("/html/body/header/nav/div/div/ul/li[2]/a").click()
         info = driver.find_elements_by_class_name("order_history_info")
         card = driver.find_elements_by_class_name("cart_product_stock_info")
