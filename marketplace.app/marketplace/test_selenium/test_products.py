@@ -1,17 +1,19 @@
 from append_path import *
-from testing_utils import login, logout
-import unittest
-from random import randint, choice
-from selenium import webdriver
+from testing_utils import init_driver_and_display, check_connection, login, logout
+
+from random import choice
 from marketplace.models import Category, User
-from selenium.webdriver.support.ui import WebDriverWait as Wait
+
+import unittest
+
 from selenium.webdriver.common.keys import Keys
 from selenium.common import exceptions as ex
 
 
-firefox_opts = webdriver.FirefoxOptions()
-firefox_opts.add_argument('--headless')
-driver = webdriver.Firefox(firefox_options=firefox_opts)
+url = "http://127.0.0.1:8000"
+
+driver, display = init_driver_and_display()
+check_connection(driver, url)
 
 
 class TestProducts(unittest.TestCase):

@@ -1,14 +1,15 @@
 from append_path import *
-from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
+from testing_utils import init_driver_and_display, check_connection, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements
+
 import unittest
-from selenium import webdriver
 from marketplace.models import User
 
 
-firefox_opts = webdriver.FirefoxOptions()
-firefox_opts.add_argument('--headless')
-driver = webdriver.Firefox(firefox_options=firefox_opts)
+url = "http://127.0.0.1:8000"
+
+driver, display = init_driver_and_display()
+check_connection(driver, url)
 
 unique_email = uniqueEmail()
 unique_shop_name = uniqueShopName()

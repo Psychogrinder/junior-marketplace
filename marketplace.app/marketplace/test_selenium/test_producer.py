@@ -1,6 +1,6 @@
 from append_path import *
 
-from testing_utils import init_driver_and_display, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
+from testing_utils import init_driver_and_display, check_connection, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements, setNewKeysForDict
 
 from marketplace.models import User
@@ -9,17 +9,12 @@ import unittest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.common import exceptions as ex
 
 
 url = "http://127.0.0.1:8000"
 
 driver, display = init_driver_and_display()
-
-try:
-    driver.get(url=url)
-except ex.TimeoutException:
-    print('url {} is not available'.format(url))
+check_connection(driver, url)
 
 unique_email, unique_shop = uniqueEmail(), uniqueShopName()
 
@@ -73,7 +68,7 @@ class TestProducer(unittest.TestCase):
                 EC.presence_of_element_located((By.XPATH, "/html/body/header/nav/div/div/div/button"))
             )
         finally:
-            self.assertIsNotNone(user_menu, "producer is not logined after registration")
+            self.assertIsNotNone(user_menu, "producer is not authorized after registration")
 
 
     # def test_05_producer_open_catalog(self):
@@ -123,7 +118,7 @@ class TestProducer(unittest.TestCase):
     #TODO add edit case
 
 
-    def test_10_producer_open_the_delete_page(self):
+    def test_10_producer_open_page_to_delete_profile(self):
         driver.find_element_by_css_selector(".edit-profile > a:nth-child(1)").click() #edit button
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click() # go to modal delete
 
@@ -131,17 +126,7 @@ class TestProducer(unittest.TestCase):
         btn_delete = driver.find_element_by_id("deleteProducerBtn")
 
         self.assertIsNotNone(btn_cancel, "can not find cancel button")
-        self.assertIn("отменить", btn_cancel.text.lower())
-
         self.assertIsNotNone(btn_delete, "can not find delete button")
-        self.assertIn("удалить", btn_delete.text.lower())
-
-
-        # TODO cancel button click; attach id to the button
-        # driver.find_element_by_xpath("/html/body/div[5]/div/div/div[3]/button[1]").click()
-        # driver.find_element_by_css_selector(
-        #     "deleteProfileProducer > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)")\
-        #     .click()
 
 
     def test_11_producer_delete_confirm(self):
