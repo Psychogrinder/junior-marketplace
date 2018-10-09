@@ -40,7 +40,6 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector(".header-login").click()
         driver.find_element_by_css_selector(
             "p.registration-link:nth-child(4) > a:nth-child(1)").click()
-        driver.implicitly_wait(2)
 
 
     def test_03_consumer_enter_registrtion_data(self):
@@ -113,7 +112,6 @@ class TestConsumer(unittest.TestCase):
     def test_09_consumer_open_the_delete_page(self):
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
-        driver.implicitly_wait(2)
 
 
     def test_10_consumer_confirm_delete(self):
