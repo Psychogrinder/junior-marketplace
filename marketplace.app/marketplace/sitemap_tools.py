@@ -7,15 +7,18 @@ import xml.etree.ElementTree as ET
 from marketplace import app, SITE_DOMAIN, celery, FIND_IN_XML_PREFIX, DEFAULT_XML_NAMESPACE
 from marketplace.api_folder.utils import product_utils
 
+
 sitemap_xml_dirr = app.config['SITEMAP_FOLDER']
-sitemap_xml_path = os.path.join(sitemap_xml_dirr, 'sitemap.xml')
+
+def get_path_to_xml_file(filename):
+    return os.path.join(sitemap_xml_dirr, filename)
 
 @celery.task()
 def add_producer_to_global_sitemap(data_tuple):
     producer_id, producer_update_date = data_tuple
-    if not os.path.isfile(sitemap_xml_path):
+    if not os.path.isfile(get_path_to_xml_file('sitemap.xml')):
         init_global_sitemap()
-    path = sitemap_xml_path
+    path = get_path_to_xml_file('sitemap.xml')
     producer_path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, False)
@@ -26,7 +29,7 @@ def add_producer_to_global_sitemap(data_tuple):
 @celery.task()
 def update_producer_info_in_global_sitemap(data_tuple):
     producer_id, producer_update_date = data_tuple
-    path = sitemap_xml_path
+    path = get_path_to_xml_file('sitemap.xml')
     producer_path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, False)
@@ -36,7 +39,7 @@ def update_producer_info_in_global_sitemap(data_tuple):
 
 @celery.task()
 def delete_producer_from_global_sitemap(producer_id):
-    path = sitemap_xml_path
+    path = get_path_to_xml_file('sitemap.xml')
     producer_path = 'producer_sitemap{}.xml'.format(producer_id)
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, False)
@@ -49,11 +52,11 @@ def init_global_sitemap():
     pages = []
     if not os.path.isdir(sitemap_xml_dirr):
         os.mkdir(sitemap_xml_dirr)
-    if os.path.isfile('static_sitemap.xml'):
-        static_mod_data = get_modification_date('static_sitemap.xml')
+    if os.path.isfile(get_path_to_xml_file('static_sitemap.xml')):
+        static_mod_data = get_modification_date(get_path_to_xml_file('static_sitemap.xml'))
         pages.append(['{}/static_sitemap.xml'.format(SITE_DOMAIN), static_mod_data])
     sitemap_xml = render_template('global_sitemap.xml', pages=pages)
-    with open(sitemap_xml_path, 'w+') as sitemap:
+    with open(get_path_to_xml_file('sitemap.xml'), 'w+') as sitemap:
         sitemap.write(sitemap_xml)
 
 
@@ -65,7 +68,7 @@ def update_static_sitemap():
         if "GET" in rule.methods and not str(rule).startswith('/api/v1/') and len(rule.arguments) == 0:
             pages.append(['{}{}'.format(SITE_DOMAIN, rule), cur_date])
     static_sitemap = render_template('sitemap.xml', pages=pages)
-    with open('static_sitemap.xml', 'w+') as sitemap:
+    with open(get_path_to_xml_file('static_sitemap.xml'), 'w+') as sitemap:
         sitemap.write(static_sitemap)
 
 
@@ -75,14 +78,14 @@ def create_producer_sitemap(producer_id):
     cur_date = datetime.now()
     pages.append(['{}/producer/{}'.format(SITE_DOMAIN, producer_id), cur_date])
     producer_sitemap = render_template('sitemap.xml', pages=pages)
-    with open('producer_sitemap{}.xml'.format(producer_id), 'w+') as sitemap:
+    with open(get_path_to_xml_file('producer_sitemap{}.xml'.format(producer_id)), 'w+') as sitemap:
         sitemap.write(producer_sitemap)
     return producer_id, cur_date
 
 
 @celery.task()
 def update_producer_sitemap(producer_id):
-    path = 'producer_sitemap{}.xml'.format(producer_id)
+    path = get_path_to_xml_file('producer_sitemap{}.xml'.format(producer_id))
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, True)
         tree.write(path)
@@ -91,14 +94,14 @@ def update_producer_sitemap(producer_id):
 
 @celery.task()
 def delete_producer_sitemap(producer_id):
-    path = 'producer_sitemap{}.xml'.format(producer_id)
+    path = get_path_to_xml_file('producer_sitemap{}.xml'.format(producer_id))
     os.remove(path)
     return producer_id
 
 
 @celery.task()
 def add_new_product_to_sitemap(producer_id, product_id):
-    path = 'producer_sitemap{}.xml'.format(producer_id)
+    path = get_path_to_xml_file('producer_sitemap{}.xml'.format(producer_id))
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, True)
         tree.getroot().append(build_new_xml_elem('{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date, 'url'))
@@ -108,7 +111,7 @@ def add_new_product_to_sitemap(producer_id, product_id):
 
 @celery.task()
 def delete_product_from_sitemap(producer_id, product_id):
-    path = 'producer_sitemap{}.xml'.format(producer_id)
+    path = get_path_to_xml_file('producer_sitemap{}.xml'.format(producer_id))
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, True)
         tree.getroot().remove(
@@ -119,7 +122,7 @@ def delete_product_from_sitemap(producer_id, product_id):
 
 @celery.task()
 def update_product_info_in_sitemap(producer_id, product_id):
-    path = 'producer_sitemap{}.xml'.format(producer_id)
+    path = get_path_to_xml_file('producer_sitemap{}.xml'.format(producer_id))
     if os.path.isfile(path):
         tree, cur_date = init_tree_and_update_date(path, True)
         update_xml_elem_date(tree.getroot(), '{}/products/{}'.format(SITE_DOMAIN, product_id), cur_date)
