@@ -16,6 +16,7 @@ def driver_init_opts():
 def display_init():
     display = Display(visible=0, size=(800, 600))
     display.start()
+    return display
 
 
 def uniqueEmail():

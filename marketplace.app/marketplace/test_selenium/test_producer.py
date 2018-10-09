@@ -17,7 +17,7 @@ url = "http://127.0.0.1:8000"
 try:
     driver = driver_init_opts()
 except ex.WebDriverException:
-    display_init()
+    display = display_init()
     print("display were initialized\n")
 finally:
     driver = driver_init_opts()
@@ -25,7 +25,6 @@ finally:
 
 try:
     driver.get(url=url)
-    print("Page title is \'{}\'\n".format(driver.title))
 except ex.TimeoutException:
     print('url {} is not available'.format(url))
 
@@ -161,7 +160,7 @@ class TestProducer(unittest.TestCase):
 
     def the_end(self):
         driver.quit()
-        display.stop()  # ignore any output from this.
+        display.stop()
 
 
 if __name__ == "__main__":
