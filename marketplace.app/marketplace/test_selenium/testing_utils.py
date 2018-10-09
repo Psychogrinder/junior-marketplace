@@ -62,13 +62,10 @@ def logout(driver):
 
 
 def getEditElements(driver):
-    first_name = driver.find_element_by_id("consumer_first_name")
-    last_name = driver.find_element_by_id("consumer_last_name")
-    patronymic = driver.find_element_by_id("consumer_patronymic")
-    phone = driver.find_element_by_id("consumer_phone")
-    address = driver.find_element_by_id("consumer_address")
+    elements_id = ["consumer_first_name", "consumer_last_name", "consumer_patronymic",
+                   "consumer_phone", "consumer_address"]
 
-    elements = [first_name, last_name, patronymic, phone, address]
+    elements = [driver.find_element_by_id(identify) for identify in elements_id]
     return elements
 
 
@@ -77,9 +74,7 @@ def getPhoneMask(nums):
 
 
 def getDataFromElements(elements):
-    edited_data = []
-    for element in elements:
-        edited_data.append(element.get_attribute('value'))
+    edited_data = [element.get_attribute('value') for element in elements]
     return edited_data
 
 
