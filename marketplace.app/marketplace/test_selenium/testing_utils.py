@@ -23,6 +23,13 @@ def init_driver_and_display():
         return driver, display
 
 
+def check_connection(driver, url):
+    try:
+        driver.get(url=url)
+    except ex.TimeoutException:
+        print('url {} is not available'.format(url))
+
+
 def uniqueEmail():
     return "mail_" + datetime.now().strftime('%f') + "@ya.ua"
 
