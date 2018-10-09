@@ -1,17 +1,33 @@
 from append_path import *
-from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
+
+from testing_utils import driver_init_opts, display_init, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements, setNewKeysForDict
+
+from marketplace.models import User
+
 import unittest
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from marketplace.models import User
+from selenium.common import exceptions as ex
 
 
-firefox_opts = webdriver.FirefoxOptions()
-firefox_opts.add_argument('--headless')
-driver = webdriver.Firefox(firefox_options=firefox_opts)
+url = "http://127.0.0.1:8000"
+
+try:
+    driver = driver_init_opts()
+except ex.WebDriverException:
+    display_init()
+    print("display were initialized\n")
+finally:
+    driver = driver_init_opts()
+
+
+try:
+    driver.get(url=url)
+    print("Page title is \'{}\'\n".format(driver.title))
+except ex.TimeoutException:
+    print('url {} is not available'.format(url))
 
 
 unique_email = uniqueEmail()
@@ -21,7 +37,7 @@ unique_shop = uniqueShopName()
 class TestProducer(unittest.TestCase):
 
     def setUp(self):
-        self.url = 'http://127.0.0.1:8000'
+        self.url = url
         self.producer = User.query.filter_by(entity='producer').order_by(User.id.desc()).first()
 
         self.password = "123123"
@@ -67,7 +83,7 @@ class TestProducer(unittest.TestCase):
                 EC.presence_of_element_located((By.XPATH, "/html/body/header/nav/div/div/div/button"))
             )
         finally:
-            self.assertIsNotNone(user_menu, "producer is not logged after registration")
+            self.assertIsNotNone(user_menu, "producer is not logined after registration")
 
 
     # def test_05_producer_open_catalog(self):
@@ -141,6 +157,11 @@ class TestProducer(unittest.TestCase):
     def test_11_producer_delete_confirm(self):
         driver.find_element_by_id("deleteProducerBtn").click()
         self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
+
+
+    def the_end(self):
+        driver.quit()
+        display.stop()  # ignore any output from this.
 
 
 if __name__ == "__main__":
