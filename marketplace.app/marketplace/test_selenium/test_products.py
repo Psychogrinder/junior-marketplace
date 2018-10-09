@@ -28,14 +28,21 @@ class TestProducts(unittest.TestCase):
 
     def test_01_check_auth_status_product_card(self):
         logged = False
+
         while not logged: # for logged and non-logged states
             driver.get(self.url)
             
             # select random category and product
-            category = choice(driver.find_elements_by_class_name("catalog-category-item"))
-            category.click()
-            product = choice(driver.find_elements_by_class_name("card-item"))
-            product.click()
+            categories = driver.find_elements_by_class_name("catalog-category-item")
+
+            if not categories:
+                print("categories are empty\n")
+                raise SystemExit(1)
+            choice(categories).click()
+
+            products = driver.find_elements_by_class_name("card-item")
+            choice(products).click()
+
             try:
                 p = driver.find_element_by_xpath("/html/body/main/div[2]/div[1]/div[2]/p")
                 self.assertIn('авторизуйтесь', p.text.lower())
@@ -45,7 +52,6 @@ class TestProducts(unittest.TestCase):
 
             else:
                 login(driver, self.consumer.email, self.password)
-
 
 
     def test_02_goods_out_of_stock_chec(self):
