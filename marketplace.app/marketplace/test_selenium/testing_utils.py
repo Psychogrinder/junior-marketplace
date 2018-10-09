@@ -6,17 +6,21 @@ from selenium.common import exceptions as ex
 from pyvirtualdisplay import Display
 
 
-def driver_init_opts():
-    firefox_opts = webdriver.FirefoxOptions()
-    firefox_opts.add_argument('--headless')
-    return webdriver.Firefox(firefox_options=firefox_opts)
+def init_driver_and_display():
+    driver, display = False, False
+    try:
+        firefox_opts = webdriver.FirefoxOptions()
+        firefox_opts.add_argument('--headless')
+        driver = webdriver.Firefox(firefox_options=firefox_opts)
 
+    except ex.WebDriverException:
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        print("display were initialized\n")
+        driver = webdriver.Firefox()
 
-# initilization display for server
-def display_init():
-    display = Display(visible=0, size=(800, 600))
-    display.start()
-    return display
+    finally:
+        return driver, display
 
 
 def uniqueEmail():

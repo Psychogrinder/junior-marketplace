@@ -1,6 +1,6 @@
 from append_path import *
 
-from testing_utils import driver_init_opts, display_init, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
+from testing_utils import init_driver_and_display, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements, setNewKeysForDict
 
 from marketplace.models import User
@@ -14,23 +14,14 @@ from selenium.common import exceptions as ex
 
 url = "http://127.0.0.1:8000"
 
-try:
-    driver = driver_init_opts()
-except ex.WebDriverException:
-    display = display_init()
-    print("display were initialized\n")
-finally:
-    driver = driver_init_opts()
-
+driver, display = init_driver_and_display()
 
 try:
     driver.get(url=url)
 except ex.TimeoutException:
     print('url {} is not available'.format(url))
 
-
-unique_email = uniqueEmail()
-unique_shop = uniqueShopName()
+unique_email, unique_shop = uniqueEmail(), uniqueShopName()
 
 
 class TestProducer(unittest.TestCase):
