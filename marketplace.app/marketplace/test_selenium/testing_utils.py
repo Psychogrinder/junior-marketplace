@@ -1,7 +1,22 @@
 from append_path import *
 from datetime import datetime
 from random import choice
+from selenium import webdriver
 from selenium.common import exceptions as ex
+from pyvirtualdisplay import Display
+
+
+def driver_init_opts():
+    firefox_opts = webdriver.FirefoxOptions()
+    firefox_opts.add_argument('--headless')
+    return webdriver.Firefox(firefox_options=firefox_opts)
+
+
+# initilization display for server
+def display_init():
+    display = Display(visible=0, size=(800, 600))
+    display.start()
+
 
 def uniqueEmail():
     return "mail_" + datetime.now().strftime('%f') + "@ya.ua"
