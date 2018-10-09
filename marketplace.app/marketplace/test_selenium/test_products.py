@@ -28,7 +28,7 @@ class TestProducts(unittest.TestCase):
         logged = False
         while not logged: # for logged and non-logged states
             driver.get(self.url)
-
+            
             # select random category and product
             category = choice(driver.find_elements_by_class_name("catalog-category-item"))
             category.click()
@@ -80,8 +80,8 @@ class TestProducts(unittest.TestCase):
 
     #TODO
     def test_06_is_cost_the_same_in_cart(self):
-        cost_product = driver.find_element_by_class_name("product_price_value").text
-        title_product = driver.find_element_by_class_name("product_title").text
+        # cost_product = driver.find_element_by_class_name("product_price_value").text
+        # title_product = driver.find_element_by_class_name("product_title").text
 
         driver.find_element_by_class_name("header-cart").click()
 
@@ -124,8 +124,11 @@ class TestProducts(unittest.TestCase):
         card = driver.find_elements_by_class_name("cart_product_stock_info")
         quantity = driver.find_elements_by_class_name("quantity_container")
 
-        print(info[0].text)
-        print(11111)
-        print(card[0].text)
-        print(11111)
-        print(quantity[0].text)
+        # print(info[0].text)
+        
+        # print(card[0].text)
+        
+        # print(quantity[0].text)
+
+if __name__ == "__main__":
+    unittest.main()

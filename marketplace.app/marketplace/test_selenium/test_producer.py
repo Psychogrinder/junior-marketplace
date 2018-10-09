@@ -141,3 +141,7 @@ class TestProducer(unittest.TestCase):
     def test_11_producer_delete_confirm(self):
         driver.find_element_by_id("deleteProducerBtn").click()
         self.assertIsNone(User.query.filter_by(id=self.producer.id).first())
+
+
+if __name__ == "__main__":
+    unittest.main()
