@@ -4,6 +4,10 @@ networks:
   marketplace:
     external: true
 
+volumes:
+  marketplace_sitemap:
+    external: true
+
 services:
   front-nginx:
     container_name: marketplace.nginx
@@ -12,6 +16,7 @@ services:
       context: ./
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
+      - marketplace_sitemap:/usr/share/nginx/sitemap
     ports:
       - "80:80"
       - "443:443"

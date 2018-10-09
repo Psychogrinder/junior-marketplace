@@ -11,6 +11,8 @@ volumes:
     external: true
   marketplace_chat:
     external: true
+  marketplace_sitemap:
+    external: true
 
 
 services:
@@ -33,6 +35,7 @@ services:
         - INFLUXDB_WRITE_USER_PASSWORD
         - CACHE_STORAGE_HOST
         - MONGO_DATABASE_URI
+        - SITEMAP_FOLDER
     environment:
       - FLASK_ENV=production
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
@@ -41,6 +44,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+      - SITEMAP_FOLDER=${SITEMAP_FOLDER}
       - SENTRY_DSN=${SENTRY_DSN}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
@@ -87,6 +91,7 @@ services:
         - INFLUXDB_WRITE_USER_PASSWORD
         - CACHE_STORAGE_HOST
         - MONGO_DATABASE_URI
+        - SITEMAP_FOLDER
     command:
       "celery -A marketplace.celery --loglevel=info worker -B"
     networks:
@@ -95,6 +100,7 @@ services:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_BACKEND_URL=${CELERY_BACKEND_URL}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+      - SITEMAP_FOLDER=${SITEMAP_FOLDER}
       - SECRET_KEY=${SECRET_KEY}
       - SECURITY_PASSWORD_SALT=${SECURITY_PASSWORD_SALT}
       - SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
@@ -107,6 +113,7 @@ services:
       - MONGO_DATABASE_URI=${MONGO_DATABASE_URI}
     volumes:
       - "marketplace_user_image:${UPLOAD_FOLDER}"
+      - "marketplace_sitemap:${SITEMAP_FOLDER}"
     depends_on:
       - redis
     restart: on-failure

@@ -93,3 +93,5 @@ class Production(Base):
     INFLUXDB_PASSWORD = os.getenv('INFLUXDB_WRITE_USER_PASSWORD')
 
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+
+    SITEMAP_FOLDER = os.getenv('SITEMAP_FOLDER')
