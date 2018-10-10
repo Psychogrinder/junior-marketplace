@@ -26,7 +26,7 @@ def init_driver_and_display():
 
 def check_connection(driver, url):
     try:
-        driver.get(url=url)
+        driver.get(url)
     except ex.TimeoutException:
         print('url {} is not available'.format(url))
 
