@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from append_path import *
 from datetime import datetime
 from random import choice

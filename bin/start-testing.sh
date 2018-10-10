@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. .venv/bin/activate
+. ./marketplace.app/.venv/bin/activate
 
 export FLASK_ENV=development
 

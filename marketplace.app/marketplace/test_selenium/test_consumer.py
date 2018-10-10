@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from append_path import *
 from testing_utils import init_driver_and_display, check_connection, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements
