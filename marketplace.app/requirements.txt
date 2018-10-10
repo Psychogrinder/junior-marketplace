@@ -33,4 +33,3 @@ eventlet
 pymongo
 selenium
 pyvirtualdisplay
-xvfb
