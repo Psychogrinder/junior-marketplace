@@ -5,23 +5,22 @@ from random import choice
 from selenium import webdriver
 from selenium.common import exceptions as ex
 from pyvirtualdisplay import Display
+import os
 
 
 def init_driver_and_display():
-    driver, display = False, False
-    try:
-        firefox_opts = webdriver.FirefoxOptions()
-        firefox_opts.add_argument('--headless')
-        driver = webdriver.Firefox(firefox_options=firefox_opts)
-
-    except ex.WebDriverException:
+    display = False
+    havedisplay = "DISPLAY" in os.environ
+    if not havedisplay:
         display = Display(visible=0, size=(800, 600))
         display.start()
-        print("display were initialized\n")
-        driver = webdriver.Firefox()
+        print("display was initialized\n")
 
-    finally:
-        return driver, display
+    firefox_opts = webdriver.FirefoxOptions()
+    firefox_opts.add_argument('--headless')
+    driver = webdriver.Firefox(firefox_options=firefox_opts)
+    print("driver was initialized\n")
+    return driver, display
 
 
 def check_connection(driver, url):
