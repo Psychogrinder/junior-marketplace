@@ -32,3 +32,5 @@ py-trello
 eventlet
 pymongo
 selenium
+pyvirtualdisplay
+xvfb

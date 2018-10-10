@@ -1,14 +1,18 @@
 from append_path import *
-from testing_utils import uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
+from testing_utils import init_driver_and_display, check_connection, uniqueEmail, uniqueShopName, login, logout, getPhoneMask, getEditElements, setDictValues, \
     getDataFromElements
+
 import unittest
-from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait as Wait
 from marketplace.models import User
 
 
-firefox_opts = webdriver.FirefoxOptions()
-firefox_opts.add_argument('--headless')
-driver = webdriver.Firefox(firefox_options=firefox_opts)
+url = "http://127.0.0.1:8000"
+
+driver, display = init_driver_and_display()
+check_connection(driver, url)
 
 unique_email = uniqueEmail()
 unique_shop_name = uniqueShopName()
@@ -36,7 +40,6 @@ class TestConsumer(unittest.TestCase):
         driver.find_element_by_css_selector(".header-login").click()
         driver.find_element_by_css_selector(
             "p.registration-link:nth-child(4) > a:nth-child(1)").click()
-        driver.implicitly_wait(2)
 
 
     def test_03_consumer_enter_registrtion_data(self):
@@ -47,17 +50,29 @@ class TestConsumer(unittest.TestCase):
 
     def test_04_consumer_submit_form(self):
         driver.find_element_by_id("reg_button").click()
-        driver.implicitly_wait(2)
+        user_menu = None
+        try:
+            user_menu = Wait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "/html/body/header/nav/div/div/div/button"))
+            )
+        finally:
+            self.assertIsNotNone(user_menu, "producer is not authorized after registration")
 
 
     def test_05_consumer_logout(self):
         logout(driver)
-        driver.implicitly_wait(2)
+        btn_auth = None
+        try:
+            btn_auth = Wait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".header-login > img:nth-child(1)"))
+            )
+        finally:
+            self.assertIsNotNone(btn_auth, "no auth button after logout")
 
 
     def test_06_consumer_login(self):
         login(driver, self.consumer.email, self.password)
-        driver.implicitly_wait(2)
+
 
 
     def test_07_consumer_open_edit_profile(self):
@@ -97,7 +112,6 @@ class TestConsumer(unittest.TestCase):
     def test_09_consumer_open_the_delete_page(self):
         driver.find_element_by_xpath("/html/body/main/div[1]/div/p/a").click()  # Edit profile btn
         driver.find_element_by_css_selector(".out-of-stock > a:nth-child(1)").click()  # Delete profile btn
-        driver.implicitly_wait(2)
 
 
     def test_10_consumer_confirm_delete(self):
@@ -105,4 +119,6 @@ class TestConsumer(unittest.TestCase):
         driver.implicitly_wait(2)
         self.assertIsNone(User.query.filter_by(id=self.consumer.id).first())
 
-        driver.close()
+
+if __name__ == "__main__":
+    unittest.main()

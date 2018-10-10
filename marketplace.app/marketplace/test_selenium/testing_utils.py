@@ -1,6 +1,33 @@
 from append_path import *
 from datetime import datetime
 from random import choice
+from selenium import webdriver
+from selenium.common import exceptions as ex
+from pyvirtualdisplay import Display
+
+
+def init_driver_and_display():
+    driver, display = False, False
+    try:
+        firefox_opts = webdriver.FirefoxOptions()
+        firefox_opts.add_argument('--headless')
+        driver = webdriver.Firefox(firefox_options=firefox_opts)
+
+    except ex.WebDriverException:
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+        print("display were initialized\n")
+        driver = webdriver.Firefox()
+
+    finally:
+        return driver, display
+
+
+def check_connection(driver, url):
+    try:
+        driver.get(url=url)
+    except ex.TimeoutException:
+        print('url {} is not available'.format(url))
 
 
 def uniqueEmail():
@@ -8,31 +35,37 @@ def uniqueEmail():
 
 
 def uniqueShopName():
-    return "Shop_name_" + datetime.now().strftime('%f')
+    name, alphabet = '', 'qwertyuiopasdfghjklzxcvbnm'
+    for x in range(7):
+        name += choice(alphabet)
+    return "Shop_" + name
 
 
 def login(driver, email, pw):
     url = 'http://127.0.0.1:8000'
     driver.get(url)
-    driver.find_element_by_css_selector("#navbarColor01 > a > img").click()
-    driver.find_element_by_id("emailAuthorisation").send_keys(email)
-    driver.find_element_by_id("passwordAuthorisation").send_keys(pw)
-    driver.find_element_by_id("authButton").click()
+    try:
+        driver.find_element_by_class_name(".navbar-toggler").click()
+    except ex.NoSuchElementException:
+        driver.find_element_by_css_selector("#navbarColor01 > a > img").click()
+        driver.find_element_by_id("emailAuthorisation").send_keys(email)
+        driver.find_element_by_id("passwordAuthorisation").send_keys(pw)
+        driver.find_element_by_id("authButton").click()
 
 
 def logout(driver):
-    driver.find_element_by_css_selector(".dropdown-toggle").click()
-    driver.find_element_by_id("logoutButton").click()
+    try:
+        driver.find_element_by_class_name(".navbar-toggler").click()
+    except ex.NoSuchElementException:
+        driver.find_element_by_css_selector("button.btn:nth-child(1)").click()
+        driver.find_element_by_id("logoutButton").click()
 
 
 def getEditElements(driver):
-    first_name = driver.find_element_by_id("consumer_first_name")
-    last_name = driver.find_element_by_id("consumer_last_name")
-    patronymic = driver.find_element_by_id("consumer_patronymic")
-    phone = driver.find_element_by_id("consumer_phone")
-    address = driver.find_element_by_id("consumer_address")
+    elements_id = ["consumer_first_name", "consumer_last_name", "consumer_patronymic",
+                   "consumer_phone", "consumer_address"]
 
-    elements = [first_name, last_name, patronymic, phone, address]
+    elements = [driver.find_element_by_id(identify) for identify in elements_id]
     return elements
 
 
@@ -41,9 +74,7 @@ def getPhoneMask(nums):
 
 
 def getDataFromElements(elements):
-    edited_data = []
-    for element in elements:
-        edited_data.append(element.get_attribute('value'))
+    edited_data = [element.get_attribute('value') for element in elements]
     return edited_data
 
 
