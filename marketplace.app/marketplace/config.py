@@ -11,7 +11,8 @@ class Base(object):
         os.path.abspath(__file__)),
         'static', 'img', 'user_images'
     )
-
+    SITEMAP_FOLDER = os.path.join(os.path.dirname(os.path.dirname(
+       os.path.abspath(__file__))), 'sitemap')
     USER_IMAGE_PRODUCTS_SIZE = 1020, 764
     USER_IMAGE_PRODUCER_LOGO_SIZE = 1000, 324
     ALLOWED_UPLOAD_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'webp'])
